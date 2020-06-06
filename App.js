@@ -1,17 +1,14 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import AppNavigation from './src/component/screens/Navigation/AppNavigation';
+import 'react-native-gesture-handler';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigation from './src/component/page/navigation/AppNavigation';
 
 const App = () => {
 
   return(
-
-    <View>
-
+    <NavigationContainer>
       <AppNavigation/>
-
-    </View>
-
+    </NavigationContainer>
   );
 
 }

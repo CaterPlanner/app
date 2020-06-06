@@ -25,7 +25,7 @@ export default class Create extends Component {
             {/*
             이친구는 그냥 샘플 이미지 가져온거임 지워줘야됨 
             */}
-            <Image source={require('../../../asset/sample_Image/SampleImage.png')} style={{width:130, height:130, marginTop:'50%'}}></Image>
+            <Image source={require('../../../../asset/sample_Image/SampleImage.png')} style={{width:130, height:130, marginTop:'50%'}}></Image>
 
             </View>
             <View style={style.in_Down}>
@@ -57,7 +57,7 @@ export default class Create extends Component {
                  
         <TouchableOpacity 
        
-       onPress={() => this.props.navigation.navigate("gowlwrite")}
+       onPress={() => this.props.navigation.navigate("CreateNavigation")}
        
        >
                 <View style={style.Button_sample}>
