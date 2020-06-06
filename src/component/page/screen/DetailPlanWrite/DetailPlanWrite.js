@@ -6,8 +6,11 @@ import {View, Text, TouchableOpacity} from 'react-native'
 
 export default ({navigation}) => (
     <View>
+        
+        <Text>디테일 플랜{"\n\n"}</Text>
+        
         <TouchableOpacity onPress={()=> navigation.navigate("PlanInsert")}>
-        <Text>DTP{"\n\n"}</Text>
+        <Text>다음으로 PlanInsert</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.goBack()}>
