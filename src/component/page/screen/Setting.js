@@ -5,7 +5,7 @@ import {View, Text} from 'react-native'
 const Setting = () => {
     return(
         <View>
-        <Text>Sett</Text>
+        <Text>Setting</Text>
         </View>
     )
 }
