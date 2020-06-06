@@ -5,7 +5,7 @@ import {View, Text} from 'react-native'
 const PlanView = () => {
   return(
     <View>
-      <Text>Hello! I am Search :D</Text>
+      <Text>Hello! I am PlanView :D</Text>
     </View>
   );
 }
