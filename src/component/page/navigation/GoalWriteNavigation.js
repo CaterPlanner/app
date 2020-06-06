@@ -15,8 +15,12 @@ const GoalWrite = () => {
         </Stack.Navigator>
     )
 }
-//잉 얘도 네비게이션이 됬자너 얘도 Navigation에 옮기고 얘 안에 두마리 있으니까 폴더 분류 해놨음
+//잉 얘도 네비게이션이 됬자너 얘도 
+//navigation에 옮기고 얘 안에 두마리 
+//Write Name, Content 분류 해놓음
 //TakePhoto 지움
 //원래 이런걸 커밋할때 적는건가
+
+
 
 export default GoalWrite;
