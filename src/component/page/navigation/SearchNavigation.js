@@ -14,7 +14,7 @@ const Search = () => {
       tabBarOptions={{
       activeTintColor: 'black',
       inactiveTintColor: 'gray',
-      tabBarPosition: "right"
+      tabBarPosition: "right",
     }}>
     <Tab.Screen name="추천 목표" component={recommend} />
     <Tab.Screen name="최신 목표" component={newGoals} />
