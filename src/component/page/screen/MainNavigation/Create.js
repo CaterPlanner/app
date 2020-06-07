@@ -25,7 +25,7 @@ export default class Create extends Component {
             {/*
             이친구는 그냥 샘플 이미지 가져온거임 지워줘야됨 
             */}
-            <Image source={require('../../../../asset/sample_Image/SampleImage.png')} style={{width:130, height:130, marginTop:'50%'}}></Image>
+            <Image source={require('../../../../../asset/sample_Image/SampleImage.png')} style={{width:130, height:130, marginTop:'50%'}}></Image>
 
             </View>
             <View style={style.in_Down}>
@@ -118,6 +118,5 @@ const style = StyleSheet.create({
         borderRadius : 40,
         marginTop:10
     }
-
 
 });
