@@ -1,10 +1,10 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from '../screen/MainNavigation/Home'
+import Home from '../screen/Main/Home'
 import SearchNavigation from '../navigation/SearchNavigation'
-import Create from '../screen/MainNavigation/Create'
-import Stories from '../screen/MainNavigation/Stories'
-import Record from '../screen/MainNavigation/Record'
+import Create from '../screen/Main/Create'
+import Stories from '../screen/Main/Stories'
+import Record from '../screen/Main/Record'
 
 
 const Tab = createBottomTabNavigator();
