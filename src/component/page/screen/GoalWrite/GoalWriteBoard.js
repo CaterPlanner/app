@@ -12,7 +12,7 @@ import PageStateText from '../../../atom/text/PageStateText'
 
 const fullWidth = Dimensions.get('window').width;
 
-export default class GoalWriteController extends Component{
+export default class GoalWriteBoard extends Component{
     constructor(props){
         super(props)
 
@@ -37,7 +37,7 @@ export default class GoalWriteController extends Component{
     _renderItem({item, index}){
         return(
             <View>
-            {item}
+                {item}
             </View>
         )
     }
