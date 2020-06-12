@@ -19,56 +19,90 @@ export default class DetailPlanWriteBoard extends Component{
         }
 
         this.state = {
-            activeParentKey: null
-        }
-
-    }
-    
-    _arragePlanAsNextLevel = () =>{
-        const children = this.detailplanStore.getChildren(this.state.activeParentKey)
-        const levelArray = [];
-
-        children.map((child) => {
-            let level = 0;
-            let current = child;
-
-            while(current){
-                if(!levelArray[count]){
-                    levelArray = [
-                        ...levelArray,
+            activeParentKey: null,
+            tmp_children : [
+                {
+                    key: "A",
+                    type : "M",
+                    isClear : false,
+                    successors : [
                         {
-                            level: count,
-                            children: []
+                            key: "A:A",
+                            type : "P",
+                            isClear : false,
+                            successors: null
+                        },
+                        {
+                            key: "A:B",
+                            type : "M",
+                            isClear : false,
+                            successors: [
+                                {
+                                    key: "A:B:A",
+                                    type : "P",
+                                    isClear : false,
+                                    successors: null
+                                },
+                                {
+                                    key: "A:B:B",
+                                    type : "P",
+                                    isClear : false,
+                                    successors: null
+                                }
+                            ]
+                        },
+                        {
+                            key: "A:C",
+                            type : "M",
+                            isClear : false,
+                            successors: [
+                                {
+                                    key: "A:C:A",
+                                    type : "P",
+                                    isClear : false,
+                                    successors: null  
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    key: "B",
+                    type : "M",
+                    isClear : false,
+                    successors: [
+                        {
+                            key: "B:A",
+                            type : "M",
+                            isClear : false,
+                            successors: [
+                                {
+                                    key: "B:A:A",
+                                    type : "P",
+                                    isClear : false,
+                                    successors: null
+                                },
+                                {
+                                    key: "B:A:B",
+                                    type : "P",
+                                    isClear : false,
+                                    successors: null
+                                }
+                            ]
                         }
                     ]
                 }
+            ]
+        }
 
-                current.next.map((next) => {
-                    const upstairs = myLevel.children[myLevel.children.length - 1];
-                    const element = {
-                        pos: (upstairs ? (upstairs.pos + (upstairs.childCount == 0 ? 1 : upstairs.childCount)) : 1),
-                        childCount: next.next.length,
-                        data: this.detailplanStore.getDetailPlan(next.key)
-                    }
-                    levelArray[count].children = {
-                        ...levelArray[count].children,
-                        element
-                    }
-                })
-
-                current = current.next;
-                level++;
-            }
-        })
-
-        return levelArray;
     }
+
 
     render(){
         return(
             <View style={{flex:1}}>
                 <View style={styles.planStateArea}>
-                    <DetailPlanState data={this._arragePlanAsNextLevel()}/>
+                    <DetailPlanState children={tmp_children}/>
                 </View>
                 <View style={styles.planCreateArea}>
                     <DetailPlanCreate/>

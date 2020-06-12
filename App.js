@@ -9,7 +9,6 @@ const root = new RootStore();
 
 const App = () => {
 
-  console.log(root);
   return(
     <Provider {...root}>
       <NavigationContainer>

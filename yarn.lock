@@ -6021,11 +6021,6 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-caterplanner-detailplantree@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-caterplanner-detailplantree/-/react-native-caterplanner-detailplantree-1.0.0.tgz#ce64d0d37f056429461a7c7252c1f070d51e6742"
-  integrity sha512-+uHeN1ir6XMbUUrxsfBGR5Yf+eNVx3W2wEncWE8VaIKqTRsGCyTmS6dT2VIxV5nqftyHQKyvlOmPAgH47cZjjg==
-
 react-native-drawer@2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/react-native-drawer/-/react-native-drawer-2.5.1.tgz#08b9314184f48c724f1b467f8859797369798654"
