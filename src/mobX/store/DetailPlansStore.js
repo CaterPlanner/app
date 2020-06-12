@@ -1,5 +1,5 @@
 import {observable, action} from 'mobx';
-import CaterPlannerTree from 'react-native-caterplanner-detailplantree'
+import CaterPlannerDetailPlanTree from '../../util/CaterPlannerDetailPlanTree'
 
 export default class DetailPlanStore{
 
@@ -11,11 +11,11 @@ export default class DetailPlanStore{
 
     @action reset(){
         this.detailPlans = new Map()
-        CaterPlannerTree.create()
+        CaterPlannerDetailPlanTree.create()
     }
 
     @action insertDetailPlan(parentKey, detailPlan){
-        CaterPlannerTree.insert(
+        CaterPlannerDetailPlanTree.insert(
             parentKey,
             {
                 key: null,
@@ -31,7 +31,7 @@ export default class DetailPlanStore{
     }
 
     @action removeDetailPlan(key){
-        CaterPlannerTree.delete(
+        CaterPlannerDetailPlanTree.delete(
             key,
             (msg) => {console.log(msg)}
         )
@@ -39,6 +39,10 @@ export default class DetailPlanStore{
 
     @action getDetailPlan(key){
         return this.detailPlans.get(key)
+    }
+
+    @action getChildren(key){
+        return null;
     }
 
     @action build(detailPlans){
