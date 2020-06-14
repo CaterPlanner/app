@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, Text , View} from 'react-native'
 
-export default function PlanIcon({name, color}){
+export default function DetailPlanIcon({name, color}){
     return(
         <TouchableOpacity>
             <View style={[styles.button, {backgroundColor : color}]}>
