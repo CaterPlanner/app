@@ -1,4 +1,4 @@
-package com.downfall.caterplanner.detailplantree.algorithm;
+package com.downfall.caterplanner.common;
 
 public enum Type {
 	

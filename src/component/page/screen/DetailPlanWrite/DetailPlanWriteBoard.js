@@ -1,25 +1,23 @@
 import React, {Component} from 'react'
 import {View, StyleSheet} from 'react-native'
-import DetailPlanState from './DetailPlanState'
-import DetailPlanCreate from './DetailPlanCreate'
-import {observer, inject} from 'mobx-react'
+import DetailPlanState from '../../../organism/DetailPlanWrite/DetailPlanState'
+import DetailPlanCreate from '../../../organism/DetailPlanWrite/DetailPlanCreate'
+import {inject} from 'mobx-react'
 
-@inject('detailplans')
-@observer
+@inject('detailPlanStore')
 export default class DetailPlanWriteBoard extends Component{
 
     constructor(props){
-        super(props)
+        super(props);
 
-        this.detailplanStore = {detailplanStore}  = this.props
-        this.detailplanStore.reset();
+        this.detailPlanStore = {detailplanStore}  = this.props
+        this.detailPlanStore.start();
 
         if(this.props.route.detailPlans){
             this.detailplanStore.build(this.props.route.detailPlans)
         }
 
         this.state = {
-            activeParentKey: null,
             tmp_children : [
                 {
                     key: "A",
@@ -97,12 +95,12 @@ export default class DetailPlanWriteBoard extends Component{
 
     }
 
-
+    
     render(){
         return(
             <View style={{flex:1}}>
                 <View style={styles.planStateArea}>
-                    <DetailPlanState children={tmp_children}/>
+                    <DetailPlanState/>
                 </View>
                 <View style={styles.planCreateArea}>
                     <DetailPlanCreate/>

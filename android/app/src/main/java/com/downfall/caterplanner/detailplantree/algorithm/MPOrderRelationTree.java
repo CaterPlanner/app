@@ -1,10 +1,12 @@
 package com.downfall.caterplanner.detailplantree.algorithm;
 
-import com.downfall.caterplanner.detailplantree.dto.PlanData;
+import com.downfall.caterplanner.common.Type;
+import com.downfall.caterplanner.common.DetailPlan;
+import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
+import com.downfall.caterplanner.detailplantree.util.NodeUtil;
 
 import java.util.Arrays;
 import java.util.Comparator;
-
 
 
 public class MPOrderRelationTree {
@@ -12,34 +14,40 @@ public class MPOrderRelationTree {
 	private Node root;
 
 	public MPOrderRelationTree() {
-		this.root = new Node(new PlanData());
+		this.root = new Node(new DetailPlan());
 	}
 
-	public MPOrderRelationTree(PlanData[] initData) throws Exception{
-		this.root = new Node(new PlanData());
+	public MPOrderRelationTree(DetailPlan[] initData) throws Exception{
+		this.root = new Node(new DetailPlan());
 
-		Arrays.sort(initData, new Comparator<PlanData>() {
+		Arrays.sort(initData, new Comparator<DetailPlan>() {
 			@Override
-			public int compare(PlanData o1, PlanData o2) {
+			public int compare(DetailPlan o1, DetailPlan o2) {
 				return (o1.getKey().length() - o2.getKey().length());
 			}
 		});
 
-		for(PlanData plan : initData){
+		for(DetailPlan plan : initData){
 			String key = plan.getKey();
 			Node node = new Node(plan);
-			if(key.length() == 1){
-				insert(null, node);
-			}else if(key.charAt(key.length() - 2) != ':'){
-				insert(key.substring(0, key.length() - 1), node);
-			}else{
-				next(key.substring(0, key.length() - 2), node);
-			}
+			insert(NodeUtil.getConsturctorKey(key), node);
 		}
 	}
 
 	public Node getRoot() {
 		return root;
+	}
+
+	public Node[] getNodes(){
+		return NodeSearcher.dfs(this.root, node -> node.getType() != Type.R,
+				((stack, element) -> {
+					for (Node child : element.getChildren()){
+						stack.push(child);
+					}
+					for (Node successor : element.getSuccessors()){
+						stack.push(successor);
+					}
+		}));
 	}
 
 	public Node select(String key) {

@@ -3,7 +3,8 @@ package com.downfall.caterplanner.detailplantree.algorithm;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.downfall.caterplanner.detailplantree.dto.PlanData;
+import com.downfall.caterplanner.common.Type;
+import com.downfall.caterplanner.common.DetailPlan;
 
 
 public class Node {
@@ -13,16 +14,12 @@ public class Node {
 	private Node constructor;
 	private List<Node> children;
 	private List<Node> successors;
-	private Type type;
-	private PlanData data;
+	private DetailPlan data;
 
 
-	public Node(PlanData data){
+	public Node(DetailPlan data){
 		this.children = new ArrayList<Node>();
 		this.successors = new ArrayList<Node>();
-
-		this.type = data.getType() == null ? Type.R : Type.valueOf(data.getType());
-
 		this.data = data;
 
 		if(data.getKey() != null){
@@ -47,10 +44,10 @@ public class Node {
 	}
 
 	public Type getType() {
-		return type;
+		return data.getType();
 	}
 
-	public PlanData getData(){
+	public DetailPlan getData(){
 		return data;
 	}
 
@@ -85,7 +82,7 @@ public class Node {
 
 	}
 	public void addChild(Node node) {
-		if(node.getNaturalKey() == null && type != Type.P) {
+		if(node.getNaturalKey() == null && getType() != Type.P) {
 			node.setKey(String.valueOf((char) (this.children.size() + 65)));
 
 		}

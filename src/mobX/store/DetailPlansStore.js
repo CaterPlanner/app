@@ -1,54 +1,103 @@
-import {observable, action} from 'mobx';
-import CaterPlannerDetailPlanTree from '../../util/CaterPlannerDetailPlanTree'
+import {observable, action, computed} from 'mobx';
+import CaterPlannerDetailPlanTree from '../../native/CaterPlannerDetailPlanTree'
 
 export default class DetailPlanStore{
 
     @observable detailPlans;
+    @observable activeParentKey;
+    @observable activeShowKey;
+
+    @observable topViewData;
+    @observable bottomViewData;
 
     constructor(){
-        this.reset();
+        this.start();
     }
 
-    @action reset(){
-        this.detailPlans = new Map()
-        CaterPlannerDetailPlanTree.create()
+    @action start(){
+        CaterPlannerDetailPlanTree.create();
+        this.activeParentKey = null;
+        this.activeShowKey = null;
     }
-
+    
     @action insertDetailPlan(parentKey, detailPlan){
-        CaterPlannerDetailPlanTree.insert(
-            parentKey,
-            {
-                key: null,
-                type: detailPlan.type,
-                isClear: false
-            },
-            (key) => {
-                detailPlan.key = key
-                this.detailPlans.set(key, detailPlan);
-            },
-            (msg) => {console.log(msg)}
-        )
+
+        CaterPlannerDetailPlanTree.insert(parentKey, detailPlan)
+        .then((key) => {
+            this.detailPlans.key = key;
+            this.detailPlans = [
+                ...this.detailPlans,
+                detailPlan
+            ]
+            this._updateViewDatas();
+        }) 
+        .error((msg) => {
+           console.log(msg);
+        })
     }
 
-    @action removeDetailPlan(key){
-        CaterPlannerDetailPlanTree.delete(
-            key,
-            (msg) => {console.log(msg)}
-        )
+    @action modifyDetailPlan(key, copy){
+        CaterPlannerDetailPlanTree.modify(key, copy)
+        .error((msg) => {
+            console.log(msg);
+        })
     }
 
-    @action getDetailPlan(key){
-        return this.detailPlans.get(key)
+    @action deleteDetailPlan(key){
+
+        CaterPlannerDetailPlanTree.delete(key)
+        .then((data) => {
+            this.detailPlans = data;
+            this._updateViewDatas();
+        })
+        .error((msg) => {
+            console.log(msg);
+        })
+
     }
 
-    @action getChildren(key){
-        return null;
+    _updateViewDatas(){
+        CaterPlannerDetailPlanTree.mapTopViewData(this.activeParentKey)
+        .then((data) => {
+            this.topViewData = data;
+        });
+        CaterPlannerDetailPlanTree.mapBottomViewData(this.activeParentKey)
+        .then((data) => {
+            this.bottomViewData = data;
+        })
     }
 
-    @action build(detailPlans){
-        CaterPlannerTree.build(
-            detailPlans,
-            (msg) => {console.log(msg)}
-        )        
-    }    
+    @action buildTree(detailPlans){
+        
+        CaterPlannerDetailPlanTree.build(detailPlans)
+        .then(() => {
+            this.detailPlans = detailPlans;
+            this._updateViewDatas();
+        })
+        .error((msg) => {
+            console.log(msg);
+        })
+
+    }
+
+    @action changeParentKey(parentKey){
+        this.activeParentKey = parentKey;
+    }
+
+    @action changeActiveShowKey(showKey){
+        this.activeShowKey = showKey;
+    }
+
+    get currentbottomViewData() {
+        return this.currentbottomViewData.brotherGroups[this.currentTopViewData.path[this.activeShowKey]];
+    }
+
+    get currentTopViewData(){
+        return this.topViewData;
+    }
+
+    getDetailPlan(key){
+        return this.detailPlans.get(key);
+    }
+
 }
