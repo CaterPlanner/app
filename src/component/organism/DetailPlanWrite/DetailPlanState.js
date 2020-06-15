@@ -10,7 +10,7 @@ const HEIGHT_INTERVAL = 200;
 
 const DetailPlanState = observer(() => {
     const {detailPlanStore} = useStores();
-    const data = detailPlanStore.levelArrayByActiveParent;
+    const data = detailPlanStore.currentTopViewData;
     return(
         <ScrollView horizontal={true} style={{flex:1}}>
             {
@@ -23,7 +23,7 @@ const DetailPlanState = observer(() => {
                                     return (
                                         <View style={{position :'relative', top: element.pos * WIDTH_INTERVAL}}>
                                             <PlanIcon text={detailPlan.name} color={detailPlan.color} 
-                                            onClick={() => detailPlanStore.changeActiveShowKey()}/>    
+                                            onClick={() => detailPlanStore.changeActiveShowKey(detailPlan.key)}/>    
                                         </View>
                                     )
                                 })

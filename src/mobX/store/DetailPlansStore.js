@@ -3,7 +3,6 @@ import CaterPlannerDetailPlanTree from '../../native/CaterPlannerDetailPlanTree'
 
 export default class DetailPlanStore{
 
-    @observable detailPlans;
     @observable activeParentKey;
     @observable activeShowKey;
 
@@ -23,12 +22,7 @@ export default class DetailPlanStore{
     @action insertDetailPlan(parentKey, detailPlan){
 
         CaterPlannerDetailPlanTree.insert(parentKey, detailPlan)
-        .then((key) => {
-            this.detailPlans.key = key;
-            this.detailPlans = [
-                ...this.detailPlans,
-                detailPlan
-            ]
+        .then(() => {
             this._updateViewDatas();
         }) 
         .error((msg) => {
@@ -46,8 +40,7 @@ export default class DetailPlanStore{
     @action deleteDetailPlan(key){
 
         CaterPlannerDetailPlanTree.delete(key)
-        .then((data) => {
-            this.detailPlans = data;
+        .then(() => {
             this._updateViewDatas();
         })
         .error((msg) => {
@@ -89,15 +82,15 @@ export default class DetailPlanStore{
     }
 
     get currentbottomViewData() {
-        return this.currentbottomViewData.brotherGroups[this.currentTopViewData.path[this.activeShowKey]];
+        return this.bottomViewData.brotherGroups[this.bottomViewData.path[this.activeShowKey]];
     }
 
     get currentTopViewData(){
         return this.topViewData;
     }
 
-    getDetailPlan(key){
-        return this.detailPlans.get(key);
+    async getDetailPlan(key){
+        return await CaterPlannerDetailPlanTree.get(key);
     }
 
 }

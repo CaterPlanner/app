@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, Text , View} from 'react-native'
 
-export default function DetailPlanIcon({name, color}){
+export default function DetailPlanIcon({name, color, width, height}){
     return(
         <TouchableOpacity>
-            <View style={[styles.button, {backgroundColor : color}]}>
+            <View style={[styles.button, {backgroundColor : color, width: width, height : height}]}>
                 <Text style={styles.buttonText}>{name}</Text>
             </View>
         </TouchableOpacity>
