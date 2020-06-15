@@ -3,14 +3,17 @@ import {View, Button, StyleSheet} from 'react-native';
 import DetailPlanIcon from '../../component/atom/button/DetailPlanBlock'
 
 
-export default function DetailPlanBar(){
+const WIDTH = 200;
+const HEIGHT = 400;
+
+export default function DetailPlanBar({detailPlan, nextClick}){
     return(
         <View>
-            <Button title="<"/>
             <View style={{position: 'absolute'}}>
-                <Button title="modify"/>
+                {detailPlan.successonHead && 
+                    <Button title="modify" onClick={() => nextClick(detailPlan.key)}/>}
             </View>
-            <DetailPlanIcon/>
+            <DetailPlanIcon name={detailPlan.name} color={detailPlan.color} width={WIDTH} height={HEIGHT}/>
             <Button title=">"/>
         </View>
     )
