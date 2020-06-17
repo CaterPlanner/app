@@ -1,9 +1,9 @@
 import MainGoalStore from './MainGoalStore'
-import DetailPlansStore from './DetailPlansStore'
+import DetailPlanStore from './DetailPlanStore'
 
 export default class RootStore {
     constructor(){
         this.mainGoal = new MainGoalStore(this);
-        this.detailPlanStore = new DetailPlansStore(this);
+        this.detailPlanStore = new DetailPlanStore(this);
     }
 }

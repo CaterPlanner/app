@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import 'mobx-react-lite/batchingForReactNative'
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigation from './src/component/page/navigation/AppNavigation';

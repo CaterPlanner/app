@@ -23,12 +23,21 @@ public class MPOrderRelationTree {
 		Arrays.sort(initData, new Comparator<DetailPlan>() {
 			@Override
 			public int compare(DetailPlan o1, DetailPlan o2) {
-				return (o1.getKey().length() - o2.getKey().length());
+				return o1.getKey().length() == o2.getKey().length() ?
+						o1.getKey().charAt(o1.getKey().length() - 1) - o2.getKey().charAt(o2.getKey().length() - 1) :
+						o1.getKey().length() - o2.getKey().length();
 			}
 		});
 
 		for(DetailPlan plan : initData){
+			System.out.println(plan.getKey());
+		}
+		
+		System.out.println(initData.length);
+
+		for(DetailPlan plan : initData){
 			String key = plan.getKey();
+			System.out.println(key + "::");
 			Node node = new Node(plan);
 			insert(NodeUtil.getConsturctorKey(key), node);
 		}
@@ -70,6 +79,8 @@ public class MPOrderRelationTree {
 					nodes = next.getChildren();
 				}
 
+				System.out.println("nodes: " + nodes.length);
+
 				if(nodes.length < index + 1) {
 					next = null;
 					break;
@@ -87,6 +98,7 @@ public class MPOrderRelationTree {
 		if(node.getConstructor() != null)
 			throw new Exception("Must be a new node.");
 
+		System.out.println("KEY : " + key + " new Node key : " + node);
 		Node parent = select(key);
 
 		if(parent == null)

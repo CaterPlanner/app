@@ -95,6 +95,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
             promise.resolve(null);
         }catch(Exception e){
             promise.reject("TREE ERROR" ,e);
+            e.printStackTrace();
         }
     }
 

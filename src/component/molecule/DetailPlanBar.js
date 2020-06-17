@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Button, StyleSheet} from 'react-native';
-import DetailPlanIcon from '../../component/atom/button/DetailPlanBlock'
+import DetailPlanIcon from '../../component/atom/button/DetailPlanIcon'
 
 
 const WIDTH = 200;

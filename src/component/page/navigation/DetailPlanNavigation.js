@@ -9,8 +9,8 @@ const Stack = createStackNavigator();
 
 const DetailPlanNavigation = () => {
     return(
-        <Stack.Navigator initalRouteName="DetailPlanWriteBoard" screenOptions={{headerShown: false}}>
-            <Stack.Screen name="DetailPlanWriteBoard" component={DetailPlanWriteBoard} />
+        <Stack.Navigator initalRouteName="PlanInsert" screenOptions={{headerShown: false}}>
+              <Stack.Screen name="DetailPlanWriteBoard" component={DetailPlanWriteBoard} />
             <Stack.Screen name="PlanInsert" component={PlanInsert} />
         </Stack.Navigator>
     )
