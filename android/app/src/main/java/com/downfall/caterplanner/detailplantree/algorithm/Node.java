@@ -26,8 +26,6 @@ public class Node {
 			this.key = data.getKey().length() == 1 ? data.getKey() : data.getKey().substring(data.getKey().length() -
 					(data.getKey().charAt(data.getKey().length() - 2) == ':' ? 2 : 1));
 		}
-
-		this.data.setKey(getKey());
 	}
 
 	public String getKey() {

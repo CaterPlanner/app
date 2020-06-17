@@ -1,6 +1,8 @@
 import {observable, action, computed} from 'mobx';
 import CaterPlannerDetailPlanTree from '../../native/CaterPlannerDetailPlanTree'
+import {autobind} from 'core-decorators';
 
+@autobind
 export default class DetailPlanStore{
 
     @observable activeParentKey;
@@ -9,14 +11,14 @@ export default class DetailPlanStore{
     @observable topViewData;
     @observable bottomViewData;
 
-    constructor(){
-        this.start();
-    }
-
-    @action start(){
-        CaterPlannerDetailPlanTree.create();
+    _start(){
         this.activeParentKey = null;
         this.activeShowKey = null;
+    }
+
+    @action async create(){
+        this._start();
+        await CaterPlannerDetailPlanTree.create();
     }
     
     @action insertDetailPlan(parentKey, detailPlan){
@@ -61,7 +63,7 @@ export default class DetailPlanStore{
     }
 
     @action buildTree(detailPlans){
-        
+        this._start();
         CaterPlannerDetailPlanTree.build(detailPlans)
         .then(() => {
             this.detailPlans = detailPlans;
