@@ -32,7 +32,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void get(String key, Promise promise){
+    public void get(Integer key, Promise promise){
         try{
             promise.resolve(service.get(key));
         }catch (Exception e){
@@ -50,7 +50,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void insert(String parentKey, ReadableMap data, Promise promise) {
+    public void insert(Integer parentKey, ReadableMap data, Promise promise) {
         try {
             service.insert(parentKey, data);
             promise.resolve(null);
@@ -60,7 +60,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void mapTopViewData(String activeParentKey, Promise promise){
+    public void mapTopViewData(Integer activeParentKey, Promise promise){
         try{
             promise.resolve(service.mapTopViewData(activeParentKey));
         }catch (Exception e){
@@ -69,7 +69,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void mapBottomViewData(String activeParentKey, Promise promise){
+    public void mapBottomViewData(Integer activeParentKey, Promise promise){
         try{
             promise.resolve(service.mapBottomViewData(activeParentKey));
         }catch(Exception e){
@@ -78,7 +78,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void modify(String key, ReadableMap param, Promise promise){
+    public void modify(Integer key, ReadableMap param, Promise promise){
         try{
             service.modify(key, param);
             promise.resolve(null);
@@ -109,7 +109,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void delete(String key, Promise promise){
+    public void delete(Integer key, Promise promise){
         try {
             service.delete(key);
             promise.resolve(null);
@@ -119,7 +119,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void successor(String previousKey, ReadableMap data, Promise promise){
+    public void successor(Integer previousKey, ReadableMap data, Promise promise){
         try {
             service.successor(previousKey, data);
             promise.resolve(null);

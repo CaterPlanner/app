@@ -1,30 +1,25 @@
 package com.downfall.caterplanner.common;
 
 import com.downfall.caterplanner.common.DetailPlan;
+import com.downfall.caterplanner.detailplantree.algorithm.Node;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Schedule {
     private DetailPlan data;
-    private List<DetailPlan> previous;
+    private List<Node> previous;
 
-    public Schedule(DetailPlan data) {
+    public Schedule(DetailPlan data, List<Node> previous) {
         this.data = data;
-        this.previous = new ArrayList<DetailPlan>();
-    }
-
-    public void addPrevious(DetailPlan data){
-        previous.add(data);
+        this.previous = previous;
     }
 
     public DetailPlan getData() {
         return data;
     }
 
-    public List<DetailPlan> getPrevious() {
+    public List<Node> getPrevious() {
         return previous;
     }
-
-
 }

@@ -1,7 +1,6 @@
 package com.downfall.caterplanner.detailplantree.processor;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
-import com.downfall.caterplanner.common.DetailPlan;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
@@ -11,18 +10,16 @@ import java.util.List;
 import java.util.Stack;
 
 
-public class TopViewDataMaker implements WritableArrayMaker {
-
-
+public class TopViewDataMaker implements WritableArrayMaker<Node> {
 
     @Override
     public WritableArray make(Node parent){
 
         class Position{
-            String key;
+            int key;
             int pos;
 
-            public Position(String key, int pos){
+            public Position(int key, int pos){
                 this.key = key;
                 this.pos = pos;
             }
@@ -51,7 +48,7 @@ public class TopViewDataMaker implements WritableArrayMaker {
             Node[] successors = null;
 
             if(element != parent) {
-                level = (element.getKey().length() + 1) / 2;
+                level = getLevel(element, parent);
                 if (level - 1 >= levelArray.size())
                     levelArray.add(new SucessorLevel(level, 0));
 
@@ -83,7 +80,7 @@ public class TopViewDataMaker implements WritableArrayMaker {
             WritableArray elementArray = Arguments.createArray();
             for(Position pos : level.elements){
                 WritableMap posMap = Arguments.createMap();
-                posMap.putString("key", pos.key);
+                posMap.putString("key", String.valueOf(pos.key));
                 posMap.putInt("pos", pos.pos);
                 elementArray.pushMap(posMap);
             }
@@ -91,6 +88,15 @@ public class TopViewDataMaker implements WritableArrayMaker {
         }
 
         return result;
+    }
+
+    private int getLevel(Node element, Node parent) {
+        int level = 0;
+        Node constructor = null;
+        while((constructor = element.getConstructor()) != parent){
+            level++;
+        }
+        return level;
     }
 
 }

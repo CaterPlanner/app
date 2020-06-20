@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class BottomViewDataMaker implements WritableMapMaker {
+public class BottomViewDataMaker implements WritableMapMaker<Node> {
 
     @Override
     public WritableMap make(Node parent) {
 
         WritableMap result = Arguments.createMap();
-        List<Pair<String, Integer>> keyIndexList = new ArrayList<>();
+        List<Pair<Integer, Integer>> keyIndexList = new ArrayList<>();
 
         Stack<Node> stack = new Stack<>();
         stack.push(parent);
@@ -32,8 +32,8 @@ public class BottomViewDataMaker implements WritableMapMaker {
             for(Node child : element.getChildren()){
                 WritableMap brother = Arguments.createMap();
 
-                brother.putString("key", child.getKey());
-                brother.putString("successorHead", child.getSuccessors().length != 0 ? child.getSuccessors()[0].getKey() : null);
+                brother.putString("key", String.valueOf(child.getKey()));
+                brother.putString("successorHead", String.valueOf(child.getSuccessors().length != 0 ? child.getSuccessors()[0].getKey() : null));
 
                 keyIndexList.add(new Pair<>(child.getKey(), currentIndex));
                 brotherGroup.pushMap(brother);
@@ -47,8 +47,8 @@ public class BottomViewDataMaker implements WritableMapMaker {
 
         WritableMap pathMap = Arguments.createMap();
 
-        for(Pair<String, Integer> pair : keyIndexList){
-            pathMap.putString(pair.getKey(), String.valueOf(pair.getValue()));
+        for(Pair<Integer, Integer> pair : keyIndexList){
+            pathMap.putString(String.valueOf(pair.getKey()), String.valueOf(pair.getValue()));
         }
 
         result.putMap("path", pathMap);
