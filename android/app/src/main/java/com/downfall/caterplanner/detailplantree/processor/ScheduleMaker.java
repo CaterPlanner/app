@@ -1,45 +1,38 @@
 package com.downfall.caterplanner.detailplantree.processor;
 
 
-import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.common.Type;
 import com.downfall.caterplanner.common.DetailPlan;
 import com.downfall.caterplanner.common.Schedule;
+import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
-public class ScheduleMaker implements WritableArrayMaker {
+public class ScheduleMaker implements WritableArrayMaker<Node[]>{
 
     @Override
-    public WritableArray make(Node root) {
+    public WritableArray make(Node[] data) {
 
-        Node[] pnodes = NodeSearcher.dfs(root, node -> node.getType() == Type.P,
-                (stack, element) -> {
-                    for(Node child : element.getChildren()){
-                        if(!child.getData().isEnd())
-                            stack.push(child);
-                    }
-                    for (Node next : element.getSuccessors()){
-                        stack.push(next);
-                    }
-                });
+        Schedule[] schedules = new Schedule[data.length];
 
-        Schedule[] schedules = new Schedule[pnodes.length];
+        for(int i = 0; i < schedules.length; i++){
+            Node current = data[i];
+            schedules[i] = new Schedule(
+                    current.getData(),
+                    NodeSearcher.dfs(current , element -> element.getType() == Type.P && element != current,
+                            (stack, element) -> {
+                                for(Node child : element.getChildren()) {
+                                    if(!child.getData().isEnd())
+                                        stack.add(child);
+                                }
+                                for(Node successor : element.getSuccessors()) {
+                                    stack.add(successor);
+                                }
+                            })
+            );
 
-        for(int i = 0; i < schedules.length; i++)
-            schedules[i] = new Schedule(pnodes[i].getData());
-
-
-        for(int i = 0; i < pnodes.length; i++) {
-            for(int j = 0; j < pnodes.length; j++) {
-                if(pnodes[i] == pnodes[j])
-                    continue;
-                if(pnodes[i].isSuccessor(pnodes[j])) {
-                    schedules[j].addPrevious(pnodes[i].getData());
-                }
-            }
         }
 
         WritableArray result = Arguments.createArray();
@@ -53,9 +46,9 @@ public class ScheduleMaker implements WritableArrayMaker {
         WritableMap map = Arguments.createMap();
         putPlanData(map, schedule.getData());
         WritableArray predecessorList = Arguments.createArray();
-        for(DetailPlan data : schedule.getPrevious()){
+        for(Node previous : schedule.getPrevious()){
             WritableMap previousMap = Arguments.createMap();
-            putPlanData(previousMap, data);
+            putPlanData(previousMap, previous.getData());
             predecessorList.pushMap(previousMap);
         }
         map.putArray("predecessors", predecessorList);
@@ -64,7 +57,7 @@ public class ScheduleMaker implements WritableArrayMaker {
     }
 
     private void putPlanData(WritableMap map , DetailPlan data){
-        map.putString("key", data.getKey());
+        map.putString("key", String.valueOf(data.getKey()));
         map.putString("type", data.getType().name());
         map.putBoolean("isEnd", data.isEnd());
     }

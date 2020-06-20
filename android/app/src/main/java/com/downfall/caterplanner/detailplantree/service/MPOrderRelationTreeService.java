@@ -1,14 +1,13 @@
 package com.downfall.caterplanner.detailplantree.service;
 
 
+import com.downfall.caterplanner.common.DetailPlan;
 import com.downfall.caterplanner.detailplantree.algorithm.MPOrderRelationTree;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
-import com.downfall.caterplanner.common.DetailPlan;
 import com.downfall.caterplanner.detailplantree.processor.BottomViewDataMaker;
 import com.downfall.caterplanner.detailplantree.processor.EntryDataMaker;
 import com.downfall.caterplanner.detailplantree.processor.ScheduleMaker;
 import com.downfall.caterplanner.detailplantree.processor.TopViewDataMaker;
-import com.downfall.caterplanner.detailplantree.util.NodeUtil;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
@@ -25,7 +24,7 @@ public class MPOrderRelationTreeService implements CaterPlannerDetailPlanTreeSer
     }
 
     @Override
-    public WritableMap get(String key) throws Exception {
+    public WritableMap get(int key) throws Exception {
         return DetailPlan.parseReadableMap(tree.select(key).getData());
     }
 
@@ -37,14 +36,14 @@ public class MPOrderRelationTreeService implements CaterPlannerDetailPlanTreeSer
     }
 
     @Override
-    public void insert(String parentKey, ReadableMap data) throws Exception {
+    public void insert(int parentKey, ReadableMap data) throws Exception {
         if(tree == null)
             throw new Exception("Please create a tree first.");
        tree.insert(parentKey, new Node(DetailPlan.valueOf(data)));
     }
 
     @Override
-    public WritableMap mapBottomViewData(String activeParentKey) throws Exception{
+    public WritableMap mapBottomViewData(int activeParentKey) throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
         Node parent = tree.select(activeParentKey);
@@ -54,13 +53,13 @@ public class MPOrderRelationTreeService implements CaterPlannerDetailPlanTreeSer
     }
 
     @Override
-    public WritableArray mapTopViewData(String activeParentKey) throws Exception{
+    public WritableArray mapTopViewData(int activeParentKey) throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
-        Node constructor = tree.select(NodeUtil.getConsturctorKey(activeParentKey));
-        if(constructor == null)
+        Node parent = tree.select(activeParentKey);
+        if(parent == null)
             throw new Exception("Node does not exist.");
-        return new TopViewDataMaker().make(constructor);
+        return new TopViewDataMaker().make(parent);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class MPOrderRelationTreeService implements CaterPlannerDetailPlanTreeSer
     }
 
     @Override
-    public void delete(String key) throws Exception{
+    public void delete(int key) throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
         tree.delete(key);
@@ -85,18 +84,18 @@ public class MPOrderRelationTreeService implements CaterPlannerDetailPlanTreeSer
     public WritableArray schedules() throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
-        return new ScheduleMaker().make(tree.getRoot());
+        return new ScheduleMaker().make(tree.getPNodes());
     }
 
     @Override
-    public void successor(String previousKey, ReadableMap data) throws Exception{
+    public void successor(int previousKey, ReadableMap data) throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
-        tree.next(previousKey, new Node(DetailPlan.valueOf(data)));
+        tree.successor(previousKey, new Node(DetailPlan.valueOf(data)));
     }
 
     @Override
-    public void modify(String key, ReadableMap param) throws Exception{
+    public void modify(int key, ReadableMap param) throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
         Node node = tree.select(key);

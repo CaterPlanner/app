@@ -4,10 +4,10 @@ import com.downfall.caterplanner.common.DetailPlan;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.bridge.WritableMap;
 
-public class EntryDataMaker{
+public class EntryDataMaker implements WritableArrayMaker<Node[]>{
 
+    @Override
     public WritableArray make(Node[] nodes) throws Exception{
         WritableArray result = Arguments.createArray();
         for(Node node : nodes) {

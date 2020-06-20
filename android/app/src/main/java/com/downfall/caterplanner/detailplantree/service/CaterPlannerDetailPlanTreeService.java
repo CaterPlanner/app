@@ -10,23 +10,23 @@ public interface CaterPlannerDetailPlanTreeService {
 
    void create();
 
-   WritableMap get(String key) throws Exception;
+   WritableMap get(int key) throws Exception;
 
-   void insert(String parentKey, ReadableMap data) throws Exception;
+   void insert(int parentKey, ReadableMap data) throws Exception;
 
-   WritableMap mapBottomViewData(String activeParentKey) throws Exception;
+   WritableMap mapBottomViewData(int activeParentKey) throws Exception;
 
-   WritableArray mapTopViewData(String activeParentKey) throws Exception;
+   WritableArray mapTopViewData(int activeParentKey) throws Exception;
 
    void build(ReadableArray param) throws Exception;
 
-   void delete(String key) throws Exception;
+   void delete(int key) throws Exception;
 
    WritableArray schedules() throws Exception;
 
-   void successor(String previousKey, ReadableMap data) throws Exception;
+   void successor(int previousKey, ReadableMap data) throws Exception;
 
-   void modify(String key, ReadableMap param) throws Exception;
+   void modify(int key, ReadableMap param) throws Exception;
 
    WritableArray entry() throws Exception;
 }

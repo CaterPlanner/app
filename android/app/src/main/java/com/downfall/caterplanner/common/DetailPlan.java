@@ -9,7 +9,9 @@ import java.time.format.DateTimeFormatter;
 
 public class DetailPlan {
 
-	private String key;
+	private int key;
+	private int constructorKey;
+	private int constructorType; //0 : parent , 1: presuccssor
 	private String name;
 	private Type type; //'M' , 'P'
 	private LocalDate startDate;
@@ -20,10 +22,12 @@ public class DetailPlan {
 
 	public DetailPlan(){
 		this.stat = 3;
-	}
+	} //Create ROOT
 
-	public DetailPlan(String key, String name, Type type, LocalDate startDate, LocalDate endDate, String color, String cycle, int stat) {
+	public DetailPlan(int key, int constructorKey, int constructorType, String name, Type type, LocalDate startDate, LocalDate endDate, String color, String cycle, int stat) {
 		this.key = key;
+		this.constructorKey = constructorKey;
+		this.constructorType = constructorType;
 		this.name = name;
 		this.type = type;
 		this.startDate = startDate;
@@ -33,12 +37,20 @@ public class DetailPlan {
 		this.stat = stat;
 	}
 
-	public String getKey() {
+	public int getKey() {
 		return key;
 	}
 
-	public void setKey(String key) {
+	public void setKey(int key) {
 		this.key = key;
+	}
+
+	public int getConstructorType() {
+		return constructorType;
+	}
+
+	public int getConstructorKey() {
+		return constructorKey;
 	}
 
 	public String getName() {
@@ -121,7 +133,9 @@ public class DetailPlan {
 			throw new Exception("DetailPlan:stat is not valid");
 
 		return new DetailPlan(
-				data.getString("key"),
+				data.getInt("key"),
+				data.getInt("constructorKey"),
+				data.getInt("constructorType"),
 				data.getString("name"),
 				Type.valueOf(type),
 				LocalDate.parse(data.getString("startDate"), DateTimeFormatter.ISO_DATE),
@@ -133,7 +147,9 @@ public class DetailPlan {
 
 	public static WritableMap parseReadableMap(DetailPlan plan) throws Exception{
 		WritableMap detailPlanMap = Arguments.createMap();
-		detailPlanMap.putString("key", plan.getKey());
+		detailPlanMap.putString("key", String.valueOf(plan.getKey()));
+		detailPlanMap.putString("constructorKey", String.valueOf(plan.getConstructorKey()));
+		detailPlanMap.putString("constructorType", String.valueOf(plan.getConstructorType()));
 		detailPlanMap.putString("name", plan.getName());
 		detailPlanMap.putString("type", plan.getType().name());
 		detailPlanMap.putString("startDate", plan.getStartDate().toString());
