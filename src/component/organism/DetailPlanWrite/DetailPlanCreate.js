@@ -6,14 +6,15 @@ import DetailPlanBar from '../../molecule/DetailPlanBar';
 
 const DetailPlanCreate = observer(() => {
 
-    const {detailPlanStroe} = useStores();
-    const data = detailPlanStroe.currentbottomViewData;
+    const {detailPlanStore} = useStores();
+    const data = detailPlanStore.currentbottomViewData;
 
     return (
         <ScrollView>
             {
-                data.map((detailPlan) => {
-                    return <DetailPlanBar detailPlan={detailPlan} nextClick={detailPlanStroe.changeActiveShowKey} />
+                data.map((element) => {
+                    const detailPlan = detailPlanStore.getDetailPlan(element.key);
+                    return <DetailPlanBar detailPlan={detailPlan} successorHead={element.successorHead} nextClick={detailPlanStore.changeActiveShowKey} />
                 })
             }
         </ScrollView>

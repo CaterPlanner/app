@@ -13,12 +13,12 @@ const DetailPlanState = observer(() => {
     const data = detailPlanStore.currentTopViewData;
     return(
         <ScrollView horizontal={true} style={{flex:1}}>
-            {
-                data.map((level, index) => {
+            { 
+                data.map((levelObj) => {
                     return(
-                        <View style={{position :'relative', left: index * WIDTH_INTERVAL}}>
+                        <View style={{position :'relative', left: levelObj.level * WIDTH_INTERVAL}}>
                             {
-                                level.map((element) => {
+                                levelObj.elements.map((element) => {
                                     let detailPlan = detailPlanStore.getDetailPlan(element.key);
                                     return (
                                         <View style={{position :'relative', top: element.pos * WIDTH_INTERVAL}}>

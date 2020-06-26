@@ -344,30 +344,20 @@ export default class DetailPlanWriteBoard extends Component{
         super(props);
 
         this.detailPlanStore = this.props.detailPlanStore
-        //여기다 하면 2번실행됨
-
-    }
-
-    componentDidMount(){
         this.detailPlanStore.buildTree(TMP_DATA);
+
     }
-    
  
     render(){
-        // console.log(this.detailPlanStore.currentbottomViewData)
-        // console.log(this.detailPlanStore.currentTopViewData)
         return(
-            <View>
-
+            <View style={{flex:1}}>
+                <View style={styles.planStateArea}>
+                    <DetailPlanState/>
+                </View>
+                <View style={styles.planCreateArea}>
+                    <DetailPlanCreate/>
+                </View>
             </View>
-            // <View style={{flex:1}}>
-            //     <View style={styles.planStateArea}>
-            //         <DetailPlanState/>
-            //     </View>
-            //     <View style={styles.planCreateArea}>
-            //         <DetailPlanCreate/>
-            //     </View>
-            // </View>
         );
     }
 }

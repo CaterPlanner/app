@@ -13,7 +13,7 @@ export default class DetailPlanStore{
 
     _start(){
         this.activeParentKey = 0;
-        this.activeShowKey = 0;
+        this.activeShowKey = 1;
     }
 
     @autobind
@@ -56,31 +56,16 @@ export default class DetailPlanStore{
     }
 
     _updateViewData(){
-        CaterPlannerDetailPlanTree.mapTopViewData(this.activeParentKey)
-        .then((data) => {
-            console.log(data);
-            this.topViewData = data;
-        });
+        this.topViewData = CaterPlannerDetailPlanTree.mapTopViewData(this.activeParentKey);
+        this.bottomViewData = CaterPlannerDetailPlanTree.mapBottomViewData(this.activeParentKey);
 
-        CaterPlannerDetailPlanTree.mapBottomViewData(this.activeParentKey)
-        .then((data) => {
-            console.log(data);
-            this.bottomViewData = data;
-        })
+
     }
 
     @action buildTree(detailPlans){
-
         this._start();
-
         CaterPlannerDetailPlanTree.build(detailPlans)
-        .then(() => {
-            this._updateViewData();
-        })
-        .catch((error) => {
-            console.log(error.message);
-        })
-
+        this._updateViewData();
     }
 
     @action changeParentKey(parentKey){
@@ -99,8 +84,8 @@ export default class DetailPlanStore{
         return this.topViewData;
     }
 
-    async getDetailPlan(key){
-        return await CaterPlannerDetailPlanTree.get(key);
+    getDetailPlan(key){
+        return CaterPlannerDetailPlanTree.get(key);
     }
 
 }

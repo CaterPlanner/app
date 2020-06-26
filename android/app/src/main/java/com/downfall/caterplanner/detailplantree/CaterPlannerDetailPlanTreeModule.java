@@ -8,6 +8,8 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 
 
 public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule {
@@ -27,27 +29,29 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
         return "CaterPlannerDetailPlanTree";
     }
 
-    @ReactMethod
+    @ReactMethod(isBlockingSynchronousMethod = true)
     public void create() {
         service.create();
     }
 
-    @ReactMethod
-    public void get(Integer key, Promise promise){
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public WritableMap get(Integer key){
         try{
-            promise.resolve(service.get(key));
+            return service.get(key);
         }catch (Exception e){
-            promise.reject("TREE ERROR", e);
+            e.printStackTrace();
         }
+        return null;
     }
 
-    @ReactMethod
-    public void entry(Promise promise){
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public WritableArray entry(){
         try{
-            promise.resolve(service.entry());
+            return service.entry();
         } catch (Exception e){
-            promise.reject("TREE ERROR", e);
+            e.printStackTrace();
         }
+        return null;
     }
 
     @ReactMethod
@@ -60,22 +64,24 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
         }
     }
 
-    @ReactMethod
-    public void mapTopViewData(Integer activeParentKey, Promise promise){
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public WritableArray mapTopViewData(Integer activeParentKey){
         try{
-            promise.resolve(service.mapTopViewData(activeParentKey));
+            return service.mapTopViewData(activeParentKey);
         }catch (Exception e){
-            promise.reject("TREE ERROR", e);
+           e.printStackTrace();
         }
+        return null;
     }
 
-    @ReactMethod
-    public void mapBottomViewData(Integer activeParentKey, Promise promise){
-        try{
-            promise.resolve(service.mapBottomViewData(activeParentKey));
-        }catch(Exception e){
-            promise.reject("TREE ERROR" , e);
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public WritableMap mapBottomViewData(Integer activeParentKey){
+        try {
+            return service.mapBottomViewData(activeParentKey);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     @ReactMethod
@@ -89,24 +95,23 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
 
-    @ReactMethod
-    public void build(ReadableArray param, Promise promise){
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public void build(ReadableArray param){
         try {
             service.build(param);
-            promise.resolve(null);
         }catch(Exception e){
-            promise.reject("TREE ERROR" ,e);
             e.printStackTrace();
         }
     }
 
-    @ReactMethod
-    public void schedules(Promise promise){
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public WritableArray schedules(){
         try {
-            promise.resolve(service.schedules());
+           return service.schedules();
         } catch (Exception e) {
-            promise.reject("TREE ERROR" ,e);
+            e.printStackTrace();
         }
+        return null;
     }
 
     @ReactMethod
