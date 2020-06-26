@@ -1,35 +1,39 @@
 package com.downfall.caterplanner.detailplantree.algorithm;
 
 import com.downfall.caterplanner.common.DetailPlan;
+import com.downfall.caterplanner.common.Type;
 import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
 
 import java.util.List;
 
-public class MPOrderRelationTree {
+public class MPRelationTree {
 
     private NodeList list;
 
-    public MPOrderRelationTree(){
+    public MPRelationTree(){
         list = new NodeList();
         list.add(new Node(new DetailPlan()));
     }
 
-    public MPOrderRelationTree(DetailPlan[] list) throws Exception {
-        Node[] initData = new Node[list.length + 1]; //root + recieve data
-        initData[0] = new Node(new DetailPlan());
-        //init nodes
-        for(int i = 1; i < initData.length; i++)
-            initData[i] = new Node(list[i - 1]);
+    public MPRelationTree(DetailPlan[] list) throws Exception {
 
-        //make relation
-        for(int i = 1; i < initData.length; i++){
-            int constructorKey = list[i - 1].getConstructorKey();
+        Node[] nodes = new Node[list.length + 1];
+        nodes[0] = Node.createRoot();
 
-            if(list[i - 1].getConstructorType() == 0) initData[constructorKey].addChild(initData[i]);
-            else initData[constructorKey].addSuccessor(initData[i]);
+        for(int i = 1; i < nodes.length; i++)
+            nodes[i] = new Node(list[i - 1]);
+
+        this.list = new NodeList(nodes);
+
+        for(int i = 0; i < list.length; i++){
+            Node node = this.list.get(list[i].getKey());
+
+            if(node.getData().getConstructorRelationType() == 0)
+                this.list.get(node.getData().getConstructorKey()).addChild(node);
+            else
+                this.list.get(node.getData().getConstructorKey()).addSuccessor(node);
+
         }
-
-        this.list = new NodeList(initData);
 
     }
 
@@ -58,9 +62,9 @@ public class MPOrderRelationTree {
 
     public Node delete(int key) throws Exception {
         Node node = list.get(key);
-        this.list.remove(node);
+        this.list.remove(key);
 
-        if(node.getConstructorType() == 0)
+        if(node.getConstructorRelationType() == 0)
             node.getConstructor().removeChild(node);
         else
             node.getConstructor().removeSuccessor(node);
@@ -83,6 +87,6 @@ public class MPOrderRelationTree {
         return this.list.getAll();
     }
 
-    public Node[] getPNodes() {return this.list.getAllPNode();}
+    public Node[] getPNodes() {return this.list.getAll(node -> node.getType() == Type.P);}
 
 }

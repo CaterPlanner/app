@@ -33,10 +33,6 @@ public class NodeSearcher {
         void play(Stack<T> stack, T element);
     }
 
-    @FunctionalInterface
-    public interface IsElementMatch<T> {
-        boolean isMatch(T element);
-    }
 
 }
 

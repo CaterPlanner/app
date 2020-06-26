@@ -40,28 +40,32 @@ public class TopViewDataMaker implements WritableArrayMaker<Node> {
         List<SucessorLevel> levelArray = new ArrayList<>();
 
         Stack<Node> stack = new Stack<>();
-        stack.push(parent);
+
+        Node[] firstChildren = parent.getChildren();
+
+        for(int i = firstChildren.length - 1;  i >= 0; i--){
+            stack.push(firstChildren[i]);
+        }
+
 
         while(!stack.isEmpty()){
             Node element = stack.pop();
-            int level = -1;
             Node[] successors = null;
 
-            if(element != parent) {
-                level = getLevel(element, parent);
-                if (level - 1 >= levelArray.size())
-                    levelArray.add(new SucessorLevel(level, 0));
+            int level = getLevel(element, parent);
+            
+            if (level - 1 >= levelArray.size())
+                levelArray.add(new SucessorLevel(level, 0));
 
-                levelArray.get(level - 1).elements.add(new Position(element.getKey(), levelArray.get(level - 1).floor));
-                int updateFloor = ++levelArray.get(level - 1).floor;
+            levelArray.get(level - 1).elements.add(new Position(element.getKey(), levelArray.get(level - 1).floor));
+            int updateFloor = ++levelArray.get(level - 1).floor;
 
-                for (int i = level - 1; i >= 0; i--)
-                    levelArray.get(i).floor = updateFloor;
+            for (int i = level - 1; i >= 0; i--)
+                levelArray.get(i).floor = updateFloor;
 
-            }
             successors = element.getSuccessors();
 
-            if(successors == null && level != -1){
+            if(successors.length == 0){
                 if(level >= levelArray.size())
                     levelArray.add(new SucessorLevel(level + 1, 0));
                 levelArray.get(level).floor++;
@@ -69,22 +73,27 @@ public class TopViewDataMaker implements WritableArrayMaker<Node> {
                 for(int i = successors.length - 1; i>=0; i--)
                     stack.push(successors[i]);
             }
-
         }
 
         WritableArray result = Arguments.createArray();
 
+
+
         for(SucessorLevel level : levelArray){
+
+            if(level.elements.size() == 0) continue;
+
             WritableMap levelMap = Arguments.createMap();
             levelMap.putInt("level", level.level);
             WritableArray elementArray = Arguments.createArray();
             for(Position pos : level.elements){
                 WritableMap posMap = Arguments.createMap();
-                posMap.putString("key", String.valueOf(pos.key));
+                posMap.putInt("key", pos.key);
                 posMap.putInt("pos", pos.pos);
                 elementArray.pushMap(posMap);
             }
             levelMap.putArray("element", elementArray);
+            result.pushMap(levelMap);
         }
 
         return result;
@@ -92,9 +101,9 @@ public class TopViewDataMaker implements WritableArrayMaker<Node> {
 
     private int getLevel(Node element, Node parent) {
         int level = 0;
-        Node constructor = null;
-        while((constructor = element.getConstructor()) != parent){
+        while(element != parent){
             level++;
+            element = element.getConstructor();
         }
         return level;
     }
