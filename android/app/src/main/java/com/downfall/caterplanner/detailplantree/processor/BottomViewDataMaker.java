@@ -12,6 +12,7 @@ import java.util.Stack;
 
 public class BottomViewDataMaker implements WritableMapMaker<Node> {
 
+    //TODO: 코드중복되는 부분이 있으므로 나중에 청소할것
     @Override
     public WritableMap make(Node parent) {
 
@@ -19,28 +20,49 @@ public class BottomViewDataMaker implements WritableMapMaker<Node> {
         List<Pair<Integer, Integer>> keyIndexList = new ArrayList<>();
 
         Stack<Node> stack = new Stack<>();
-        stack.push(parent);
 
         WritableArray brotherGroups = Arguments.createArray();
 
         int currentIndex = 0;
+
+        WritableArray firstbrotherGroup = Arguments.createArray();
+
+        for(Node child : parent.getChildren()) {
+            WritableMap brother = Arguments.createMap();
+
+            brother.putInt("key", child.getKey());
+            brother.putString("successorHead", String.valueOf(child.getSuccessors().length != 0 ? child.getSuccessors()[0].getKey() : null));
+
+            keyIndexList.add(new Pair<>(child.getKey(), currentIndex));
+            firstbrotherGroup.pushMap(brother);
+
+            stack.push(child);
+        }
+
+        brotherGroups.pushArray(firstbrotherGroup);
+
+        currentIndex++;
+
         while(!stack.isEmpty()){
             Node element = stack.pop();
 
             WritableArray brotherGroup = Arguments.createArray();
 
-            for(Node child : element.getChildren()){
+            for(Node successor : element.getSuccessors()){
                 WritableMap brother = Arguments.createMap();
 
-                brother.putString("key", String.valueOf(child.getKey()));
-                brother.putString("successorHead", String.valueOf(child.getSuccessors().length != 0 ? child.getSuccessors()[0].getKey() : null));
+                brother.putInt("key", successor.getKey());
+                brother.putString("successorHead", String.valueOf(successor.getSuccessors().length != 0 ? successor.getSuccessors()[0].getKey() : null));
 
-                keyIndexList.add(new Pair<>(child.getKey(), currentIndex));
+                keyIndexList.add(new Pair<>(successor.getKey(), currentIndex));
                 brotherGroup.pushMap(brother);
-                stack.push(child);
+                stack.push(successor);
             }
-            brotherGroups.pushArray(brotherGroup);
-            currentIndex++;
+
+            if(brotherGroup.size() != 0) {
+                brotherGroups.pushArray(brotherGroup);
+                currentIndex++;
+            }
         }
 
         result.putArray("brotherGroups", brotherGroups);
@@ -48,7 +70,7 @@ public class BottomViewDataMaker implements WritableMapMaker<Node> {
         WritableMap pathMap = Arguments.createMap();
 
         for(Pair<Integer, Integer> pair : keyIndexList){
-            pathMap.putString(String.valueOf(pair.getKey()), String.valueOf(pair.getValue()));
+            pathMap.putInt(String.valueOf(pair.getKey()), pair.getValue());
         }
 
         result.putMap("path", pathMap);

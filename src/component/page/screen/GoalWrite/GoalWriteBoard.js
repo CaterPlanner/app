@@ -9,9 +9,11 @@ import GoalDetailPlanWrite from './GoalDetailPlanWrite'
 import GoalOtherWrite from './GoalOtherWrite'
 import GoalWriteDone from './GoalWriteDone'
 import PageStateText from '../../../atom/text/PageStateText'
+import { autobind } from 'core-decorators';
 
 const fullWidth = Dimensions.get('window').width;
 
+@autobind
 export default class GoalWriteBoard extends Component{
     constructor(props){
         super(props)
@@ -30,8 +32,6 @@ export default class GoalWriteBoard extends Component{
             ]
         }
 
-        this._next =  this._next.bind(this);
-        this._previous = this._previous.bind(this);
     }
 
     _renderItem({item, index}){

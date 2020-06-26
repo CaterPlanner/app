@@ -1,8 +1,7 @@
 package com.downfall.caterplanner.detailplantree.algorithm;
 
-import com.downfall.caterplanner.common.Type;
-
-import java.util.ArrayList;
+import com.downfall.caterplanner.detailplantree.util.IsElementMatch;
+import java.util.Arrays;
 import java.util.List;
 
 public class NodeList {
@@ -15,27 +14,41 @@ public class NodeList {
         this(10);
     }
 
+    public NodeList(Node[] nodes) {
+        this(nodes.length);
+
+        for(Node node : nodes) {
+            insert(node.getKey(), node);
+        }
+    }
+
     public NodeList(int initCapacity) {
         this.capacity = initCapacity;
         this.size = 0;
         data = new Node[capacity];
     }
 
-    public NodeList(Node[] initData){
-        this.data = initData;
-        this.capacity = data.length;
-        this.size = data.length;
-    }
-
-    private void validIndex(int index) {
-        if (index >= size || index < 0)
-            throw new IndexOutOfBoundsException("Can't find that node.");
-        if (size == 0) {
-            throw new IndexOutOfBoundsException("Array is empty.");
+    private void insert(int index, Node node) {
+        if(index < 0) {
+            throw new IndexOutOfBoundsException("index < 0 <- not allowed as indexes");
+        }else if(index >= capacity) {
+            capacity = index;
+            expansion();
         }
+        data[index] = node;
+        size++;
     }
 
-    private void defragmentation() {
+
+    private void expansion() {
+        capacity = (int) Math.ceil(capacity * 1.5f);
+        Node[] newArray = new Node[capacity];
+        for (int i = 0; i < size; i++)
+            newArray[i] = data[i];
+        data = newArray;
+    }
+
+    public void defragmentation() {
         int pointer = -1;
 
         for (int i = 0; i < data.length; i++) {
@@ -53,24 +66,31 @@ public class NodeList {
     }
 
     public Node get(int index) {
-        validIndex(index);
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Can't find that node.");
+        }
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Array is empty.");
+        }
+
         return data[index];
     }
 
     public void add(Node node) {
         if (size >= capacity) {
-            capacity = (int) (capacity * 1.5f);
-            Node[] newArray = new Node[capacity];
-            for (int i = 0; i < size; i++)
-                newArray[i] = data[i];
-            data = newArray;
+            expansion();
         }
         data[++size - 1] = node;
     }
 
-    public void remove(Node node) {
-        int index = node.getKey();
-        validIndex(index);
+    public void remove(int index) {
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Can't find that node.");
+        }
+        if (size == 0) {
+            throw new IndexOutOfBoundsException("Array is empty.");
+        }
+
         data[index] = null;
         size--;
 
@@ -79,33 +99,30 @@ public class NodeList {
 
     public void removeAll(List<Node> nodes) {
         for (int i = 0; i < nodes.size(); i++)
-            remove(data[nodes.get(i).getKey()]);
+            remove(data[nodes.get(i).getKey()].getKey());
 
         defragmentation();
 
     }
 
     public Node[] getAll() {
+
         Node[] result = new Node[size];
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
             result[i] = data[i];
         return result;
     }
 
-    public Node[] getAllPNode(){
-        List<Node> result = new ArrayList<>();
-        for(Node node : data){
-            if(node.getType() == Type.P)
-                result.add(node);
-        }
-        return result.toArray(new Node[result.size()]);
+    public Node[] getAll(IsElementMatch<Node> filter) {
+        return Arrays.asList(this.data).stream().filter(node -> filter.isMatch(node)).toArray(size -> new Node[size]);
     }
 
-    public int size(){
+    public int size() {
         return size;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return size == 0;
     }
+
 }

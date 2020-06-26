@@ -14,12 +14,11 @@ public class Node{
     private DetailPlan data;
 
     private Node constructor;
-    private int constructorType; //0 : parent 1 : predecessor
 
     public Node(DetailPlan detailPlan) {
         this.data = detailPlan;
-        this.children = new ArrayList<>();
-        this.successors = new ArrayList<>();
+        this.children = new ArrayList<Node>();
+        this.successors = new ArrayList<Node>();
     }
 
     public int getKey() {
@@ -42,12 +41,12 @@ public class Node{
         return constructor;
     }
 
-    public int getConstructorType() {
-        return data.getConstructorType();
+    public int getConstructorRelationType() {
+        return data.getConstructorRelationType();
     }
 
-    public void setConstructorType(int constructorType) {
-        this.constructorType = constructorType;
+    public void setConstructorRelationType(int constructorRelationType) {
+        this.data.setConstructorRelationType(constructorRelationType);
     }
 
     public void setConstructor(Node constructor) {
@@ -68,7 +67,7 @@ public class Node{
 
         this.children.add(node);
         node.setConstructor(this);
-        node.setConstructorType(0);
+        node.setConstructorRelationType(0);
     }
 
     public boolean removeChild(Node node){
@@ -81,10 +80,14 @@ public class Node{
 
         this.successors.add(node);
         node.setConstructor(this);
-        node.setConstructorType(1);
+        node.setConstructorRelationType(1);
     }
 
     public boolean removeSuccessor(Node node){
         return this.successors.remove(node);
+    }
+
+    public static Node createRoot() {
+        return new Node(new DetailPlan());
     }
 }

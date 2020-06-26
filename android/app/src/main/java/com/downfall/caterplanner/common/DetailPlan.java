@@ -11,7 +11,7 @@ public class DetailPlan {
 
 	private int key;
 	private int constructorKey;
-	private int constructorType; //0 : parent , 1: presuccssor
+	private int constructorRelationType; //0 : parent , 1: presuccssor
 	private String name;
 	private Type type; //'M' , 'P'
 	private LocalDate startDate;
@@ -22,12 +22,16 @@ public class DetailPlan {
 
 	public DetailPlan(){
 		this.stat = 3;
+		this.key = 0;
+		this.constructorKey = -1;
+		this.constructorRelationType = -1;
+		this.type = Type.R;
 	} //Create ROOT
 
-	public DetailPlan(int key, int constructorKey, int constructorType, String name, Type type, LocalDate startDate, LocalDate endDate, String color, String cycle, int stat) {
+	public DetailPlan(int key, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, String color, String cycle, int stat) {
 		this.key = key;
 		this.constructorKey = constructorKey;
-		this.constructorType = constructorType;
+		this.constructorRelationType = constructorRelationType;
 		this.name = name;
 		this.type = type;
 		this.startDate = startDate;
@@ -45,8 +49,12 @@ public class DetailPlan {
 		this.key = key;
 	}
 
-	public int getConstructorType() {
-		return constructorType;
+	public int getConstructorRelationType() {
+		return constructorRelationType;
+	}
+
+	public void setConstructorRelationType(int constructorRelationType) {
+		this.constructorRelationType = constructorRelationType;
 	}
 
 	public int getConstructorKey() {
@@ -135,21 +143,21 @@ public class DetailPlan {
 		return new DetailPlan(
 				data.getInt("key"),
 				data.getInt("constructorKey"),
-				data.getInt("constructorType"),
+				data.getInt("constructorRelationType"),
 				data.getString("name"),
 				Type.valueOf(type),
 				LocalDate.parse(data.getString("startDate"), DateTimeFormatter.ISO_DATE),
 				LocalDate.parse(data.getString("endDate"), DateTimeFormatter.ISO_DATE),
 				data.getString("color"),
 				data.getString("cycle"),
-				data.getInt("stat"));
+				stat);
 	}
 
 	public static WritableMap parseReadableMap(DetailPlan plan) throws Exception{
 		WritableMap detailPlanMap = Arguments.createMap();
-		detailPlanMap.putString("key", String.valueOf(plan.getKey()));
-		detailPlanMap.putString("constructorKey", String.valueOf(plan.getConstructorKey()));
-		detailPlanMap.putString("constructorType", String.valueOf(plan.getConstructorType()));
+		detailPlanMap.putInt("key", plan.getKey());
+		detailPlanMap.putInt("constructorKey", plan.getConstructorKey());
+		detailPlanMap.putInt("constructorRelationType", plan.getConstructorRelationType());
 		detailPlanMap.putString("name", plan.getName());
 		detailPlanMap.putString("type", plan.getType().name());
 		detailPlanMap.putString("startDate", plan.getStartDate().toString());

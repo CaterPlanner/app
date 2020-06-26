@@ -17,22 +17,31 @@ public class ScheduleMaker implements WritableArrayMaker<Node[]>{
 
         Schedule[] schedules = new Schedule[data.length];
 
-        for(int i = 0; i < schedules.length; i++){
+        for (int i = 0; i < schedules.length; i++) {
             Node current = data[i];
-            schedules[i] = new Schedule(
-                    current.getData(),
-                    NodeSearcher.dfs(current , element -> element.getType() == Type.P && element != current,
+
+            Node hasPrevConstructor = current;
+            while (hasPrevConstructor.getConstructorRelationType() == 0 && hasPrevConstructor.getConstructor().getType() != Type.R) {
+                hasPrevConstructor = hasPrevConstructor.getConstructor();
+            }
+
+            final Node targetConstructor = hasPrevConstructor.getConstructor();
+
+            schedules[i] = new Schedule(current.getData(),
+                    targetConstructor.getKey() == 0 ? null
+                            : NodeSearcher.dfs(targetConstructor,
+                            element -> element.getType() == Type.P && element != current,
                             (stack, element) -> {
-                                for(Node child : element.getChildren()) {
-                                    if(!child.getData().isEnd())
+                                for (Node child : element.getChildren()) {
+                                    if (!child.getData().isEnd())
                                         stack.add(child);
                                 }
-                                for(Node successor : element.getSuccessors()) {
-                                    stack.add(successor);
+                                if (element != targetConstructor) {
+                                    for (Node successor : element.getSuccessors()) {
+                                        stack.add(successor);
+                                    }
                                 }
-                            })
-            );
-
+                            }));
         }
 
         WritableArray result = Arguments.createArray();
@@ -57,7 +66,7 @@ public class ScheduleMaker implements WritableArrayMaker<Node[]>{
     }
 
     private void putPlanData(WritableMap map , DetailPlan data){
-        map.putString("key", String.valueOf(data.getKey()));
+        map.putInt("key", data.getKey());
         map.putString("type", data.getType().name());
         map.putBoolean("isEnd", data.isEnd());
     }

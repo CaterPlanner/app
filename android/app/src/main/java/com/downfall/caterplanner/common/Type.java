@@ -10,4 +10,8 @@ public enum Type {
 		this.value = value;
 	}
 
+	public String getValue() {
+		return value;
+	}
+
 }

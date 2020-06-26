@@ -2,7 +2,7 @@ package com.downfall.caterplanner.detailplantree.service;
 
 
 import com.downfall.caterplanner.common.DetailPlan;
-import com.downfall.caterplanner.detailplantree.algorithm.MPOrderRelationTree;
+import com.downfall.caterplanner.detailplantree.algorithm.MPRelationTree;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.processor.BottomViewDataMaker;
 import com.downfall.caterplanner.detailplantree.processor.EntryDataMaker;
@@ -14,13 +14,13 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
 
-public class MPOrderRelationTreeService implements CaterPlannerDetailPlanTreeService{
+public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
 
-    private MPOrderRelationTree tree;
+    private MPRelationTree tree;
 
     @Override
     public void create(){
-        tree = new MPOrderRelationTree();
+        tree = new MPRelationTree();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class MPOrderRelationTreeService implements CaterPlannerDetailPlanTreeSer
         for(int i = 0; i < param.size(); i++){
             list[i] = DetailPlan.valueOf(param.getMap(i));
         }
-        tree = new MPOrderRelationTree(list);
+        tree = new MPRelationTree(list);
     }
 
     @Override

@@ -1,4 +1,4 @@
-import {observable, action, computed} from 'mobx';
+import {observable, action} from 'mobx';
 import CaterPlannerDetailPlanTree from '../../native/CaterPlannerDetailPlanTree'
 import {autobind} from 'core-decorators';
 
@@ -12,10 +12,11 @@ export default class DetailPlanStore{
     @observable bottomViewData;
 
     _start(){
-        this.activeParentKey = null;
-        this.activeShowKey = null;
+        this.activeParentKey = 0;
+        this.activeShowKey = 0;
     }
 
+    @autobind
     @action async create(){
         this._start();
         await CaterPlannerDetailPlanTree.create();
@@ -25,52 +26,59 @@ export default class DetailPlanStore{
 
         CaterPlannerDetailPlanTree.insert(parentKey, detailPlan)
         .then(() => {
-            this._updateViewDatas();
+            this._updateViewData();
         }) 
-        .error((msg) => {
-           console.log(msg);
+        .catch((error) => {
+           console.log(error.message);
         })
+
     }
 
     @action modifyDetailPlan(key, copy){
+
         CaterPlannerDetailPlanTree.modify(key, copy)
-        .error((msg) => {
-            console.log(msg);
+        .catch((error) => {
+            console.log(error.message);
         })
+
     }
 
     @action deleteDetailPlan(key){
 
         CaterPlannerDetailPlanTree.delete(key)
         .then(() => {
-            this._updateViewDatas();
+            this._updateViewData();
         })
-        .error((msg) => {
-            console.log(msg);
+        .catch((error) => {
+            console.log(error.message);
         })
 
     }
 
-    _updateViewDatas(){
+    _updateViewData(){
         CaterPlannerDetailPlanTree.mapTopViewData(this.activeParentKey)
         .then((data) => {
+            console.log(data);
             this.topViewData = data;
         });
+
         CaterPlannerDetailPlanTree.mapBottomViewData(this.activeParentKey)
         .then((data) => {
+            console.log(data);
             this.bottomViewData = data;
         })
     }
 
     @action buildTree(detailPlans){
+
         this._start();
+
         CaterPlannerDetailPlanTree.build(detailPlans)
         .then(() => {
-            this.detailPlans = detailPlans;
-            this._updateViewDatas();
+            this._updateViewData();
         })
-        .error((msg) => {
-            console.log(msg);
+        .catch((error) => {
+            console.log(error.message);
         })
 
     }
