@@ -6,11 +6,11 @@ import DetailPlanIcon from '../../component/atom/button/DetailPlanIcon'
 const WIDTH = 200;
 const HEIGHT = 400;
 
-export default function DetailPlanBar({detailPlan, nextClick}){
+export default function DetailPlanBar({detailPlan, successonHead, nextClick}){
     return(
         <View>
             <View style={{position: 'absolute'}}>
-                {detailPlan.successonHead && 
+                {successonHead && 
                     <Button title="modify" onClick={() => nextClick(detailPlan.key)}/>}
             </View>
             <DetailPlanIcon name={detailPlan.name} color={detailPlan.color} width={WIDTH} height={HEIGHT}/>

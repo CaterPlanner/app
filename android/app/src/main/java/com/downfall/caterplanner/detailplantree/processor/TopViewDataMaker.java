@@ -92,7 +92,7 @@ public class TopViewDataMaker implements WritableArrayMaker<Node> {
                 posMap.putInt("pos", pos.pos);
                 elementArray.pushMap(posMap);
             }
-            levelMap.putArray("element", elementArray);
+            levelMap.putArray("elements", elementArray);
             result.pushMap(levelMap);
         }
 
