@@ -11,8 +11,8 @@ const Stack = createStackNavigator();
 
 const AppNavigation = () => {
     return(
-          <Stack.Navigator initalRouteName="MainNavigation">
-            <Stack.Screen name="MainNavigation" component={MainNavigation} />
+          <Stack.Navigator initalRouteName="AppNvg" screenOptions={{headerShown: false}}>
+            <Stack.Screen name="MainNavigation" component={MainNavigation}  />
             <Stack.Screen options={{headerShown:false}} name="CreateNavigation" component={CreateNavigation} />
             <Stack.Screen name="ServerNotification" component={ServerNotification} />
             <Stack.Screen name="Setting" component={Setting} />
