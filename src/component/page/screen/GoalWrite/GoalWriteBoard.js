@@ -55,7 +55,7 @@ export default class GoalWriteBoard extends Component{
         return(
             <View style={{flex:1}}>
                 <View style={styles.topContainer}>
-                    <PageStateText activeIndex={this.state.activeIndex + 1} endIndex={this.state.endIndex}/>
+                    <PageStateText activeIndex={this.state.activeIndex + 1} endIndex={this.state.endIndex} />
                 </View>
                 <View style={styles.viewContainer}>
                     <Carousel
@@ -74,12 +74,12 @@ export default class GoalWriteBoard extends Component{
                 <View style={styles.bottomContainer}>
                     <View>
                     {this.state.activeIndex != 0 &&
-                    <Button title="<" onPress={this._previous}/> 
+                    <Button title="     <    " onPress={this._previous} color="#83D74E"/> 
                     }
                     </View>
                     <View>
                     {this.state.activeIndex + 1 != this.state.endIndex &&
-                    <Button title=">" onPress={this._next}/> 
+                    <Button title="     >    " onPress={this._next} color="#83D74E"/> 
                     }
                     </View>
                 </View>
@@ -90,9 +90,14 @@ export default class GoalWriteBoard extends Component{
 
 const styles = StyleSheet.create({
     topContainer: {
-        flex: 0.8,
+        flex: 0.35,
         alignItems: 'center',
-        backgroundColor: 'blue'
+        backgroundColor: 'white',
+        
+        elevation:5,
+
+        paddingTop:'3%'
+
     },
     viewContainer : {
         flex: 6
@@ -102,6 +107,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: "center",
         justifyContent: 'space-between',
-        backgroundColor: 'red'
+        backgroundColor: 'white'
     },
+
+    indexN:{
+        fontSize : 20,
+    },
+
+
 })

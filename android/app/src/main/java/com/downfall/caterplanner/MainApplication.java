@@ -6,6 +6,8 @@ import android.content.Context;
 import com.downfall.caterplanner.detailplantree.CaterPlannerDetailPlanTreePackage;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.henninghall.date_picker.DatePickerPackage;
+import com.henninghall.date_picker.DatePickerPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;

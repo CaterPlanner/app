@@ -25,7 +25,7 @@ export default class Create extends Component {
             {/*
             이친구는 그냥 샘플 이미지 가져온거임 지워줘야됨 
             */}
-            <Image source={require('../../../../../asset/sample_Image/SampleImage.png')} style={{width:130, height:130, marginTop:'50%'}}></Image>
+            <Image source={require('../../../../../asset/DZC.gif')} style={{width:130, height:130, marginTop:'50%'}}></Image>
 
             </View>
             <View style={style.in_Down}>
@@ -34,11 +34,12 @@ export default class Create extends Component {
              * 이친구들 그냥 Text임 마찬가지
              */}
             <Text style={{fontSize:22, textAlign:'center', marginTop:10, color:'black', }}>
-                화면 확인용 윗부분 텍스트
+                목표를 추가해 볼까요?
             </Text>
-            <Text style={{fontSize:20, textAlign:'center', marginTop:15, color:'black',  }}>
+            <Text style={{fontSize:14, textAlign:'center', marginTop:15, color:'black',  }}>
                 
-                화면 확인용 아랫부분 텍스트 여긴 텍스트가 더 길다야
+            버튼을 누르고 목표를 추가하여 다른 사용자들과 목표를 공유하세요
+
 
             </Text>
 
@@ -61,7 +62,7 @@ export default class Create extends Component {
        
        >
                 <View style={style.Button_sample}>
-                    <Text style={{fontSize:20, textAlign:'center', marginTop:10, color:'white', }}>임시 확인용 버튼 형태 View</Text>
+                    <Text style={{fontSize:25, textAlign:'center', marginTop:3,justifyContent:'center', color:'white', }}>추       가</Text>
                 </View>
         </TouchableOpacity>
             </View>
@@ -86,26 +87,26 @@ const style = StyleSheet.create({
 
     Base_Up : {
         flex : 3,
-        borderWidth:1,
+     //   borderWidth:1,
         width:'100%',
         alignItems:'center',
     },
     
     Base_Down : {
         flex : 1,
-        borderWidth:1,
+     //   borderWidth:1,
         width:'100%',
         alignItems : 'center'
     },
 
     in_Up : {
-        borderWidth : 1,
+     //   borderWidth : 1,
         borderColor: 'red',
         flex:3
     },
 
     in_Down:{
-        borderWidth : 1,
+     //   borderWidth : 1,
         borderColor: 'orange',
         flex:1,
         width:'70%'
@@ -113,8 +114,8 @@ const style = StyleSheet.create({
     
     Button_sample : {
         width: 260,
-        height: 50,
-        backgroundColor : '#55d517',    
+        height: 40,
+        backgroundColor : '#83D74E',    
         borderRadius : 40,
         marginTop:10
     }
