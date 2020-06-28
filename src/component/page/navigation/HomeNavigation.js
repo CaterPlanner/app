@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 
 const HomeNavigation = () => {
     return(
-          <Stack.Navigator initalRouteName="PlanCardView">
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="PlanCardView" component={PlanCardView} />
             <Stack.Screen name="PlanView" component={PlanView} />
         </Stack.Navigator>
