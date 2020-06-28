@@ -31,7 +31,7 @@ const DetailPlanState = observer(() => {
                                                 <View style={{ marginTop: DIFF_INTERVAL * HEIGHT_INTERVAL + DIFF_ICON_HEIGHT_INTERVAL * ICON_HEIGHT,
                                                                 marginBottom : (elementIndex == levelObj.elements.length - 1 ? HEIGHT_INTERVAL : 0) }}>
                                                     <DetailPlanIcon text={detailPlan.name} color={detailPlan.color} width={ICON_WIDTH} height={ICON_HEIGHT}
-                                                        onClick={() => detailPlanStore.changeActiveShowKey(detailPlan.key)} />
+                                                        onPress={() => {detailPlanStore.changeActiveShowKey(detailPlan.key);}} />
                                                 </View>
                                             )
                                         })

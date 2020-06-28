@@ -353,7 +353,7 @@ export default class DetailPlanWriteBoard extends Component{
                     <DetailPlanState/>
                 </View>
                 <View style={styles.planCreateArea}>
-                    <DetailPlanCreate/>
+                    <DetailPlanCreate navigation={this.props.navigation}/>
                 </View>
             </View>
         );
