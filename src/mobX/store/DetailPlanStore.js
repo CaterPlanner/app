@@ -1,8 +1,7 @@
 import {observable, action} from 'mobx';
 import CaterPlannerDetailPlanTree from '../../native/CaterPlannerDetailPlanTree'
-import {autobind} from 'core-decorators';
 
-@autobind
+
 export default class DetailPlanStore{
 
     @observable activeParentKey;
@@ -16,13 +15,14 @@ export default class DetailPlanStore{
         this.activeShowKey = 1;
     }
 
-    @autobind
-    @action async create(){
+    @action 
+    create = async () => {
         this._start();
         await CaterPlannerDetailPlanTree.create();
     }
     
-    @action insertDetailPlan(parentKey, detailPlan){
+    @action 
+    insertDetailPlan = (parentKey, detailPlan) => {
 
         CaterPlannerDetailPlanTree.insert(parentKey, detailPlan)
         .then(() => {
@@ -34,7 +34,8 @@ export default class DetailPlanStore{
 
     }
 
-    @action modifyDetailPlan(key, copy){
+    @action 
+    modifyDetailPlan = (key, copy) => {
 
         CaterPlannerDetailPlanTree.modify(key, copy)
         .catch((error) => {
@@ -43,7 +44,8 @@ export default class DetailPlanStore{
 
     }
 
-    @action deleteDetailPlan(key){
+    @action 
+    deleteDetailPlan = (key) => {
 
         CaterPlannerDetailPlanTree.delete(key)
         .then(() => {
@@ -55,24 +57,27 @@ export default class DetailPlanStore{
 
     }
 
-    _updateViewData(){
+    _updateViewData = () => {
         this.topViewData = CaterPlannerDetailPlanTree.mapTopViewData(this.activeParentKey);
         this.bottomViewData = CaterPlannerDetailPlanTree.mapBottomViewData(this.activeParentKey);
 
 
     }
 
-    @action buildTree(detailPlans){
+    @action 
+    buildTree = (detailPlans) => {
         this._start();
         CaterPlannerDetailPlanTree.build(detailPlans)
         this._updateViewData();
     }
 
-    @action changeParentKey(parentKey){
+    @action 
+    changeParentKey = (parentKey) => {
         this.activeParentKey = parentKey;
     }
 
-    @action changeActiveShowKey(showKey){
+    @action 
+    changeActiveShowKey = (showKey) => {
         this.activeShowKey = showKey;
     }
 
@@ -84,7 +89,7 @@ export default class DetailPlanStore{
         return this.topViewData;
     }
 
-    getDetailPlan(key){
+    getDetailPlan = (key) => {
         return CaterPlannerDetailPlanTree.get(key);
     }
 

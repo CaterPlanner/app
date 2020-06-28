@@ -9,11 +9,10 @@ import GoalDetailPlanWrite from './GoalDetailPlanWrite'
 import GoalOtherWrite from './GoalOtherWrite'
 import GoalWriteDone from './GoalWriteDone'
 import PageStateText from '../../../atom/text/PageStateText'
-import { autobind } from 'core-decorators';
 
 const fullWidth = Dimensions.get('window').width;
 
-@autobind
+
 export default class GoalWriteBoard extends Component{
     constructor(props){
         super(props)
@@ -34,7 +33,7 @@ export default class GoalWriteBoard extends Component{
 
     }
 
-    _renderItem({item, index}){
+    _renderItem = ({item, index}) => {
         return(
             <View>
                 {item}
@@ -42,11 +41,11 @@ export default class GoalWriteBoard extends Component{
         )
     }
 
-    _next(){
+    _next = () => {
         this.carousel._snapToItem(this.state.activeIndex + 1)
     }
 
-    _previous(){
+    _previous = () => {
         this.carousel._snapToItem(this.state.activeIndex - 1)
     }
 

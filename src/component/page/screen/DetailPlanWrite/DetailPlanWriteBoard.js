@@ -3,7 +3,6 @@ import {View, StyleSheet} from 'react-native'
 import DetailPlanState from '../../../organism/DetailPlanWrite/DetailPlanState'
 import DetailPlanCreate from '../../../organism/DetailPlanWrite/DetailPlanCreate'
 import {inject} from 'mobx-react'
-import { autobind } from 'core-decorators'
 
 
 const TMP_DATA = 
@@ -337,7 +336,6 @@ const TMP_DATA =
 
 
 @inject(['detailPlanStore'])
-@autobind
 export default class DetailPlanWriteBoard extends Component{
 
     constructor(props){
