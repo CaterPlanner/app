@@ -1,10 +1,10 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, Text , View} from 'react-native'
 
-export default function DetailPlanIcon({name, color, width, height}){
+export default function DetailPlanIcon({name, color, width, height, onClick}){
     return(
-        <TouchableOpacity>
-            <View style={[styles.button, {backgroundColor : color, width: width, height : height}]}>
+        <TouchableOpacity onClick={() => {onClick();}} style={{backgroundColor : color, width: width, height : height}}>
+            <View style={styles.button}>
                 <Text style={styles.buttonText}>{name}</Text>
             </View>
         </TouchableOpacity>
@@ -16,8 +16,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingVertical: 14,
         paddingHorizontal: 10,
-        width: 200,
-        height: 100
     },
     buttonText: {
         color: 'white',

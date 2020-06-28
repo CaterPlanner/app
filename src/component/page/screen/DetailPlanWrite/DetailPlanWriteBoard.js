@@ -75,7 +75,7 @@ const TMP_DATA =
         type:"M",
         startDate:"2020-02-03",
         endDate:"2020-02-27",
-        color:"gray",
+        color:"yellow",
         cycle:"unknown",
         stat:0
     },
@@ -87,7 +87,7 @@ const TMP_DATA =
         type:"M",
         startDate:"2020-02-03",
         endDate:"2020-02-27",
-        color:"gray",
+        color:"green",
         cycle:"unknown",
         stat:0
     },
@@ -159,7 +159,7 @@ const TMP_DATA =
         type:"M",
         startDate:"2020-02-03",
         endDate:"2020-02-27",
-        color:"gray",
+        color:"red",
         cycle:"unknown",
         stat:0
     },
@@ -183,7 +183,7 @@ const TMP_DATA =
         type:"M",
         startDate:"2020-02-03",
         endDate:"2020-02-27",
-        color:"gray",
+        color:"green",
         cycle:"unknown",
         stat:0
     },
@@ -195,7 +195,7 @@ const TMP_DATA =
         type:"M",
         startDate:"2020-02-03",
         endDate:"2020-02-27",
-        color:"gray",
+        color:"yellow",
         cycle:"unknown",
         stat:0
     },
@@ -219,7 +219,7 @@ const TMP_DATA =
         type:"M",
         startDate:"2020-02-03",
         endDate:"2020-02-27",
-        color:"gray",
+        color:"blue",
         cycle:"unknown",
         stat:0
     },
@@ -291,7 +291,7 @@ const TMP_DATA =
         type:"M",
         startDate:"2020-02-03",
         endDate:"2020-02-27",
-        color:"gray",
+        color:"orange",
         cycle:"unknown",
         stat:0
     },
@@ -364,11 +364,9 @@ const styles = StyleSheet.create({
 
     planStateArea: {
         flex:1,
-        backgroundColor:'red'
     },
 
     planCreateArea: {
         flex:2,
-        backgroundColor:'blue'
     }
 });
