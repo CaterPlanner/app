@@ -1,9 +1,9 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, Text , View} from 'react-native'
 
-export default function DetailPlanIcon({name, color, width, height, onClick}){
+export default function DetailPlanIcon({name, color, width, height, onPress}){
     return(
-        <TouchableOpacity onClick={() => {onClick();}} style={{backgroundColor : color, width: width, height : height}}>
+        <TouchableOpacity onPress={onPress} style={{backgroundColor : color, width: width, height : height}}>
             <View style={styles.button}>
                 <Text style={styles.buttonText}>{name}</Text>
             </View>

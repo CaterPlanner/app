@@ -78,6 +78,7 @@ export default class DetailPlanStore{
 
     @action 
     changeActiveShowKey = (showKey) => {
+        console.log("ChangeActionShowKey : " + showKey);
         this.activeShowKey = showKey;
     }
 
