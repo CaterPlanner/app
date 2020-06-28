@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 const CreateNavigation = () => {
     return(
-          <Stack.Navigator initalRouteName="GoalWriteBoard">
+          <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen options={{headerShown: false}} name="GoalWriteBoard" component={GoalWriteBoard}  />
             <Stack.Screen name="DetailPlanNavigation" component={DetailPlanNavigation} />
             <Stack.Screen name="ChoiceImage" component={ChoiceImage} />
