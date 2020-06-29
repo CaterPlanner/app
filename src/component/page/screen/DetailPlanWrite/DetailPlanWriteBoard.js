@@ -3,6 +3,7 @@ import {View, StyleSheet} from 'react-native'
 import DetailPlanState from '../../../organism/DetailPlanWrite/DetailPlanState'
 import DetailPlanCreate from '../../../organism/DetailPlanWrite/DetailPlanCreate'
 import {inject} from 'mobx-react'
+import { observer } from 'mobx-react'
 
 
 const TMP_DATA = 
@@ -334,8 +335,8 @@ const TMP_DATA =
 
 ]
 
-
 @inject(['detailPlanStore'])
+@observer
 export default class DetailPlanWriteBoard extends Component{
 
     constructor(props){
@@ -347,13 +348,26 @@ export default class DetailPlanWriteBoard extends Component{
     }
  
     render(){
+
         return(
             <View style={{flex:1}}>
                 <View style={styles.planStateArea}>
-                    <DetailPlanState/>
+                    <DetailPlanState
+                        data={this.detailPlanStore.currentTopViewData}
+                        get={this.detailPlanStore.getDetailPlan}
+                        changeActiveShowKey={this.detailPlanStore.changeActiveShowKey}
+                    />
                 </View>
                 <View style={styles.planCreateArea}>
-                    <DetailPlanCreate navigation={this.props.navigation}/>
+                    <DetailPlanCreate
+                        data={this.detailPlanStore.currentbottomViewData}
+                        constructor={this.detailPlanStore.currentConstructorState}
+                        get={this.detailPlanStore.getDetailPlan}
+                        changeActiveShowKey={this.detailPlanStore.changeActiveShowKey}
+                        insert={this.detailPlanStore.insertDetailPlan}
+                        successor={this.detailPlanStore.successorDetailPlan}
+                        navigation={this.props.navigation}
+                    />
                 </View>
             </View>
         );

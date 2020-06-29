@@ -1,13 +1,16 @@
-import React from 'react'
-import {View, Text, StyleSheet, Image} from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { Button } from 'native-base';
+import React , { useState } from 'react'
+import {View, Text, StyleSheet, Image, Button, TextInput} from 'react-native';
+
 
 const goalImage = './../../../../../asset/sample_Image/Sam.png'
 
 const goalTotal= '23'
 
-export default function GoalOtherWrite() {
+export default function GoalOtherWrite({mainGoal}) {
+
+    const [mainGoalScope, setMainGoalScope] = useState();
+    const [mainGoalGroup, setMainGoalGroup] = useState();
+
     return(
         <View style = {styles.container}>
             

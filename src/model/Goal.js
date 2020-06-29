@@ -9,5 +9,5 @@ export default class Goal {
         this.scope = scope;
         this.group = group;
     }
-    
+
 }

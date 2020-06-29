@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import {View, Text, StyleSheet, TextInput} from 'react-native';
-//import DatePicker from 'react-native-date-picker'
 
-export default function GoalDecimalDayWrite() {
+export default function GoalDecimalDayWrite({mainGoal}) {
 
-    //const [date, setDate] = useState(new Date())
+    const [mainGoalDecimalDay, setMainGoalDecimalDay] = useState(new Date())
 
     return(
         <View style = {styles.container}>

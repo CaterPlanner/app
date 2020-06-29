@@ -1,33 +1,38 @@
 import React from 'react'
-import { observer } from 'mobx-react';
-import useStores from '../../../mobX/helper/useStores'
+import {Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DetailPlanBar from '../../molecule/DetailPlanBar';
+import {createEmptyDetailPlan} from '../../../model/DetailPlan'
 
-const DetailPlanCreate = observer(({navigation}) => {
-
-    const {detailPlanStore} = useStores();
-    const data = detailPlanStore.currentbottomViewData;
+export default function DetailPlanCreate({
+    data, constructor, get, changeActiveShowKey, insert, successor,  navigation}){
 
     return (
         <ScrollView>
             {
                 data.map((element) => {
-                    const detailPlan = detailPlanStore.getDetailPlan(element.key);
+                    const detailPlan = get(element.key);
+                    console.log(detailPlan)
+
                     return <DetailPlanBar 
                     detailPlan={detailPlan} 
                     successorHead={element.successorHead} 
-                    nextClick={() => detailPlanStore.changeActiveShowKey(element.successorHead)}
+                    nextClick={() => changeActiveShowKey(element.successorHead)}
                     callPlanInsert={() => {navigation.navigate('PlanInsert', {
                         detailPlan : detailPlan
                     });}}
                     />
                 })
             }
+            <Button 
+                title="+"
+                onPress={() => {constructor.relationType == 0 ? 
+                    insert(constructor.key, createEmptyDetailPlan(constructor.key, constructor.relationType)) :
+                    successor(constructor.key, createEmptyDetailPlan(constructor.key, constructor.relationType))
+                }}
+            />
         </ScrollView>
     )
-})
-
-export default DetailPlanCreate;
+}
 
 

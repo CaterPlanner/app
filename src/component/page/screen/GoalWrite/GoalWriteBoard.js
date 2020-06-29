@@ -5,32 +5,34 @@ import GoalNameWrite from './GoalNameWrite'
 import GoalDescriptionWrite from './GoalDescriptionWrite'
 import GoalThumbnailWrite from './GoalThumbnailWrite'
 import GoalDecimalDayWrite from './GoalDecimalDayWrite'
-import GoalDetailPlanWrite from './GoalDetailPlanWrite'
+import GoalDetailPlansWrite from './GoalDetailPlansWrite'
 import GoalOtherWrite from './GoalOtherWrite'
 import GoalWriteDone from './GoalWriteDone'
 import PageStateText from '../../../atom/text/PageStateText'
+import Goal from '../../../../model/Goal';
 
 const fullWidth = Dimensions.get('window').width;
 
-
 export default class GoalWriteBoard extends Component{
+
     constructor(props){
         super(props)
 
         this.state = {
             activeIndex : 0,
             endIndex : 6,
-            views : [
-                <GoalNameWrite/>,
-                <GoalDescriptionWrite/>,
-                <GoalThumbnailWrite/>,
-                <GoalDecimalDayWrite/>,
-                <GoalDetailPlanWrite navigation={this.props.navigation}/>,
-                <GoalOtherWrite/>,
-                <GoalWriteDone/>
-            ]
+            mainGoal : new Goal()
         }
-
+        
+        this.views = [
+            <GoalNameWrite mainGoal={this.state.mainGoal}/>,
+            <GoalDescriptionWrite mainGoal={this.state.mainGoal}/>,
+            <GoalThumbnailWrite mainGoal={this.state.mainGoal} />,
+            <GoalDecimalDayWrite mainGoal={this.state.mainGoal}/>,
+            <GoalDetailPlansWrite mainGoal={this.state.mainGoal} navigation={this.props.navigation}/>,
+            <GoalOtherWrite mainGoal={this.state.mainGoal} />,
+            <GoalWriteDone mainGoal={this.state.mainGoal}/>
+        ]
     }
 
     _renderItem = ({item, index}) => {
@@ -60,7 +62,7 @@ export default class GoalWriteBoard extends Component{
                     <Carousel
                         style={{flex:1}}
                         ref = {ref => this.carousel = ref}
-                        data = {this.state.views}
+                        data = {this.views}
                         renderItem = {this._renderItem}
                         scrollEnabled = {false}
                         sliderWidth={fullWidth}
