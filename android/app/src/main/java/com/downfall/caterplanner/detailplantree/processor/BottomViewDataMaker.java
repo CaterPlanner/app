@@ -33,7 +33,7 @@ public class BottomViewDataMaker implements WritableMapMaker<Node> {
             brother.putInt("key", child.getKey());
 
             if(child.getSuccessors().length != 0){
-                brother.putString("successorHead", String.valueOf(child.getSuccessors()[0].getKey()));
+                brother.putInt("successorHead", child.getSuccessors()[0].getKey());
             }
 
             keyIndexList.add(new Pair<>(child.getKey(), currentIndex));
@@ -56,7 +56,7 @@ public class BottomViewDataMaker implements WritableMapMaker<Node> {
 
                 brother.putInt("key", successor.getKey());
                 if(successor.getSuccessors().length != 0){
-                    brother.putString("successorHead", String.valueOf(successor.getSuccessors()[0].getKey()));
+                    brother.putInt("successorHead", successor.getSuccessors()[0].getKey());
                 }
 
                 keyIndexList.add(new Pair<>(successor.getKey(), currentIndex));

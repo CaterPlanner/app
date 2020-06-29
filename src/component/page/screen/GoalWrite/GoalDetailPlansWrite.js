@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {View, Text, Button, StyleSheet} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function GoalDetailPlanWrite({navigation}) {
+export default function GoalDetailPlanWrite({mainGoal, navigation}) {
+
+    const [mainGoalDetailPlans, setMainGoalDetailPlans] = useState();
+
     return(
         <View style = {styles.container}>
             

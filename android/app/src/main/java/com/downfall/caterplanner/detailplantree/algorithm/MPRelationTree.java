@@ -49,6 +49,7 @@ public class MPRelationTree {
         Node constructor = list.get(key);
         constructor.addChild(node);
         list.add(node);
+        node.setKey(list.size() - 1);
         return node;
     }
 
@@ -56,6 +57,7 @@ public class MPRelationTree {
         Node constructor = list.get(key);
         constructor.addSuccessor(node);
         list.add(node);
+        node.setKey(list.size() - 1);
         return node;
     }
 

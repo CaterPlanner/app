@@ -23,7 +23,6 @@ export default class DetailPlanStore{
     
     @action 
     insertDetailPlan = (parentKey, detailPlan) => {
-
         CaterPlannerDetailPlanTree.insert(parentKey, detailPlan)
         .then(() => {
             this._updateViewData();
@@ -34,6 +33,17 @@ export default class DetailPlanStore{
 
     }
 
+    @action 
+    successorDetailPlan = (parentKey, detailPlan) => {
+        CaterPlannerDetailPlanTree.successor(parentKey, detailPlan)
+        .then(() => {
+            this._updateViewData();
+        }) 
+        .catch((error) => {
+           console.log(error.message);
+        })
+    }
+    
     @action 
     modifyDetailPlan = (key, copy) => {
 
@@ -60,8 +70,6 @@ export default class DetailPlanStore{
     _updateViewData = () => {
         this.topViewData = CaterPlannerDetailPlanTree.mapTopViewData(this.activeParentKey);
         this.bottomViewData = CaterPlannerDetailPlanTree.mapBottomViewData(this.activeParentKey);
-
-
     }
 
     @action 
@@ -78,7 +86,7 @@ export default class DetailPlanStore{
 
     @action 
     changeActiveShowKey = (showKey) => {
-        console.log("ChangeActionShowKey : " + showKey);
+        console.log(showKey)
         this.activeShowKey = showKey;
     }
 
@@ -88,6 +96,14 @@ export default class DetailPlanStore{
 
     get currentTopViewData(){
         return this.topViewData;
+    }
+
+    get currentConstructorState(){
+        const activeShowDetailPlan = CaterPlannerDetailPlanTree.get(this.activeShowKey);
+        return {
+            key : activeShowDetailPlan.constructorKey,
+            relationType : activeShowDetailPlan.constructorRelationType
+        };
     }
 
     getDetailPlan = (key) => {

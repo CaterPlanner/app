@@ -39,7 +39,16 @@ export default class PlanCardView extends Component {
                 //함정카드 발동 
                 progresValue: progresValue,
 
-            }]
+            },
+            {
+                image: 'https://www.aramamotoru.com/wp-content/uploads/2018/02/google-amp-icin-goruntu-boyut-gereksinimini-neredeyse-iki-katina-cikardi-1280x720.png',
+                title: '하루 O시간 OO하기',
+                date: 'D - O',
+                //함정카드 발동 
+                progresValue: progresValue,
+
+            }
+        ]
         }
     }
     //
