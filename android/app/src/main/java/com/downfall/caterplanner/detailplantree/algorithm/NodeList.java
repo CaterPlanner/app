@@ -81,6 +81,7 @@ public class NodeList {
             expansion();
         }
         data[++size - 1] = node;
+
     }
 
     public void remove(int index) {
@@ -114,7 +115,7 @@ public class NodeList {
     }
 
     public Node[] getAll(IsElementMatch<Node> filter) {
-        return Arrays.asList(this.data).stream().filter(node -> filter.isMatch(node)).toArray(size -> new Node[size]);
+        return Arrays.asList(this.data).stream().filter(node -> node != null && filter.isMatch(node)).toArray(size -> new Node[size]);
     }
 
     public int size() {

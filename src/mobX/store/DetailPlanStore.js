@@ -1,4 +1,4 @@
-import {observable, action} from 'mobx';
+import {observable, action, computed} from 'mobx';
 import CaterPlannerDetailPlanTree from '../../native/CaterPlannerDetailPlanTree'
 
 
@@ -23,6 +23,7 @@ export default class DetailPlanStore{
     
     @action 
     insertDetailPlan = (parentKey, detailPlan) => {
+        console.log(detailPlan.type);
         CaterPlannerDetailPlanTree.insert(parentKey, detailPlan)
         .then(() => {
             this._updateViewData();
@@ -86,8 +87,12 @@ export default class DetailPlanStore{
 
     @action 
     changeActiveShowKey = (showKey) => {
-        console.log(showKey)
         this.activeShowKey = showKey;
+    }
+
+    @computed
+    get entry(){
+        return CaterPlannerDetailPlanTree.entry();
     }
 
     get currentbottomViewData() {

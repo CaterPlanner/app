@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ScrollView } from 'react-native'
 import DetailPlanIcon from '../../atom/button/DetailPlanIcon'
-import useStores from '../../../mobX/helper/useStores'
+
 
 const WIDTH_INTERVAL = 15;
 const HEIGHT_INTERVAL = 10;

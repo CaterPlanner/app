@@ -12,7 +12,7 @@ public class MPRelationTree {
 
     public MPRelationTree(){
         list = new NodeList();
-        list.add(new Node(new DetailPlan()));
+        list.add(Node.createRoot());
     }
 
     public MPRelationTree(DetailPlan[] list) throws Exception {
@@ -86,7 +86,7 @@ public class MPRelationTree {
     }
 
     public Node[] getNodes() {
-        return this.list.getAll();
+        return this.list.getAll(node -> node.getType() != Type.R);
     }
 
     public Node[] getPNodes() {return this.list.getAll(node -> node.getType() == Type.P);}

@@ -1,6 +1,6 @@
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack';
-import DetailPlanWriteBoard from '../screen/DetailPlanWrite/DetailPlanWriteBoard'
+import {DetailPlanWriteBoard} from '../screen/DetailPlanWrite/DetailPlanWriteBoard'
 import PlanInsert from '../screen/DetailPlanWrite/PlanInsert'
 
 

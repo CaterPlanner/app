@@ -145,7 +145,7 @@ public class DetailPlan {
 				data.getInt("constructorKey"),
 				data.getInt("constructorRelationType"),
 				data.getString("name"),
-				Type.valueOf(type),
+				Type.findByValue(type), //TODO : 수정
 				LocalDate.parse(data.getString("startDate"), DateTimeFormatter.ISO_DATE),
 				LocalDate.parse(data.getString("endDate"), DateTimeFormatter.ISO_DATE),
 				data.getString("color"),
@@ -160,8 +160,8 @@ public class DetailPlan {
 		detailPlanMap.putInt("constructorRelationType", plan.getConstructorRelationType());
 		detailPlanMap.putString("name", plan.getName());
 		detailPlanMap.putString("type", plan.getType().name());
-		detailPlanMap.putString("startDate", plan.getStartDate().toString());
-		detailPlanMap.putString("endDate", plan.getEndDate().toString());
+		detailPlanMap.putString("startDate", plan.getStartDate().format(DateTimeFormatter.ISO_DATE));
+		detailPlanMap.putString("endDate", plan.getEndDate().format(DateTimeFormatter.ISO_DATE));
 		detailPlanMap.putString("color", plan.getColor());
 		detailPlanMap.putString("cycle", plan.getCycle());
 		detailPlanMap.putInt("stat", plan.getStat());
