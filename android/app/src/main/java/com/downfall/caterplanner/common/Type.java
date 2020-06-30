@@ -10,6 +10,14 @@ public enum Type {
 		this.value = value;
 	}
 
+	public static Type findByValue(String value){
+		for(Type type : values()){
+			if(type.getValue().equals(value))
+				return type;
+		}
+		return null;
+	}
+
 	public String getValue() {
 		return value;
 	}

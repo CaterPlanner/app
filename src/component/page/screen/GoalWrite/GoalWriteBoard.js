@@ -20,7 +20,7 @@ export default class GoalWriteBoard extends Component{
 
         this.state = {
             activeIndex : 0,
-            endIndex : 6,
+            endIndex : 7,
             mainGoal : new Goal()
         }
         
@@ -31,7 +31,7 @@ export default class GoalWriteBoard extends Component{
             <GoalDecimalDayWrite mainGoal={this.state.mainGoal}/>,
             <GoalDetailPlansWrite mainGoal={this.state.mainGoal} navigation={this.props.navigation}/>,
             <GoalOtherWrite mainGoal={this.state.mainGoal} />,
-            <GoalWriteDone mainGoal={this.state.mainGoal}/>
+            <GoalWriteDone mainGoal={this.state.mainGoal} navigation={this.props.navigation}/>
         ]
     }
 
@@ -52,7 +52,6 @@ export default class GoalWriteBoard extends Component{
     }
 
     render(){
-
         return(
             <View style={{flex:1}}>
                 <View style={styles.topContainer}>

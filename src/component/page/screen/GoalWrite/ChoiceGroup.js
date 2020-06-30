@@ -7,7 +7,6 @@ export default ({navigation}) => (
     <View>
         <Text>GRP{"\n\n"}</Text>
 
-
         <TouchableOpacity onPress={() => navigation.navigate('Create')}>
         <Text>확인</Text>
         </TouchableOpacity>
