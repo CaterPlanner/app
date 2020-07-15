@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {View, Text, FlatList} from 'react-native'
 import StoryCardTest from './StoryCardTest'
+import Header_Main from '../../../molecule/Header_Main';
 
 const time = 3;
 const hour = '시간';
@@ -49,7 +50,12 @@ export default class PullTest extends Component{
     
     render(){
         return(
+       
+
             <View style={{flex:1, backgroundColor:'#E6E6E6'}}>
+
+            <Header_Main/>
+
                 <FlatList
                 data = {this.state.items}
                 renderItem={this.renderItem}
@@ -57,6 +63,8 @@ export default class PullTest extends Component{
                 refreshing={this.state.isLoading}
                 onRefresh={this.getData}
                 ></FlatList>
+            
+
             </View>
         )
     }

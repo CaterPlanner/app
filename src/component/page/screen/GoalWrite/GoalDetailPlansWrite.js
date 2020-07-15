@@ -430,8 +430,20 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
 
 
-    }
+    },
 
+    imgIn: {
+        //backgroundColor: 'black',
+        width: '76%',
+        height: '76%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        borderWidth:1,
+        marginTop: '6%',
+        borderStyle: 'dashed',
+        borderRadius: 1
+
+    },
 
 
 

@@ -102,14 +102,15 @@ export default function StoryCardTest({userImg, userName, hisTime,title,content,
 
     <TouchableOpacity>
     <Image 
-    style={{height:45, width:45, borderRadius:30, marginLeft:20, marginTop:-2}}
+    style={{height:45, width:45, borderRadius:30, marginLeft:'17%', marginTop:-2}}
     //바로가기
     source={{uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRBibCuTx1Uzx9GmgTA7jzHvD8p9L8JkwrmD1OUN9oLla6vCAV2&usqp=CAU'}}/>
     </TouchableOpacity>
     
     <View style={styles.comments}>
 
-            <TouchableOpacity style={{flexDirection:'row'}}>
+            <TouchableOpacity style={{flexDirection:'row',
+             marginRight:'10%', marginLeft:'10%'}}>
             <Image style={{width:25, height:25, marginTop:'25%', marginRight:7}} source={{uri:'https://i.pinimg.com/originals/d8/3b/09/d83b09ebec8c4ca33339cc880d6f1143.jpg'}}></Image>
         <Text style={{fontSize:20, marginTop:'17%'}}>{likeGrab}</Text>
             </TouchableOpacity>

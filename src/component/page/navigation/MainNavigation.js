@@ -64,7 +64,8 @@ const MainNavigation = () => {
       <Tab.Screen name="Home" component={Home}/>
       <Tab.Screen name="Search" component={SearchNavigation} />
       <Tab.Screen name="Create" component={Create}  />
-      <Tab.Screen name="Stories" component={PullTest} />
+      <Tab.Screen name="Stories" component={StoryCardActive} />
+      {/**<Tab.Screen name="Stories" component={PullTest} /> */}
       <Tab.Screen name="Record" component={Record} />
       </Tab.Navigator>
   );
