@@ -12,7 +12,7 @@ export default function DetailPlanCreate({
             {
                 data.map((element) => {
                     const detailPlan = get(element.key);
-                    console.log(detailPlan)
+                   
 
                     return <DetailPlanBar 
                     detailPlan={detailPlan} 
