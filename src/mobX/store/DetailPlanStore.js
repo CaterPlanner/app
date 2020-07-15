@@ -23,7 +23,7 @@ export default class DetailPlanStore{
     
     @action 
     insertDetailPlan = (parentKey, detailPlan) => {
-        console.log(detailPlan.type);
+       
         CaterPlannerDetailPlanTree.insert(parentKey, detailPlan)
         .then(() => {
             this._updateViewData();

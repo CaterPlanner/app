@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions} from 'react-native';
 import {Icon, Row} from 'native-base';
+import Header_Main from '../../../molecule/Header_Main'
+
+const fullWidth = Dimensions.get('window').width;
+const fullHeight = Dimensions.get('window').height;
 
 export default class Create extends Component {
 
@@ -11,10 +15,18 @@ export default class Create extends Component {
         )
     }
     render() {
-        return (
-            <View style={style.container}>
-            
 
+
+        return (
+            
+            <View style={style.container}>
+            {/* 
+            얘를 네비게이션 그걸로 사용안하고 이걸로 한다고 하면
+            얘를 재사용하는데가 많으니까 따로 만들어놓고 가져와야되는게 정석이지?
+            */}
+
+            <Header_Main/>
+           
 
             <View style={style.Base_Up}>
 
@@ -25,21 +37,24 @@ export default class Create extends Component {
             {/*
             이친구는 그냥 샘플 이미지 가져온거임 지워줘야됨 
             */}
-            <Image source={require('../../../../../asset/sample_Image/SampleImage.png')} style={{width:130, height:130, marginTop:'50%'}}></Image>
-
+            <Image source={require('../../../../../asset/DZC.gif')} style={{width:140, height:140, marginTop:'23%'}}></Image>
             </View>
             <View style={style.in_Down}>
 
             {/**
              * 이친구들 그냥 Text임 마찬가지
              */}
-            <Text style={{fontSize:22, textAlign:'center', marginTop:10, color:'black', }}>
-                화면 확인용 윗부분 텍스트
+            <Text adjustsFontSizeToFit
+              numberOfLines={1} style={{fontSize:20, textAlign:'center', marginTop:'10%', color:'black', }}>
+                목표를 추가해 볼까요?
             </Text>
-            <Text style={{fontSize:20, textAlign:'center', marginTop:15, color:'black',  }}>
+            <Text 
+            adjustsFontSizeToFit
+              numberOfLines={2}
+            style={{fontSize:18, textAlign:'center', marginTop:'7%', color:'black',  }}>
                 
-                화면 확인용 아랫부분 텍스트 여긴 텍스트가 더 길다야
-
+                버튼을 누르고 목표를 추가하여 다른 사용자들과 목표를 공유해 봅시다!
+            
             </Text>
 
             </View>
@@ -61,7 +76,7 @@ export default class Create extends Component {
        
        >
                 <View style={style.Button_sample}>
-                    <Text style={{fontSize:20, textAlign:'center', marginTop:10, color:'white', }}>임시 확인용 버튼 형태 View</Text>
+                <Text style={{fontSize:25, textAlign:'center', marginTop:'0.5%', color:'white', }}>추         가</Text>
                 </View>
         </TouchableOpacity>
             </View>
@@ -76,8 +91,12 @@ export default class Create extends Component {
  
 
 const style = StyleSheet.create({
+
+
+
     container: {
         flex: 1,
+        
        // alignItems: 'center',
        // justifyContent: 'center',
         flexDirection: 'column',
@@ -85,38 +104,44 @@ const style = StyleSheet.create({
     },
 
     Base_Up : {
-        flex : 3,
-        borderWidth:1,
+        flex : 2,
+       // borderWidth:1,
         width:'100%',
         alignItems:'center',
     },
     
     Base_Down : {
-        flex : 1,
-        borderWidth:1,
+        flex : 0.8,
+       // borderWidth:1,
         width:'100%',
         alignItems : 'center'
     },
 
     in_Up : {
-        borderWidth : 1,
+      //  borderWidth : 1,
         borderColor: 'red',
-        flex:3
+        flex:2
     },
 
     in_Down:{
-        borderWidth : 1,
+     //   borderWidth : 1,
         borderColor: 'orange',
         flex:1,
-        width:'70%'
+        width:'70%',
+        
     },
     
     Button_sample : {
         width: 260,
-        height: 50,
+        height: 45,
         backgroundColor : '#55d517',    
         borderRadius : 40,
-        marginTop:10
+        marginTop:'5%',
+        alignItems:'center',
+        justifyContent:'center',
+        
+        
+
     }
 
 });

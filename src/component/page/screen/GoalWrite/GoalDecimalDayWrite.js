@@ -8,10 +8,15 @@ export default function GoalDecimalDayWrite({mainGoal}) {
     return(
         <View style = {styles.container}>
             
-            <Text style = {styles.title}>목표의 종료일을 정해 주세요</Text>
-            <Text style = {styles.subtitle}>목표를 정하고 목표 종료일을 정하면</Text>
-            <Text style = {styles.subtitle}>사용자님이 더 편하게 목표를 달성하실 수 있을거에요</Text>
-           
+            <Text 
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style = {styles.title}>목표가 끝날 날짜를</Text>
+            <Text 
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style = {styles.subtitle}>입력해 주세요</Text>
+          
            {/*} <DatePicker
              date={date}
              onDateChange={setDate}
@@ -36,11 +41,14 @@ const styles = StyleSheet.create({
     title:{
         fontSize : 22,
         //fontWeight : "bold",
-        margin:20
+        marginTop:20,
+        marginLeft:20
     },
 
     subtitle:{
-        marginLeft:20
+        marginLeft:20,
+        fontSize : 22,
+        marginTop:5
     },
 
     title_In:{
