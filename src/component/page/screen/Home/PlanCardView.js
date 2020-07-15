@@ -5,6 +5,7 @@ import PlanView from './PlanView.js'
 import PageStateText from '../../../atom/text/PageStateText'
 import Card from './Card'
 import ActiveCard from './ActiveCard'
+import Header_Main from '../../../molecule/Header_Main.js';
 
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
 YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
@@ -54,19 +55,18 @@ export default class PlanCardView extends Component {
     //
     _renderItem = ({ item, index }) => {
 
-        if (actuationCard == false) {
             return (
                 <View>
-                    <Card image={item.image} title={item.title} date={item.date} />
-                </View>
-            )
-        } else if (actuationCard == true) {
-            return (
-                <View>
+                    
+                    <Card image={item.image} title={item.title} date={item.date} /> 
+
+                    {/*
                     <ActiveCard progresValue={item.progresValue}></ActiveCard>
+                    */}
+
+                    
                 </View>
             )
-        }
 
     }
 
@@ -82,24 +82,12 @@ export default class PlanCardView extends Component {
         this.forceUpdate();
     };
 
-    //흔적
-    _switch = () => {
-
-        if (actuationCard == 0) {
-            actuationCard = true;
-            console.log(actuationCard)
-
-        } else if (actuationCard == 1) {
-            actuationCard = false;
-            console.log(actuationCard)
-
-        }
-
-    }
 
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: 'white' }}>
+
+                <Header_Main></Header_Main>
 
                 <View style={styles.baseLay}>
                     <View style={styles.in_SideLay}></View>
@@ -125,30 +113,7 @@ export default class PlanCardView extends Component {
                     <View style={styles.in_SideLay}></View>
                 </View>
 
-                <TouchableOpacity onPress={
-                    shit(this.forceUpdateHandler)
-                    //()=>
-                }>
-                    <View style={{
-                        backgroundColor: tabColor,
-                        width: '70.9%',
-                        height: 30,
-
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        borderBottomWidth: 0.5,
-                        borderBottomEndRadius: 20, borderBottomStartRadius: 20,
-                        borderColor: 'black',
-                        borderRightWidth: 0.5,
-                        borderLeftWidth: 0.5,
-                        elevation: 5,
-                        marginBottom: '1%',
-
-                    }}>
-                        <Text style={{ color: tabFonC, fontWeight: 'bold', fontSize: 15 }}>{tabText}</Text>
-                    </View>
-                </TouchableOpacity>
+              
 
 
                 <View style={styles.indexNum}>
@@ -167,33 +132,11 @@ export default class PlanCardView extends Component {
     }
 }
 
-function shit(forceUpdateHandler) {
-
-    if (actuationCard == false) {
-        console.log('뒷면으로 뒤집기')
-        actuationCard = true;
-        tabText = '확인'
-        tabFonC = 'white'
-        tabColor = '#A8D954'
-        console.log('뒷면 - Progress')
-
-    } else if (actuationCard == true) {
-        console.log('앞면으로 뒤집기')
-        actuationCard = false;
-        tabText = '자세히 보기'
-        tabFonC = 'gray'
-        tabColor = 'white'
-
-        console.log('앞면 - ImageCard')
-
-    }
-
-    return (forceUpdateHandler);
-
-
-}
 
 const styles = StyleSheet.create({
+
+    
+
     buttomContainer: {
         flex: 0.6,
         alignItems: 'center',

@@ -9,12 +9,25 @@ export default function GoalDescriptionWrite({mainGoal}) {
     return (
         <View style={styles.container}>
 
-            <Text style={styles.title}>당신의 목표는...</Text>
-            <Text style={styles.Gettitle}>{mainGoal.name}</Text>
-            <Text style={styles.subtitle}>해당 목표를 정한 이유를 간단하게 적어 주세요</Text>
+            <Text 
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style={styles.title}>당신의 목표는...</Text>
+            <Text 
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style={styles.Gettitle}>{mainGoal.name}</Text>
+            <Text 
+            adjustsFontSizeToFit
+            numberOfLines={1}
+            style={styles.subtitle}>해당 목표를 정한 이유를 간단하게 적어 주세요</Text>
             <TextInput 
+            adjustsFontSizeToFit
+            numberOfLines={1}
                 style={styles.title_In} 
-                placeholder=" 이유 작성"
+                placeholder="정한 목표에 대한 설명이나 시작하게 된
+                동기를 적어주세요.
+                "
                 onChangeText={text => {
                     setMainGoalDescription(text);
                     mainGoal.description = text;
@@ -51,7 +64,7 @@ const styles = StyleSheet.create({
     },
 
     subtitle: {
-        marginLeft: 20
+        marginLeft: '4%'
     },
 
     title_In: {
@@ -59,8 +72,9 @@ const styles = StyleSheet.create({
         height: 40,
         alignSelf: 'center',
         width: "91%",
-        borderWidth: 1,
+       // borderWidth: 1,
 
+       marginLeft: '-3%'
     },
 
 
