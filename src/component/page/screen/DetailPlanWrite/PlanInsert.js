@@ -6,7 +6,8 @@ export default function PlanInsert({route}){
     const {detailPlan} = route.params;
     return(
         <View>
-            <Text> This is DetailPlan Key is {detailPlan.key}</Text>
+            <Text>이름</Text>
+            <
         </View>
     )
 }
