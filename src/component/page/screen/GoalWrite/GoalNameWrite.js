@@ -8,11 +8,13 @@ export default function GoalNameWrite({ mainGoal }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>새로운  목표를  정해주세요</Text>
-            <Text style={styles.subtitle}>목표 제목 설정하기</Text>
+            <Text style={styles.title}>당신의 목표는 무엇인가요?</Text>
+
             <TextInput
+                adjustsFontSizeToFit
+                numberOfLines={1}
                 style={styles.title_In}
-                placeholder={"목표 계획"}
+                placeholder={"목표 이름을 적어주세요!"}
                 onChangeText={text => {
                     setMainGoalName(text);
                     mainGoal.name = text;
@@ -47,7 +49,8 @@ const styles = StyleSheet.create({
         height: 40,
         alignSelf: 'center',
         width: "91%",
-        borderWidth: 1,
+        marginLeft: '-3%'
+        //borderWidth: 1,
 
     },
 
