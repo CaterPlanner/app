@@ -2,22 +2,23 @@ import React from 'react'
 import {Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DetailPlanBar from '../../molecule/DetailPlanBar';
-import {createEmptyDetailPlan} from '../../../model/DetailPlan'
+import {createEmptyDetailPlan} from '../../../rest/model/DetailPlan'
 
-export default function DetailPlanCreate({
-    data, constructor, get, changeActiveShowKey, insert, successor,  navigation}){
+export default function DetailPlanCreate({detailPlanStore,  navigation}){
+    
+    const data = detailPlanStore.currentbottomViewData;
+    const constructor = detailPlanStore.currentConstructorState;
 
     return (
         <ScrollView>
             {
                 data.map((element) => {
-                    const detailPlan = get(element.key);
+                    const detailPlan = detailPlanStore.getDetailPlan(element.key);
                    
-
                     return <DetailPlanBar 
                     detailPlan={detailPlan} 
                     successorHead={element.successorHead} 
-                    nextClick={() => changeActiveShowKey(element.successorHead)}
+                    nextClick={() => detailPlanStore.changeActiveShowKey(element.successorHead)}
                     callPlanInsert={() => {navigation.navigate('PlanInsert', {
                         detailPlan : detailPlan
                     });}}
@@ -27,8 +28,8 @@ export default function DetailPlanCreate({
             <Button 
                 title="+"
                 onPress={() => {constructor.relationType == 0 ? 
-                    insert(constructor.key, createEmptyDetailPlan(constructor.key, constructor.relationType)) :
-                    successor(constructor.key, createEmptyDetailPlan(constructor.key, constructor.relationType))
+                    detailPlanStore.insertDetailPlan(constructor.key, createEmptyDetailPlan(constructor.key, constructor.relationType)) :
+                    detailPlanStore.successorDetailPlan(constructor.key, createEmptyDetailPlan(constructor.key, constructor.relationType))
                 }}
             />
         </ScrollView>
