@@ -9,7 +9,7 @@ import GoalDetailPlansWrite from './GoalDetailPlansWrite'
 import GoalOtherWrite from './GoalOtherWrite'
 import GoalWriteDone from './GoalWriteDone'
 import PageStateText from '../../../atom/text/PageStateText'
-import Goal from '../../../../model/Goal';
+import Goal from '../../../../rest/model/Goal';
 
 const fullWidth = Dimensions.get('window').width;
 

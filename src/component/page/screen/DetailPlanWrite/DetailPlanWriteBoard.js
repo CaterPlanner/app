@@ -43,12 +43,7 @@ export class DetailPlanWriteBoard extends Component {
                 </View>
                 <View style={styles.planCreateArea}>
                     <DetailPlanCreate
-                        data={this.detailPlanStore.currentbottomViewData}
-                        constructor={this.detailPlanStore.currentConstructorState}
-                        get={this.detailPlanStore.getDetailPlan}
-                        changeActiveShowKey={this.detailPlanStore.changeActiveShowKey}
-                        insert={this.detailPlanStore.insertDetailPlan}
-                        successor={this.detailPlanStore.successorDetailPlan}
+                        detailPlanStore={this.props.detailPlanStore}
                         navigation={this.props.navigation}
                     />
                 </View>

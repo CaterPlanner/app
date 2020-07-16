@@ -1,30 +1,25 @@
 import React, { useState } from 'react'
 import {View, Text, StyleSheet, TextInput} from 'react-native';
+import purposeStyles from './stylesheet/PurposeStyles';
 
 export default function GoalDecimalDayWrite({mainGoal}) {
 
     const [mainGoalDecimalDay, setMainGoalDecimalDay] = useState(new Date())
 
     return(
-        <View style = {styles.container}>
-            
-            <Text 
-            adjustsFontSizeToFit
-            numberOfLines={1}
-            style = {styles.title}>목표가 끝날 날짜를</Text>
-            <Text 
-            adjustsFontSizeToFit
-            numberOfLines={1}
-            style = {styles.subtitle}>입력해 주세요</Text>
-          
-           {/*} <DatePicker
-             date={date}
-             onDateChange={setDate}
-             />*/}
-
-
-             <Text style={styles.shoudBeDate}> Data Picker date</Text>
-
+        <View style = {purposeStyles.container}>
+            <View style={purposeStyles.titleContainer}>
+                <Text style={purposeStyles.title}>
+                    목표를 끝날 날짜를
+                    {"\n"}
+                    입력해 주세요
+                </Text>
+            </View>
+            <View style={purposeStyles.bottomContainer}>
+                <View>
+                <Text> Data Picker date</Text>
+                </View>
+            </View>
         </View>
     );
 }

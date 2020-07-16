@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { startType } from '../DetailPlanWrite/DetailPlanWriteBoard';
+import purposeStyles from './stylesheet/PurposeStyles';
+
 
 const TMP_DATA =
     [
@@ -337,114 +339,52 @@ export default function GoalDetailPlanWrite({ mainGoal, navigation }) {
     const [mainGoalDetailPlans, setMainGoalDetailPlans] = useState();
 
     return (
-        <View style={styles.container}>
+        <View style={purposeStyles.container}>
 
-            <Text style={styles.title}>목표 세부적으로</Text>
-            <Text style={styles.Gettitle}>설정하는 시간입니다</Text>
-
-            <Text style={styles.subtitle}>자신이 직접 새로운 목표 계획을 세우거나 기존에 있던 목표를</Text>
-            <Text style={styles.subtitle}>가지고 올 수 있으며 다른 사람의 목표도 가져올 수 있습니다.</Text>
-
-
-            <TouchableOpacity onPress={() => {
-                navigation.navigate('DetailPlanNavigation', {
-                    screen: 'DetailPlanWriteBoard',
-                    params: {
-                        startType: startType.MODIFY,
-                        initData: TMP_DATA,
-                        result: (detailPlans) => {
-                            setMainGoalDetailPlans(detailPlans);
-                            mainGoal.detailPlans = detailPlans;
-                        }
-                    }})
-            }}>
-            <View style={styles.itWasButton}>
-                <Text style={{ fontSize: 270, alignSelf: 'center', color: 'gray', marginTop: '-2%' }}> + </Text>
+            <View style={[purposeStyles.titleContainer, { flex: 2 }]}>
+                <View>
+                    <Text style={purposeStyles.title}>
+                        목표를 세부적으로
+                    {"\n"}
+                    설정하는 시간입니다.
+                </Text>
+                </View>
+                <View style={{ marginTop: 10 }}>
+                    <Text style={purposeStyles.subtitle}>
+                        자신이 직접 세부 목표 계획을 세우거나 다른 사람의 목표 계획을 가져와 사용할 수 있습니다.
+                </Text>
+                </View>
             </View>
-           </TouchableOpacity>
-
-
-        </View >
+            <View style={[purposeStyles.bottomContainer, { flex: 6.5}]}>
+                <View style={{flex:1}}>
+                    <Button
+                        title="+"
+                    />
+                </View>
+                <View style={{flex:3}}>
+                    <TouchableOpacity
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            alignSelf: 'center',
+                            borderWidth: 1
+                        }}
+                        onPress={() => {
+                            navigation.navigate('DetailPlanNavigation', {
+                                screen: 'DetailPlanWriteBoard',
+                                params: {
+                                    startType: startType.MODIFY,
+                                    initData: TMP_DATA,
+                                    result: (detailPlans) => {
+                                        setMainGoalDetailPlans(detailPlans);
+                                        mainGoal.detailPlans = detailPlans;
+                                    }
+                                }
+                            })
+                        }}>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
     );
 }
-
-
-const styles = StyleSheet.create({
-
-
-    container: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: 'white',
-    },
-
-    title: {
-        fontSize: 22,
-        //fontWeight : "bold",
-        marginLeft: 20,
-        marginTop: 20
-    },
-
-    Gettitle: {
-        fontSize: 22,
-        //fontWeight : "bold",
-        marginLeft: 20,
-        marginTop: 5,
-        marginBottom: 20
-
-    },
-
-    subtitle: {
-        marginTop: 10,
-        marginLeft: 20
-    },
-
-    title_In: {
-        marginTop: 20,
-        height: 40,
-        alignSelf: 'center',
-        width: "91%",
-        borderWidth: 1,
-
-    },
-
-    imgIn: {
-        backgroundColor: 'black',
-        width: '60%',
-        height: '45%',
-        alignSelf: 'center',
-        justifyContent: 'center',
-
-        marginTop: '34%',
-
-        borderRadius: 20
-
-    },
-
-    itWasButton: {
-
-        height: '80%',
-        width: '90%',
-        marginTop: '10%',
-        borderWidth: 1,
-        alignSelf: 'center',
-
-
-    },
-
-    imgIn: {
-        //backgroundColor: 'black',
-        width: '76%',
-        height: '76%',
-        alignSelf: 'center',
-        justifyContent: 'center',
-        borderWidth:1,
-        marginTop: '6%',
-        borderStyle: 'dashed',
-        borderRadius: 1
-
-    },
-
-
-
-})
