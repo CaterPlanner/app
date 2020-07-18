@@ -1,5 +1,6 @@
 package com.downfall.caterplanner.detailplantree;
 
+import com.downfall.caterplanner.detailplantree.service.GoalRelationTreeService;
 import com.downfall.caterplanner.detailplantree.service.MPRelationTreeService;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -15,13 +16,13 @@ import com.facebook.react.bridge.WritableMap;
 public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
-    private MPRelationTreeService service;
+    private GoalRelationTreeService service;
 
 
     public CaterPlannerDetailPlanTreeModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-        this.service = new MPRelationTreeService();
+        this.service = new GoalRelationTreeService();
     }
 
     @Override
@@ -64,23 +65,25 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
         }
     }
 
+    @Deprecated
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableArray mapTopViewData(Integer activeParentKey){
-        try{
-            return service.mapTopViewData(activeParentKey);
-        }catch (Exception e){
-           e.printStackTrace();
-        }
+//        try{
+//            return service.mapTopViewData(activeParentKey);
+//        }catch (Exception e){
+//           e.printStackTrace();
+//        }
         return null;
     }
 
+    @Deprecated
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap mapBottomViewData(Integer activeParentKey){
-        try {
-            return service.mapBottomViewData(activeParentKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            return service.mapBottomViewData(activeParentKey);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
 

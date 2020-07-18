@@ -1,23 +1,44 @@
-package com.downfall.caterplanner.detailplantree.processor;
+package com.downfall.caterplanner.detailplantree.manufacture;
 
 
-import com.downfall.caterplanner.common.Type;
-import com.downfall.caterplanner.common.DetailPlan;
-import com.downfall.caterplanner.common.Schedule;
+import com.downfall.caterplanner.detailplantree.algorithm.Type;
+import com.downfall.caterplanner.common.Goal;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
-public class ScheduleMaker implements WritableArrayMaker<Node[]>{
+import java.util.List;
+
+@Deprecated
+class MPSchedule {
+    private Goal data;
+    private List<Node> previous;
+
+    public MPSchedule(Goal data, List<Node> previous) {
+        this.data = data;
+        this.previous = previous;
+    }
+
+    public Goal getData() {
+        return data;
+    }
+
+    public List<Node> getPrevious() {
+        return previous;
+    }
+}
+
+@Deprecated
+public class MPScheduleMaker extends BaseScheduleMaker<Node[]>{
 
     @Override
     public WritableArray make(Node[] data) {
 
-        Schedule[] schedules = new Schedule[data.length];
+        MPSchedule[] MPSchedules = new MPSchedule[data.length];
 
-        for (int i = 0; i < schedules.length; i++) {
+        for (int i = 0; i < MPSchedules.length; i++) {
             Node current = data[i];
 
             Node hasPrevConstructor = current;
@@ -27,7 +48,7 @@ public class ScheduleMaker implements WritableArrayMaker<Node[]>{
 
             final Node targetConstructor = hasPrevConstructor.getConstructor();
 
-            schedules[i] = new Schedule(current.getData(),
+            MPSchedules[i] = new MPSchedule(current.getData(),
                     targetConstructor.getKey() == 0 ? null
                             : NodeSearcher.dfs(targetConstructor,
                             element -> element.getType() == Type.P && element != current,
@@ -45,17 +66,17 @@ public class ScheduleMaker implements WritableArrayMaker<Node[]>{
         }
 
         WritableArray result = Arguments.createArray();
-        for (Schedule schedule: schedules) {
-            result.pushMap(scheduleToWriteMap(schedule));
+        for (MPSchedule MPSchedule : MPSchedules) {
+            result.pushMap(scheduleToWriteMap(MPSchedule));
         }
         return result;
     }
 
-    private WritableMap scheduleToWriteMap(Schedule schedule){
+    private WritableMap scheduleToWriteMap(MPSchedule MPSchedule){
         WritableMap map = Arguments.createMap();
-        putPlanData(map, schedule.getData());
+        putPlanData(map, MPSchedule.getData());
         WritableArray predecessorList = Arguments.createArray();
-        for(Node previous : schedule.getPrevious()){
+        for(Node previous : MPSchedule.getPrevious()){
             WritableMap previousMap = Arguments.createMap();
             putPlanData(previousMap, previous.getData());
             predecessorList.pushMap(previousMap);
@@ -65,7 +86,7 @@ public class ScheduleMaker implements WritableArrayMaker<Node[]>{
         return map;
     }
 
-    private void putPlanData(WritableMap map , DetailPlan data){
+    private void putPlanData(WritableMap map , Goal data){
         map.putInt("key", data.getKey());
         map.putString("type", data.getType().name());
         map.putBoolean("isEnd", data.isEnd());

@@ -1,6 +1,5 @@
-package com.downfall.caterplanner.detailplantree.processor;
+package com.downfall.caterplanner.detailplantree.manufacture;
 
-import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.facebook.react.bridge.WritableArray;
 
 public interface WritableArrayMaker<T> {

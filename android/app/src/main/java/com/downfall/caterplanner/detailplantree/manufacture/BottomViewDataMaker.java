@@ -1,4 +1,4 @@
-package com.downfall.caterplanner.detailplantree.processor;
+package com.downfall.caterplanner.detailplantree.manufacture;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.util.Pair;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+@Deprecated
 public class BottomViewDataMaker implements WritableMapMaker<Node> {
 
     //TODO: 코드중복되는 부분이 있으므로 나중에 청소할것

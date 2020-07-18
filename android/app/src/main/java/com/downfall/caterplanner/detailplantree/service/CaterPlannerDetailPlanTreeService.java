@@ -14,10 +14,6 @@ public interface CaterPlannerDetailPlanTreeService {
 
    void insert(int parentKey, ReadableMap data) throws Exception;
 
-   WritableMap mapBottomViewData(int activeParentKey) throws Exception;
-
-   WritableArray mapTopViewData(int activeParentKey) throws Exception;
-
    void build(ReadableArray param) throws Exception;
 
    void delete(int key) throws Exception;

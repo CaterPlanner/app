@@ -1,6 +1,6 @@
-package com.downfall.caterplanner.detailplantree.processor;
+package com.downfall.caterplanner.detailplantree.manufacture;
 
-import com.downfall.caterplanner.common.DetailPlan;
+import com.downfall.caterplanner.common.Goal;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
@@ -11,7 +11,7 @@ public class EntryDataMaker implements WritableArrayMaker<Node[]>{
     public WritableArray make(Node[] nodes) throws Exception{
         WritableArray result = Arguments.createArray();
         for(Node node : nodes) {
-            result.pushMap(DetailPlan.parseReadableMap(node.getData()));
+            result.pushMap(Goal.parseWritableMap(node.getData()));
         }
         return result;
     }

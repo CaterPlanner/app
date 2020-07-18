@@ -1,4 +1,4 @@
-package com.downfall.caterplanner.detailplantree.processor;
+package com.downfall.caterplanner.detailplantree.manufacture;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.facebook.react.bridge.Arguments;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Stack;
 
 
+@Deprecated
 public class TopViewDataMaker implements WritableArrayMaker<Node> {
 
     @Override

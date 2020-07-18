@@ -1,8 +1,8 @@
-package com.downfall.caterplanner.common;
+package com.downfall.caterplanner.detailplantree.algorithm;
 
 public enum Type {
 	
-	M("M") , P("P"), R("R");
+	M("M") , P("P"), R("R"), G("G");
 
 	private String value;
 	
