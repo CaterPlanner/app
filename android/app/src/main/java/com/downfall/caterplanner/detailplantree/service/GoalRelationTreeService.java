@@ -1,36 +1,32 @@
 package com.downfall.caterplanner.detailplantree.service;
 
-
 import com.downfall.caterplanner.common.Goal;
-import com.downfall.caterplanner.detailplantree.algorithm.MPRelationTree;
+import com.downfall.caterplanner.detailplantree.algorithm.GoalRelationTree;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.algorithm.NodeList;
 import com.downfall.caterplanner.detailplantree.manufacture.BaseScheduleMaker;
-import com.downfall.caterplanner.detailplantree.manufacture.BottomViewDataMaker;
 import com.downfall.caterplanner.detailplantree.manufacture.EntryDataMaker;
-import com.downfall.caterplanner.detailplantree.manufacture.MPScheduleMaker;
-import com.downfall.caterplanner.detailplantree.manufacture.TopViewDataMaker;
+import com.downfall.caterplanner.detailplantree.manufacture.GoalScheduleMaker;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
-//TODO 나중에 유지 보수 코드 정리 필요
-public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
+public class GoalRelationTreeService implements CaterPlannerDetailPlanTreeService {
 
-    private MPRelationTree tree;
+    private GoalRelationTree tree;
     private NodeList nodeList;
 
     private BaseScheduleMaker scheduleMaker;
 
-    public MPRelationTreeService() {
-        this.scheduleMaker = new MPScheduleMaker();
+    public GoalRelationTreeService() {
+        this.scheduleMaker = new GoalScheduleMaker();
     }
 
     @Override
     public void create(){
         nodeList = new NodeList();
-        tree = new MPRelationTree(nodeList);
+        tree = new GoalRelationTree(nodeList);
     }
 
     @Override
@@ -49,25 +45,7 @@ public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
     public void insert(int parentKey, ReadableMap data) throws Exception {
         if(tree == null)
             throw new Exception("Please create a tree first.");
-       tree.insert(parentKey, new Node(Goal.valueOf(data)));
-    }
-
-    public WritableMap mapBottomViewData(int activeParentKey) throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-        Node parent = tree.select(activeParentKey);
-        if(parent == null)
-            throw new Exception("Node does not exist.");
-        return new BottomViewDataMaker().make(parent);
-    }
-
-    public WritableArray mapTopViewData(int activeParentKey) throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-        Node parent = tree.select(activeParentKey);
-        if(parent == null)
-            throw new Exception("Node does not exist.");
-        return new TopViewDataMaker().make(parent);
+        tree.insert(parentKey, new Node(Goal.valueOf(data)));
     }
 
     @Override
@@ -78,7 +56,7 @@ public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
         for(int i = 0; i < param.size(); i++){
             list[i] = Goal.valueOf(param.getMap(i));
         }
-        tree = new MPRelationTree(nodeList, list);
+        tree = new GoalRelationTree(nodeList, list);
     }
 
     @Override
@@ -109,6 +87,5 @@ public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
         Node node = tree.select(key);
         node.getData().modify(Goal.valueOf(param));
     }
-
 
 }

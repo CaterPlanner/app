@@ -1,5 +1,6 @@
 package com.downfall.caterplanner.common;
 
+import com.downfall.caterplanner.detailplantree.algorithm.Type;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
@@ -7,7 +8,7 @@ import com.facebook.react.bridge.WritableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class DetailPlan {
+public class Goal {
 
 	private int key;
 	private int constructorKey;
@@ -20,7 +21,7 @@ public class DetailPlan {
 	private String cycle;
 	private int stat; //0 : 진행중, 1 : 성공 , 2: 실패 , 3: 루트
 
-	public DetailPlan(){
+	public Goal(){
 		this.stat = 3;
 		this.key = 0;
 		this.constructorKey = -1;
@@ -28,7 +29,7 @@ public class DetailPlan {
 		this.type = Type.R;
 	} //Create ROOT
 
-	public DetailPlan(int key, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, String color, String cycle, int stat) {
+	public Goal(int key, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, String color, String cycle, int stat) {
 		this.key = key;
 		this.constructorKey = constructorKey;
 		this.constructorRelationType = constructorRelationType;
@@ -121,7 +122,7 @@ public class DetailPlan {
 		return stat > 0;
 	}
 
-	public void modify(DetailPlan copy){
+	public void modify(Goal copy){
 		this.name = copy.getName();
 		this.color = copy.getColor();
 		this.startDate = copy.getStartDate();
@@ -130,7 +131,7 @@ public class DetailPlan {
 		this.stat = copy.getStat();
 	}
 
-	public static DetailPlan valueOf(ReadableMap data) throws Exception{
+	public static Goal valueOf(ReadableMap data) throws Exception{
 		String type = data.getString("type");
 		int stat = data.getInt("stat");
 
@@ -140,7 +141,7 @@ public class DetailPlan {
 		if(stat < 0 || stat > 2)
 			throw new Exception("DetailPlan:stat is not valid");
 
-		return new DetailPlan(
+		return new Goal(
 				data.getInt("key"),
 				data.getInt("constructorKey"),
 				data.getInt("constructorRelationType"),
@@ -153,7 +154,7 @@ public class DetailPlan {
 				stat);
 	}
 
-	public static WritableMap parseReadableMap(DetailPlan plan) throws Exception{
+	public static WritableMap parseWritableMap(Goal plan) throws Exception{
 		WritableMap detailPlanMap = Arguments.createMap();
 		detailPlanMap.putInt("key", plan.getKey());
 		detailPlanMap.putInt("constructorKey", plan.getConstructorKey());
