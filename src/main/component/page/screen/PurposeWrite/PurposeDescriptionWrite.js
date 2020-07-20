@@ -14,7 +14,7 @@ export default function PurposeDescriptionWrite({purpose}) {
                 style={purposeStyles.title}>
                 당신의 목표는... 
                 {"\n"} 
-                {Purpose.name}
+                {purpose.name}
                 </Text>
             </View>
             <View style={[purposeStyles.bottomContainer, {flex:8}]}>

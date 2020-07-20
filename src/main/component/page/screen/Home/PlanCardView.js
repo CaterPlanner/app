@@ -15,7 +15,7 @@ const fullWidth = Dimensions.get('window').width;
 
 //진행률 값 
 const progresValue = 30;
-const defaultDCater = '../../../../../asset/DDC.gif'
+const defaultDCater = '../../../../../../asset/DDC.gif'
 
 //함정카드 발동
 var actuationCard = true;

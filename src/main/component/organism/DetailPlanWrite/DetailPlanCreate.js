@@ -2,7 +2,6 @@ import React from 'react'
 import {Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DetailPlanBar from '../../molecule/DetailPlanBar';
-import {createEmptyDetailPlan} from '../../../rest/model/DetailPlan'
 
 export default function DetailPlanCreate({detailPlanStore,  navigation}){
     
@@ -13,23 +12,29 @@ export default function DetailPlanCreate({detailPlanStore,  navigation}){
         <ScrollView>
             {
                 data.map((element) => {
-                    const detailPlan = detailPlanStore.getDetailPlan(element.key);
+                    const goal = detailPlanStore.getDetailPlan(element.key);
                    
                     return <DetailPlanBar 
                     detailPlan={detailPlan} 
                     successorHead={element.successorHead} 
                     nextClick={() => detailPlanStore.changeActiveShowKey(element.successorHead)}
-                    callPlanInsert={() => {navigation.navigate('PlanInsert', {
-                        detailPlan : detailPlan
-                    });}}
+                    callPlanInsert={() => {navigation.navigate('GoalInsert', {
+                        goal : goal
+                    });
+                }}
                     />
                 })
             }
             <Button 
                 title="+"
-                onPress={() => {constructor.relationType == 0 ? 
-                    detailPlanStore.insertDetailPlan(constructor.key, createEmptyDetailPlan(constructor.key, constructor.relationType)) :
-                    detailPlanStore.successorDetailPlan(constructor.key, createEmptyDetailPlan(constructor.key, constructor.relationType))
+                onPress={() => {
+                    navigation.navigate('GoalInsert', {
+                        create : (goal) => {
+                            constructor.relationType == 0 ? 
+                            detailPlanStore.insertDetailPlan(constructor.key, goal) :
+                            detailPlanStore.successorDetailPlan(constructor.key, goal);
+                        }
+                    })
                 }}
             />
         </ScrollView>

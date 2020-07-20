@@ -12,7 +12,10 @@ export default class DetailPlanStore{
 
     _start(){
         this.activeParentKey = 0;
-        this.activeShowKey = 1;
+        this.activeShowKey = 0;
+
+        this.bottomViewData = [];
+        this.topViewData = [];
     }
 
     @action 
@@ -26,6 +29,9 @@ export default class DetailPlanStore{
        
         CaterPlannerDetailPlanTree.insert(parentKey, detailPlan)
         .then(() => {
+            if(this.activeShowKey == 0)
+                this.activeShowKey = 1;
+
             this._updateViewData();
         }) 
         .catch((error) => {
@@ -96,7 +102,8 @@ export default class DetailPlanStore{
     }
 
     get currentbottomViewData() {
-        return this.bottomViewData.brotherGroups[this.bottomViewData.path[this.activeShowKey]];
+        return this.bottomViewData.length == 0 ? this.bottomViewData :  
+        this.bottomViewData.brotherGroups[this.bottomViewData.path[this.activeShowKey]];
     }
 
     get currentTopViewData(){
@@ -104,10 +111,18 @@ export default class DetailPlanStore{
     }
 
     get currentConstructorState(){
-        const activeShowDetailPlan = CaterPlannerDetailPlanTree.get(this.activeShowKey);
+        let key = 0;
+        let relationType = 0;
+
+        if(this.activeShowKey != 0){
+            const activeShowDetailPlan = CaterPlannerDetailPlanTree.get(this.activeShowKey);
+            key = activeShowDetailPlan.constructorKey;
+            relationType = activeShowDetailPlan.constructorRelationType;
+        }
+
         return {
-            key : activeShowDetailPlan.constructorKey,
-            relationType : activeShowDetailPlan.constructorRelationType
+            key : key,
+            relationType : relationType
         };
     }
 

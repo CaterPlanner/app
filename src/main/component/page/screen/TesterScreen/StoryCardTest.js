@@ -7,7 +7,7 @@ import { Left, Row } from 'native-base';
 const fullWidth = Dimensions.get('window').width;
 const fullHeight = Dimensions.get('window').height;
 
-const caterIcon = '../../../../../asset/DDC.gif';
+const caterIcon = '../../../../../../asset/DDC.gif';
 
 const likeGrab = 12;
 const comentGrab = 7;

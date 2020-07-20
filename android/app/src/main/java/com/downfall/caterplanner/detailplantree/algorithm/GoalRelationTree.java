@@ -9,12 +9,12 @@ public class GoalRelationTree {
 
     private NodeList nodeList;
 
-    public GoalRelationTree(NodeList nodeList){
-        nodeList = nodeList;
+    public GoalRelationTree(){
+        nodeList = new NodeList();
         nodeList.add(Node.createRoot());
     }
 
-    public GoalRelationTree(NodeList nodeList, Goal[] list) throws Exception {
+    public GoalRelationTree(Goal[] list) throws Exception {
 
         Node[] nodes = new Node[list.length + 1];
         nodes[0] = Node.createRoot();

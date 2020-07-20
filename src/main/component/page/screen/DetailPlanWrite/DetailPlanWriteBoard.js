@@ -36,9 +36,7 @@ export class DetailPlanWriteBoard extends Component {
             <View style={{ flex: 1 }}>
                 <View style={styles.planStateArea}>
                     <DetailPlanState
-                        data={this.detailPlanStore.currentTopViewData}
-                        get={this.detailPlanStore.getDetailPlan}
-                        changeActiveShowKey={this.detailPlanStore.changeActiveShowKey}
+                        detailPlanStore={this.props.detailPlanStore}
                     />
                 </View>
                 <View style={styles.planCreateArea}>

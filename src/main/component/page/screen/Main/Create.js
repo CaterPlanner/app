@@ -37,7 +37,7 @@ export default class Create extends Component {
             {/*
             이친구는 그냥 샘플 이미지 가져온거임 지워줘야됨 
             */}
-            <Image source={require('../../../../../asset/DZC.gif')} style={{width:140, height:140, marginTop:'23%'}}></Image>
+            <Image source={require('../../../../../../asset/DZC.gif')} style={{width:140, height:140, marginTop:'23%'}}></Image>
             </View>
             <View style={style.in_Down}>
 

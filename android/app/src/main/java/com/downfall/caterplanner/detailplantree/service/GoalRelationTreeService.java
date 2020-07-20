@@ -5,8 +5,10 @@ import com.downfall.caterplanner.detailplantree.algorithm.GoalRelationTree;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.algorithm.NodeList;
 import com.downfall.caterplanner.detailplantree.manufacture.BaseScheduleMaker;
+import com.downfall.caterplanner.detailplantree.manufacture.BottomViewDataMaker;
 import com.downfall.caterplanner.detailplantree.manufacture.EntryDataMaker;
 import com.downfall.caterplanner.detailplantree.manufacture.GoalScheduleMaker;
+import com.downfall.caterplanner.detailplantree.manufacture.TopViewDataMaker;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
@@ -15,8 +17,6 @@ import com.facebook.react.bridge.WritableMap;
 public class GoalRelationTreeService implements CaterPlannerDetailPlanTreeService {
 
     private GoalRelationTree tree;
-    private NodeList nodeList;
-
     private BaseScheduleMaker scheduleMaker;
 
     public GoalRelationTreeService() {
@@ -25,8 +25,7 @@ public class GoalRelationTreeService implements CaterPlannerDetailPlanTreeServic
 
     @Override
     public void create(){
-        nodeList = new NodeList();
-        tree = new GoalRelationTree(nodeList);
+        tree = new GoalRelationTree();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class GoalRelationTreeService implements CaterPlannerDetailPlanTreeServic
         for(int i = 0; i < param.size(); i++){
             list[i] = Goal.valueOf(param.getMap(i));
         }
-        tree = new GoalRelationTree(nodeList, list);
+        tree = new GoalRelationTree(list);
     }
 
     @Override
@@ -86,6 +85,24 @@ public class GoalRelationTreeService implements CaterPlannerDetailPlanTreeServic
             throw new Exception("Please create a tree first.");
         Node node = tree.select(key);
         node.getData().modify(Goal.valueOf(param));
+    }
+
+    public WritableMap mapBottomViewData(int activeParentKey) throws Exception{
+        if(tree == null)
+            throw new Exception("Please create a tree first.");
+        Node parent = tree.select(activeParentKey);
+        if(parent == null)
+            throw new Exception("Node does not exist.");
+        return new BottomViewDataMaker().make(parent);
+    }
+
+    public WritableArray mapTopViewData(int activeParentKey) throws Exception{
+        if(tree == null)
+            throw new Exception("Please create a tree first.");
+        Node parent = tree.select(activeParentKey);
+        if(parent == null)
+            throw new Exception("Node does not exist.");
+        return new TopViewDataMaker().make(parent);
     }
 
 }

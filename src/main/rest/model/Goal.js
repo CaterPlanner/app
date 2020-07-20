@@ -19,6 +19,7 @@ function findDayCountInTerm(startDate, endDate, piece, pieceStartIndex){
 
 export default class Goal {
 
+
     constructor(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, color, cycle, stat, briefingCount) {
         this.key = key;
         this.headerId = headerId;

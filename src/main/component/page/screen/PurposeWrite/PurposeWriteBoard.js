@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import {View, StyleSheet, Button, Dimensions} from 'react-native'
 import Carousel from 'react-native-snap-carousel';
-import GoalNameWrite from './PurposeNameWrite'
-import GoalDescriptionWrite from './PurposeDescriptionWrite'
-import GoalThumbnailWrite from './PurposeThumbnailWrite'
-import GoalDecimalDayWrite from './PurposeDecimalDayWrite'
-import GoalDetailPlansWrite from './PurposeDetailPlansWrite'
-import GoalOtherWrite from './PurposeOtherWrite'
-import GoalWriteDone from './PurposeWriteDone'
+import PurposeNameWrite from './PurposeNameWrite'
+import PurposeDescriptionWrite from './PurposeDescriptionWrite'
+import PurposeThumbnailWrite from './PurposeThumbnailWrite'
+import PurposeDecimalDayWrite from './PurposeDecimalDayWrite'
+import PurposeDetailPlansWrite from './PurposeDetailPlansWrite'
+import PurposeOtherWrite from './PurposeOtherWrite'
+import PurposeWriteDone from './PurposeWriteDone'
 import PageStateText from '../../../atom/text/PageStateText'
-import Goal from '../../../../rest/model/Goal';
 import Purpose from '../../../../rest/model/Purpose';
 
 const fullWidth = Dimensions.get('window').width;
