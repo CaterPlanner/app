@@ -1,5 +1,5 @@
-import React from '../ObjectionWrite/node_modules/react';
-import {View, Text} from '../ObjectionWrite/node_modules/react-native'
+import React from 'react';
+import {View, Text} from 'react-native'
 
 const popularGaols = () => {
     return(

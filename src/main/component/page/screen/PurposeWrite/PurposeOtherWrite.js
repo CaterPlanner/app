@@ -7,10 +7,10 @@ const goalImage = './../../../../../asset/sample_Image/Sam.png'
 
 const goalTotal = '23'
 
-export default function ObjectionOtherWrite({ objection }) {
+export default function PurposeOtherWrite({ purpose }) {
 
-    const [objectionScope, setObjectionScope] = useState();
-    const [objectionGroup, setObjectionGroup] = useState();
+    const [purposeScope, setPurposeScope] = useState();
+    const [purposeGroup, setPurposeGroup] = useState();
 
     return (
         <View style={purposeStyles.container}>

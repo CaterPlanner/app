@@ -1,5 +1,5 @@
-import React, { Component } from '../page/screen/ObjectionWrite/node_modules/react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions} from '../page/screen/ObjectionWrite/node_modules/react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions} from 'react-native';
 
 const UserName  = '김근육';
 

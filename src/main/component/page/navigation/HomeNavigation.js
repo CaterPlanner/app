@@ -1,4 +1,4 @@
-import React from '../screen/ObjectionWrite/node_modules/react'
+import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack';
 import PlanCardView from '../screen/Home/PlanCardView'
 import PlanView from '../screen/Home/PlanView'

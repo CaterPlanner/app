@@ -1,5 +1,5 @@
-import React, { Component } from '../ObjectionWrite/node_modules/react';
-import { View, Text, ScrollView, AsyncStorage } from '../ObjectionWrite/node_modules/react-native'
+import React, { Component } from 'react';
+import { View, Text, ScrollView, AsyncStorage } from 'react-native'
 
 
 export default class PlanView extends Component {

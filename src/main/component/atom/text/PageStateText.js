@@ -1,5 +1,5 @@
-import React from '../../page/screen/ObjectionWrite/node_modules/react';
-import {Text} from '../../page/screen/ObjectionWrite/node_modules/react-native'
+import React from 'react';
+import {Text} from 'react-native'
 
 export default function PageStateText({activeIndex, endIndex}){
     return(

@@ -1,4 +1,4 @@
-import React from '../screen/ObjectionWrite/node_modules/react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screen/Main/Home'
 import SearchNavigation from '../navigation/SearchNavigation'

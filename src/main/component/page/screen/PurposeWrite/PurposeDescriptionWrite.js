@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import purposeStyles from './stylesheet/PurposeStyles';
 
 
-export default function ObjectionDescriptionWrite({objection}) {
+export default function PurposeDescriptionWrite({purpose}) {
 
-    const [objectionDescription, setObjectionDescription] = useState("");
+    const [purposeDescription, setPurposeDescription] = useState("");
 
     return (
         <View style={purposeStyles.container}>
@@ -14,7 +14,7 @@ export default function ObjectionDescriptionWrite({objection}) {
                 style={purposeStyles.title}>
                 당신의 목표는... 
                 {"\n"} 
-                {objection.name}
+                {Purpose.name}
                 </Text>
             </View>
             <View style={[purposeStyles.bottomContainer, {flex:8}]}>
@@ -22,10 +22,10 @@ export default function ObjectionDescriptionWrite({objection}) {
                     multiline ={true}
                     placeholder="정한 목표에 대한 설명이나 시작하게 된 동기를 적어주세요."
                     onChangeText={text => {
-                        setObjectionDescription(text);
-                        objection.description = text;
+                        setPurposeDescription(text);
+                        purpose.description = text;
                     }}
-                    value={objectionDescription}
+                    value={purposeDescription}
                 />
             </View>           
         </View>

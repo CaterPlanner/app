@@ -1,6 +1,6 @@
-import React, { Component } from '../ObjectionWrite/node_modules/react'
-import { View, StyleSheet, Button, Dimensions, YellowBox, Text, Image, TouchableOpacity } from '../ObjectionWrite/node_modules/react-native'
-import Carousel from '../ObjectionWrite/node_modules/react-native-snap-carousel';
+import React, { Component } from 'react'
+import { View, StyleSheet, Button, Dimensions, YellowBox, Text, Image, TouchableOpacity } from 'react-native'
+import Carousel from 'react-native-snap-carousel';
 import PlanView from './PlanView.js'
 import PageStateText from '../../../atom/text/PageStateText'
 import Card from './Card'

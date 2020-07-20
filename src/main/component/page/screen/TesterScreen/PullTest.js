@@ -1,5 +1,5 @@
-import React, {Component} from '../ObjectionWrite/node_modules/react'
-import {View, Text, FlatList} from '../ObjectionWrite/node_modules/react-native'
+import React, {Component} from 'react'
+import {View, Text, FlatList} from 'react-native'
 import StoryCardTest from './StoryCardTest'
 import Header_Main from '../../../molecule/Header_Main';
 

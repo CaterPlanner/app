@@ -1,4 +1,4 @@
-import React from '../screen/ObjectionWrite/node_modules/react'
+import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack';
 import MainNavigation from './MainNavigation'
 import CreateNavigation from './CreateNavigation'

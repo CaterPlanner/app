@@ -334,9 +334,9 @@ const TMP_DATA =
 
     ]
 
-export default function ObjectionDetailPlanWrite({ objection, navigation }) {
+export default function PurposeDetailPlanWrite({ purpose, navigation }) {
 
-    const [objectionDetailPlans, setObjectionDetailPlans] = useState();
+    const [purposeDetailPlans, setPurposeDetailPlans] = useState();
 
     return (
         <View style={purposeStyles.container}>
@@ -376,8 +376,8 @@ export default function ObjectionDetailPlanWrite({ objection, navigation }) {
                                     startType: startType.MODIFY,
                                     initData: TMP_DATA,
                                     result: (detailPlans) => {
-                                        setObjectionDetailPlans(detailPlans);
-                                        objection.detailPlans = detailPlans;
+                                        setPurposeDetailPlans(detailPlans);
+                                        purpose.detailPlans = detailPlans;
                                     }
                                 }
                             })

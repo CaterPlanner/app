@@ -1,5 +1,5 @@
-import React, { Component } from '../ObjectionWrite/node_modules/react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions} from '../ObjectionWrite/node_modules/react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions} from 'react-native';
 import {Icon, Row} from 'native-base';
 import Header_Main from '../../../molecule/Header_Main'
 

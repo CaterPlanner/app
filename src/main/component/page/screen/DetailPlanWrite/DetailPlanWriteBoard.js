@@ -1,5 +1,5 @@
-import React, { Component } from '../ObjectionWrite/node_modules/react'
-import { View, StyleSheet } from '../ObjectionWrite/node_modules/react-native'
+import React, { Component } from 'react'
+import { View, StyleSheet } from 'react-native'
 import DetailPlanState from '../../../organism/DetailPlanWrite/DetailPlanState'
 import DetailPlanCreate from '../../../organism/DetailPlanWrite/DetailPlanCreate'
 import { inject } from 'mobx-react'

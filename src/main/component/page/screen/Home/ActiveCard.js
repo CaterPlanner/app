@@ -1,5 +1,5 @@
-import React,  { Component } from '../ObjectionWrite/node_modules/react';
-import {View, Text, Image, StyleSheet, Dimensions, ScrollView} from '../ObjectionWrite/node_modules/react-native'
+import React,  { Component } from 'react';
+import {View, Text, Image, StyleSheet, Dimensions, ScrollView} from 'react-native'
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';

@@ -1,4 +1,4 @@
-import { NativeModules } from '../component/page/screen/ObjectionWrite/node_modules/react-native';
+import { NativeModules } from 'react-native';
 
 const { CaterPlannerDetailPlanTree } = NativeModules;
 

@@ -1,5 +1,5 @@
-import React from '../../page/screen/ObjectionWrite/node_modules/react'
-import {StyleSheet, TouchableOpacity, Text , View} from '../../page/screen/ObjectionWrite/node_modules/react-native'
+import React from 'react'
+import {StyleSheet, TouchableOpacity, Text , View} from 'react-native'
 
 export default function DetailPlanIcon({name, color, width, height, onPress}){
     return(

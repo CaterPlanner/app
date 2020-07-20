@@ -1,4 +1,4 @@
-import React, { Component } from '../screen/ObjectionWrite/node_modules/react';
+import React, { Component } from 'react';
 import recommend from '../screen/Search/RecommendGoals'
 import newGoals from '../screen/Search/NewGoals'
 import popularGaols from '../screen/Search/PopularGaols'

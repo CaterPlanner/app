@@ -1,5 +1,5 @@
-import React from '../screen/ObjectionWrite/node_modules/react'
-import {Button} from '../screen/ObjectionWrite/node_modules/react-native'
+import React from 'react'
+import {Button} from 'react-native'
 import {createStackNavigator} from '@react-navigation/stack';
 import {DetailPlanWriteBoard} from '../screen/DetailPlanWrite/DetailPlanWriteBoard'
 import PlanInsert from '../screen/DetailPlanWrite/PlanInsert'

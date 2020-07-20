@@ -1,5 +1,5 @@
-import React from "../ObjectionWrite/node_modules/react";
-import {View, Text, TouchableOpacity} from '../ObjectionWrite/node_modules/react-native'
+import React from "react";
+import {View, Text, TouchableOpacity} from 'react-native'
 
 
 export default function PlanInsert({route}){

@@ -1,5 +1,5 @@
-import React from '../ObjectionWrite/node_modules/react';
-import { View, Text, Image, StyleSheet, Dimensions } from '../ObjectionWrite/node_modules/react-native'
+import React from 'react';
+import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 

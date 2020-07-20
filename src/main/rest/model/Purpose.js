@@ -1,6 +1,6 @@
 
 
-export default class Objection{
+export default class Purpose{
     constructor(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, goalHeaderId, goals){
         this.id = id;
         this.authorName = authorName;
