@@ -2,7 +2,7 @@ import React from 'react'
 import {Button} from 'react-native'
 import {createStackNavigator} from '@react-navigation/stack';
 import {DetailPlanWriteBoard} from '../screen/DetailPlanWrite/DetailPlanWriteBoard'
-import PlanInsert from '../screen/DetailPlanWrite/PlanInsert'
+import GoalInsert from '../screen/DetailPlanWrite/GoalInsert'
 
 
 const Stack = createStackNavigator();
@@ -19,8 +19,8 @@ const DetailPlanNavigation = () => {
                     />
                 )
             }} 
-            name="PlanInsert" 
-            component={PlanInsert} />
+            name="GoalInsert" 
+            component={GoalInsert} />
         </Stack.Navigator>
     )
 }

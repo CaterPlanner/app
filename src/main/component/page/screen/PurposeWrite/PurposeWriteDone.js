@@ -9,7 +9,7 @@ export default function PurposeWriteDone({purpose, navigation }) {
     return (
         <View style={styles.container}>
 
-        <Image source={require('../../../../../asset/DDC.gif')} style={{
+        <Image source={require('../../../../../../asset/DDC.gif')} style={{
             
             height: 180,
             width: 180,

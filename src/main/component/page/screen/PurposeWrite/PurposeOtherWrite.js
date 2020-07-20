@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, Button, TextInput } from 'react-native';
 import purposeStyles from './stylesheet/PurposeStyles';
 
 
-const goalImage = './../../../../../asset/sample_Image/Sam.png'
+const goalImage = './../../../../../../asset/sample_Image/Sam.png'
 
 const goalTotal = '23'
 

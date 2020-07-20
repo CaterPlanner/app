@@ -68,22 +68,22 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     @Deprecated
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableArray mapTopViewData(Integer activeParentKey){
-//        try{
-//            return service.mapTopViewData(activeParentKey);
-//        }catch (Exception e){
-//           e.printStackTrace();
-//        }
+        try{
+            return service.mapTopViewData(activeParentKey);
+        }catch (Exception e){
+           e.printStackTrace();
+        }
         return null;
     }
 
     @Deprecated
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap mapBottomViewData(Integer activeParentKey){
-//        try {
-//            return service.mapBottomViewData(activeParentKey);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            return service.mapBottomViewData(activeParentKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

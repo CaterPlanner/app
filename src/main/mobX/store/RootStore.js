@@ -1,4 +1,4 @@
-import GoalStore from './DetailPlanStore'
+import DetailPlanStore from './DetailPlanStore'
 import SQLiteManager from '../../sqlite/SQLiteManager';
 
 export default class RootStore {

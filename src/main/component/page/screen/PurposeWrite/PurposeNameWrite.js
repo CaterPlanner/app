@@ -21,7 +21,7 @@ export default function PurposeNameWrite({ purpose }) {
                     setPurposeName(text);
                     purpose.name = text;
                 }}
-                value={PurposeName}
+                value={purposeName}
             />
             </View>
         </View>
