@@ -1,4 +1,4 @@
-import React from '../screen/ObjectionWrite/node_modules/react'
+import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack';
 import DetailPlanNavigation from './DetailPlanNavigation'
 import ChoiceImage from '../screen/ObjectionWrite/ChoiceImage'

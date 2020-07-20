@@ -1,5 +1,5 @@
-import React from '../../page/screen/ObjectionWrite/node_modules/react'
-import { View, ScrollView } from '../../page/screen/ObjectionWrite/node_modules/react-native'
+import React from 'react'
+import { View, ScrollView } from 'react-native'
 import DetailPlanIcon from '../../atom/button/DetailPlanIcon'
 
 

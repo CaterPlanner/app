@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
 import {View, StyleSheet, Button, Dimensions} from 'react-native'
 import Carousel from 'react-native-snap-carousel';
-import GoalNameWrite from './ObjectionNameWrite'
-import GoalDescriptionWrite from './ObjectionDescriptionWrite'
-import GoalThumbnailWrite from './ObjectionThumbnailWrite'
-import GoalDecimalDayWrite from './ObjectionDecimalDayWrite'
-import GoalDetailPlansWrite from './ObjectionDetailPlansWrite'
-import GoalOtherWrite from './ObjectionOtherWrite'
-import GoalWriteDone from './ObjectionWriteDone'
+import GoalNameWrite from './PurposeNameWrite'
+import GoalDescriptionWrite from './PurposeDescriptionWrite'
+import GoalThumbnailWrite from './PurposeThumbnailWrite'
+import GoalDecimalDayWrite from './PurposeDecimalDayWrite'
+import GoalDetailPlansWrite from './PurposeDetailPlansWrite'
+import GoalOtherWrite from './PurposeOtherWrite'
+import GoalWriteDone from './PurposeWriteDone'
 import PageStateText from '../../../atom/text/PageStateText'
 import Goal from '../../../../rest/model/Goal';
-import Objection from '../../../../rest/model/Objection';
+import Purpose from '../../../../rest/model/Purpose';
 
 const fullWidth = Dimensions.get('window').width;
 
-export default class ObjectionWriteBoard extends Component{
+export default class PurposeWriteBoard extends Component{
 
     constructor(props){
         super(props)
@@ -22,17 +22,17 @@ export default class ObjectionWriteBoard extends Component{
         this.state = {
             activeIndex : 0,
             endIndex : 7,
-            objection : new Objection()
+            purpose : new Purpose()
         }
         
         this.views = [
-            <ObjectionNameWrite mainGoal={this.state.objection}/>,
-            <ObjectionDescriptionWrite mainGoal={this.state.objection}/>,
-            <ObjectionThumbnailWrite mainGoal={this.state.objection} />,
-            <ObjectionDecimalDayWrite mainGoal={this.state.objection}/>,
-            <ObjectionDetailPlansWrite mainGoal={this.state.objection} navigation={this.props.navigation}/>,
-            <ObjectionOtherWrite mainGoal={this.state.objection} />,
-            <ObjectionWriteDone mainGoal={this.state.objection} navigation={this.props.navigation}/>
+            <PurposeNameWrite purpose={this.state.purpose}/>,
+            <PurposeDescriptionWrite purpose={this.state.purpose}/>,
+            <PurposeThumbnailWrite purpose={this.state.purpose} />,
+            <PurposeDecimalDayWrite purpose={this.state.purpose}/>,
+            <PurposeDetailPlansWrite purpose={this.state.purpose} navigation={this.props.navigation}/>,
+            <PurposeOtherWrite purpose={this.state.purpose} />,
+            <PurposeWriteDone purpose={this.state.purpose} navigation={this.props.navigation}/>
         ]
     }
 

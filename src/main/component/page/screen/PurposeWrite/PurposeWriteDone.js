@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export default function ObjectionWriteDone({objection, navigation }) {
+export default function PurposeWriteDone({purpose, navigation }) {
 
 
 
@@ -30,7 +30,7 @@ export default function ObjectionWriteDone({objection, navigation }) {
                     params: {
                         screen: 'PlanView',
                         params: {
-                            objection : objection
+                            purpose : purpose
                         }
                     }
                 })

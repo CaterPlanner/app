@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import {View, Text, StyleSheet, TextInput} from 'react-native';
 import purposeStyles from './stylesheet/PurposeStyles';
 
-export default function ObjectionDecimalDayWrite({objection}) {
+export default function PurposeDecimalDayWrite({purpose}) {
 
-    const [objectionDecimalDay, setObjectionDecimalDay] = useState(new Date())
+    const [purposeDecimalDay, setPurposeDecimalDay] = useState(new Date())
 
     return(
         <View style = {purposeStyles.container}>

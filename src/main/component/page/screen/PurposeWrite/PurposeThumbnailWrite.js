@@ -4,9 +4,9 @@ import purposeStyles from './stylesheet/PurposeStyles';
 
 const ImageBtn = './../../../../../asset/sample_Image/Sam.png';
 
-export default function ObjectionTumbnailWrite({ objection }) {
+export default function PurposeTumbnailWrite({ purpose }) {
 
-    const [objectionTumbnail, setObjectionTumbnail] = useState("");
+    const [purposeTumbnail, setPurposeTumbnail] = useState("");
 
     return (
         <View style={purposeStyles.container}>

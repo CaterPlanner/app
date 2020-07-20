@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import purposeStyles from './stylesheet/PurposeStyles';
 
 
-export default function ObjectionNameWrite({ objection }) {
+export default function PurposeNameWrite({ purpose }) {
 
-    const [objectionName, setObjectionName] = useState("");
+    const [purposeName, setPurposeName] = useState("");
 
     return (
         <View style={purposeStyles.container}>
@@ -18,10 +18,10 @@ export default function ObjectionNameWrite({ objection }) {
                 maxLength = {32}
                 placeholder={"목표 이름을 적어주세요!"}
                 onChangeText={text => {
-                    setObjectionName(text);
-                    objection.name = text;
+                    setPurposeName(text);
+                    purpose.name = text;
                 }}
-                value={objectionName}
+                value={PurposeName}
             />
             </View>
         </View>

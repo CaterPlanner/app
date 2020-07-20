@@ -1,5 +1,5 @@
-import React from '../../page/screen/ObjectionWrite/node_modules/react'
-import {Button} from '../../page/screen/ObjectionWrite/node_modules/react-native';
+import React from 'react'
+import {Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DetailPlanBar from '../../molecule/DetailPlanBar';
 import {createEmptyDetailPlan} from '../../../rest/model/DetailPlan'

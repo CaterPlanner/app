@@ -1,4 +1,4 @@
-import React from '../ObjectionWrite/node_modules/react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeNavigation from '../../navigation/HomeNavigation'
 
