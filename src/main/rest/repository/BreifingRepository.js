@@ -4,13 +4,11 @@ import { action } from 'mobx';
 
 
 @inject(['sqliteManager'])
-class GoalHeaderRepository {
+class BreifingRepository {
     
     constructor(props){
         super(props);
         this.dbConnection = this.props.sqliteManager.connection;
     }
-
-
 
 }

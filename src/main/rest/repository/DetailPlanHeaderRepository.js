@@ -4,7 +4,7 @@ import { action } from 'mobx';
 
 
 @inject(['sqliteManager'])
-class GoalHeaderRepository {
+class DetailPlanHeaderRepository {
     
     constructor(props){
         super(props);

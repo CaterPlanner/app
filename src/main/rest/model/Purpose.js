@@ -1,7 +1,7 @@
 
 
 export default class Purpose{
-    constructor(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, goalHeaderId, goals){
+    constructor(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, goalHeaderId, detailPlans){
         this.id = id;
         this.authorName = authorName;
         this.authorId = authorId;
@@ -15,6 +15,6 @@ export default class Purpose{
         this.decimalDay = decimalDay;
         this.goalHeaderId = goalHeaderId;
 
-        this.goals = goals;
+        this.detailPlans = detailPlans;
     }
 }
