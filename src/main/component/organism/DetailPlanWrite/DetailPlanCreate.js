@@ -3,21 +3,21 @@ import {Button} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DetailPlanBar from '../../molecule/DetailPlanBar';
 
-export default function DetailPlanCreate({detailPlanStore,  navigation}){
+export default function DetailPlanCreate({detailPlanTreeStore,  navigation}){
     
-    const data = detailPlanStore.currentbottomViewData;
-    const constructor = detailPlanStore.currentConstructorState;
+    const data = detailPlanTreeStore.currentbottomViewData;
+    const constructor = detailPlanTreeStore.currentConstructorState;
 
     return (
         <ScrollView>
             {
                 data.map((element) => {
-                    const goal = detailPlanStore.getDetailPlan(element.key);
+                    const goal = detailPlanTreeStore.getDetailPlan(element.key);
                    
                     return <DetailPlanBar 
                     detailPlan={detailPlan} 
                     successorHead={element.successorHead} 
-                    nextClick={() => detailPlanStore.changeActiveShowKey(element.successorHead)}
+                    nextClick={() => detailPlanTreeStore.changeActiveShowKey(element.successorHead)}
                     callPlanInsert={() => {navigation.navigate('GoalInsert', {
                         goal : goal
                     });
@@ -31,8 +31,8 @@ export default function DetailPlanCreate({detailPlanStore,  navigation}){
                     navigation.navigate('GoalInsert', {
                         create : (goal) => {
                             constructor.relationType == 0 ? 
-                            detailPlanStore.insertDetailPlan(constructor.key, goal) :
-                            detailPlanStore.successorDetailPlan(constructor.key, goal);
+                            detailPlanTreeStore.insertDetailPlan(constructor.key, goal) :
+                            detailPlanTreeStore.successorDetailPlan(constructor.key, goal);
                         }
                     })
                 }}

@@ -2,7 +2,7 @@ import {observable, action, computed} from 'mobx';
 import CaterPlannerDetailPlanTree from '../../native/CaterPlannerDetailPlanTree'
 
 
-export default class DetailPlanStore{
+export default class DetailPlanTreeStore{
 
     @observable activeParentKey;
     @observable activeShowKey;

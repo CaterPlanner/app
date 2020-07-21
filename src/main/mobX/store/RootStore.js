@@ -1,9 +1,9 @@
-import DetailPlanStore from './DetailPlanStore'
+import DetailPlanTreeStore from './DetailPlanTreeStore'
 import SQLiteManager from '../../sqlite/SQLiteManager';
 
 export default class RootStore {
     constructor(){
-        this.detailPlanStore = new DetailPlanStore(this);
+        this.detailPlanTreeStore = new DetailPlanTreeStore(this);
         this.sqliteManager = new SQLiteManager(this);
     }
 }

@@ -11,21 +11,21 @@ export const startType = {
     MODIFY: 1
 }
 
-@inject(['detailPlanStore'])
+@inject(['detailPlanTreeStore'])
 @observer
 export class DetailPlanWriteBoard extends Component {
 
     constructor(props) {
         super(props);
 
-        this.detailPlanStore = this.props.detailPlanStore
+        this.detailPlanTreeStore = this.props.detailPlanTreeStore
 
         switch (props.route.params.startType) {
             case startType.CREATE:
-                this.detailPlanStore.create();
+                this.detailPlanTreeStore.create();
                 break;
             case startType.MODIFY:
-                this.detailPlanStore.buildTree(props.route.params.initData);
+                this.detailPlanTreeStore.buildTree(props.route.params.initData);
                 break;
         }
     }
@@ -36,12 +36,12 @@ export class DetailPlanWriteBoard extends Component {
             <View style={{ flex: 1 }}>
                 <View style={styles.planStateArea}>
                     <DetailPlanState
-                        detailPlanStore={this.props.detailPlanStore}
+                        detailPlanTreeStore={this.props.detailPlanTreeStore}
                     />
                 </View>
                 <View style={styles.planCreateArea}>
                     <DetailPlanCreate
-                        detailPlanStore={this.props.detailPlanStore}
+                        detailPlanTreeStore={this.props.detailPlanTreeStore}
                         navigation={this.props.navigation}
                     />
                 </View>
@@ -50,7 +50,7 @@ export class DetailPlanWriteBoard extends Component {
     }
 
     componentWillUnmount(){
-        this.props.route.params.result(this.detailPlanStore.entry);
+        this.props.route.params.result(this.detailPlanTreeStore.entry);
     }
 }
 
