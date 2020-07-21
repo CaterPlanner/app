@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, Button, StyleSheet} from 'react-native';
-import DetailPlanIcon from '../../component/atom/button/DetailPlanIcon'
+import DetailPlanIcon from '../atom/button/GoalIcon'
 
 
-const WIDTH = 100;
+const WIDTH = 300;
 const HEIGHT = 100;
 
-export default function DetailPlanBar({detailPlan, successorHead, nextClick, callPlanInsert}){
+export default function DetailPlanBar({goal, successorHead, successor, remove , modify, create}){
     return(
         <View style={styles.container}>
             <View style={{justifyContent: 'center', alignItems:'flex-start', height:"100%" ,  width:"10%"}}>
@@ -14,16 +14,14 @@ export default function DetailPlanBar({detailPlan, successorHead, nextClick, cal
             </View>
             <View style={{height:"100%", width:"80%"}}>
                 <View style={{justifyContent: 'center', alignItems:'center'}}>
-                <DetailPlanIcon name={detailPlan.name} color={detailPlan.color} width={300} height={HEIGHT} onPress={() => {console.log(detailPlan.key)}}/>
+                <DetailPlanIcon name={goal.name} color={goal.color} width={WIDTH} height={HEIGHT} onPress={() => {modify(goal)}}/>
                 </View>
                 <View style={{position: 'absolute', alignSelf: 'flex-end'}}>
-                        <Button title="modify" onPress={callPlanInsert}/>
+                        <Button title="remove" onPress={remove}/>
                 </View>
             </View>
             <View style={{justifyContent: 'center', alignItems:'flex-end' , height:"100%",  width:"10%"}}>
-                {successorHead && 
-                    <Button title=">" onPress={nextClick}/>
-                }
+                <Button title={successorHead ? ">": "+"} onPress={successorHead ? successor : () => {create(goal.key, 1)}}/>
             </View>
         </View>
     )

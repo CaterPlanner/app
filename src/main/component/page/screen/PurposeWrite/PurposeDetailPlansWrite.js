@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { startType } from '../DetailPlanWrite/DetailPlanWriteBoard';
+import { startType } from '../DetailPlanWrite/GoalWriteBoard';
 import purposeStyles from './stylesheet/PurposeStyles';
+import CommonType from '../../../../util/CommonType'
 
 export default function PurposeDetailPlanWrite({ purpose, navigation }) {
 
@@ -43,7 +44,7 @@ export default function PurposeDetailPlanWrite({ purpose, navigation }) {
                             navigation.navigate('DetailPlanNavigation', {
                                 screen: 'DetailPlanWriteBoard',
                                 params: {
-                                    startType: startType.CREATE,
+                                    startType: CommonType.CREATE,
                                     result: (detailPlans) => {
                                         setPurposeDetailPlans(detailPlans);
                                         purpose.detailPlans = detailPlans;

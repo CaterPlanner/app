@@ -3,7 +3,6 @@ import { inject } from 'mobx-react';
 import { action } from 'mobx';
 import DetailPlan from '../model/DetailPlan';
 
-
 @inject(['sqliteManager'])
 class DetailPlanRepository {
     
@@ -17,8 +16,7 @@ class DetailPlanRepository {
         return this.dbConnection.sql(
             'insert into detailPlan values (?,?,?,?,?,?,?,?,?,?,?,?)',
             [goal.key, goal.headerId, goal.constructorKey, goal.constructorRelationType, goal.name,
-            goal.type, goal.startDate, goal.endDate, goal.hopeAchievement, goal.color, goal.stat],
-            error
+            goal.type, goal.startDate, goal.endDate, goal.hopeAchievement, goal.color, goal.stat]
         );
     }
 

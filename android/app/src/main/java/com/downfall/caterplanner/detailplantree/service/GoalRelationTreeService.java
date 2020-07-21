@@ -3,7 +3,6 @@ package com.downfall.caterplanner.detailplantree.service;
 import com.downfall.caterplanner.common.Goal;
 import com.downfall.caterplanner.detailplantree.algorithm.GoalRelationTree;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
-import com.downfall.caterplanner.detailplantree.algorithm.NodeList;
 import com.downfall.caterplanner.detailplantree.manufacture.BaseScheduleMaker;
 import com.downfall.caterplanner.detailplantree.manufacture.BottomViewDataMaker;
 import com.downfall.caterplanner.detailplantree.manufacture.EntryDataMaker;
@@ -37,7 +36,7 @@ public class GoalRelationTreeService implements CaterPlannerDetailPlanTreeServic
     public WritableArray entry() throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
-        return new EntryDataMaker().make(tree.getNodes());
+        return new EntryDataMaker().make(tree.getUseNodes());
     }
 
     @Override
@@ -87,22 +86,16 @@ public class GoalRelationTreeService implements CaterPlannerDetailPlanTreeServic
         node.getData().modify(Goal.valueOf(param));
     }
 
-    public WritableMap mapBottomViewData(int activeParentKey) throws Exception{
+    public WritableMap mapGoalBottomViewData() throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
-        Node parent = tree.select(activeParentKey);
-        if(parent == null)
-            throw new Exception("Node does not exist.");
-        return new BottomViewDataMaker().make(parent);
+        return new BottomViewDataMaker().make(tree.getRoot());
     }
 
-    public WritableArray mapTopViewData(int activeParentKey) throws Exception{
+    public WritableMap mapGoalTopViewData() throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
-        Node parent = tree.select(activeParentKey);
-        if(parent == null)
-            throw new Exception("Node does not exist.");
-        return new TopViewDataMaker().make(parent);
+        return new TopViewDataMaker().make(tree.getRoot());
     }
 
 }
