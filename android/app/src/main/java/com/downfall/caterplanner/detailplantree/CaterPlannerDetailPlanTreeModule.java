@@ -1,14 +1,12 @@
 package com.downfall.caterplanner.detailplantree;
 
 import com.downfall.caterplanner.detailplantree.service.GoalRelationTreeService;
-import com.downfall.caterplanner.detailplantree.service.MPRelationTreeService;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Promise;
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
@@ -67,9 +65,9 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
 
     @Deprecated
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableArray mapTopViewData(Integer activeParentKey){
+    public WritableMap mapGoalTopViewData(){
         try{
-            return service.mapTopViewData(activeParentKey);
+            return service.mapGoalTopViewData();
         }catch (Exception e){
            e.printStackTrace();
         }
@@ -78,9 +76,9 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
 
     @Deprecated
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap mapBottomViewData(Integer activeParentKey){
+    public WritableMap mapGoalBottomViewData(){
         try {
-            return service.mapBottomViewData(activeParentKey);
+            return service.mapGoalBottomViewData();
         } catch (Exception e) {
             e.printStackTrace();
         }

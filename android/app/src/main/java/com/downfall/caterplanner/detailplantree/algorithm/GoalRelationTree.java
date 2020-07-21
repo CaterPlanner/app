@@ -99,9 +99,10 @@ public class GoalRelationTree {
         return node;
     }
 
-    public Node[] getNodes() {
+    public Node[] getUseNodes() {
         return this.nodeList.getAll(node -> node.getType() != Type.R);
     }
+
 
 
 }

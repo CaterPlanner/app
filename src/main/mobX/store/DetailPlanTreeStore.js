@@ -4,18 +4,16 @@ import CaterPlannerDetailPlanTree from '../../native/CaterPlannerDetailPlanTree'
 
 export default class DetailPlanTreeStore{
 
-    @observable activeParentKey;
     @observable activeShowKey;
 
-    @observable topViewData;
-    @observable bottomViewData;
+    @observable goalTopViewData;
+    @observable goalBottomViewData;
 
     _start(){
-        this.activeParentKey = 0;
         this.activeShowKey = 0;
 
-        this.bottomViewData = [];
-        this.topViewData = [];
+        this.goalBottomViewData = [];
+        this.goalTopViewData = [];
     }
 
     @action 
@@ -75,8 +73,8 @@ export default class DetailPlanTreeStore{
     }
 
     _updateViewData = () => {
-        this.topViewData = CaterPlannerDetailPlanTree.mapTopViewData(this.activeParentKey);
-        this.bottomViewData = CaterPlannerDetailPlanTree.mapBottomViewData(this.activeParentKey);
+        this.goalTopViewData = CaterPlannerDetailPlanTree.mapGoalTopViewData();
+        this.goalBottomViewData = CaterPlannerDetailPlanTree.mapGoalBottomViewData();
     }
 
     @action 
@@ -86,10 +84,6 @@ export default class DetailPlanTreeStore{
         this._updateViewData();
     }
 
-    @action 
-    changeParentKey = (parentKey) => {
-        this.activeParentKey = parentKey;
-    }
 
     @action 
     changeActiveShowKey = (showKey) => {
@@ -102,15 +96,15 @@ export default class DetailPlanTreeStore{
     }
 
     get currentbottomViewData() {
-        return this.bottomViewData.length == 0 ? this.bottomViewData :  
-        this.bottomViewData.brotherGroups[this.bottomViewData.path[this.activeShowKey]];
+        return this.goalBottomViewData.length == 0 ? this.goalBottomViewData :  
+        this.goalBottomViewData.brotherGroups[this.goalBottomViewData.path[this.activeShowKey]];
     }
 
     get currentTopViewData(){
-        return this.topViewData;
+        return this.goalTopViewData;
     }
 
-    get currentConstructorState(){
+    get currentActiveConstructorState(){
         let key = 0;
         let relationType = 0;
 

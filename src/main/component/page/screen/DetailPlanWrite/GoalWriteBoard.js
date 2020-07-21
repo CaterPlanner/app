@@ -4,16 +4,13 @@ import DetailPlanState from '../../../organism/DetailPlanWrite/DetailPlanState'
 import DetailPlanCreate from '../../../organism/DetailPlanWrite/DetailPlanCreate'
 import { inject } from 'mobx-react'
 import { observer } from 'mobx-react'
+import CommonType from '../../../../util/CommonType'
 
 
-export const startType = {
-    CREATE: 0,
-    MODIFY: 1
-}
 
 @inject(['detailPlanTreeStore'])
 @observer
-export class DetailPlanWriteBoard extends Component {
+export class GoalWriteBoard extends Component {
 
     constructor(props) {
         super(props);
@@ -21,10 +18,10 @@ export class DetailPlanWriteBoard extends Component {
         this.detailPlanTreeStore = this.props.detailPlanTreeStore
 
         switch (props.route.params.startType) {
-            case startType.CREATE:
+            case CommonType.CREATE:
                 this.detailPlanTreeStore.create();
                 break;
-            case startType.MODIFY:
+            case CommonType.MODIFY:
                 this.detailPlanTreeStore.buildTree(props.route.params.initData);
                 break;
         }

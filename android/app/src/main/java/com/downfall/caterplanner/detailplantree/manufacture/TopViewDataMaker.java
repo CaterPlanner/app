@@ -7,17 +7,15 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
 
-public class TopViewDataMaker implements WritableArrayMaker<Node> {
+public class TopViewDataMaker implements WritableMapMaker<Node> {
 
     @Override
-    public WritableArray make(Node root){
-
-        if(root.getType() != Type.R)
-            throw new RuntimeException("only root node start");
+    public WritableMap make(Node root){
 
         class Space {
             int key;
@@ -42,10 +40,11 @@ public class TopViewDataMaker implements WritableArrayMaker<Node> {
 
 
         List<FloorLevel> floorLevelList = new ArrayList<>();
-
         Stack<Node> stack = new Stack<>();
 
-        Node[] firstChildren = root.getChildren();
+        HashMap<Integer, Space> spaceHashMap = new HashMap<>();
+
+        Node[] firstChildren = root.getChildren(); //root
 
         for(int i = firstChildren.length - 1;  i >= 0; i--){
             stack.push(firstChildren[i]);
@@ -61,14 +60,16 @@ public class TopViewDataMaker implements WritableArrayMaker<Node> {
             if(element.getConstructor().getChildren()[0] == element){
                 floorLevel = floorLevelList.get(previousFloorArrayIndex);
             }else{
-                floorLevel = new FloorLevel();
+                floorLevel = new FloorLevel(); //currentpos를 부모로부터 이어받아야함
                 floorLevelList.add(floorLevel);
                 previousFloorArrayIndex = floorLevelList.size() - 1;
             }
 
-            floorLevel.currentPos++;
-            floorLevel.elements.add(new Space(element.getKey(), floorLevel.currentPos));
+            Space space = new Space(element.getKey(), element.getConstructor().getKey() == 0 ? 0 : spaceHashMap.get(element.getConstructor().getKey()).pos + 1);
+            floorLevel.elements.add(space);
+            spaceHashMap.put(element.getKey(), space);
 
+            
             Node[] successors = element.getSuccessors();
 
             for(int i = successors.length - 1;  i >= 0; i--){
@@ -77,12 +78,19 @@ public class TopViewDataMaker implements WritableArrayMaker<Node> {
 
         }
 
-        WritableArray result = Arguments.createArray();
+
+        WritableMap result = Arguments.createMap();
+        int maxPos = 0;
+
+        WritableArray floorArray = Arguments.createArray();
 
         for(FloorLevel level : floorLevelList){
-
+            //max 그헹힘
             WritableMap levelMap = Arguments.createMap();
             WritableArray elementArray = Arguments.createArray();
+
+            maxPos = Math.max(maxPos, level.elements.size());
+
             for(Space space : level.elements){
                 WritableMap spaceMap = Arguments.createMap();
                 spaceMap.putInt("key", space.key);
@@ -90,8 +98,11 @@ public class TopViewDataMaker implements WritableArrayMaker<Node> {
                 elementArray.pushMap(spaceMap);
             }
             levelMap.putArray("elements", elementArray);
-            result.pushMap(levelMap);
+            floorArray.pushMap(levelMap);
         }
+
+        result.putArray("floorArray", floorArray);
+        result.putInt("maxPos", maxPos - 1);
 
         return result;
     }
