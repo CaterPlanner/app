@@ -6,7 +6,6 @@ import { action } from 'mobx';
 @inject(stores => ({
     sqliteManager: stores.sqliteManager,
     purposeRepository : stores.repository.purposeRepository,
-    detailPlanHeaderRepository : stores.repository.detailPlanHeaderRepository,
     detailPlanService : stores.service.detailPlanService
 }))
 class PurposeService {
@@ -25,24 +24,31 @@ class PurposeService {
     @action
     create = (purpose) => {
         this.connection.transaction((tx) => {
+            let detailPlanHeaderId = this.detailPlanService.register(purpose.detailPlans);
 
-            //1. detailPlanHeaderId 생성
-            let detailPlanHeaderId = this.detailPlanHeaderRepository.insert();
-            
-            //2. detailPlans bulk insert
-            this.detailPlanService.bulkCreate(detailPlanHeaderId, purpose.detailPlans);
+            if(detailPlanHeaderId)
+                throw 'failed register the detailPlans';
 
-            //3. purpose insert
             this.purposeRepository.insert(purpose, null, null, detailPlanHeaderId)
-
         });
     }
 
     @action
     read = (id) => {
+        let purpose;
         this.connection.transaction((tx) => {
+            purpose = this.purposeRepository.selectById(id);
+            let detailPlans = this.detailPlanService.findAllByHeaderId(purpose.headerId);
             
+            purpose.setDetailPlans(detailPlans);
+
         });
+        return purpose;
+    }
+
+    @action
+    shortRead = (id) => {
+        return this.purposeRepository.selectById(id);
     }
 
     @action

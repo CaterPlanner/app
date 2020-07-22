@@ -16,7 +16,7 @@ class BriefingRepository {
             'insert into briefing values(?, ?, datetime(\'now\'), 0)',
             [headerId, detailPlanKey],
             (tx, result) =>{
-                return true;
+                return result.rowsAffected > 0 ? true : false; 
             }
         )
     }

@@ -10,6 +10,7 @@ class DetailPlanHeaderRepository {
         this.connection = this.props.sqliteManager.connection
     }
 
+
     @action
     insert = (author, baseId) => {
         return this.connection.executeSql(
