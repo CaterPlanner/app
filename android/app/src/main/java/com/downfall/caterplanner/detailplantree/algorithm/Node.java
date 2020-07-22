@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.detailplantree.algorithm;
 
-import com.downfall.caterplanner.common.Goal;
+import com.downfall.caterplanner.common.DetailPlan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,12 @@ public class Node{
     private List<Node> children;
     private List<Node> successors;
 
-    private Goal data;
+    private DetailPlan data;
 
     private Node constructor;
 
-    public Node(Goal goal) {
-        this.data = goal;
+    public Node(DetailPlan detailPlan) {
+        this.data = detailPlan;
         this.children = new ArrayList<Node>();
         this.successors = new ArrayList<Node>();
     }
@@ -28,7 +28,7 @@ public class Node{
         this.data.setKey(key);
     }
 
-    public Goal getData() {
+    public DetailPlan getData() {
         return data;
     }
 
@@ -87,6 +87,6 @@ public class Node{
     }
 
     public static Node createRoot() {
-        return new Node(new Goal());
+        return new Node(new DetailPlan());
     }
 }

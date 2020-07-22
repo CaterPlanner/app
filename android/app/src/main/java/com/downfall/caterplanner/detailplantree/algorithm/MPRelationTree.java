@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.detailplantree.algorithm;
 
-import com.downfall.caterplanner.common.Goal;
+import com.downfall.caterplanner.common.DetailPlan;
 import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class MPRelationTree {
         nodeList.add(Node.createRoot());
     }
 
-    public MPRelationTree(NodeList nodeList, Goal[] list) throws Exception {
+    public MPRelationTree(NodeList nodeList, DetailPlan[] list) throws Exception {
 
         Node[] nodes = new Node[list.length + 1];
         nodes[0] = Node.createRoot();

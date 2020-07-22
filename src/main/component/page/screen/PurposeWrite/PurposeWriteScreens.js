@@ -7,47 +7,47 @@ import useStores from '../../../../mobX/helper/useStores';
 export function PurposeNameWrite({ purpose }) {
 
     const [purposeName, setPurposeName] = useState("");
-    
+
 
     return (
         <View style={purposeStyles.container}>
-            <View style={[purposeStyles.titleContainer, {flex:1}]}>
+            <View style={[purposeStyles.titleContainer, { flex: 1 }]}>
                 <Text style={purposeStyles.title}>당신의 목표는 무엇인가요?</Text>
             </View>
-            <View style={[purposeStyles.bottomContainer, {flex:8}]}>
-            <TextInput
-                numberOfLines={1}
-                maxLength = {32}
-                placeholder={"목표 이름을 적어주세요!"}
-                onChangeText={text => {
-                    setPurposeName(text);
-                    purpose.name = text;
-                }}
-                value={purposeName}
-            />
+            <View style={[purposeStyles.bottomContainer, { flex: 8 }]}>
+                <TextInput
+                    numberOfLines={1}
+                    maxLength={32}
+                    placeholder={"목표 이름을 적어주세요!"}
+                    onChangeText={text => {
+                        setPurposeName(text);
+                        purpose.name = text;
+                    }}
+                    value={purposeName}
+                />
             </View>
         </View>
     );
 }
 
 
-export function PurposeDescriptionWrite({purpose}) {
+export function PurposeDescriptionWrite({ purpose }) {
 
     const [purposeDescription, setPurposeDescription] = useState("");
 
     return (
         <View style={purposeStyles.container}>
-            <View style={[purposeStyles.titleContainer, {flex:1}]}>
-                <Text 
-                style={purposeStyles.title}>
-                당신의 목표는... 
-                {"\n"} 
-                {purpose.name}
+            <View style={[purposeStyles.titleContainer, { flex: 1 }]}>
+                <Text
+                    style={purposeStyles.title}>
+                    당신의 목표는...
+                {"\n"}
+                    {purpose.name}
                 </Text>
             </View>
-            <View style={[purposeStyles.bottomContainer, {flex:8}]}>
+            <View style={[purposeStyles.bottomContainer, { flex: 8 }]}>
                 <TextInput
-                    multiline ={true}
+                    multiline={true}
                     placeholder="정한 목표에 대한 설명이나 시작하게 된 동기를 적어주세요."
                     onChangeText={text => {
                         setPurposeDescription(text);
@@ -55,17 +55,17 @@ export function PurposeDescriptionWrite({purpose}) {
                     }}
                     value={purposeDescription}
                 />
-            </View>           
+            </View>
         </View>
     );
 }
 
-export function PurposeDecimalDayWrite({purpose}) {
+export function PurposeDecimalDayWrite({ purpose }) {
 
     const [purposeDecimalDay, setPurposeDecimalDay] = useState(new Date())
 
-    return(
-        <View style = {purposeStyles.container}>
+    return (
+        <View style={purposeStyles.container}>
             <View style={purposeStyles.titleContainer}>
                 <Text style={purposeStyles.title}>
                     목표를 끝날 날짜를
@@ -75,7 +75,7 @@ export function PurposeDecimalDayWrite({purpose}) {
             </View>
             <View style={purposeStyles.bottomContainer}>
                 <View>
-                <Text> Data Picker date</Text>
+                    <Text> Data Picker date</Text>
                 </View>
             </View>
         </View>
@@ -92,14 +92,14 @@ export default function PurposeTumbnailWrite({ purpose }) {
 
     return (
         <View style={purposeStyles.container}>
-            <View style={[purposeStyles.titleContainer, {flex:1}]}>
+            <View style={[purposeStyles.titleContainer, { flex: 1 }]}>
                 <Text style={purposeStyles.title}>
                     자신의 목표에 맞는{"\n"}
                     대표 이미지를 설정해주세요
                 </Text>
             </View>
 
-            <View style={[purposeStyles.bottomContainer, {flex:8, justifyContent: 'center'}]}>
+            <View style={[purposeStyles.bottomContainer, { flex: 8, justifyContent: 'center' }]}>
                 <TouchableOpacity style={{
                     width: '80%',
                     height: '77%',
@@ -147,13 +147,13 @@ export function PurposeDetailPlanWrite({ purpose, navigation }) {
                 </Text>
                 </View>
             </View>
-            <View style={[purposeStyles.bottomContainer, { flex: 6.5}]}>
-                <View style={{flex:1}}>
+            <View style={[purposeStyles.bottomContainer, { flex: 6.5 }]}>
+                <View style={{ flex: 1 }}>
                     <Button
                         title="+"
                     />
                 </View>
-                <View style={{flex:3}}>
+                <View style={{ flex: 3 }}>
                     <TouchableOpacity
                         style={{
                             width: '100%',
@@ -236,8 +236,7 @@ export function PurposeOtherWrite({ purpose }) {
 
 export function PurposeWriteDone({ purpose, navigation }) {
 
-    const purposeService = ({service} = useStores()).purposeService;
-
+    const purposeService = ({ service } = useStores()).purposeService;
 
     return (
         <View style={styles.container}>
@@ -257,13 +256,11 @@ export function PurposeWriteDone({ purpose, navigation }) {
             <TouchableOpacity
                 style={{
                     alignItems: 'center',
-
                     justifyContent: 'center'
                 }}
-                onPress={async () => {
-                    try{
-
-                        await purposeService.create(purpose);
+                onPress={() => {
+                    try {
+                        purposeService.create(purpose);
 
                         navigation.navigate('MainNavigation', {
                             screen: 'Home',
@@ -274,8 +271,8 @@ export function PurposeWriteDone({ purpose, navigation }) {
                                 }
                             }
                         })
-                    }catch(e){
-
+                    } catch (e) {
+                        console.log(e);
                     }
                 }}
             //버튼
@@ -313,18 +310,18 @@ const purposeStyles = StyleSheet.create({
         marginHorizontal: 20,
         marginVertical: 5,
         marginTop: 20
-    } ,
+    },
 
     title: {
         fontSize: 25
     },
 
     subtitle: {
-        fontSize : 15,
+        fontSize: 15,
         color: 'gray'
     },
 
-    bottomContainer : {
+    bottomContainer: {
         width: "91%",
         marginHorizontal: 20,
         marginVertical: 5

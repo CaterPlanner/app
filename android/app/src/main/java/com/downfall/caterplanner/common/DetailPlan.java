@@ -8,7 +8,7 @@ import com.facebook.react.bridge.WritableMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Goal {
+public class DetailPlan {
 
 	private int key;
 	private int constructorKey;
@@ -21,7 +21,7 @@ public class Goal {
 	private String cycle;
 	private int stat; //0 : 진행중, 1 : 성공 , 2: 실패 , 3: 루트
 
-	public Goal(){
+	public DetailPlan(){
 		this.stat = 3;
 		this.key = 0;
 		this.constructorKey = -1;
@@ -29,7 +29,7 @@ public class Goal {
 		this.type = Type.R;
 	} //Create ROOT
 
-	public Goal(int key, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, String color, String cycle, int stat) {
+	public DetailPlan(int key, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, String color, String cycle, int stat) {
 		this.key = key;
 		this.constructorKey = constructorKey;
 		this.constructorRelationType = constructorRelationType;
@@ -122,7 +122,7 @@ public class Goal {
 		return stat > 0;
 	}
 
-	public void modify(Goal copy){
+	public void modify(DetailPlan copy){
 		this.name = copy.getName();
 		this.color = copy.getColor();
 		this.startDate = copy.getStartDate();
@@ -131,7 +131,7 @@ public class Goal {
 		this.stat = copy.getStat();
 	}
 
-	public static Goal valueOf(ReadableMap data) throws Exception{
+	public static DetailPlan valueOf(ReadableMap data) throws Exception{
 		String type = data.getString("type");
 		int stat = data.getInt("stat");
 
@@ -141,7 +141,7 @@ public class Goal {
 		if(stat < 0 || stat > 2)
 			throw new Exception("DetailPlan:stat is not valid");
 
-		return new Goal(
+		return new DetailPlan(
 				data.getInt("key"),
 				data.getInt("constructorKey"),
 				data.getInt("constructorRelationType"),
@@ -154,7 +154,7 @@ public class Goal {
 				stat);
 	}
 
-	public static WritableMap parseWritableMap(Goal plan) throws Exception{
+	public static WritableMap parseWritableMap(DetailPlan plan) throws Exception{
 		WritableMap detailPlanMap = Arguments.createMap();
 		detailPlanMap.putInt("key", plan.getKey());
 		detailPlanMap.putInt("constructorKey", plan.getConstructorKey());

@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
-public class GoalScheduleMaker extends BaseScheduleMaker<Node> {
+public class GPScheduleMaker extends BaseScheduleMaker<Node> {
 
     @Override
     public WritableArray make(Node root) throws Exception {
