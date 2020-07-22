@@ -1,4 +1,3 @@
-import connection from '../../sqlite/SQLiteManager';
 import { inject } from 'mobx-react';
 import { action } from 'mobx';
 
@@ -8,14 +7,17 @@ class BriefingRepository {
     
     constructor(props){
         super(props);
-        this.dbConnection = this.props.sqliteManager.connection;
+        this.connection = this.props.sqliteManager.connection;
     }
 
     @action
     insert = (headerId, detailPlanKey) => {
-        return this.dbConnection.sql(
+        return this.connection.executeSql(
             'insert into briefing values(?, ?, datetime(\'now\'), 0)',
-            [headerId, detailPlanKey]
+            [headerId, detailPlanKey],
+            (tx, result) =>{
+                return true;
+            }
         )
     }
 
