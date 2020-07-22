@@ -19,7 +19,7 @@ class PurposeRepository {
             purpose.name, purpose.description, purpose.imageUrl, purpose.disclosureScope,
             purpose.startAt, purpose.decimalDay, detailPlanHeaderId],
             (tx, result) =>{
-                return true;
+                return result.rowsAffected > 0 ? true : false; 
             }
        );
     }
@@ -30,10 +30,16 @@ class PurposeRepository {
             'select * from purpose where id = ?',
             [id],
             (tx, result) => {
-                return new Purpose(id,authorName,authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, detailPlanHeaderId);
+                if(result.rows.length == 0)
+                    return null;
+                let res = result.rows.get(0);
+                return new Purpose(res.id,res.authorName,res.authorId, res.groupName, res.groupId, res.name, 
+                    res.description, res.imageUrl, res.disclosureScope, res.startAt, res.decimalDay, res.detailPlanHeaderId);
             }
         )
     }
+
+
 
     @action
     updatePurposeData = (id, purpose) => {
@@ -44,7 +50,7 @@ class PurposeRepository {
             'where id = ?',
             [purpose.name, purpose.description, purpose.imageUrl, purpose.disclosureScope, purpose.startAt, purpose.decimalDay, purpose.detailPlanHeaderId, id],
             (tx, result) =>{
-                return true;
+                return result.rowsAffected > 0 ? true : false; 
             }
         )
     }
@@ -55,7 +61,7 @@ class PurposeRepository {
             'delete from where id = ?',
             [id],
             (tx, result) =>{
-                return true;
+                return result.rowsAffected > 0 ? true : false; 
             }
         )
     }
