@@ -1,4 +1,3 @@
-import connection from '../../sqlite/SQLiteManager';
 import { inject } from 'mobx-react';
 import { action } from 'mobx';
 import DetailPlan from '../model/DetailPlan';
@@ -8,21 +7,24 @@ class DetailPlanRepository {
     
     constructor(props){
         super(props);
-        this.dbConnection = this.props.sqliteManager.connection;
+        this.connection = this.props.sqliteManager.connection;
     }
 
     @action
-    insert = (detailPlan, error) => {
-        return this.dbConnection.sql(
+    insert = (headerId, detailPlan) => {
+        return this.connection.executeSql(
             'insert into detailPlan values (?,?,?,?,?,?,?,?,?,?,?,?)',
-            [goal.key, goal.headerId, goal.constructorKey, goal.constructorRelationType, goal.name,
-            goal.type, goal.startDate, goal.endDate, goal.hopeAchievement, goal.color, goal.stat]
+            [goal.key, headerId, goal.constructorKey, goal.constructorRelationType, goal.name,
+            goal.type, goal.startDate, goal.endDate, goal.hopeAchievement, goal.color, goal.stat],
+            (tx, result) => {
+                return true;
+            }
         );
     }
 
     @action
     selectByKeyWithBriefingCount = (key) => {
-        return this.dbConnection.sql(
+        return this.connection.executeSql(
             'select d.key "key", d.header_id "headerId", d.constructor_key "costructorKey", d.constructor_relation_type "constructorRelatioType", '+
             'd.name "name", d.type "type", d.start_date "startDate", d.end_date "endDate", d.hope_achievement "hopeAchievement", d.color "color", '+
             'd.stat "stat", b.briefingCount "briefingCount" '+
@@ -32,26 +34,32 @@ class DetailPlanRepository {
             (tx, result) => {
                 return result.rows.length == 0 ? null : new DetailPlan(result.key, result.headerId, result.constructorKey, result.constructorRelationType, 
                     result.name, result.type, result.startDate, result.endDate, result.hopeAchievement, result.color, result.tat, result.briefingCount);
-            },
+            }
         );
     }
 
     @action
     deleteByKey = (key) => {
-        return this.dbConnection.executeSql(
+        return this.connection.executeSql(
             'delete from detailplan where key = ?',
-            [key]
+            [key],
+            (tx, result) => {
+                return true;
+            }
         );
     }
 
 
     @action
     updateDetailPlanData = (key, detailPlan) => {
-        return this.dboConnection.executeSql(
+        return this.connection.executeSql(
             'update detailplan '+
             'name = ?, start_date = ?, end_date = ?, hope_achievement = ?, color = ? '+
             'where key = ?',
-            [detailPlan.name, detailPlan.startDate, detailPlan.endDate, detailPlan.hopeAchievement, detailPlan.color, key]
+            [detailPlan.name, detailPlan.startDate, detailPlan.endDate, detailPlan.hopeAchievement, detailPlan.color, key].color],
+            (tx, result) => {
+                return true;
+            }
         );
     }
 

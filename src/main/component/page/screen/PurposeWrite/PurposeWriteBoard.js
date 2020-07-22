@@ -1,13 +1,7 @@
 import React, { Component } from 'react'
 import {View, StyleSheet, Button, Dimensions} from 'react-native'
 import Carousel from 'react-native-snap-carousel';
-import PurposeNameWrite from './PurposeNameWrite'
-import PurposeDescriptionWrite from './PurposeDescriptionWrite'
-import PurposeThumbnailWrite from './PurposeThumbnailWrite'
-import PurposeDecimalDayWrite from './PurposeDecimalDayWrite'
-import PurposeDetailPlansWrite from './PurposeDetailPlansWrite'
-import PurposeOtherWrite from './PurposeOtherWrite'
-import PurposeWriteDone from './PurposeWriteDone'
+import {PurposeNameWrite, PurposeDescriptionWrite, PurposeThumbnailWrite, PurposeDecimalDayWrite, PurposeDetailPlansWrite, PurposeOtherWrite, PurposeWriteDone} from './PurposeWriteScreens'
 import PageStateText from '../../../atom/text/PageStateText'
 import Purpose from '../../../../rest/model/Purpose';
 
