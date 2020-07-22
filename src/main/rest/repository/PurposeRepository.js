@@ -13,7 +13,7 @@ class PurposeRepository {
 
     @action
     insert = (purpose, author, group, detailPlanHeaderId) => {
-       this.connection.executeSql(
+       return this.connection.executeSql(
            'insert into purpose values (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)',
            [purpose.id, author ? author.name : null , author ? author.Id : null , group ? group.name : null, group ? group.id : null,
             purpose.name, purpose.description, purpose.imageUrl, purpose.disclosureScope,
@@ -26,7 +26,7 @@ class PurposeRepository {
 
     @action
     selectById = (id) => {
-        this.connection.executeSql(
+        return this.connection.executeSql(
             'select * from purpose where id = ?',
             [id],
             (tx, result) => {
@@ -39,11 +39,26 @@ class PurposeRepository {
         )
     }
 
+    @action
+    selectByStatIsActive = () => {
+        return this.connection.executeSql(
+            'select * from purpose where stat = 0',
+            [],
+            (tx, result) => {
+                if(result.rows.length == 0)
+                    return null;
+                return result.rows.map((row) => {
+                    return new Purpose(row.id, row.authorName, row.authorId, row.groupName, row.groupId, row.name,
+                        row.description, row.imageUrl, row.disclosureScope, row.startAt, row.decimalDay, row.detailPlanHeaderId);
+                })
+            }
+        )
+    }
 
 
     @action
     updatePurposeData = (id, purpose) => {
-        this.connection.executeSql(
+        return this.connection.executeSql(
             'update purpose '+
             'set name = ?, description = ?, image_url = ?, disclosure_scope = ?, start_at = ?, decimal_day = ?, detailplan_header_id = ? '+
             'from purpose '+
@@ -57,7 +72,7 @@ class PurposeRepository {
 
     @action
     deleteById = (id) => {
-        this.connection.executeSql(
+        return this.connection.executeSql(
             'delete from where id = ?',
             [id],
             (tx, result) =>{

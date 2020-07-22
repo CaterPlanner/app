@@ -19,8 +19,8 @@ public class Schedule {
         this.perform = perform;
     }
 
-    public Schedule(Goal goal, int previousKey, Goal[] perform){
-        this(new Task(goal.getKey(), goal.getCycle()), previousKey,
+    public Schedule(DetailPlan detailPlan, int previousKey, DetailPlan[] perform){
+        this(new Task(detailPlan.getKey(), detailPlan.getCycle()), previousKey,
                 Arrays.stream(perform)
                         .map(p -> new Task(p.getKey(), p.getCycle()))
                         .toArray(size -> new Task[size]));

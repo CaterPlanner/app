@@ -2,7 +2,7 @@ package com.downfall.caterplanner.detailplantree.manufacture;
 
 
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
-import com.downfall.caterplanner.common.Goal;
+import com.downfall.caterplanner.common.DetailPlan;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
 import com.facebook.react.bridge.Arguments;
@@ -13,15 +13,15 @@ import java.util.List;
 
 @Deprecated
 class MPSchedule {
-    private Goal data;
+    private DetailPlan data;
     private List<Node> previous;
 
-    public MPSchedule(Goal data, List<Node> previous) {
+    public MPSchedule(DetailPlan data, List<Node> previous) {
         this.data = data;
         this.previous = previous;
     }
 
-    public Goal getData() {
+    public DetailPlan getData() {
         return data;
     }
 
@@ -86,7 +86,7 @@ public class MPScheduleMaker extends BaseScheduleMaker<Node[]>{
         return map;
     }
 
-    private void putPlanData(WritableMap map , Goal data){
+    private void putPlanData(WritableMap map , DetailPlan data){
         map.putInt("key", data.getKey());
         map.putString("type", data.getType().name());
         map.putBoolean("isEnd", data.isEnd());

@@ -28,5 +28,16 @@ class DetailPlanHeaderRepository {
         )
     }
 
+    @action
+    deleteById = (id) => {
+        return this.connection.executeSql(
+            'delete from detailplan_header where id = ?',
+            [id],
+            (tx, result) => {
+                return result.rowsAffected > 0 ? true : false;
+            }
+        )
+    }
+
 
 }

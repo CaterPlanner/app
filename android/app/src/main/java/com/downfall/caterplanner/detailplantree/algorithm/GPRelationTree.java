@@ -1,20 +1,20 @@
 package com.downfall.caterplanner.detailplantree.algorithm;
 
-import com.downfall.caterplanner.common.Goal;
+import com.downfall.caterplanner.common.DetailPlan;
 import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
 
 import java.util.List;
 
-public class GoalRelationTree {
+public class GPRelationTree {
 
     private NodeList nodeList;
 
-    public GoalRelationTree(){
+    public GPRelationTree(){
         nodeList = new NodeList();
         nodeList.add(Node.createRoot());
     }
 
-    public GoalRelationTree(Goal[] list) throws Exception {
+    public GPRelationTree(DetailPlan[] list) throws Exception {
 
         Node[] nodes = new Node[list.length + 1];
         nodes[0] = Node.createRoot();
