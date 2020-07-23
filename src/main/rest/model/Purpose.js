@@ -1,8 +1,5 @@
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-
-
 export default class Purpose {
-
+    //D-DAY 필요
     constructor(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, detailPlanHeaderId) {
 
         this.id = id;
@@ -14,8 +11,8 @@ export default class Purpose {
         this.description = description;
         this.imageUrl = imageUrl;
         this.disclosureScope = disclosureScope;
-        this.startAt = startAt;
-        this.decimalDay = decimalDay;
+        this.startAt = new Date(startAt);
+        this.decimalDay = new Date(decimalDay);
         this.detailPlanHeaderId = detailPlanHeaderId;
 
         this.isSpecific = false;
@@ -23,37 +20,54 @@ export default class Purpose {
     }
 
     get entryProgress() {
-        return this.isSpecific ? Math.round(this.entryCurrentPerfectTime / this.entryMaxTime).toFixed(2) : null;
+        if (!this.isSpecific)
+            throw Error('Must add a DetailPlans first.');
+
+        let entryCurrentPerfectTime = 0;
+
+        this.detailPlans.forEach((detailPlan) => {
+            if(detailPlan.type == 'G')
+                entryCurrentPerfectTime += detailPlan.performsCurrentPerfectTime;
+        })
+
+        return Math.round(entryCurrentPerfectTime / this.entryMaxTime).toFixed(2);
     }
 
     get entryAcheive() {
-        return this.isSpecific ? Math.round(this.briefingCount / this.maxTime).toFixed(2) : null;
+        if (!this.isSpecific)
+            throw Error('Must add a DetailPlans first.');
+
+        let entryBriefingCount = 0;
+
+        this.detailPlans.forEach((detailPlan) => {
+            if(detailPlan.type == 'G')
+                entryBriefingCount += detailPlan.performsBriefingCount;
+        })
+
+        return Math.round(entryBriefingCount / this.entryMaxTime).toFixed(2);
     }
 
-    addBriefing = (key) => {
+    get leftDay(){
+        return DeteUtil.betweenDayCount(this.decimalDay , Date.now());
+    }
+
+    addBriefing = (key, briefing) => {
         if(!this.isSpecific)
-            return false;
+            throw Error('Must add a DetailPlans first.');
 
         this.entryBriefingCount++;
-        this.detailPlans[key].briefingCount++;
+        this.detailPlans[key].addBriefing(briefing);
 
-        return true;
     }
 
-    setDetailPlans = (detailPlans) => {
-        if(!detailPlans)
-            return;
-            
+    setDetailPlans = (detailPlans) => {          
         this.detailPlans = detailPlans;
 
         this.entryMaxTime = 0;
-        this.entryBriefingCount = 0;
-        this.entryCurrentPerfectTime = 0;
 
         detailPlans.forEach(detailPlan => {
-            this.entryMaxTime += detailPlan.maxTime;
-            this.entryBriefingCount += detailPlan.briefingCount;
-            this.entryCurrentPerfectTime += detailPlan.currentPerfectTime;
+            if(detailPlan.type == 'G')
+                this.entryMaxTime += detailPlan.performsMaxTime;
         });
 
         this.isSpecific = true;

@@ -1,8 +1,214 @@
 import DateUtil from '../../util/DateUtil'
 
+//P와 G 구분 필요
+export class DetailPlan {
+
+    //다음 브리핑까진 남은 데이 필요
+    constructor(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat) {
+
+        this.key = key;
+        this.headerId = headerId;
+        this.constructorKey = constructorKey;
+        this.constructorRelationType = constructorRelationType;
+        this.name = name;
+        this.type = type; //G - goal P - performGoal
+        this.startDate = Date.parse(startDate);
+        this.endDate = Date.parse(endDate);
+        this.hopeAchievement = hopeAchievement;
+        this.color = color;
+        this.cycle = cycle;
+        this.stat = stat;
 
 
-getBetweenMaxBriefing = (startDate, endDate, cycleType, piece) => {
+    }
+
+    /**
+    * 진행치
+    * 시간에 따른 %
+    */
+    get progress() {
+        throw new Error('must be overriding');
+    }
+    /**
+     * 수행치
+     * 수행에 따른 %
+     */
+    get achieve() {
+        throw new Error('must be overriding');
+    }
+
+}
+
+
+export class Goal extends DetailPlan{
+
+    constructor(key, headerId, constructorKey, constructorRelationType, name, startDate, endDate, hopeAchievement, color, cycle, stat) {
+        super(key, headerId, constructorKey, constructorRelationType, name, 'G', startDate, endDate, hopeAchievement, color, cycle, stat);
+        
+        this.isSpecific = false;
+    }
+
+    setPerforms = (performs) => {
+        this.performs = performs;
+
+        this.performsMaxTime=0;
+
+        this.performs.forEach((perform) => {
+            this.performsMaxTime += perform.maxTime;
+        })
+
+        this.isSpecific = true;
+    }
+
+    get performsCurrentPerfectTime() {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.');
+
+        let value = 0;
+
+        this.performs.forEach((perform) => {
+            value += perform.currentPerfectTime;
+        });
+        return value;
+    }
+
+    get performsBreifingCount() {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.');
+
+        let value = 0;
+
+        this.performs.forEach((perform) => {
+            value += perform.briefingCount;
+        });
+
+        return value;
+    }
+
+    get progress() {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.');
+
+        return Math.round(this.performsCurrentPerfectTime / this.performsMaxTime).toFixed(2);
+    }
+
+    get achieve() {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.');
+        
+        return Math.round(this.performsBreifingCount / this.maxTimperformsMaxTimee).toFixed(2);
+    }
+}
+
+
+//P와 G 구분 필요
+export class Perform extends DetailPlan {
+
+    //다음 브리핑까진 남은 데이 필요
+    constructor(key, headerId, constructorKey, constructorRelationType, name, startDate, endDate, hopeAchievement, color, cycle, stat) {
+        super(key, headerId, constructorKey, constructorRelationType, name, 'P', startDate, endDate, hopeAchievement, color, cycle, stat);
+
+        const cyclePiece = this.cycle.split(' ');
+
+        this.cycle = {
+            type: cyclePiece[0],
+            params: cyclePiece.slice(1, cyclePiece.length)
+        }
+
+        this.maxTime = maxTime = getBetweenMaxBriefing(startDate, endDate, this.cycle.type, this.cycle.params);
+
+        this.isSpecific = false;
+    }
+
+    get currentPerfectTime(){
+        return getBetweenMaxBriefing(startDate, new Date(), this.cycle.type, this.cycle.params);
+    }
+
+    get progress() {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.');
+
+        return Math.round(this.currentPerfectTime / this.maxTime).toFixed(2);
+    }
+
+    get achieve() {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.');
+
+        return Math.round(this.briefingCount / this.maxTime).toFixed(2);
+    }
+
+    get lastBriefingDay() {
+        return this.briefings[this.briefingCount - 1].createAt;
+    }
+
+
+    get nextLeftDay() {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.');
+            
+        switch(this.cycle.type){
+            case "A":
+                
+                break;
+            case "W":
+                break;
+            case "M":
+
+                break;
+        }
+
+
+        return
+    }
+
+    get briefingCount() {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.')
+        return this.briefings.length;
+    }
+
+    //최근의 날짜도 구할것
+    setBriefings = (briefings) => {
+        this.briefings = briefings;
+        this.isSpecific = true;
+    }
+
+    addBriefing = (briefings) => {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.')
+        this.briefings.push(briefings);
+    }
+
+    isNowBriefing = () => {
+        if (!this.isSpecific)
+            throw Error('Must add a briefing first.')
+
+        const today = Date.now();
+        switch(this.cycle.type){
+            case "A":
+                return this.lastBriefingDay != today ? true : false;
+            case "W":
+                for (const param in this.cycle.params) {
+                    if (param == today.getDay()) {
+                        return true;
+                    }
+                }
+                return false;
+            case "M":
+                for (const param in this.cycle.params) {
+                    if (param == today.getDate()) {
+                        return true;
+                    }
+                }
+                return false;
+        }
+    }
+
+
+}
+
+const getBetweenMaxBriefing = (startDate, endDate, cycleType, piece) => {
 
     const diffDay = DateUtil.betweenDayCount(startDate, endDate);
     let maxTime = 0;
@@ -14,7 +220,7 @@ getBetweenMaxBriefing = (startDate, endDate, cycleType, piece) => {
             break;
         case "W":
 
-            findDayCountInTerm = (startDate, endDate, piece) => {
+            const findDayCountInTerm = (startDate, endDate, piece) => {
                 let count = 0;
 
                 for (let i = 0; i < piece.length; i++) {
@@ -65,58 +271,5 @@ getBetweenMaxBriefing = (startDate, endDate, cycleType, piece) => {
     }
 
     return maxTime;
-
-}
-
-
-export default class DetailPlan {
-
-
-    constructor(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat, briefingCount) {
-
-        this.key = key;
-        this.headerId = headerId;
-        this.constructorKey = constructorKey;
-        this.constructorRelationType = constructorRelationType;
-        this.name = name;
-        this.type = type; //G - goal P - performGoal
-        this.startDate = Date.parse(startDate);
-        this.endDate = Date.parse(endDate);
-        this.hopeAchievement = hopeAchievement;
-        this.color = color;
-        this.cycle = cycle;
-        this.stat = stat;
-        //schema Data
-
-        this.isSpecific = true;
-
-        if (briefingCount) {
-            const cyclePiece = cycle.split(' ');
-            const cycleType = cyclePiece[0];
-            const cycleParam = cyclePiece.slice(1, cyclePiece.length);
-    
-            this.maxTime = getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParam);
-    
-            this.briefingCount = briefingCount;
-            this.currentPerfectTime = getBetweenMaxBriefing(startDate, new Date(), cycleType, cycleParam);            
-            this.isSpecific = false;
-        }
-
-
-    }
-    /**
-     * 진행치
-     * 시간에 따른 %
-     */
-    get progress() {
-        return this.isSpecific ? Math.round(this.currentPerfectTime / this.maxTime).toFixed(2) : null;
-    }
-    /**
-     * 수행치
-     * 수행에 따른 %
-     */
-    get achieve() {
-        return this.isSpecific ? Math.round(this.briefingCount / this.maxTime).toFixed(2) : null;
-    }
 
 }
