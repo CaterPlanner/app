@@ -27,7 +27,9 @@ class PurposeRepository {
     @action
     selectById = (id) => {
         return this.connection.executeSql(
-            'select * from purpose where id = ?',
+            'select id "id", author_name "authorName", author_id "authorId", group_name "groupName", group_id "groupId", name "name" '+
+            'description "description", image_url "imageUrl", disclosure_scope "disclosureScope", decimal_day "decimalDay", detailplan_heder_id "detailPlanHeaderId" '+
+            'from purpose where id = ?',
             [id],
             (tx, result) => {
                 if(result.rows.length == 0)
@@ -36,13 +38,15 @@ class PurposeRepository {
                 return new Purpose(res.id,res.authorName,res.authorId, res.groupName, res.groupId, res.name, 
                     res.description, res.imageUrl, res.disclosureScope, res.startAt, res.decimalDay, res.detailPlanHeaderId);
             }
-        )
+        );
     }
 
     @action
     selectByStatIsActive = () => {
         return this.connection.executeSql(
-            'select * from purpose where stat = 0',
+            'select id "id", author_name "authorName", author_id "authorId", group_name "groupName", group_id "groupId", name "name" '+
+            'description "description", image_url "imageUrl", disclosure_scope "disclosureScope", decimal_day "decimalDay", detailplan_heder_id "detailPlanHeaderId" '+
+            'from purpose where stat = 0',
             [],
             (tx, result) => {
                 if(result.rows.length == 0)
@@ -52,7 +56,7 @@ class PurposeRepository {
                         row.description, row.imageUrl, row.disclosureScope, row.startAt, row.decimalDay, row.detailPlanHeaderId);
                 })
             }
-        )
+        );
     }
 
 
@@ -67,7 +71,7 @@ class PurposeRepository {
             (tx, result) =>{
                 return result.rowsAffected > 0 ? true : false; 
             }
-        )
+        );
     }
 
     @action
@@ -78,7 +82,7 @@ class PurposeRepository {
             (tx, result) =>{
                 return result.rowsAffected > 0 ? true : false; 
             }
-        )
+        );
     }
     
 

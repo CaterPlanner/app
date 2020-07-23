@@ -7,25 +7,27 @@ import { action } from 'mobx';
  */
 @inject(stores => ({
     sqliteManager: stores.sqliteManager,
-    detailPlanRespository : stores.repository.detailPlanRespository,
-    detailPlanHeaderRepository : stores.repository.detailPlanHeaderRepository
+    detailPlanRespository: stores.repository.detailPlanRespository,
+    detailPlanHeaderRepository: stores.repository.detailPlanHeaderRepository,
+    briefingRespository: stores.repository.briefingRespository
 }))
 class DetailPlansService {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
 
         //DI
         this.connection = this.props.sqliteManager.connection;
         this.detailPlanRespository = this.props.detailPlanRespository;
         this.detailPlanHeaderRepository = stores.repository.detailPlanHeaderRepository;
+        this.briefingRespository = stores.repository.briefingRespository;
     }
 
     @action
     create = (detailPlans, author, baseId) => {
         let detailPlanHeaderId;
         this.connection.transaction((tx) => {
-            
+
             detailPlanHeaderId = this.detailPlanHeaderRepository.insert(author, baseId);
 
             detailPlans.forEach((detailPlan) => {
@@ -39,7 +41,20 @@ class DetailPlansService {
     read = (detailPlanHeaderId) => {
         let detailPlans;
         this.connection.transaction((tx) => {
-            detailPlans = this.detailPlanRespository.selectByHeaderIdWithBriefingCount(detailPlanHeaderId);
+            detailPlans = this.detailPlanRespository.selectByHeaderId(detailPlanHeaderId);
+
+            detailPlans.forEach((detailPlan) => {
+                switch (detailPlan.type) {
+                    case 'G':
+                        detailPlan.setPerforms(detailPlans.filter(element => element.constructorRelationType === 0 && element.constructorKey === detailPlan.key));
+                        break;
+                    case 'P':
+                        detailPlan.setBriefins(
+                            this.briefingRespository.selectByHeaderIdAndDetilPlanKey(detailPlanHeaderId, detailPlan.key));
+                        break;
+                }
+            })
+
         });
         return detailPlans;
     }
@@ -47,9 +62,9 @@ class DetailPlansService {
     @action
     update = (detailPlanHeaderId, detailPlans) => {
         this.connection.transaction((tx) => {
-            if(!this.detailPlanRespository.deleteByHeaderId(detailPlanHeaderId))
+            if (!this.detailPlanRespository.deleteByHeaderId(detailPlanHeaderId))
                 throw 'Not Exist detailPlanHeaderId';
-            
+
             detailPlans.forEach((detailPlan) => {
                 this.detailPlanRespository.insert(detailPlanHeaderId, detailPlan);
             })
@@ -64,5 +79,5 @@ class DetailPlansService {
         })
     }
 
-    
+
 }

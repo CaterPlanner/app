@@ -25,7 +25,7 @@ class DetailPlanHeaderRepository {
                     }
                 ) 
             }
-        )
+        );
     }
 
     @action
@@ -36,7 +36,7 @@ class DetailPlanHeaderRepository {
             (tx, result) => {
                 return result.rowsAffected > 0 ? true : false;
             }
-        )
+        );
     }
 
 

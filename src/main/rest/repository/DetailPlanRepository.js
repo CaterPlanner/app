@@ -1,6 +1,7 @@
 import { inject } from 'mobx-react';
 import { action } from 'mobx';
-import DetailPlan from '../model/DetailPlan';
+import {Goal, Perform} from '../model/DetailPlan';
+
 
 @inject(['sqliteManager'])
 class DetailPlanRepository {
@@ -9,6 +10,7 @@ class DetailPlanRepository {
         super(props);
         this.connection = this.props.sqliteManager.connection;
     }
+    
     @action
     insert = (headerId, goal) => {
         return this.connection.executeSql(
@@ -22,43 +24,47 @@ class DetailPlanRepository {
     }
 
     @action
-    selectByKeyWithBriefingCount = (key) => {
+    selectByKey = (key) => {
         return this.connection.executeSql(
-            'select d.key "key", d.header_id "headerId", d.constructor_key "costructorKey", d.constructor_relation_type "constructorRelatioType", ' +
-            'd.name "name", d.type "type", d.start_date "startDate", d.end_date "endDate", d.hope_achievement "hopeAchievement", d.color "color", ' +
-            'd.stat "stat", b.briefingCount "briefingCount" ' +
-            'from (select * from detailplan where key = ?) d, (select header_id , count(*) "briefingCount" from briefing group by header_id ) b ' +
-            'where d.header_id = b.header_id',
+            'select key "key", header_id "headerId", constructor_key "costructorKey", constructor_relation_type "constructorRelatioType", ' +
+            'name "name", type "type", start_date "startDate", end_date "endDate", hope_achievement "hopeAchievement", color "color", ' +
+            'stat "stat" ' +
+            'from detailplan ' +
+            'where key = ?',
             [key],
             (tx, result) => {
 
                 if (result.rows.length == 0)
                     return null;
 
-
                 let res = result.rows.get(0);
                 return new DetailPlan(res.key, res.headerId, res.constructorKey, res.constructorRelationType,
-                    res.name, res.type, res.startDate, res.endDate, res.hopeAchievement, res.color, res.tat, res.briefingCount);
+                    res.name, res.type, res.startDate, res.endDate, res.hopeAchievement, res.color, res.stat);
             }
         );
     }
 
     @action
-    selectByHeaderIdWithBriefingCount = (headerId) => {
+    selectByHeaderId = (headerId) => {
         return this.connection.executeSql(
-            'select d.key "key", d.header_id "headerId", d.constructor_key "costructorKey", d.constructor_relation_type "constructorRelatioType", ' +
-            'd.name "name", d.type "type", d.start_date "startDate", d.end_date "endDate", d.hope_achievement "hopeAchievement", d.color "color", ' +
-            'd.stat "stat", b.briefingCount "briefingCount" ' +
-            'from (select * from detailplan where header_id = ?) d, (select header_id , count(*) "briefingCount" from briefing group by header_id ) b ' +
-            'where d.header_id = b.header_id',
+            'select key "key", header_id "headerId", constructor_key "costructorKey", constructor_relation_type "constructorRelatioType", ' +
+            'name "name", type "type", start_date "startDate", end_date "endDate", hope_achievement "hopeAchievement", color "color", ' +
+            'stat "stat" ' +
+            'from detailplan ' +
+            'where header_Id = ?',
             [headerId],
             (tx, result) => {
                 if (result.rows.length == 0)
                     return null;
 
                 return result.rows.map((row) => {
-                    return new DetailPlan(res.key, res.headerId, res.constructorKey, res.constructorRelationType,
-                        res.name, res.type, res.startDate, res.endDate, res.hopeAchievement, res.color, res.tat, res.briefingCount);
+                    if(row.type == 'G'){
+                        return new Goal(res.key, res.headerId, res.constructorKey, res.constructorRelationType,
+                            res.name, res.type, res.startDate, res.endDate, res.hopeAchievement, res.color, res.stat);
+                    }else if(row.type == 'P'){
+                        return new Perform(res.key, res.headerId, res.constructorKey, res.constructorRelationType,
+                            res.name, res.type, res.startDate, res.endDate, res.hopeAchievement, res.color, res.stat);
+                    }
                 });
             }
         );
@@ -83,7 +89,7 @@ class DetailPlanRepository {
             (tx, result) => {
                 return result.rowsAffected > 0 ? true : false;
             }
-        )
+        );
     }
 
     //안쓰일것 같음
