@@ -49,25 +49,19 @@ export default class PlanCardView extends Component {
                 progresValue: progresValue,
 
             }
-        ]
+            ]
         }
     }
     //
     _renderItem = ({ item, index }) => {
-
-            return (
-                <View>
-                    
-                    <Card image={item.image} title={item.title} date={item.date} /> 
-
-                    {/*
+        return (
+            <View>
+                <Card image={item.image} title={item.title} date={item.date} />
+                {/*
                     <ActiveCard progresValue={item.progresValue}></ActiveCard>
                     */}
-
-                    
-                </View>
-            )
-
+            </View>
+        )
     }
 
     _next = () => {
@@ -87,18 +81,15 @@ export default class PlanCardView extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: 'white' }}>
 
-                <Header_Main></Header_Main>
-
+                <Header_Main/>
                 <View style={styles.baseLay}>
                     <View style={styles.in_SideLay}></View>
                     <View style={styles.centerLay}>
-
-
                         <Image style={{ width: 100, height: 93, marginBottom: 0, }
-                        } source={require(defaultDCater)}/>
+                        } source={require(defaultDCater)} />
 
                         <Carousel
-                            ref={(ref) => {this.carousel = ref;}}
+                            ref={(ref) => { this.carousel = ref; }}
                             data={this.state.item}
                             renderItem={this._renderItem}
                             scrollEnabled={true}
@@ -112,10 +103,6 @@ export default class PlanCardView extends Component {
                     </View>
                     <View style={styles.in_SideLay}></View>
                 </View>
-
-              
-
-
                 <View style={styles.indexNum}>
                     <PageStateText
                         activeIndex={this.state.activeIndex + 1}
@@ -135,7 +122,7 @@ export default class PlanCardView extends Component {
 
 const styles = StyleSheet.create({
 
-    
+
 
     buttomContainer: {
         flex: 0.6,

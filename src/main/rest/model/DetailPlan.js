@@ -1,9 +1,7 @@
 import DateUtil from '../../util/DateUtil'
 
-//P와 G 구분 필요
 export class DetailPlan {
 
-    //다음 브리핑까진 남은 데이 필요
     constructor(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat) {
 
         this.key = key;
@@ -40,18 +38,18 @@ export class DetailPlan {
 }
 
 
-export class Goal extends DetailPlan{
+export class Goal extends DetailPlan {
 
     constructor(key, headerId, constructorKey, constructorRelationType, name, startDate, endDate, hopeAchievement, color, cycle, stat) {
         super(key, headerId, constructorKey, constructorRelationType, name, 'G', startDate, endDate, hopeAchievement, color, cycle, stat);
-        
+
         this.isSpecific = false;
     }
 
     setPerforms = (performs) => {
         this.performs = performs;
 
-        this.performsMaxTime=0;
+        this.performsMaxTime = 0;
 
         this.performs.forEach((perform) => {
             this.performsMaxTime += perform.maxTime;
@@ -95,16 +93,14 @@ export class Goal extends DetailPlan{
     get achieve() {
         if (!this.isSpecific)
             throw Error('Must add a briefing first.');
-        
+
         return Math.round(this.performsBreifingCount / this.maxTimperformsMaxTimee).toFixed(2);
     }
 }
 
 
-//P와 G 구분 필요
 export class Perform extends DetailPlan {
 
-    //다음 브리핑까진 남은 데이 필요
     constructor(key, headerId, constructorKey, constructorRelationType, name, startDate, endDate, hopeAchievement, color, cycle, stat) {
         super(key, headerId, constructorKey, constructorRelationType, name, 'P', startDate, endDate, hopeAchievement, color, cycle, stat);
 
@@ -120,7 +116,7 @@ export class Perform extends DetailPlan {
         this.isSpecific = false;
     }
 
-    get currentPerfectTime(){
+    get currentPerfectTime() {
         return getBetweenMaxBriefing(startDate, new Date(), this.cycle.type, this.cycle.params);
     }
 
@@ -142,24 +138,49 @@ export class Perform extends DetailPlan {
         return this.briefings[this.briefingCount - 1].createAt;
     }
 
-
+ 
     get nextLeftDay() {
         if (!this.isSpecific)
             throw Error('Must add a briefing first.');
-            
-        switch(this.cycle.type){
-            case "A":
-                
-                break;
-            case "W":
-                break;
-            case "M":
 
-                break;
+        const today = Date.now();
+        let nextDay;
+
+        if (this.isNowBriefing()) {
+            nextDay = today;
+        } else {
+            switch (this.cycle.type) {
+                case "A":
+                    nextDay = new Date(today.getTime() + 1 * DateUtil.DAY_TIME);
+                    break;
+                case "W":
+                    nextDay = new Date(
+                        today.getTime() +
+                        DateUtil.waitingDayCount(today, this.cycle.params[0]) * DateUtil.DAY_TIME
+                    );
+                    for (let i = 1; i < params.length; i++){
+                        if(params[i] > today.getDay()){
+                            nextDay = new Date(today.getTime() + DateUtil.waitingDayCount(today, this.cycle.params[i]) * DateUtil.DAY_TIME);
+                            break;
+                        }
+                    }
+                    break;
+                case "M":
+                    nextDay = new Date(
+                        today.getTime() +
+                        DateUtil.waitingDateCount(tody, this.cycle.params[0]) * DateUtil.DAY_TIME
+                    );
+                    for (let i = 1; i < params.length; i++){
+                        if(params[i] > today.getDate()){
+                            nextDay = new Date(today.getTime() + DateUtil.waitingDateCount(today, this.cycle.params[i]) * DateUtil.DAY_TIME);
+                            break;
+                        }
+                    }
+                    break;
+            }
         }
 
-
-        return
+        return nextDay;
     }
 
     get briefingCount() {
@@ -168,7 +189,6 @@ export class Perform extends DetailPlan {
         return this.briefings.length;
     }
 
-    //최근의 날짜도 구할것
     setBriefings = (briefings) => {
         this.briefings = briefings;
         this.isSpecific = true;
@@ -185,7 +205,8 @@ export class Perform extends DetailPlan {
             throw Error('Must add a briefing first.')
 
         const today = Date.now();
-        switch(this.cycle.type){
+
+        switch (this.cycle.type) {
             case "A":
                 return this.lastBriefingDay != today ? true : false;
             case "W":
@@ -208,9 +229,26 @@ export class Perform extends DetailPlan {
 
 }
 
+/**
+ * 
+ * @param {Date} startDate 시작날짜
+ * @param {Date} endDate  종료날짜
+ * @param {String} cycleType 주기타입
+ * @param {Array} piece 주기 값들
+ * 
+ * startDate와 endDate 사이의 주기가 총 몇번 일어나는지 구하는 함수
+ * 주기타입(매일, 월, 일)에 맞추어 사용함
+ * 
+ * 매일 - startDate와 endDate 사잇일이 바로 주기 갯수 (매일 일어나므로)
+ * 주 - 주는 요일을 이용하여 계산하는데 요일은 완전한 주기이므로 startDate, endDate의 사잇 주 개수를 곱하고 나머지 일수는
+ * 반복문으로 직접 돌아가며 셈
+ * 월 - startDate 달에 브리핑 개수 + endDate 달에 브리핑 개수 + startDate, endDate 사이의 달 개수 * (달당 브리핑 개수)
+ * 
+ * 
+ */
 const getBetweenMaxBriefing = (startDate, endDate, cycleType, piece) => {
 
-    const diffDay = DateUtil.betweenDayCount(startDate, endDate);
+    const diffDay = DateUtil.betweenDateCount(startDate, endDate);
     let maxTime = 0;
 
     switch (cycleType) {
@@ -235,7 +273,6 @@ const getBetweenMaxBriefing = (startDate, endDate, cycleType, piece) => {
 
                 return count;
             }
-
 
             maxTime = diffDay < 7 ?
                 findDayCountInTerm(startDate, endDate, piece) :
