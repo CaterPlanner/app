@@ -47,6 +47,7 @@ export default class Purpose {
         return Math.round(entryBriefingCount / this.entryMaxTime).toFixed(2);
     }
 
+
     get leftDay(){
         return DeteUtil.betweenDayCount(this.decimalDay , Date.now());
     }

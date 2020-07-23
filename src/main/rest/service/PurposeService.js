@@ -15,7 +15,7 @@ class PurposeService {
         //DI
         this.connection = this.props.sqliteManager.connection;
         this.purposeRepository = this.props.purposeRepository;
-        this.detailPlanService = this.props.detailPlanService;
+        this.detailPlansService = this.props.detailPlansService;
     }
 
 
@@ -51,7 +51,7 @@ class PurposeService {
             purposes = this.purposeRepository.selectByStatIsActive();
             if(purposes){
                 purposes.forEach((purpose) => {
-                    purpose.setDetailPlans(this.detailPlanService.findAllByHeaderId(purpose.detailPlanHeaderId));
+                    purpose.setDetailPlans(this.detailPlansService.read(purpose.detailPlanHeaderId));
                 })
             }
         })
@@ -80,7 +80,7 @@ class PurposeService {
                 throw 'Not Exist Purpose';
             
             this.purposeRepository.deleteById(id);
-            this.detailPlanService.delete(purpose.detailPlanHeaderId);
+            this.detailPlansService.delete(purpose.detailPlanHeaderId);
         })
     }
 
