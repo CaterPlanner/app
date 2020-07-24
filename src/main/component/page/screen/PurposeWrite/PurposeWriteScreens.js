@@ -166,6 +166,7 @@ export function PurposeDetailPlanWrite({ purpose, navigation }) {
                                 screen: 'DetailPlanWriteBoard',
                                 params: {
                                     startType: CommonType.CREATE,
+                                    purpose : purpose, 
                                     result: (detailPlans) => {
                                         setPurposeDetailPlans(detailPlans);
                                         purpose.detailPlans = detailPlans;

@@ -1,4 +1,4 @@
-package com.downfall.caterplanner.detailplantree.service;
+package com.downfall.caterplanner.detailplantree.controller;
 
 
 import com.facebook.react.bridge.ReadableArray;
@@ -6,7 +6,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
-public interface CaterPlannerDetailPlanTreeService {
+public interface CaterPlannerDetailPlanTreeController {
 
    void create();
 

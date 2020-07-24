@@ -9,16 +9,24 @@ export default class DetailPlanTreeStore{
     @observable goalTopViewData;
     @observable goalBottomViewData;
 
-    _start(){
-        this.activeShowKey = 0;
 
+    @action
+    start(purpose){
+        this.activeShowKey = 0;
         this.goalBottomViewData = [];
         this.goalTopViewData = [];
+        
+        this.purpose = purpose;
+    }
+
+    @action 
+    buildTree = (detailPlans) => {
+        CaterPlannerDetailPlanTree.build(detailPlans)
+        this._updateViewData();
     }
 
     @action 
     create = async () => {
-        this._start();
         await CaterPlannerDetailPlanTree.create();
     }
     
@@ -77,22 +85,25 @@ export default class DetailPlanTreeStore{
         this.goalBottomViewData = CaterPlannerDetailPlanTree.mapGoalBottomViewData();
     }
 
-    @action 
-    buildTree = (detailPlans) => {
-        this._start();
-        CaterPlannerDetailPlanTree.build(detailPlans)
-        this._updateViewData();
-    }
+
 
 
     @action 
-    changeActiveShowKey = (showKey) => {
+    changeActiveConstructorShowKey = (showKey) => {
         this.activeShowKey = showKey;
     }
 
     @computed
     get entry(){
         return CaterPlannerDetailPlanTree.entry();
+    }
+
+    get limitStartDate(){
+        return this.purpose.startDate;
+    }
+
+    get limitEndDate(){
+        return this.purpose.endDate;
     }
 
     get currentbottomViewData() {
@@ -107,16 +118,23 @@ export default class DetailPlanTreeStore{
     get currentActiveConstructorState(){
         let key = 0;
         let relationType = 0;
+        let startDate = this.purpose.startDate;
+        let endDate = this.purpose.endDate;
 
         if(this.activeShowKey != 0){
             const activeShowDetailPlan = CaterPlannerDetailPlanTree.get(this.activeShowKey);
+
             key = activeShowDetailPlan.constructorKey;
             relationType = activeShowDetailPlan.constructorRelationType;
+            startDate = activeShowDetailPlan.startDate;
+            endDate = activeShowDetailPlan.endDate;
         }
 
         return {
             key : key,
-            relationType : relationType
+            relationType : relationType,
+            startDate : startDate,
+            endDate : endDate
         };
     }
 

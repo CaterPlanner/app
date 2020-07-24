@@ -2,7 +2,7 @@ package com.downfall.caterplanner.scheduler;
 
 public enum Type {
 
-    A("A") , W("W"), O("O"), M("M");
+    A("A") , W("W"),  M("M");
 
     private String value;
 
