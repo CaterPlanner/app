@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
-import DetailPlanState from '../../../organism/DetailPlanWrite/DetailPlanState'
-import DetailPlanCreate from '../../../organism/DetailPlanWrite/DetailPlanCreate'
+import GoalWriteBoardTop from '../../../organism/DetailPlanWrite/GoalWriteBoardTop'
+import GoalWriteBoardBottom from '../../../organism/DetailPlanWrite/GoalWriteBoardBottom'
 import { inject } from 'mobx-react'
 import { observer } from 'mobx-react'
 import CommonType from '../../../../util/CommonType'
@@ -16,13 +16,15 @@ export class GoalWriteBoard extends Component {
         super(props);
 
         this.detailPlanTreeStore = this.props.detailPlanTreeStore
+        
+        this.detailPlanTreeStore.start(this.props.route.params.purpose);
 
         switch (props.route.params.startType) {
             case CommonType.CREATE:
                 this.detailPlanTreeStore.create();
                 break;
             case CommonType.MODIFY:
-                this.detailPlanTreeStore.buildTree(props.route.params.initData);
+                this.detailPlanTreeStore.buildTree(this.props.route.params.initData);
                 break;
         }
     }
@@ -32,12 +34,12 @@ export class GoalWriteBoard extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.planStateArea}>
-                    <DetailPlanState
+                    <GoalWriteBoardTop
                         detailPlanTreeStore={this.props.detailPlanTreeStore}
                     />
                 </View>
                 <View style={styles.planCreateArea}>
-                    <DetailPlanCreate
+                    <GoalWriteBoardBottom
                         detailPlanTreeStore={this.props.detailPlanTreeStore}
                         navigation={this.props.navigation}
                     />

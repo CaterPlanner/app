@@ -10,10 +10,7 @@ export default class PlanView extends Component {
     this.state = {
       mainGoal: props.route.params.mainGoal
     }
-
-
   }
-
 
   render() {
     return (

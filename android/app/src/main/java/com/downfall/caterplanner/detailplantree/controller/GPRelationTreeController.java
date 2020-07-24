@@ -1,36 +1,30 @@
-package com.downfall.caterplanner.detailplantree.service;
-
+package com.downfall.caterplanner.detailplantree.controller;
 
 import com.downfall.caterplanner.common.DetailPlan;
-import com.downfall.caterplanner.detailplantree.algorithm.MPRelationTree;
+import com.downfall.caterplanner.detailplantree.algorithm.GPRelationTree;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
-import com.downfall.caterplanner.detailplantree.algorithm.NodeList;
 import com.downfall.caterplanner.detailplantree.manufacture.BaseScheduleMaker;
 import com.downfall.caterplanner.detailplantree.manufacture.BottomViewDataMaker;
 import com.downfall.caterplanner.detailplantree.manufacture.EntryDataMaker;
-import com.downfall.caterplanner.detailplantree.manufacture.MPScheduleMaker;
+import com.downfall.caterplanner.detailplantree.manufacture.GPScheduleMaker;
 import com.downfall.caterplanner.detailplantree.manufacture.TopViewDataMaker;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
-//TODO 나중에 유지 보수 코드 정리 필요
-public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
+public class GPRelationTreeController implements CaterPlannerDetailPlanTreeController {
 
-    private MPRelationTree tree;
-    private NodeList nodeList;
-
+    private GPRelationTree tree;
     private BaseScheduleMaker scheduleMaker;
 
-    public MPRelationTreeService() {
-        this.scheduleMaker = new MPScheduleMaker();
+    public GPRelationTreeController() {
+        this.scheduleMaker = new GPScheduleMaker();
     }
 
     @Override
     public void create(){
-        nodeList = new NodeList();
-        tree = new MPRelationTree(nodeList);
+        tree = new GPRelationTree();
     }
 
     @Override
@@ -42,32 +36,14 @@ public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
     public WritableArray entry() throws Exception{
         if(tree == null)
             throw new Exception("Please create a tree first.");
-        return new EntryDataMaker().make(tree.getNodes());
+        return new EntryDataMaker().make(tree.getUseNodes());
     }
 
     @Override
     public void insert(int parentKey, ReadableMap data) throws Exception {
         if(tree == null)
             throw new Exception("Please create a tree first.");
-       tree.insert(parentKey, new Node(DetailPlan.valueOf(data)));
-    }
-
-    public WritableMap mapBottomViewData(int activeParentKey) throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-        Node parent = tree.select(activeParentKey);
-        if(parent == null)
-            throw new Exception("Node does not exist.");
-        return new BottomViewDataMaker().make(parent);
-    }
-
-    public WritableArray mapTopViewData(int activeParentKey) throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-        Node parent = tree.select(activeParentKey);
-        if(parent == null)
-            throw new Exception("Node does not exist.");
-        return new TopViewDataMaker().make(parent);
+        tree.insert(parentKey, new Node(DetailPlan.valueOf(data)));
     }
 
     @Override
@@ -78,7 +54,7 @@ public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
         for(int i = 0; i < param.size(); i++){
             list[i] = DetailPlan.valueOf(param.getMap(i));
         }
-        tree = new MPRelationTree(nodeList, list);
+        tree = new GPRelationTree(list);
     }
 
     @Override
@@ -110,5 +86,16 @@ public class MPRelationTreeService implements CaterPlannerDetailPlanTreeService{
         node.getData().modify(DetailPlan.valueOf(param));
     }
 
+    public WritableMap mapGoalBottomViewData() throws Exception{
+        if(tree == null)
+            throw new Exception("Please create a tree first.");
+        return new BottomViewDataMaker().make(tree.getRoot());
+    }
+
+    public WritableMap mapGoalTopViewData() throws Exception{
+        if(tree == null)
+            throw new Exception("Please create a tree first.");
+        return new TopViewDataMaker().make(tree.getRoot());
+    }
 
 }
