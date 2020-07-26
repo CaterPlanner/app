@@ -1,5 +1,6 @@
 package com.downfall.caterplanner.common;
 
+import com.downfall.caterplanner.common.model.DetailPlan;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;

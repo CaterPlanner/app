@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.detailplantree;
 
-import com.downfall.caterplanner.detailplantree.controller.GPRelationTreeController;
+import com.downfall.caterplanner.detailplantree.service.GPRelationTreeService;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -14,13 +14,13 @@ import com.facebook.react.bridge.WritableMap;
 public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
-    private GPRelationTreeController service;
+    private GPRelationTreeService service;
 
 
     public CaterPlannerDetailPlanTreeModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-        this.service = new GPRelationTreeController();
+        this.service = new GPRelationTreeService();
     }
 
     @Override
