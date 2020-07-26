@@ -1,4 +1,6 @@
-import { inject } from 'mobx-react';
+
+
+port { inject } from 'mobx-react';
 import { action } from 'mobx';
 
 /**

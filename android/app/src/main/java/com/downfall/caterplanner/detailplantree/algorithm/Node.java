@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.detailplantree.algorithm;
 
-import com.downfall.caterplanner.common.DetailPlan;
+import com.downfall.caterplanner.common.model.DetailPlan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +87,6 @@ public class Node{
     }
 
     public static Node createRoot() {
-        return new Node(new DetailPlan());
+        return new Node(new DetailPlan(0, -1, -1, "ROOT", Type.R, null, null, null, null, -1));
     }
 }

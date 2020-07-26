@@ -15,6 +15,7 @@ public class Scheduler {
     public Scheduler(List<Schedule> schedules){
         this.schedules = schedules;
 
+
         this.activityList = new ArrayList<>();
         this.waitList = new ArrayList<>();
 
