@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'reac
 import CommonType from '../../../../util/CommonType'
 import useStores from '../../../../mobX/helper/useStores';
 
+import {PurposeController} from '../../../../native/RestService'
+
 
 export function PurposeNameWrite({ purpose }) {
 
@@ -83,7 +85,7 @@ export function PurposeDecimalDayWrite({ purpose }) {
 }
 
 
-export default function PurposeTumbnailWrite({ purpose }) {
+export function PurposeTumbnailWrite({ purpose }) {
 
     const [purposeTumbnail, setPurposeTumbnail] = useState("");
     const ImageBtn = './../../../../../asset/sample_Image/Sam.png';
@@ -235,9 +237,8 @@ export function PurposeOtherWrite({ purpose }) {
     );
 }
 
-export function PurposeWriteDone({ purpose, navigation }) {
+export function PurposeWriteDone({navigation }) {
 
-    const purposeService = ({ service } = useStores()).purposeService;
 
     return (
         <View style={styles.container}>
@@ -260,21 +261,21 @@ export function PurposeWriteDone({ purpose, navigation }) {
                     justifyContent: 'center'
                 }}
                 onPress={() => {
-                    try {
-                        purposeService.create(purpose);
-
-                        navigation.navigate('MainNavigation', {
-                            screen: 'Home',
-                            params: {
-                                screen: 'PlanView',
+                        PurposeController.createWithDetailPlans(purpose, purpose.detailPlans)
+                        .then((id) => {
+                            navigation.navigate('MainNavigation', {
+                                screen: 'Home',
                                 params: {
-                                    purpose: purpose
+                                    screen: 'PlanView',
+                                    params: {
+                                        purpose: purpose
+                                    }
                                 }
-                            }
+                            })
                         })
-                    } catch (e) {
-                        console.log(e);
-                    }
+                        .catch((e) => {
+                            console.log(e);
+                        })
                 }}
             //버튼
             >
