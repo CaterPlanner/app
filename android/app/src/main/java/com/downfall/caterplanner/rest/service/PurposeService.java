@@ -1,6 +1,5 @@
 package com.downfall.caterplanner.rest.service;
 
-import com.downfall.caterplanner.common.model.DetailPlan;
 import com.downfall.caterplanner.common.model.Perform;
 import com.downfall.caterplanner.common.model.Purpose;
 import com.downfall.caterplanner.common.model.StatisticsDetailPlan;
@@ -24,21 +23,21 @@ public class PurposeService extends BaseService {
         this.detailPlansService = detailPlansService;
     }
 
-    public Long create(ReadableMap purpose) throws Exception {
+    public Long createByReact(ReadableMap purpose) throws Exception {
         return purposeRepository.insert(Purpose.valueOf(purpose));
     }
 
-    public Long create(ReadableMap readablePurpose, ReadableArray readableDetailPlans) throws Exception{
-        return this.create(readablePurpose, readableDetailPlans, null);
+    public Long createByReact(ReadableMap readablePurpose, ReadableArray readableDetailPlans) throws Exception{
+        return this.createByReact(readablePurpose, readableDetailPlans, null);
     }
 
-    public Long create(ReadableMap readablePurpose, ReadableArray readableDetailPlans, Long baseId) throws Exception{
+    public Long createByReact(ReadableMap readablePurpose, ReadableArray readableDetailPlans, Integer baseId) throws Exception{
         db.beginTransaction();
         try{
             Purpose purpose = Purpose.valueOf(readablePurpose);
             Long detailPlanHeaderId = null;
             if(readableDetailPlans != null){
-                detailPlanHeaderId = this.detailPlansService.create(readableDetailPlans, purpose.getAuthorName(), purpose.getAuthorId(), baseId);
+                detailPlanHeaderId = this.detailPlansService.createByReact(readableDetailPlans, purpose.getAuthorName(), purpose.getAuthorId().intValue(), baseId);
             }
             purpose.setDetailPlanHeaderId(detailPlanHeaderId);
             Long id = purposeRepository.insert(purpose);
@@ -52,7 +51,7 @@ public class PurposeService extends BaseService {
         }
     }
 
-    public WritableMap readByReact(long id){
+    public WritableMap readByReact(Integer id){
         return writableCard(this.purposeRepository.selectById(id));
     }
 
@@ -65,11 +64,11 @@ public class PurposeService extends BaseService {
         return result;
     }
 
-    public void update(long id, Purpose purpose){
-        this.purposeRepository.updatePurposeDate(id, purpose);
+    public void updateByReact(Integer id, ReadableMap purpose) throws Exception {
+        this.purposeRepository.updatePurposeDate(id, Purpose.valueOf(purpose));
     }
 
-    public void delete(long id) throws Exception{
+    public void deleteByReact(Integer id) throws Exception{
         db.beginTransaction();
         try{
             Purpose purpose = this.purposeRepository.selectById(id);
@@ -77,7 +76,7 @@ public class PurposeService extends BaseService {
                 throw new Exception();
 
             this.purposeRepository.deleteById(id);
-            this.detailPlansService.delete(purpose.getDetailPlanHeaderId());
+            this.detailPlansService.deleteByReact(purpose.getDetailPlanHeaderId().intValue());
 
             db.setTransactionSuccessful();
         }catch (Exception e){

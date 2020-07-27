@@ -3,6 +3,13 @@ package com.downfall.caterplanner;
 import android.app.Application;
 import android.content.Context;
 
+import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.repository.BriefingRepository;
+import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
+import com.downfall.caterplanner.rest.repository.DetailPlanRepository;
+import com.downfall.caterplanner.rest.repository.PurposeRepository;
+import com.downfall.caterplanner.rest.service.DetailPlansService;
+import com.downfall.caterplanner.rest.service.PurposeService;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -11,6 +18,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
+import org.pgsqlite.SQLitePlugin;
 import org.pgsqlite.SQLitePluginPackage;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -46,6 +55,25 @@ public class MainApplication extends Application implements ReactApplication {
   @Override
   public void onCreate() {
     super.onCreate();
+
+      SQLiteHelper sqLiteHelper = new SQLiteHelper(getApplicationContext(), 0);
+      BriefingRepository briefingRepository = new BriefingRepository(sqLiteHelper);
+      DetailPlanHeaderRepository detailPlanHeaderRepository = new DetailPlanHeaderRepository(sqLiteHelper);
+      DetailPlanRepository detailPlanRepository = new DetailPlanRepository(sqLiteHelper);
+      PurposeRepository purposeRepository = new PurposeRepository(sqLiteHelper);
+
+      DetailPlansService detailPlansService = new DetailPlansService(sqLiteHelper, detailPlanRepository, detailPlanHeaderRepository, briefingRepository);
+      PurposeService purposeService = new PurposeService(sqLiteHelper, purposeRepository, detailPlansService);
+
+      SingletonContainer.register(SQLiteHelper.class, sqLiteHelper);
+      SingletonContainer.register(BriefingRepository.class, briefingRepository);
+      SingletonContainer.register(DetailPlanHeaderRepository.class, detailPlanHeaderRepository);
+      SingletonContainer.register(DetailPlanRepository.class, detailPlanRepository);
+      SingletonContainer.register(PurposeRepository.class, purposeRepository);
+
+      SingletonContainer.register(DetailPlansService.class, detailPlansService);
+      SingletonContainer.register(PurposeService.class, purposeService);
+
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
