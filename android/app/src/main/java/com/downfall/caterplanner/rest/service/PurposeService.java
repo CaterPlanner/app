@@ -12,6 +12,8 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
+import java.text.ParseException;
+
 public class PurposeService extends BaseService {
 
     private PurposeRepository purposeRepository;
@@ -51,11 +53,11 @@ public class PurposeService extends BaseService {
         }
     }
 
-    public WritableMap readByReact(Integer id){
+    public WritableMap readByReact(Integer id) throws ParseException {
         return writableCard(this.purposeRepository.selectById(id));
     }
 
-    public WritableArray readAllByReact(){
+    public WritableArray readAllByReact() throws ParseException {
         Purpose[] purposes = this.purposeRepository.selectByStatIsActive();
         WritableArray result = Arguments.createArray();
         for(Purpose purpose : purposes){
@@ -87,7 +89,7 @@ public class PurposeService extends BaseService {
         }
     }
 
-    private WritableMap writableCard(Purpose purpose){
+    private WritableMap writableCard(Purpose purpose) throws ParseException {
         WritableMap writablePurpose = Purpose.parseWritableMap(purpose);
 
         StatisticsDetailPlan[] detailPlans = (StatisticsDetailPlan[]) this.detailPlansService.read(purpose.getDetailPlanHeaderId());

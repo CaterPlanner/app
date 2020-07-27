@@ -2,7 +2,10 @@ package com.downfall.caterplanner.common.model;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
 
-import java.time.LocalDate;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public abstract class StatisticsDetailPlan extends DetailPlan implements BriefingStatizable{
@@ -12,7 +15,7 @@ public abstract class StatisticsDetailPlan extends DetailPlan implements Briefin
     protected int currentBriefingCount;
     protected boolean isStatizable;
 
-    public StatisticsDetailPlan(int key, long headerId,  int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
+    public StatisticsDetailPlan(int key, long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
         super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
     }
 

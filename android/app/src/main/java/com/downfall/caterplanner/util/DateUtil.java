@@ -1,13 +1,36 @@
 package com.downfall.caterplanner.util;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.text.ParseException;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 
 public class DateUtil {
 
-    private static int monthForFinalDay(LocalDate date){
+    private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private static DateTimeFormatter dateTimeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+
+    public static LocalDate parseToDate(String dateText) throws ParseException {
+        return LocalDate.parse(dateText, dateFormat);
+    }
+
+    public static LocalDateTime parseToDateTime(String dateText) throws ParseException{
+        return LocalDateTime.parse(dateText, dateTimeFormat);
+    }
+
+    public static String formatFromDate(LocalDate date){
+        return dateFormat.print(date);
+    }
+
+    public static String formatFromDateTime(LocalDateTime date){
+        return dateTimeFormat.print(date);
+    }
+
+    private static int currentMonthFinalDay(LocalDate date){
         switch (date.getDayOfMonth()){
             case 1:
             case 3:
@@ -29,10 +52,10 @@ public class DateUtil {
     }
 
     public static int waitingDayOfWeekCountDay (LocalDate now, int hopeDayOfWeek){
-        return hopeDayOfWeek > now.getDayOfWeek().getValue() ? hopeDayOfWeek - now.getDayOfWeek().getValue() : (7 - now.getDayOfWeek().getValue()) + hopeDayOfWeek;
+        return hopeDayOfWeek > now.getDayOfWeek() ? hopeDayOfWeek - now.getDayOfWeek() : (7 - now.getDayOfWeek()) + hopeDayOfWeek;
     }
 
     public static int waitingDayCountDay(LocalDate now, int hopeDay){
-        return hopeDay > now.getDayOfMonth() ? hopeDay - now.getDayOfMonth() : (monthForFinalDay(now) - now.getDayOfMonth()) + hopeDay;
+        return hopeDay > now.getDayOfMonth() ? hopeDay - now.getDayOfMonth() : (currentMonthFinalDay(now) - now.getDayOfMonth()) + hopeDay;
     }
 }

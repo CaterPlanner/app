@@ -1,17 +1,17 @@
 package com.downfall.caterplanner.common.model;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
+import com.downfall.caterplanner.util.DateUtil;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
@@ -62,8 +62,8 @@ public class DetailPlan {
 				.constructorRelationType(data.getInt("constructorRelationType"))
 				.name(data.getString("name"))
 				.type(Type.findByValue(type))
-				.startDate(LocalDate.parse(data.getString("startDate"), DateTimeFormatter.ISO_DATE))
-				.endDate(LocalDate.parse(data.getString("endDate"), DateTimeFormatter.ISO_DATE))
+				.startDate(DateUtil.parseToDate(data.getString("startDate")))
+				.endDate(DateUtil.parseToDate(data.getString("endDate")))
 				.hopeAchievement(data.hasKey("hopeAchievement") ? data.getInt("hopeAchievement") : null)
 				.color(data.getString("color"))
 				.cycle(data.getString("cycle"))
@@ -80,8 +80,8 @@ public class DetailPlan {
 		detailPlanMap.putInt("constructorRelationType", plan.getConstructorRelationType());
 		detailPlanMap.putString("name", plan.getName());
 		detailPlanMap.putString("type", plan.getType().name());
-		detailPlanMap.putString("startDate", plan.getStartDate().format(DateTimeFormatter.ISO_DATE));
-		detailPlanMap.putString("endDate", plan.getEndDate().format(DateTimeFormatter.ISO_DATE));
+		detailPlanMap.putString("startDate", DateUtil.formatFromDate(plan.getStartDate()));
+		detailPlanMap.putString("endDate", DateUtil.formatFromDate(plan.getEndDate()));
 		detailPlanMap.putInt("hopeAchievement", plan.getHopeAchievement());
 		detailPlanMap.putString("color", plan.getColor());
 		detailPlanMap.putString("cycle", plan.getCycle());

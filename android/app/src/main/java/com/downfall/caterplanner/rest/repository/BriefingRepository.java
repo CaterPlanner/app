@@ -4,7 +4,9 @@ import android.database.Cursor;
 
 import com.downfall.caterplanner.common.model.Briefing;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.util.DateUtil;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -14,7 +16,7 @@ public class BriefingRepository extends BaseRepository{
         super(helper);
     }
 
-    public Briefing[] selectByHeaderIdAndDetailPlanKey(long headerId, long detailPlanKey){
+    public Briefing[] selectByHeaderIdAndDetailPlanKey(long headerId, long detailPlanKey) throws ParseException {
         final String sql =
                 "select header_id, detailplan_key, create_at, score " +
                         "from briefing " +
@@ -27,7 +29,7 @@ public class BriefingRepository extends BaseRepository{
                     Briefing.builder()
                     .headerId(c.getLong(1))
                     .detailPlanKey(c.getLong(2))
-                    .createAt(LocalDate.parse(c.getString(3), DateTimeFormatter.ISO_DATE))
+                    .createAt(DateUtil.parseToDateTime(c.getString(3)))
                     .score(c.getInt(4))
                     .build();
         }

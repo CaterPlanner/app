@@ -8,9 +8,9 @@ import com.downfall.caterplanner.common.model.Goal;
 import com.downfall.caterplanner.common.model.Perform;
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.util.DateUtil;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
 
 public class DetailPlanRepository extends BaseRepository {
 
@@ -35,7 +35,7 @@ public class DetailPlanRepository extends BaseRepository {
         return (int) db.insert("detailPlan", null, contentValues);
     }
 
-    public DetailPlan selectByKey(long key) {
+    public DetailPlan selectByKey(long key) throws ParseException {
         final String sql =
                 "select key, header_id, constructor_key, constructor_relation_type, name, type, " +
                         "start_date, end_date, hope_achievement, color, cycle, stat " +
@@ -52,8 +52,8 @@ public class DetailPlanRepository extends BaseRepository {
                             .constructorRelationType(c.getInt(3))
                             .name(c.getString(4))
                             .type(Type.findByValue(c.getString(5)))
-                            .startDate(LocalDate.parse(c.getString(6), DateTimeFormatter.ISO_DATE))
-                            .endDate(LocalDate.parse(c.getString(7), DateTimeFormatter.ISO_DATE))
+                            .startDate(DateUtil.parseToDate(c.getString(6)))
+                            .endDate(DateUtil.parseToDate(c.getString(7)))
                             .hopeAchievement(c.getInt(8))
                             .color(c.getString(9))
                             .cycle(c.getString(10))
@@ -64,7 +64,7 @@ public class DetailPlanRepository extends BaseRepository {
         return detailPlan;
     }
 
-    public DetailPlan[] selectByHeaderId(long headerId) {
+    public DetailPlan[] selectByHeaderId(long headerId) throws ParseException {
         final String sql =
                 "select key, header_id, constructor_key, constructor_relation_type, name, type, " +
                         "start_date, end_date, hope_achievement, color, cycle, stat " +
@@ -82,8 +82,8 @@ public class DetailPlanRepository extends BaseRepository {
                             c.getInt(3),
                             c.getString(4),
                             Type.findByValue(type),
-                            LocalDate.parse(c.getString(6), DateTimeFormatter.ISO_DATE),
-                            LocalDate.parse(c.getString(7), DateTimeFormatter.ISO_DATE),
+                            DateUtil.parseToDate(c.getString(6)),
+                            DateUtil.parseToDate(c.getString(7)),
                             c.getInt(8),
                             c.getString(9),
                             c.getString(10),
@@ -95,8 +95,8 @@ public class DetailPlanRepository extends BaseRepository {
                             c.getInt(3),
                             c.getString(4),
                             Type.findByValue(type),
-                            LocalDate.parse(c.getString(6), DateTimeFormatter.ISO_DATE),
-                            LocalDate.parse(c.getString(7), DateTimeFormatter.ISO_DATE),
+                            DateUtil.parseToDate(c.getString(6)),
+                            DateUtil.parseToDate(c.getString(7)),
                             c.getInt(8),
                             c.getString(9),
                             c.getString(10),
