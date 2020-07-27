@@ -7,15 +7,18 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
+import lombok.Getter;
+
 public class Task {
 
-    private int key;
+    @Getter
+    private long key;
     private String cycle;
 
     private Type type;
     private int[] param;
 
-    public Task(int key, String cycle) {
+    public Task(long key, String cycle) {
         this.key = key;
         this.cycle = cycle;
     }
@@ -42,9 +45,6 @@ public class Task {
         return param;
     }
 
-    public int getKey() {
-        return key;
-    }
 
     public String getCycleText() {
         return cycle;
@@ -56,7 +56,7 @@ public class Task {
 
     public static WritableMap parseWritableMap(Task task){
         WritableMap result = Arguments.createMap();
-        result.putInt("key", task.getKey());
+        result.putInt("key", (int) task.getKey());
         result.putString("cycle", task.getCycleText());
         return result;
     }

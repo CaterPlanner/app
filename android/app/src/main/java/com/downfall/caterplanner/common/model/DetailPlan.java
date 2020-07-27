@@ -5,132 +5,32 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NonNull;
+
+@Data
+@AllArgsConstructor
 public class DetailPlan {
 
-	private long key;
-	private long headerId;
-	private int constructorKey;
-	private int constructorRelationType; //0 : parent , 1: presuccssor
-	private String name;
-	private Type type; //'M' , 'P'
-	private LocalDate startDate;
-	private LocalDate endDate;
-	private Integer hopeAchievement;
-	private String color;
+	@NonNull private long key;
+	@NonNull private long headerId;
+	@NonNull private int constructorKey;
+	@NonNull private int constructorRelationType; //0 : parent , 1: presuccssor
+	@NonNull private String name;
+	@NonNull private Type type; //'M' , 'P'
+	@NonNull private LocalDate startDate;
+	@NonNull private LocalDate endDate;
+	@NonNull private Integer hopeAchievement;
+	@NonNull private String color;
 	private String cycle;
-	private int stat; //0 : 진행중, 1 : 성공 , 2: 실패 , 3: 루트
+	@NonNull private int stat; //0 : 진행중, 1 : 성공 , 2: 실패 , 3: 루트
 
-	public DetailPlan(long key, long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
-		this.key = key;
-		this.headerId = headerId;
-		this.constructorKey = constructorKey;
-		this.constructorRelationType = constructorRelationType;
-		this.name = name;
-		this.type = type;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.hopeAchievement = hopeAchievement;
-		this.color = color;
-		this.cycle = cycle;
-		this.stat = stat;
-
-	}
-
-	public long getKey() {
-		return key;
-	}
-
-	public void setKey(long key) {
-		this.key = key;
-	}
-
-	public long getHeaderId() {
-		return headerId;
-	}
-
-	public void setHeaderId(long headerId) {
-		this.headerId = headerId;
-	}
-
-	public int getConstructorRelationType() {
-		return constructorRelationType;
-	}
-
-	public void setConstructorRelationType(int constructorRelationType) {
-		this.constructorRelationType = constructorRelationType;
-	}
-
-	public int getConstructorKey() {
-		return constructorKey;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Type getType() {
-		return type;
-	}
-
-	public void setType(Type type) {
-		this.type = type;
-	}
-
-	public LocalDate getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
-	}
-
-	public LocalDate getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}
-
-	public Integer getHopeAchievement() {
-		return hopeAchievement;
-	}
-
-	public void setHopeAchievement(Integer hopeAchievement) {
-		this.hopeAchievement = hopeAchievement;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	public String getCycle() {
-		return cycle;
-	}
-
-	public void setCycle(String cycle) {
-		this.cycle = cycle;
-	}
-
-	public int getStat() {
-		return stat;
-	}
-
-	public void setStat(int stat) {
-		this.stat = stat;
+	public static DetailPlanBuilder builder() {
+		return new DetailPlanBuilder();
 	}
 
 	public boolean isEnd() {
@@ -190,4 +90,89 @@ public class DetailPlan {
 		return detailPlanMap;
 	}
 
+	public static class DetailPlanBuilder {
+		private long key;
+		private long headerId;
+		private int constructorKey;
+		private int constructorRelationType;
+		private String name;
+		private Type type;
+		private LocalDate startDate;
+		private LocalDate endDate;
+		private Integer hopeAchievement;
+		private String color;
+		private String cycle;
+		private int stat;
+
+		DetailPlanBuilder() {
+		}
+
+		public DetailPlanBuilder key(long key) {
+			this.key = key;
+			return this;
+		}
+
+		public DetailPlanBuilder headerId(long headerId) {
+			this.headerId = headerId;
+			return this;
+		}
+
+		public DetailPlanBuilder constructorKey(int constructorKey) {
+			this.constructorKey = constructorKey;
+			return this;
+		}
+
+		public DetailPlanBuilder constructorRelationType(int constructorRelationType) {
+			this.constructorRelationType = constructorRelationType;
+			return this;
+		}
+
+		public DetailPlanBuilder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public DetailPlanBuilder type(Type type) {
+			this.type = type;
+			return this;
+		}
+
+		public DetailPlanBuilder startDate(LocalDate startDate) {
+			this.startDate = startDate;
+			return this;
+		}
+
+		public DetailPlanBuilder endDate(LocalDate endDate) {
+			this.endDate = endDate;
+			return this;
+		}
+
+		public DetailPlanBuilder hopeAchievement(Integer hopeAchievement) {
+			this.hopeAchievement = hopeAchievement;
+			return this;
+		}
+
+		public DetailPlanBuilder color(String color) {
+			this.color = color;
+			return this;
+		}
+
+		public DetailPlanBuilder cycle(String cycle) {
+			this.cycle = cycle;
+			return this;
+		}
+
+		public DetailPlanBuilder stat(int stat) {
+			this.stat = stat;
+			return this;
+		}
+
+		public DetailPlan build() {
+			return new DetailPlan(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
+		}
+
+		public String toString() {
+			return "DetailPlan.DetailPlanBuilder(key=" + this.key + ", headerId=" + this.headerId + ", constructorKey=" + this.constructorKey + ", constructorRelationType=" + this.constructorRelationType + ", name=" + this.name + ", type=" + this.type + ", startDate=" + this.startDate + ", endDate=" + this.endDate + ", hopeAchievement=" + this.hopeAchievement + ", color=" + this.color + ", cycle=" + this.cycle + ", stat=" + this.stat + ")";
+		}
+	}
 }

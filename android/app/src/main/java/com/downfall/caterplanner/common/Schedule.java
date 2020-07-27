@@ -9,16 +9,17 @@ import com.facebook.react.bridge.WritableMap;
 
 import java.util.Arrays;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
 public class Schedule {
+
+    @Getter
     private Task data;
     private int previousKey;
+    @Getter
     private Task[] perform;
-
-    public Schedule(Task data, int previousKey, Task[] perform) {
-        this.data = data;
-        this.previousKey = previousKey;
-        this.perform = perform;
-    }
 
     public Schedule(DetailPlan detailPlan, int previousKey, DetailPlan[] perform){
         this(new Task(detailPlan.getKey(), detailPlan.getCycle()), previousKey,
@@ -27,20 +28,12 @@ public class Schedule {
                         .toArray(size -> new Task[size]));
     }
 
-    public Task getData() {
-        return data;
-    }
-
-    public int getDataKey(){
+    public long getDataKey(){
         return data.getKey();
     }
 
-    public int getPreviousKey() {
+    public long getPreviousKey() {
         return previousKey;
-    }
-
-    public Task[] getPerform() {
-        return perform;
     }
 
     public static Schedule valueOf(ReadableMap map){
@@ -58,7 +51,7 @@ public class Schedule {
         WritableMap result = Arguments.createMap();
 
         result.putMap("data", Task.parseWritableMap(schedule.getData()));
-        result.putInt("previousKey", schedule.getPreviousKey());
+        result.putInt("previousKey", (int) schedule.getPreviousKey());
 
         WritableArray writablePerfom = Arguments.createArray();
         for(Task t : schedule.getPerform()){

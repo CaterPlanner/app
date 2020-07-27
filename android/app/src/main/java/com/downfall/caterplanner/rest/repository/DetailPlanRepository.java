@@ -18,7 +18,7 @@ public class DetailPlanRepository extends BaseRepository {
         super(helper);
     }
 
-    public int insert(DetailPlan detailPlan){
+    public int insert(DetailPlan detailPlan) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("key", detailPlan.getKey());
         contentValues.put("headerId", detailPlan.getHeaderId());
@@ -27,7 +27,7 @@ public class DetailPlanRepository extends BaseRepository {
         contentValues.put("name", detailPlan.getName());
         contentValues.put("type", detailPlan.getType().getValue());
         contentValues.put("start_date", detailPlan.getStartDate().toString());
-        contentValues.put("end_date",detailPlan.getEndDate().toString());
+        contentValues.put("end_date", detailPlan.getEndDate().toString());
         contentValues.put("hope_achievement", detailPlan.getHopeAchievement());
         contentValues.put("color", detailPlan.getColor());
         contentValues.put("stat", detailPlan.getStat());
@@ -35,7 +35,7 @@ public class DetailPlanRepository extends BaseRepository {
         return (int) db.insert("detailPlan", null, contentValues);
     }
 
-    public DetailPlan selectByKey(long key){
+    public DetailPlan selectByKey(long key) {
         final String sql =
                 "select key, header_id, constructor_key, constructor_relation_type, name, type, " +
                         "start_date, end_date, hope_achievement, color, cycle, stat " +
@@ -43,25 +43,28 @@ public class DetailPlanRepository extends BaseRepository {
 
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(key)});
         DetailPlan detailPlan = null;
-        if(c.moveToFirst()){
-            detailPlan = new DetailPlan(
-                    c.getLong(0),
-                    c.getLong(1),
-                    c.getInt(2),
-                    c.getInt(3),
-                    c.getString(4),
-                    Type.findByValue(c.getString(5)),
-                    LocalDate.parse(c.getString(6), DateTimeFormatter.ISO_DATE),
-                    LocalDate.parse(c.getString(7), DateTimeFormatter.ISO_DATE),
-                    c.getInt(8),
-                    c.getString(9),
-                    c.getString(10),
-                    c.getInt(11));
+        if (c.moveToFirst()) {
+            detailPlan =
+                    DetailPlan.builder()
+                            .key(c.getLong(0))
+                            .headerId(c.getLong(1))
+                            .constructorKey(c.getInt(2))
+                            .constructorRelationType(c.getInt(3))
+                            .name(c.getString(4))
+                            .type(Type.findByValue(c.getString(5)))
+                            .startDate(LocalDate.parse(c.getString(6), DateTimeFormatter.ISO_DATE))
+                            .endDate(LocalDate.parse(c.getString(7), DateTimeFormatter.ISO_DATE))
+                            .hopeAchievement(c.getInt(8))
+                            .color(c.getString(9))
+                            .cycle(c.getString(10))
+                            .stat(c.getInt(11))
+                            .build();
+
         }
         return detailPlan;
     }
 
-    public DetailPlan[] selectByHeaderId(long headerId){
+    public DetailPlan[] selectByHeaderId(long headerId) {
         final String sql =
                 "select key, header_id, constructor_key, constructor_relation_type, name, type, " +
                         "start_date, end_date, hope_achievement, color, cycle, stat " +
@@ -69,21 +72,22 @@ public class DetailPlanRepository extends BaseRepository {
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
         DetailPlan[] detailPlans = new DetailPlan[c.getCount()];
 
-        while(c.moveToNext()){
+        while (c.moveToNext()) {
             String type = c.getString(5);
-            detailPlans[c.getPosition()] = type.equals("G") ? new Goal(
-                    c.getLong(0),
-                    c.getLong(1),
-                    c.getInt(2),
-                    c.getInt(3),
-                    c.getString(4),
-                    Type.findByValue(type),
-                    LocalDate.parse(c.getString(6), DateTimeFormatter.ISO_DATE),
-                    LocalDate.parse(c.getString(7), DateTimeFormatter.ISO_DATE),
-                    c.getInt(8),
-                    c.getString(9),
-                    c.getString(10),
-                    c.getInt(11)) :
+            detailPlans[c.getPosition()] = type.equals("G") ?
+                    new Goal(
+                            c.getLong(0),
+                            c.getLong(1),
+                            c.getInt(2),
+                            c.getInt(3),
+                            c.getString(4),
+                            Type.findByValue(type),
+                            LocalDate.parse(c.getString(6), DateTimeFormatter.ISO_DATE),
+                            LocalDate.parse(c.getString(7), DateTimeFormatter.ISO_DATE),
+                            c.getInt(8),
+                            c.getString(9),
+                            c.getString(10),
+                            c.getInt(11)) :
                     new Perform(
                             c.getLong(0),
                             c.getLong(1),
@@ -102,13 +106,13 @@ public class DetailPlanRepository extends BaseRepository {
         return detailPlans.length == 0 ? null : detailPlans;
     }
 
-    public void deleteByKey(int key){
+    public void deleteByKey(int key) {
         final String sql =
                 "delete from detailPlan where key = ?";
         db.execSQL(sql, new String[]{String.valueOf(key)});
     }
 
-    public void deleteByHeaderId(long headerId){
+    public void deleteByHeaderId(long headerId) {
         final String sql =
                 "delete from detailPlan where header_id = ?";
         db.execSQL(sql, new String[]{String.valueOf(headerId)});
