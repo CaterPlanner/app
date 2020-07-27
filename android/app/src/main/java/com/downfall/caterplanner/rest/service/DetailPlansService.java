@@ -7,7 +7,9 @@ import com.downfall.caterplanner.rest.db.SQLiteHelper;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.DetailPlanRepository;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.WritableArray;
 
 
 import java.util.Arrays;
@@ -26,7 +28,7 @@ public class DetailPlansService extends BaseService {
         this.briefingRepository = briefingRepository;
     }
 
-    public long create(ReadableArray readableDetailPlans, String authorName, Long authorId, Long baseId) throws Exception {
+    public long createByReact(ReadableArray readableDetailPlans, String authorName, Integer authorId, Integer baseId) throws Exception {
         db.beginTransaction();
         try{
             DetailPlan[] detailPlans = new DetailPlan[readableDetailPlans.size()];
@@ -69,7 +71,17 @@ public class DetailPlansService extends BaseService {
         return detailPlans;
     }
 
-    public void update(long detailPlanHeaderId, ReadableArray readableDetailPlans) throws Exception {
+    public WritableArray readByReact(long detailPlanHeaderId) throws Exception {
+        WritableArray result = Arguments.createArray();
+        DetailPlan[] detailPlans = read(detailPlanHeaderId);
+
+        for(DetailPlan d : detailPlans){
+            result.pushMap(DetailPlan.parseWritableMap(d));
+        }
+        return result;
+    }
+
+    public void updateByReact(Integer detailPlanHeaderId, ReadableArray readableDetailPlans) throws Exception {
         db.beginTransaction();
         try{
             DetailPlan[] detailPlans = new DetailPlan[readableDetailPlans.size()];
@@ -92,7 +104,7 @@ public class DetailPlansService extends BaseService {
         }
     }
 
-    public void delete(long detailPlanHeaderId){
+    public void deleteByReact(Integer detailPlanHeaderId){
         this.detailPlanHeaderRepository.deleteById(detailPlanHeaderId);
     }
 
