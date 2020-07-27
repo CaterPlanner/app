@@ -1,5 +1,7 @@
 package com.downfall.caterplanner.rest.service;
 
+import android.os.Build;
+
 import com.downfall.caterplanner.common.model.DetailPlan;
 import com.downfall.caterplanner.common.model.Goal;
 import com.downfall.caterplanner.common.model.Perform;
@@ -12,7 +14,10 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
 
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class DetailPlansService extends BaseService {
 
@@ -51,15 +56,18 @@ public class DetailPlansService extends BaseService {
         }
     }
 
-    public DetailPlan[] read(long detailPlanHeaderId){
+    public DetailPlan[] read(long detailPlanHeaderId) throws ParseException {
         DetailPlan[] detailPlans = this.detailPlanRepository.selectByHeaderId(detailPlanHeaderId);
         for(DetailPlan detailPlan : detailPlans){
             switch (detailPlan.getType()){
                 case G:
-                    ((Goal)detailPlan).setPerforms(
-                            Arrays.stream(detailPlans).map(
-                                    element -> element.getConstructorRelationType() == 0 && element.getConstructorKey() == detailPlan.getKey()
-                            ).toArray(size -> new Perform[size]));
+                    List<Perform> performs = new ArrayList<>();
+                    for(DetailPlan dp2 : detailPlans){
+                        if(dp2.getConstructorKey() == detailPlan.getKey() && dp2.getConstructorRelationType() == 0){
+                            performs.add((Perform) dp2);
+                        }
+                    }
+                    ((Goal)detailPlan).setPerforms(performs.toArray(new Perform[performs.size()]));
                     break;
                 case P:
                     ((Perform) detailPlan).setBriefings(

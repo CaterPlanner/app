@@ -3,11 +3,20 @@ package com.downfall.caterplanner.common.model;
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
 import com.downfall.caterplanner.util.DateUtil;
 
-import java.time.LocalDate;
-import java.time.Period;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
 public class Perform extends StatisticsDetailPlan {
 
     private Briefing[] briefings;
@@ -15,12 +24,15 @@ public class Perform extends StatisticsDetailPlan {
     private char cycleType;
     private int[] cycleParams;
 
+    @Setter //Debug
+    private LocalDate today;
+
+
+
     public Perform(int key, Long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
         super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
-    }
 
-    public Perform(int key, Long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, Briefing[] briefings) {
-        super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
+        today = LocalDate.now();
 
         //cycle 분석
         char[] cyclePiece = cycle.toCharArray();
@@ -34,10 +46,19 @@ public class Perform extends StatisticsDetailPlan {
             }
         }
 
-        this.maxTime  = Perform.getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams);
-        this.currentPerfectTime = getBetweenMaxBriefing(startDate, LocalDate.now(), cycleType, cycleParams);
-        this.briefings = briefings;
+        this.cycleParams = new int[t_cycleParams.size()];
+        for(int i = 0; i < cycleParams.length; i++){
+            this.cycleParams[i] = t_cycleParams.get(i);
+        }
 
+        this.maxTime = getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams);
+        this.currentPerfectTime = getBetweenMaxBriefing(startDate, today, cycleType, cycleParams);
+    }
+
+    public Perform(int key, Long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, Briefing[] briefings) {
+        this(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
+
+        this.briefings = briefings;
         statistion();
     }
 
@@ -55,11 +76,11 @@ public class Perform extends StatisticsDetailPlan {
         this.isStatizable = true;
     }
     public int getNextLeftDayCount(){
-        return Period.between(LocalDate.now(), getNextLeftDay()).getDays();
+        return new Period(today, getNextLeftDay(), PeriodType.days()).getDays();
     }
+
     public LocalDate getNextLeftDay(){
 
-        final LocalDate today = LocalDate.now();
         LocalDate nextDay = null;
 
         if(isNowBriefing()){
@@ -72,7 +93,7 @@ public class Perform extends StatisticsDetailPlan {
                 case 'W':
                     nextDay = today.plusDays(DateUtil.waitingDayOfWeekCountDay(today, cycleParams[0]));
                     for(int i = 1; i < cycleParams.length; i++){
-                        if(cycleParams[i] > today.getDayOfWeek().getValue()){
+                        if(cycleParams[i] > today.getDayOfWeek()){
                             nextDay = today.plusDays(DateUtil.waitingDayOfWeekCountDay(today, cycleParams[i]));
                             break;
                         }
@@ -94,38 +115,42 @@ public class Perform extends StatisticsDetailPlan {
 
     public boolean isNowBriefing(){
 
-        final LocalDate today = LocalDate.now();
-
-        switch (this.cycleType){
-            case 'A':
-                return !this.getLastBriefingDay().equals(today) ? true : false;
-            case 'W':
-                for(int wParam : this.cycleParams) {
-                    if (wParam == today.getDayOfWeek().getValue()) {
-                        return true;
+        if(!getLastBriefingDay().equals(today)) {
+            switch (this.cycleType) {
+                case 'A':
+                    return !this.getLastBriefingDay().equals(today) ? true : false;
+                case 'W':
+                    for (int wParam : this.cycleParams) {
+                        if (wParam == today.getDayOfWeek()) {
+                            return true;
+                        }
                     }
-                }
-                return false;
-            case 'M':
-                for(int mParam : this.cycleParams){
-                    if(mParam == today.getDayOfMonth()){
-                        return true;
+                    return false;
+                case 'M':
+                    for (int mParam : this.cycleParams) {
+                        if (mParam == today.getDayOfMonth()) {
+                            return true;
+                        }
                     }
-                }
-                return false;
+                    return false;
+            }
         }
         return false;
     }
 
     private static int getDayBriefingCountInTerm(LocalDate startDate, LocalDate endDate, int[] piece){
+
+
         int count = 0;
 
-        for(int i =0; i< piece.length; i++){
-            if(startDate.isBefore(endDate)){
-                if(piece[i] >= startDate.getDayOfWeek().getValue() && piece[i] <= endDate.getDayOfWeek().getValue())
+        if(startDate.getDayOfWeek() < endDate.getDayOfWeek()){
+            for(int i = 0; i < piece.length; i++){
+                if(piece[i] >= startDate.getDayOfWeek() && piece[i] <= endDate.getDayOfWeek())
                     count++;
-            }else{
-                if(piece[i] >= startDate.getDayOfMonth() || piece[i] <= endDate.getDayOfMonth())
+            }
+        }else{ // st 3   end 1
+            for(int i = 0; i < piece.length; i++){
+                if(piece[i] >= startDate.getDayOfWeek() || piece[i] <= endDate.getDayOfWeek())
                     count++;
             }
         }
@@ -135,15 +160,15 @@ public class Perform extends StatisticsDetailPlan {
 
     private static int getBetweenMaxBriefing(LocalDate startDate, LocalDate endDate, char cycleType, int[] pieces){
 
-        final LocalDate today = LocalDate.now();
         LocalDate nextDay;
 
-        final Period diff = Period.between(startDate, endDate);
+        final Period diff = new Period(startDate, endDate, PeriodType.days());
+
         int maxTime = 0;
 
         switch (cycleType){
             case 'A':
-                maxTime = diff.getDays();
+                maxTime = diff.getDays() + 1;
                 break;
             case 'W':
                 maxTime = diff.getDays() < 7 ? getDayBriefingCountInTerm(startDate, endDate, pieces) :
@@ -178,7 +203,7 @@ public class Perform extends StatisticsDetailPlan {
     }
 
     public LocalDate getLastBriefingDay(){
-        return this.briefings[this.briefings.length- 1].getCreateAt();
+        return this.briefings[this.briefings.length- 1].getCreateAt().toLocalDate();
     }
 
 }
