@@ -87,6 +87,6 @@ public class Node{
     }
 
     public static Node createRoot() {
-        return new Node(new DetailPlan(0, -1, -1, "ROOT", Type.R, null, null, null, null, -1));
+        return new Node(new DetailPlan(0,  null, -1, -1, "ROOT", Type.R, null, null, null, null, null, -1));
     }
 }
