@@ -15,11 +15,11 @@ public class Perform extends StatisticsDetailPlan {
     private char cycleType;
     private int[] cycleParams;
 
-    public Perform(long key, long headerId,  int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
-        super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
+    public Perform(long key, long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
+        super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
     }
 
-    public Perform(long key, long headerId,  int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, Briefing[] briefings) {
+    public Perform(long key, long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, Briefing[] briefings) {
         super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
 
         //cycle 분석
