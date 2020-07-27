@@ -92,7 +92,7 @@ public class DetailPlansService extends BaseService {
             detailPlanRepository.deleteByHeaderId(detailPlanHeaderId);
 
             for(DetailPlan detailPlan : detailPlans){
-                detailPlan.setHeaderId(detailPlanHeaderId);
+                detailPlan.setHeaderId(detailPlanHeaderId.longValue());
                 this.detailPlanRepository.insert(detailPlan);
             }
 

@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
 import lombok.AccessLevel;
@@ -17,16 +18,16 @@ import lombok.Setter;
 @Data
 public class Purpose implements BriefingStatizable {
 
-    @NonNull private long id;
+    private long id;
     private String authorName;
     private Long authorId;
     private String groupName;
     private Long groupId;
 
-    @NonNull private String name;
-    @NonNull private String description;
-    @NonNull private String imageUrl;
-    @NonNull private int disclosureScope;
+    private String name;
+    private String description;
+    private String imageUrl;
+    private int disclosureScope;
     private LocalDate startAt;
     private LocalDate decimalDay;
     private Long detailPlanHeaderId;
@@ -137,20 +138,20 @@ public class Purpose implements BriefingStatizable {
     }
 
     public static Purpose valueOf(ReadableMap data) throws Exception{
-        return new Purpose(
-                data.getInt("id"),
-                data.hasKey("authorName") ?  data.getString("authorName") : null,
-                data.hasKey("authorId") ? Long.valueOf(data.getInt("authorId")) : null,
-                data.hasKey("groupName") ? data.getString("groupName") : null,
-                data.hasKey("groupId") ? Long.valueOf(data.getInt("groupId")) : null,
-                data.getString("name"),
-                data.getString("description"),
-                data.getString("imageUrl"),
-                data.getInt("disclosureScope"),
-                data.hasKey("startAt") ? LocalDate.parse(data.getString("startAt"), DateTimeFormatter.ISO_DATE) : null,
-                data.hasKey("decimalDay") ? LocalDate.parse(data.getString("decimalDay"), DateTimeFormatter.ISO_DATE) : null,
-                data.hasKey("detailPlanHeaderId") ? Long.valueOf(data.getInt("detailPlanHeaderId")) : null
-        );
+        return Purpose.builder()
+                .id(data.getInt("id"))
+                .authorName(data.hasKey("authorName") ?  data.getString("authorName") : null)
+                .authorId(data.hasKey("authorId") ? Long.valueOf(data.getInt("authorId")) : null)
+                .groupName(data.hasKey("groupName") ? data.getString("groupName") : null)
+                .groupId( data.hasKey("groupId") ? Long.valueOf(data.getInt("groupId")) : null)
+                .name(data.getString("name"))
+                .description(data.getString("description"))
+                .imageUrl(data.getString("imageUrl"))
+                .disclosureScope( data.getInt("disclosureScope"))
+                .startAt(data.hasKey("startAt") ? LocalDate.parse(data.getString("startAt"), DateTimeFormatter.ISO_DATE) : null)
+                .decimalDay(data.hasKey("decimalDay") ? LocalDate.parse(data.getString("decimalDay"), DateTimeFormatter.ISO_DATE) : null)
+                .detailPlanHeaderId(data.hasKey("detailPlanHeaderId") ? Long.valueOf(data.getInt("detailPlanHeaderId")) : null)
+                .build();
     }
 
     public static WritableMap parseWritableMap(Purpose purpose){
@@ -168,6 +169,12 @@ public class Purpose implements BriefingStatizable {
         writableMap.putString("decimalDay", purpose.getDecimalDay().toString());
         writableMap.putInt("detailPlanHeaderId", purpose.getDetailPlanHeaderId().intValue());
         return writableMap;
+    }
+
+    public int getLeftDay() {
+        if(decimalDay == null)
+            throw new RuntimeException();
+        return Period.between(LocalDate.now(), decimalDay).getDays();
     }
 
     public static class PurposeBuilder {

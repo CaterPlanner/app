@@ -46,7 +46,7 @@ public class DetailPlanRepository extends BaseRepository {
         if (c.moveToFirst()) {
             detailPlan =
                     DetailPlan.builder()
-                            .key(c.getLong(0))
+                            .key(c.getInt(0))
                             .headerId(c.getLong(1))
                             .constructorKey(c.getInt(2))
                             .constructorRelationType(c.getInt(3))
@@ -76,7 +76,7 @@ public class DetailPlanRepository extends BaseRepository {
             String type = c.getString(5);
             detailPlans[c.getPosition()] = type.equals("G") ?
                     new Goal(
-                            c.getLong(0),
+                            c.getInt(0),
                             c.getLong(1),
                             c.getInt(2),
                             c.getInt(3),
@@ -89,7 +89,7 @@ public class DetailPlanRepository extends BaseRepository {
                             c.getString(10),
                             c.getInt(11)) :
                     new Perform(
-                            c.getLong(0),
+                            c.getInt(0),
                             c.getLong(1),
                             c.getInt(2),
                             c.getInt(3),

@@ -14,7 +14,7 @@ public class Briefing {
 
     private long headerId;
     private long detailPlanKey;
-    @NonNull private LocalDate createAt;
+    private LocalDate createAt;
     private int score;
 
 
