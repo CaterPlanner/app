@@ -1,6 +1,5 @@
 package com.downfall.caterplanner.common;
 
-import com.downfall.caterplanner.scheduler.Type;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;

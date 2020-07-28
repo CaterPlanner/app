@@ -3,13 +3,11 @@ package com.downfall.caterplanner.rest.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.downfall.caterplanner.common.model.Purpose;
+import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
 import com.downfall.caterplanner.util.DateUtil;
 
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class PurposeRepository extends BaseRepository {
 
@@ -30,7 +28,6 @@ public class PurposeRepository extends BaseRepository {
         contentValues.put("disclosureScope",purpose.getDisclosureScope());
         contentValues.put("startAt", purpose.getStartAt().toString());
         contentValues.put("decimalDay", purpose.getDecimalDay().toString());
-        contentValues.put("detailPlan_header_id", purpose.getDetailPlanHeaderId());
         contentValues.put("stat", purpose.getStat());
         return db.insert("purpose", null, contentValues);
     }
@@ -38,7 +35,7 @@ public class PurposeRepository extends BaseRepository {
     public Purpose selectById(long id) throws ParseException {
         final String sql =
                 "select id , author_name, author_id, group_name, group_id, name, " +
-                        "description, image_url, disclosure_scope, start_at, decimal_day, detailPlan_header_id, stat " +
+                        "description, image_url, disclosure_scope, start_at, decimal_day, stat " +
                         "from purpose where id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(id)});
         Purpose purpose = null;
@@ -55,8 +52,7 @@ public class PurposeRepository extends BaseRepository {
                     .disclosureScope( c.getInt(9))
                     .startAt(DateUtil.parseToDateTime(c.getString(10)))
                     .decimalDay(DateUtil.parseToDate(c.getString(11)))
-                    .detailPlanHeaderId(c.getLong(12))
-                    .stat(c.getInt(13))
+                    .stat(c.getInt(12))
                     .build();
 
         }
@@ -66,7 +62,7 @@ public class PurposeRepository extends BaseRepository {
     public Purpose[] selectByStatIsActive() throws ParseException {
         final String sql =
                 "select id , author_name, author_id, group_name, group_id, name, " +
-                        "description, image_url, disclosure_scope, start_at, decimal_day, detailPlan_header_id " +
+                        "description, image_url, disclosure_scope, start_at, decimal_day, stat " +
                         "from purpose where stat = 0";
         Cursor c = db.rawQuery(sql, null);
         Purpose[] purposes = new Purpose[c.getCount()];
@@ -84,8 +80,7 @@ public class PurposeRepository extends BaseRepository {
                     .disclosureScope( c.getInt(9))
                     .startAt(DateUtil.parseToDateTime(c.getString(10)))
                     .decimalDay(DateUtil.parseToDate(c.getString(11)))
-                    .detailPlanHeaderId(c.getLong(12))
-                    .stat(c.getInt(13))
+                    .stat(c.getInt(12))
                     .build();
         }
         return purposes.length == 0 ? null : purposes;
@@ -95,13 +90,13 @@ public class PurposeRepository extends BaseRepository {
         final String sql =
                 "update purpose " +
                         "set name = ?, description = ?, image_url = ?, disclosure_scope = ?, " +
-                        "start_at = ?, decimal_day = ?, detailplan_header_id = ?, stat = ? " +
+                        "start_at = ?, decimal_day = ?, stat = ? " +
                         "where id = ?";
         db.execSQL(sql,
                 new String[]{
                     purpose.getName(), purpose.getDescription(), purpose.getImageUrl(),
                         String.valueOf(purpose.getDisclosureScope()), purpose.getStartAt().toString(), purpose.getDecimalDay().toString(),
-                        String.valueOf(purpose.getDetailPlanHeaderId()), String.valueOf(purpose.getStat())
+                        String.valueOf(purpose.getStat())
                 });
     }
 

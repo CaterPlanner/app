@@ -2,13 +2,13 @@ package com.downfall.caterplanner.rest.repository;
 
 import android.database.Cursor;
 
-import com.downfall.caterplanner.common.model.Briefing;
+import com.downfall.caterplanner.rest.model.Briefing;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
 import com.downfall.caterplanner.util.DateUtil;
 
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BriefingRepository extends BaseRepository{
 
@@ -16,29 +16,29 @@ public class BriefingRepository extends BaseRepository{
         super(helper);
     }
 
-    public Briefing[] selectByHeaderIdAndDetailPlanKey(long headerId, long detailPlanKey) throws ParseException {
+    public List<Briefing> selectBypurposeIdAndDetailPlanKey(long purposeId, long detailPlanKey) throws ParseException {
         final String sql =
-                "select header_id, detailplan_key, create_at, score " +
+                "select purpose_id, detailplan_key, create_at, score " +
                         "from briefing " +
-                        "where header_id = ? and detailplan_key = ?";
+                        "where purpose_id = ? and detailplan_key = ?";
 
-        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId), String.valueOf(detailPlanKey)});
-        Briefing[] briefings = new Briefing[c.getCount()];
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(purposeId), String.valueOf(detailPlanKey)});
+        List<Briefing> briefings = new ArrayList<>();
         while(c.moveToNext()){
-            briefings[c.getPosition()] =
+                briefings.add(
                     Briefing.builder()
-                    .headerId(c.getLong(1))
-                    .detailPlanKey(c.getLong(2))
+                    .purposeId(c.getLong(1))
+                    .detailPlanKey(c.getInt(2))
                     .createAt(DateUtil.parseToDateTime(c.getString(3)))
                     .score(c.getInt(4))
-                    .build();
+                    .build());
         }
         return briefings.length == 0 ? null : briefings;
     }
 
-    public void insert(long headerId, long detailPlanKey){
+    public void insert(long purposeId, long detailPlanKey){
         final String sql =
                 "insert into briefing values(?, ? , datetime(\'now\'), 0)";
-        db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(detailPlanKey)});
+        db.execSQL(sql, new String[]{String.valueOf(purposeId), String.valueOf(detailPlanKey)});
     }
 }

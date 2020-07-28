@@ -1,4 +1,4 @@
-package com.downfall.caterplanner.common.model;
+package com.downfall.caterplanner.rest.model;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
 import com.downfall.caterplanner.util.DateUtil;
@@ -6,7 +6,6 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ import lombok.Data;
 public class DetailPlan {
 
 	private int key;
-	private Long headerId;
+	private Long purposeId;
 	private int constructorKey;
 	private int constructorRelationType; //0 : parent , 1: presuccssor
 	private String name;
@@ -57,7 +56,7 @@ public class DetailPlan {
 
 		return DetailPlan.builder()
 				.key(data.getInt("key"))
-				.headerId(data.hasKey("headerId") ? (long) data.getInt("headerId") : null)
+				.purposeId((long) data.getInt("purposeId"))
 				.constructorKey(data.getInt("constructorKey"))
 				.constructorRelationType(data.getInt("constructorRelationType"))
 				.name(data.getString("name"))
@@ -75,7 +74,7 @@ public class DetailPlan {
 
 		WritableMap detailPlanMap = Arguments.createMap();
 		detailPlanMap.putInt("key", (int) plan.getKey());
-		detailPlanMap.putInt("headerId", plan.getHeaderId().intValue());
+		detailPlanMap.putInt("purposeId", plan.getPurposeId().intValue());
 		detailPlanMap.putInt("constructorKey", plan.getConstructorKey());
 		detailPlanMap.putInt("constructorRelationType", plan.getConstructorRelationType());
 		detailPlanMap.putString("name", plan.getName());

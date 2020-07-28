@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.rest.service;
 
-import com.downfall.caterplanner.common.model.Task;
+import com.downfall.caterplanner.rest.model.Task;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
 import com.downfall.caterplanner.rest.repository.TaskRepositiory;
 import com.facebook.react.bridge.ReadableArray;
@@ -14,20 +14,13 @@ public class TaskService extends BaseService{
         this.taskRepositiory = taskRepositiory;
     }
 
-    public void createByReact(ReadableArray r_tasks) throws Exception {
+    public void createByReact(Integer purposeId, ReadableArray r_tasks) throws Exception {
         SQLiteHelper.transaction(db, () -> {
             for(int i = 0; i < r_tasks.size(); i++){
                 Task task = Task.valueOf(r_tasks.getMap(i));
-                taskRepositiory.insert(task);
+                taskRepositiory.insert(purposeId, task);
             }
         });
     }
 
-    public void pass(long headerId, int detailPlanKey) throws Exception {
-        SQLiteHelper.transaction(db, () -> {
-            Task task = taskRepositiory.selectByKey(headerId, detailPlanKey);
-            taskRepositiory.updateActive(headerId, task.getDetailPlanKey());
-            taskRepositiory.deleteByKey(headerId, task.getDetailPlanKey());
-        });
-    }
 }
