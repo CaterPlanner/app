@@ -1,7 +1,7 @@
 package com.downfall.caterplanner.detailplantree.service;
 
 
-import com.downfall.caterplanner.common.model.DetailPlan;
+import com.downfall.caterplanner.rest.model.DetailPlan;
 import com.downfall.caterplanner.detailplantree.algorithm.MPRelationTree;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.algorithm.NodeList;

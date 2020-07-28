@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.detailplantree.algorithm;
 
-import com.downfall.caterplanner.common.model.DetailPlan;
+import com.downfall.caterplanner.rest.model.DetailPlan;
 
 import java.util.ArrayList;
 import java.util.List;

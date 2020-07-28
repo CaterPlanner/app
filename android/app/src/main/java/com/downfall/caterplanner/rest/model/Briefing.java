@@ -1,7 +1,5 @@
-package com.downfall.caterplanner.common.model;
+package com.downfall.caterplanner.rest.model;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 
@@ -13,8 +11,8 @@ import lombok.Getter;
 @Builder
 public class Briefing {
 
-    private long headerId;
-    private long detailPlanKey;
+    private long purposeId;
+    private int detailPlanKey;
     private LocalDateTime createAt;
     private int score;
 

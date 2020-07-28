@@ -1,25 +1,23 @@
-package com.downfall.caterplanner.common.model;
+package com.downfall.caterplanner.rest.model;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
-import java.util.Date;
-
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 
 public class Goal extends StatisticsDetailPlan{
 
+    @Getter
     private Perform[] performs;
 
-    public Goal(int key, Long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
-        super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
+    public Goal(int key, Long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
+        super(key, purposeId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
     }
 
-    public Goal(int key, Long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, Perform[] performs) {
-        super(key, headerId ,constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, null, stat);
+    public Goal(int key, Long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, Perform[] performs) {
+        super(key, purposeId ,constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, null, stat);
 
         this.performs = performs;
 
@@ -45,6 +43,7 @@ public class Goal extends StatisticsDetailPlan{
 
         isStatizable = true;
     }
+
 
     @Override
     public int achieve() {

@@ -1,9 +1,8 @@
-package com.downfall.caterplanner.common.model;
+package com.downfall.caterplanner.rest.model;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
 import com.downfall.caterplanner.util.DateUtil;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -19,7 +18,7 @@ import lombok.Setter;
 @Getter
 public class Perform extends StatisticsDetailPlan {
 
-    private Briefing[] briefings;
+    private List<Briefing> briefings;
 
     private char cycleType;
     private int[] cycleParams;
@@ -28,8 +27,8 @@ public class Perform extends StatisticsDetailPlan {
     private LocalDate today;
 
 
-    public Perform(int key, Long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
-        super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
+    public Perform(int key, Long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
+        super(key, purposeId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
 
         today = LocalDate.now();
 
@@ -54,14 +53,14 @@ public class Perform extends StatisticsDetailPlan {
         this.currentPerfectTime = getBetweenMaxBriefing(startDate, today, cycleType, cycleParams);
     }
 
-    public Perform(int key, Long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, Briefing[] briefings) {
-        this(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
+    public Perform(int key, Long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, List<Briefing> briefings) {
+        this(key, purposeId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
 
         this.briefings = briefings;
         statistion();
     }
 
-    public void setBriefings(Briefing[] briefings) {
+    public void setBriefings(List<Briefing> briefings) {
         this.briefings = briefings;
         statistion();
     }
@@ -71,7 +70,7 @@ public class Perform extends StatisticsDetailPlan {
         if(this.briefings == null)
             throw new RuntimeException();
 
-        this.currentBriefingCount = this.briefings.length;
+        this.currentBriefingCount = this.briefings.size();
         this.isStatizable = true;
     }
     public int getNextLeftDayCount(){
@@ -202,7 +201,7 @@ public class Perform extends StatisticsDetailPlan {
     }
 
     public LocalDate getLastBriefingDay(){
-        return this.briefings[this.briefings.length- 1].getCreateAt().toLocalDate();
+        return this.briefings.get(this.briefings.size()- 1).getCreateAt().toLocalDate();
     }
 
 }

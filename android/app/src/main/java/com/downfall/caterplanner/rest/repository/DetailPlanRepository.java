@@ -3,9 +3,9 @@ package com.downfall.caterplanner.rest.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.downfall.caterplanner.common.model.DetailPlan;
-import com.downfall.caterplanner.common.model.Goal;
-import com.downfall.caterplanner.common.model.Perform;
+import com.downfall.caterplanner.rest.model.DetailPlan;
+import com.downfall.caterplanner.rest.model.Goal;
+import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
 import com.downfall.caterplanner.util.DateUtil;
@@ -21,7 +21,7 @@ public class DetailPlanRepository extends BaseRepository {
     public int insert(DetailPlan detailPlan) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("key", detailPlan.getKey());
-        contentValues.put("headerId", detailPlan.getHeaderId());
+        contentValues.put("purpose_Id", detailPlan.getPurposeId());
         contentValues.put("constructor_key", detailPlan.getConstructorKey());
         contentValues.put("constructor_relation_type", detailPlan.getConstructorRelationType());
         contentValues.put("name", detailPlan.getName());
@@ -37,7 +37,7 @@ public class DetailPlanRepository extends BaseRepository {
 
     public DetailPlan selectByKey(long key) throws ParseException {
         final String sql =
-                "select key, header_id, constructor_key, constructor_relation_type, name, type, " +
+                "select key, purpose_id, constructor_key, constructor_relation_type, name, type, " +
                         "start_date, end_date, hope_achievement, color, cycle, stat " +
                         "from detailPlan where key = ?";
 
@@ -47,7 +47,7 @@ public class DetailPlanRepository extends BaseRepository {
             detailPlan =
                     DetailPlan.builder()
                             .key(c.getInt(0))
-                            .headerId(c.getLong(1))
+                            .purposeId(c.getLong(1))
                             .constructorKey(c.getInt(2))
                             .constructorRelationType(c.getInt(3))
                             .name(c.getString(4))
@@ -64,12 +64,12 @@ public class DetailPlanRepository extends BaseRepository {
         return detailPlan;
     }
 
-    public DetailPlan[] selectByHeaderId(long headerId) throws ParseException {
+    public DetailPlan[] selectByPurposeId(long purposeId) throws ParseException {
         final String sql =
-                "select key, header_id, constructor_key, constructor_relation_type, name, type, " +
+                "select key, purpose_id, constructor_key, constructor_relation_type, name, type, " +
                         "start_date, end_date, hope_achievement, color, cycle, stat " +
-                        "from detailPlan where header_id = ?";
-        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
+                        "from detailPlan where purpose_id = ?";
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(purposeId)});
         DetailPlan[] detailPlans = new DetailPlan[c.getCount()];
 
         while (c.moveToNext()) {
@@ -106,15 +106,18 @@ public class DetailPlanRepository extends BaseRepository {
         return detailPlans.length == 0 ? null : detailPlans;
     }
 
-    public void deleteByKey(int key) {
+
+    public void updateStatByKey(long headerid, int detailPlanKey, int stat){
         final String sql =
-                "delete from detailPlan where key = ?";
-        db.execSQL(sql, new String[]{String.valueOf(key)});
+                "update detailPlan " +
+                        "set stat = ? " +
+                        "where purpose_id = ? and detailPlan_key = ?";
+        db.execSQL(sql, new String[]{String.valueOf(stat), String.valueOf(headerid), String.valueOf(detailPlanKey)});
     }
 
-    public void deleteByHeaderId(long headerId) {
+    public void deleteByPurposeId(long purposeId) {
         final String sql =
-                "delete from detailPlan where header_id = ?";
-        db.execSQL(sql, new String[]{String.valueOf(headerId)});
+                "delete from detailPlan where purpose_id = ?";
+        db.execSQL(sql, new String[]{String.valueOf(purposeId)});
     }
 }

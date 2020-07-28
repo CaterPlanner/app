@@ -2,7 +2,7 @@ package com.downfall.caterplanner.detailplantree.manufacture;
 
 
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
-import com.downfall.caterplanner.common.model.DetailPlan;
+import com.downfall.caterplanner.rest.model.DetailPlan;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
 import com.facebook.react.bridge.Arguments;

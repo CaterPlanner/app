@@ -25,37 +25,21 @@ public class DetailPlansControllerModule extends ReactContextBaseJavaModule {
         return "DetailPlansController";
     }
 
+
     @ReactMethod
-    public void create(ReadableArray readableDetailPlans, String authorName, Integer authorId, Integer baseId, Promise promise){
+    public void update(Integer purposeId, ReadableArray readableDetailPlans, Promise promise){
         try{
-            promise.resolve(detailPlansService.createByReact(readableDetailPlans, authorName, authorId, baseId));
+            detailPlansService.updateByReact(purposeId, readableDetailPlans);
         }catch (Exception e){
             promise.reject(e);
         }
     }
 
-    @ReactMethod
-    public void update(Integer detailPlanHeaderId, ReadableArray readableDetailPlans, Promise promise){
-        try{
-            detailPlansService.updateByReact(detailPlanHeaderId, readableDetailPlans);
-        }catch (Exception e){
-            promise.reject(e);
-        }
-    }
 
     @ReactMethod
-    public void readByReact(Integer detailPlanHeaderId, Promise promise){
+    public void delete(Integer purposeId, Promise promise){
         try{
-            promise.resolve(detailPlansService.readByReact(detailPlanHeaderId));
-        }catch (Exception e){
-            promise.reject(e);
-        }
-    }
-
-    @ReactMethod
-    public void delete(Integer detailPlanHeaderId, Promise promise){
-        try{
-            detailPlansService.deleteByReact(detailPlanHeaderId);
+            detailPlansService.deleteByReact(purposeId);
         }catch (Exception e){
             promise.reject(e);
         }

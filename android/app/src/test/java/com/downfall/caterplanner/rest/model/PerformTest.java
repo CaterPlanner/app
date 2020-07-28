@@ -1,18 +1,14 @@
-package com.downfall.caterplanner.common.model;
+package com.downfall.caterplanner.rest.model;
 
 import com.downfall.caterplanner.detailplantree.algorithm.Type;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
