@@ -33,11 +33,10 @@ public class Purpose implements BriefingStatizable {
     private LocalDateTime startAt;
     private LocalDate decimalDay;
     private Long detailPlanHeaderId;
+    private int stat;
 
-    @Getter(AccessLevel.NONE)
     private StatisticsDetailPlan[] detailPlans;
 
-    @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private boolean isStatizable;
 
@@ -53,7 +52,7 @@ public class Purpose implements BriefingStatizable {
     @Setter(AccessLevel.NONE)
     private int entryCurrentPerfectTime;
 
-    public Purpose(long id, String authorName, Long authorId, String groupName, Long groupId, String name, String description, String imageUrl, int disclosureScope, LocalDateTime startAt, LocalDate decimalDay, Long detailPlanHeaderId) {
+    public Purpose(long id, String authorName, Long authorId, String groupName, Long groupId, String name, String description, String imageUrl, int disclosureScope, LocalDateTime startAt, LocalDate decimalDay, Long detailPlanHeaderId, int stat) {
         this.id = id;
         this.authorName = authorName;
         this.authorId = authorId;
@@ -66,11 +65,12 @@ public class Purpose implements BriefingStatizable {
         this.startAt = startAt;
         this.decimalDay = decimalDay;
         this.detailPlanHeaderId = detailPlanHeaderId;
+        this.stat = stat;
 
     }
 
-    public Purpose(long id, String authorName, Long authorId, String groupName, Long groupId, String name, String description, String imageUrl, int disclosureScope, LocalDateTime startAt, LocalDate decimalDay, Long detailPlanHeaderId, StatisticsDetailPlan[] detailPlans) {
-        this(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, detailPlanHeaderId);
+    public Purpose(long id, String authorName, Long authorId, String groupName, Long groupId, String name, String description, String imageUrl, int disclosureScope, LocalDateTime startAt, LocalDate decimalDay, Long detailPlanHeaderId, StatisticsDetailPlan[] detailPlans, int stat) {
+        this(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, detailPlanHeaderId, stat);
         this.detailPlans = detailPlans;
         statistion();
     }
@@ -105,17 +105,17 @@ public class Purpose implements BriefingStatizable {
     }
 
     @Override
-    public float progress() {
+    public int progress() {
         if(!isStatizable)
             throw new RuntimeException();
-        return Math.round(getCurrentBriefingCount() / getMaxTime()) / 100.0f;
+        return Math.round(((float) getCurrentBriefingCount() / getMaxTime()) * 100);
     }
 
     @Override
-    public float achieve() {
+    public int achieve() {
         if(!isStatizable)
             throw new RuntimeException();
-        return Math.round(getCurrentPerfectTime() / getMaxTime()) / 100.0f;
+        return Math.round(((float) getCurrentPerfectTime() / getMaxTime()) * 100);
     }
 
     @Override
@@ -153,6 +153,7 @@ public class Purpose implements BriefingStatizable {
                 .startAt(data.hasKey("startAt") ? DateUtil.parseToDateTime(data.getString("startAt")) : null)
                 .decimalDay(data.hasKey("decimalDay") ? DateUtil.parseToDate(data.getString("decimalDay")) : null)
                 .detailPlanHeaderId(data.hasKey("detailPlanHeaderId") ? Long.valueOf(data.getInt("detailPlanHeaderId")) : null)
+                .stat(data.getInt("stat"))
                 .build();
     }
 
@@ -170,6 +171,7 @@ public class Purpose implements BriefingStatizable {
         writableMap.putString("startAt", DateUtil.formatFromDateTime(purpose.getStartAt()));
         writableMap.putString("decimalDay", DateUtil.formatFromDate(purpose.getDecimalDay()));
         writableMap.putInt("detailPlanHeaderId", purpose.getDetailPlanHeaderId().intValue());
+        writableMap.putInt("stat", purpose.getStat());
         return writableMap;
     }
 
@@ -192,6 +194,7 @@ public class Purpose implements BriefingStatizable {
         private LocalDateTime startAt;
         private LocalDate decimalDay;
         private Long detailPlanHeaderId;
+        private int stat;
 
         PurposeBuilder() {
         }
@@ -256,12 +259,17 @@ public class Purpose implements BriefingStatizable {
             return this;
         }
 
+        public PurposeBuilder stat(int stat) {
+            this.stat = stat;
+            return this;
+        }
+
         public Purpose build() {
-            return new Purpose(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, detailPlanHeaderId);
+            return new Purpose(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, detailPlanHeaderId, stat);
         }
 
         public String toString() {
-            return "Purpose.PurposeBuilder(id=" + this.id + ", authorName=" + this.authorName + ", authorId=" + this.authorId + ", groupName=" + this.groupName + ", groupId=" + this.groupId + ", name=" + this.name + ", description=" + this.description + ", imageUrl=" + this.imageUrl + ", disclosureScope=" + this.disclosureScope + ", startAt=" + this.startAt + ", decimalDay=" + this.decimalDay + ", detailPlanHeaderId=" + this.detailPlanHeaderId + ")";
+            return "Purpose.PurposeBuilder(id=" + this.id + ", authorName=" + this.authorName + ", authorId=" + this.authorId + ", groupName=" + this.groupName + ", groupId=" + this.groupId + ", name=" + this.name + ", description=" + this.description + ", imageUrl=" + this.imageUrl + ", disclosureScope=" + this.disclosureScope + ", startAt=" + this.startAt + ", decimalDay=" + this.decimalDay + ", detailPlanHeaderId=" + this.detailPlanHeaderId + ", stat=" + this.stat + ")";
         }
     }
 }

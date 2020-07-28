@@ -1,7 +1,7 @@
 package com.downfall.caterplanner.detailplantree.manufacture;
 
 import com.downfall.caterplanner.common.Schedule;
-import com.downfall.caterplanner.common.Task;
+import com.downfall.caterplanner.common.Tasks;
 import com.downfall.caterplanner.detailplantree.algorithm.Node;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
@@ -28,11 +28,11 @@ public class GPScheduleMaker extends BaseScheduleMaker<Node> {
 
             for(Node successor : current.getSuccessors()){
                 Schedule schedule = new Schedule(
-                        new Task(successor.getKey(), successor.getData().getCycle()),
+                        new Tasks(successor.getKey(), successor.getData().getCycle()),
                         current.getKey(),
                         Arrays.stream(successor.getChildren())
-                                .map(n -> new Task(n.getKey(), n.getData().getCycle()))
-                                .toArray(size -> new Task[size]));
+                                .map(n -> new Tasks(n.getKey(), n.getData().getCycle()))
+                                .toArray(size -> new Tasks[size]));
                 schedules.add(schedule);
                 dfs.add(successor);
             }

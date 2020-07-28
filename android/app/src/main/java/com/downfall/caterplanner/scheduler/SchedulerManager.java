@@ -1,7 +1,5 @@
 package com.downfall.caterplanner.scheduler;
 
-import com.downfall.caterplanner.common.Task;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

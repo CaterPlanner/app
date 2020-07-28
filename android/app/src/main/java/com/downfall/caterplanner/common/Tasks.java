@@ -1,15 +1,14 @@
 package com.downfall.caterplanner.common;
 
-import androidx.annotation.Nullable;
-
 import com.downfall.caterplanner.scheduler.Type;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
 import lombok.Getter;
-
-public class Task {
+//task 클리어 처리는 scheduler에서 하지 않음
+//scehduler는 그냥 task  리스트만 보고 알림을 줘야하는 지 안줘야하는지만 구별하여 알림
+public class Tasks {
 
     @Getter
     private long key;
@@ -18,7 +17,7 @@ public class Task {
     private Type type;
     private int[] param;
 
-    public Task(long key, String cycle) {
+    public Tasks(long key, String cycle) {
         this.key = key;
         this.cycle = cycle;
     }
@@ -50,14 +49,14 @@ public class Task {
         return cycle;
     }
 
-    public static Task valueOf(ReadableMap map){
-        return new Task(map.getInt("key"), map.getString("cycle"));
+    public static Tasks valueOf(ReadableMap map){
+        return new Tasks(map.getInt("key"), map.getString("cycle"));
     }
 
-    public static WritableMap parseWritableMap(Task task){
+    public static WritableMap parseWritableMap(Tasks tasks){
         WritableMap result = Arguments.createMap();
-        result.putInt("key", (int) task.getKey());
-        result.putString("cycle", task.getCycleText());
+        result.putInt("key", (int) tasks.getKey());
+        result.putString("cycle", tasks.getCycleText());
         return result;
     }
 

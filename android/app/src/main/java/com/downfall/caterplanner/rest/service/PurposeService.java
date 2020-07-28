@@ -25,17 +25,41 @@ public class PurposeService extends BaseService {
         this.detailPlansService = detailPlansService;
     }
 
+    /**
+     * Purpose 데이터만 생성하고 할때 사용 (detailPlans X)
+     *
+     * @param purpose
+     * @return
+     * @throws Exception
+     */
     public Long createByReact(ReadableMap purpose) throws Exception {
         return purposeRepository.insert(Purpose.valueOf(purpose));
     }
 
+    /**
+     * Purpose 등록시 자신이 만든 detailPlans도 동시에 등록하고자 할때 사용
+     *
+     * @param readablePurpose
+     * @param readableDetailPlans
+     * @return
+     * @throws Exception
+     */
     public Long createByReact(ReadableMap readablePurpose, ReadableArray readableDetailPlans) throws Exception{
-        return this.createByReact(readablePurpose, readableDetailPlans, null);
+        return createByReact(readablePurpose, readableDetailPlans, null);
     }
 
+    /**
+     *
+     * Purpose 등록시 타 유저가 만든 detailPlans도 동시에 등록하고자 할때 사용
+     *
+     * @param readablePurpose
+     * @param readableDetailPlans
+     * @param baseId
+     * @return
+     * @throws Exception
+     */
     public Long createByReact(ReadableMap readablePurpose, ReadableArray readableDetailPlans, Integer baseId) throws Exception{
-        db.beginTransaction();
-        try{
+        return SQLiteHelper.transaction(db, () -> {
             Purpose purpose = Purpose.valueOf(readablePurpose);
             Long detailPlanHeaderId = null;
             if(readableDetailPlans != null){
@@ -45,16 +69,18 @@ public class PurposeService extends BaseService {
             Long id = purposeRepository.insert(purpose);
             db.setTransactionSuccessful();
             return id;
-        }catch (Exception e){
-            e.printStackTrace();
-            throw e;
-        }finally {
-            db.endTransaction();
-        }
+        });
+    }
+
+    private Purpose read(long id) throws ParseException {
+        Purpose purpose = purposeRepository.selectById(id);
+        StatisticsDetailPlan[] detailPlans = (StatisticsDetailPlan[]) this.detailPlansService.read(purpose.getDetailPlanHeaderId());
+        purpose.setDetailPlans(detailPlans);
+        return purpose;
     }
 
     public WritableMap readByReact(Integer id) throws ParseException {
-        return writableCard(this.purposeRepository.selectById(id));
+        return writableCard(read(id));
     }
 
     public WritableArray readAllByReact() throws ParseException {
@@ -71,30 +97,27 @@ public class PurposeService extends BaseService {
     }
 
     public void deleteByReact(Integer id) throws Exception{
-        db.beginTransaction();
-        try{
+        SQLiteHelper.transaction(db, () -> {
             Purpose purpose = this.purposeRepository.selectById(id);
             if(purpose == null)
                 throw new Exception();
 
             this.purposeRepository.deleteById(id);
             this.detailPlansService.deleteByReact(purpose.getDetailPlanHeaderId().intValue());
-
-            db.setTransactionSuccessful();
-        }catch (Exception e){
-            e.printStackTrace();
-            throw e;
-        }finally {
-            db.endTransaction();
-        }
+        });
     }
 
     private WritableMap writableCard(Purpose purpose) throws ParseException {
         WritableMap writablePurpose = Purpose.parseWritableMap(purpose);
 
-        StatisticsDetailPlan[] detailPlans = (StatisticsDetailPlan[]) this.detailPlansService.read(purpose.getDetailPlanHeaderId());
+        StatisticsDetailPlan[] detailPlans;
 
-        purpose.setDetailPlans(detailPlans);
+        if(!purpose.isStatizable()){
+            detailPlans = (StatisticsDetailPlan[]) this.detailPlansService.read(purpose.getDetailPlanHeaderId());
+            purpose.setDetailPlans(detailPlans);
+        }else{
+            detailPlans = purpose.getDetailPlans();
+        }
 
         writablePurpose.putDouble("progress", purpose.progress());
         writablePurpose.putDouble("achieve", purpose.achieve());

@@ -42,16 +42,16 @@ public abstract class StatisticsDetailPlan extends DetailPlan implements Briefin
 
 
     @Override
-    public float progress() {
+    public int progress() {
         if(!isStatizable)
             throw new RuntimeException();
-        return Math.round(getCurrentBriefingCount() / getMaxTime()) / 100.0f;
+        return Math.round(((float) getCurrentPerfectTime() / getMaxTime()) * 100);
     }
 
     @Override
-    public float achieve() {
+    public int achieve() {
         if(!isStatizable)
             throw new RuntimeException();
-        return Math.round(getCurrentBriefingCount() / getMaxTime()) / 100.0f;
+        return Math.round(((float) getCurrentBriefingCount() / getMaxTime()) * 100);
     }
 }

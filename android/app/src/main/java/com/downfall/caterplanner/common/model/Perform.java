@@ -28,9 +28,8 @@ public class Perform extends StatisticsDetailPlan {
     private LocalDate today;
 
 
-
     public Perform(int key, Long headerId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
-        super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
+        super(key, headerId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
 
         today = LocalDate.now();
 
