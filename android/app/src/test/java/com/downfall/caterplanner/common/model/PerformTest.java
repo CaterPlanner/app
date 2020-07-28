@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,6 +37,11 @@ class PerformTest {
                 "W 1 2",
                 0
         );
+
+        defaultPerform.setToday(
+                new LocalDate(2020,7,28)
+        );
+
         List<Briefing> briefings = new ArrayList<>();
         briefings.add(
                 Briefing.builder()
@@ -66,19 +72,19 @@ class PerformTest {
                         .score(0).build()
         );
 
-        //TODAY
-//        briefings.add(
-//                Briefing.builder()
-//                        .headerId(0L)
-//                        .detailPlanKey(2)
-//                        .createAt(new DateTime(2020, 7, 28))
-//                        .score(0).build()
-//        );
         defaultPerform.setBriefings(briefings.toArray(new Briefing[briefings.size()]));
 
     }
 
+    @Test
+    void achieve(){
+        assertEquals(defaultPerform.achieve(), 40);
+    }
 
+    @Test
+    void progress(){
+        assertEquals(defaultPerform.progress(), 80);
+    }
 
     @Test
     void cycle(){
@@ -86,7 +92,7 @@ class PerformTest {
         assertEquals(defaultPerform.getCycleParams().length, 2);
 
         //getCurrentPerfectTime
-        assertEquals(defaultPerform.getCurrentPerfectTime() ,7);
+        assertEquals(defaultPerform.getCurrentPerfectTime() ,8);
 
         //getMaxTime
         assertEquals(defaultPerform.getMaxTime(), 10);
@@ -98,7 +104,7 @@ class PerformTest {
 
     @Test
     void getNextLeftDay(){
-        assertEquals(defaultPerform.getNextLeftDay(), new LocalDate(2020,7, 27
+        assertEquals(defaultPerform.getNextLeftDay(), new LocalDate(2020,7, 28
         ));
     }
 

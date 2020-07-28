@@ -6,8 +6,8 @@ import java.util.Date;
 
 public interface BriefingStatizable {
 
-    float progress();
-    float achieve();
+    int progress();
+    int achieve();
 
     void statistion();
 

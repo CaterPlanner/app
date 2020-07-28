@@ -45,4 +45,15 @@ public class Goal extends StatisticsDetailPlan{
 
         isStatizable = true;
     }
+
+    @Override
+    public int achieve() {
+        int value = super.achieve();
+        return value >= this.getHopeAchievement() ? 100 : value;
+    }
+
+    @Override
+    public int getCurrentBriefingCount() {
+        return achieve() == 100 ? super.getMaxTime() :  super.getCurrentBriefingCount();
+    }
 }

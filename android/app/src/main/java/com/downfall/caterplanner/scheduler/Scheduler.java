@@ -1,7 +1,7 @@
 package com.downfall.caterplanner.scheduler;
 
 import com.downfall.caterplanner.common.Schedule;
-import com.downfall.caterplanner.common.Task;
+import com.downfall.caterplanner.common.Tasks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 public class Scheduler {
 
     private List<Schedule> schedules;
-    private List<Task> activityList;
+    private List<Tasks> activityList;
     private List<Schedule> waitList;
 
     public Scheduler(List<Schedule> schedules){
@@ -57,7 +57,7 @@ public class Scheduler {
         return schedules;
     }
 
-    public List<Task> getActivityList() {
+    public List<Tasks> getActivityList() {
         return activityList;
     }
 
