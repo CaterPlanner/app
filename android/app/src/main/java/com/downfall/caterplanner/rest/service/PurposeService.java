@@ -1,10 +1,13 @@
 package com.downfall.caterplanner.rest.service;
 
+import com.downfall.caterplanner.detailplanmaker.algorithm.RelationTree;
+import com.downfall.caterplanner.detailplanmaker.manufacture.GPScheduleMaker;
 import com.downfall.caterplanner.rest.model.DetailPlans;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.model.Task;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.PurposeRepository;
@@ -23,15 +26,15 @@ public class PurposeService extends BaseService {
     private PurposeRepository purposeRepository;
     private DetailPlanService detailPlanService;
     private BriefingRepository briefingRepository;
-    private TaskRepositiory taskRepositiory;
+    private TaskService taskService;
 
-    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, TaskRepositiory taskRepositiory) {
+    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, TaskService taskService) {
         super(helper);
 
         this.purposeRepository = purposeRepository;
         this.briefingRepository = briefingRepository;
         this.detailPlanService = detailPlanService;
-        this.taskRepositiory = taskRepositiory;
+        this.taskService = taskService;
     }
 
     /**
@@ -113,13 +116,7 @@ public class PurposeService extends BaseService {
         return writableCard(read(id));
     }
 
-    /**
-     *
-     *
-     *
-     * @return
-     * @throws ParseException
-     */
+
     public WritableArray readForCardAllByReact() throws ParseException {
         Purpose[] purposes = this.purposeRepository.selectByStatIsActive();
         WritableArray result = Arguments.createArray();
@@ -181,6 +178,22 @@ public class PurposeService extends BaseService {
         });
     }
 
+    public void startSchedule(Integer id) throws Exception {
+        SQLiteHelper.transaction(db, () -> {
+            Purpose purpose = purposeRepository.selectById(id);
+            DetailPlans detailPlans = detailPlanService.readShort(purpose.getDetailPlanHeaderId());
+
+            RelationTree tree = RelationTree.Builder.build(detailPlans);
+            GPScheduleMaker maker = new GPScheduleMaker();
+
+            Task[] tasks = maker.make(tree.getRoot());
+            taskService.registerSchedule(purpose.getDetailPlanHeaderId(), tasks);
+        });
+    }
+
+    public void stopSchedule(Integer id){
+
+    }
 
     private WritableMap writableCard(Purpose purpose) throws ParseException {
         if(!purpose.isStatizable())

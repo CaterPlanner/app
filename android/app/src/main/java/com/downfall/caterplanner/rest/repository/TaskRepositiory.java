@@ -11,22 +11,22 @@ public class TaskRepositiory extends BaseRepository{
         super(helper);
     }
 
-    public void insert(long purposeId, Task task){
+    public void insert(long headerId, Task task){
         String sql =
                 "insert into task values(?, ?, ?)";
-        db.execSQL(sql, new String[]{String.valueOf(purposeId), String.valueOf(task.getDetailPlanKey()), String.valueOf(task.getPreviousDetailPlanKey())});
+        db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(task.getGoalId()), String.valueOf(task.getPerformId())});
     }
 
-    public Task selectByKey(long purposeId, int previousDetailPlanKey){
+    public Task selectByHeaderIdAndPreviousGoalId(long headerId, int previousGoalId){
         String sql =
-                "select purpose_id, detailPlan_key, previous_detailPlan_key from task where purpose_id = ? and previous_detailPlan_key = ?";
-        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(purposeId), String.valueOf(previousDetailPlanKey)});
+                "select header_id, goal_id, perform_id, previous_goal_id from task where header_id = ? and previous_goal_id = ?";
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId), String.valueOf(previousGoalId)});
         Task task = null;
         if(c.moveToNext()){
             task = Task.builder()
-                    .purposeId(c.getLong(1))
-                    .detailPlanKey(c.getInt(2))
-                    .previousDetailPlanKey(c.getInt(3))
+                    .headerId(c.getLong(1))
+                    .goalId(c.getInt(2))
+                    .performId(c.getInt(3))
                     .build();
         }
         return task;
@@ -34,31 +34,31 @@ public class TaskRepositiory extends BaseRepository{
 
     public Task[] selectActive(){
         String sql =
-                "select purpose_id, detailPlan_key, previous_detailPlan_key from task where previous_detailPlan_key is null";
+                "select header_id, goal_id, perform_id, previous_goal_id from task where previous_goal_id is null";
         Cursor c = db.rawQuery(sql, null);
         Task[] tasks = new Task[c.getCount()];
 
         while(c.moveToNext()){
             tasks[c.getPosition()] =
                     Task.builder()
-                    .purposeId(c.getLong(0))
-                    .detailPlanKey(c.getInt(1))
-                    .previousDetailPlanKey(c.getInt(2))
+                    .headerId(c.getLong(0))
+                    .goalId(c.getInt(1))
+                    .performId(c.getInt(2))
                     .build();
         }
         return tasks;
     }
 
-    public void updateActive(long purposeId, int previousDetailPlanKey){
+    public void updateActive(long headerId, int previousGoalId){
         String sql =
-                "update task set previous_detailPlan_key = null where purpose_id = ? and previous_detailPlan_key = ?";
-        db.execSQL(sql, new String[]{String.valueOf(purposeId), String.valueOf(previousDetailPlanKey)});
+                "update task set previous_goal_id = null where header_id = ? and previous_goal_id = ?";
+        db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(previousGoalId)});
     }
 
-    public void deleteByKey(long purposeId, int detailPlanKey){
+    public void deleteByheaderIdAndGoalId(long headerId, int goalId){
         String sql =
-                "delete from task where purpose_id = ? and detail_plan_key = ?";
-        db.execSQL(sql, new String[]{String.valueOf(purposeId), String.valueOf(detailPlanKey)});
+                "delete from task where header_id = ? and previous_goal_id = ?";
+        db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(goalId)});
     }
 
 

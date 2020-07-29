@@ -63,6 +63,10 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
             statistion();
     }
 
+    public boolean isClear(){
+        return this.stat > 0;
+    }
+
     @Override
     public void statistion() {
         if(this.performs == null)
