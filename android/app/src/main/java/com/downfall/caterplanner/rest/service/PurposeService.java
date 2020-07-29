@@ -162,38 +162,38 @@ public class PurposeService extends BaseService {
 
     public void addBriefing(Integer id, int detailPlanKey) throws Exception {
         SQLiteHelper.transaction(db, () -> {
-            Purpose purpose = read(id);
-            this.briefingRepository.insert(purpose.getId(), detailPlanKey);
-
-            Briefing briefing =
-                    Briefing.builder()
-                            .purposeId(purpose.getId())
-                            .detailPlanKey(detailPlanKey)
-                            .score(0).build();
-
-            Perform perform = (Perform) purpose.getDetailPlans()[detailPlanKey - 1];
-            perform.getBriefings().add(briefing);
-
-            perform.statistion();
-
-            Goal goal = (Goal) this.detailPlans[perform.getConstructorKey() - 1];
-            goal.statistion();
-
-            perform.statistion();
-
-            if(goal.achieve() == 100){
-                goal.setStat(1);
-                detailPlanRepository.updateStatByKey(purpose.getId(), goal.getKey(), goal.getStat());
-
-                for(Perform perform1 : goal.getPerforms()){
-                    perform1.setStat(1);
-                    detailPlanRepository.updateStatByKey(purpose.getId(), perform1.getKey(), perform1.getStat());
-
-                    Task task = taskRepositiory.selectByKey(purpose.getId(), perform1.getKey());
-                    taskRepositiory.updateActive(purpose.getId(), task.getDetailPlanKey());
-                    taskRepositiory.deleteByKey(purpose.getId(), task.getDetailPlanKey());
-                }
-            }
+//            Purpose purpose = read(id);
+//            this.briefingRepository.insert(purpose.getId(), detailPlanKey);
+//
+//            Briefing briefing =
+//                    Briefing.builder()
+//                            .purposeId(purpose.getId())
+//                            .detailPlanKey(detailPlanKey)
+//                            .score(0).build();
+//
+//            Perform perform = (Perform) purpose.getDetailPlans()[detailPlanKey - 1];
+//            perform.getBriefings().add(briefing);
+//
+//            perform.statistion();
+//
+//            Goal goal = (Goal) this.detailPlans[perform.getConstructorKey() - 1];
+//            goal.statistion();
+//
+//            perform.statistion();
+//
+//            if(goal.achieve() == 100){
+//                goal.setStat(1);
+//                detailPlanRepository.updateStatByKey(purpose.getId(), goal.getKey(), goal.getStat());
+//
+//                for(Perform perform1 : goal.getPerforms()){
+//                    perform1.setStat(1);
+//                    detailPlanRepository.updateStatByKey(purpose.getId(), perform1.getKey(), perform1.getStat());
+//
+//                    Task task = taskRepositiory.selectByKey(purpose.getId(), perform1.getKey());
+//                    taskRepositiory.updateActive(purpose.getId(), task.getDetailPlanKey());
+//                    taskRepositiory.deleteByKey(purpose.getId(), task.getDetailPlanKey());
+//                }
+//            }
         });
     }
 

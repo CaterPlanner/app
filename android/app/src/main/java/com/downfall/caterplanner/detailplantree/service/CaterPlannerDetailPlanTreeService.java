@@ -18,8 +18,6 @@ public interface CaterPlannerDetailPlanTreeService {
 
    void delete(int key) throws Exception;
 
-   WritableArray schedules() throws Exception;
-
    void successor(int previousKey, ReadableMap data) throws Exception;
 
    void modify(int key, ReadableMap param) throws Exception;
