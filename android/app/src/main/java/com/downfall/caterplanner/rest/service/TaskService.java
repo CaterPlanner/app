@@ -14,13 +14,20 @@ public class TaskService extends BaseService{
         this.taskRepositiory = taskRepositiory;
     }
 
-    public void createByReact(Integer purposeId, ReadableArray r_tasks) throws Exception {
+    public void registerSchedule(long headerId, Task[] tasks) throws Exception {
         SQLiteHelper.transaction(db, () -> {
-            for(int i = 0; i < r_tasks.size(); i++){
-                Task task = Task.valueOf(r_tasks.getMap(i));
-                taskRepositiory.insert(purposeId, task);
+            for(int i = 0; i < tasks.length; i++){
+                taskRepositiory.insert(headerId, tasks[i]);
             }
         });
+    }
+
+    public void updateSchedule(long headerId, Task[] tasks){
+        
+    }
+
+    public void unregisterSchedule(long headerId, Task[] tasks){
+
     }
 
 }
