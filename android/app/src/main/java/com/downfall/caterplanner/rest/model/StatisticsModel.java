@@ -3,7 +3,7 @@ package com.downfall.caterplanner.rest.model;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class StatisticsDetailPlan implements BriefingStatizable{
+public abstract class StatisticsModel implements BriefingStatizable{
 
     protected int maxTime;
     protected int currentPerfectTime;

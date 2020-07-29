@@ -1,15 +1,19 @@
 package com.downfall.caterplanner.detailplanmaker.service;
 
 import com.downfall.caterplanner.detailplanmaker.util.Pair;
-import com.downfall.caterplanner.rest.model.DetailPlan;
-import com.downfall.caterplanner.detailplanmaker.algorithm.GPRelationTree;
+import com.downfall.caterplanner.detailplanmaker.algorithm.RelationTree;
 import com.downfall.caterplanner.detailplanmaker.algorithm.Node;
+import com.downfall.caterplanner.rest.model.DetailPlans;
+import com.downfall.caterplanner.rest.model.Goal;
+import com.downfall.caterplanner.rest.model.Perform;
+import com.downfall.caterplanner.rest.service.DetailPlanService;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,79 +21,86 @@ import java.util.Stack;
 
 //perform추가는 여기에서
 //nodeList는 밖으로 뺀다
-public class GPRelationTreeService implements CaterPlannerDetailPlanTreeService {
+public class CaterPlannerDetailPlanMakerService{
 
-    private GPRelationTree tree;
+    private RelationTree goalRelationTree;
 
-    @Override
     public void create(){
-        tree = new GPRelationTree();
+        goalRelationTree = new RelationTree();
     }
 
-    @Override
-    public WritableMap get(int key) throws Exception {
-        return DetailPlan.parseWritableMap(tree.select(key).getData());
+    public WritableMap getGoal(int key)  {
+        return Goal.parseWritableMap((Goal) goalRelationTree.select(key).getData());
     }
 
-    @Override
-    public WritableArray entry() throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-
-        Node[] nodes = tree.getUseNodes();
-        WritableArray result = Arguments.createArray();
-        for(Node node : nodes) {
-            result.pushMap(DetailPlan.parseWritableMap(node.getData()));
-        }
-
-        return result;
+    @Deprecated
+    public WritableArray entry() {
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
+        return DetailPlans.parseWritableMap(DetailPlans.valueOf(goalRelationTree.getUseNodes()));
     }
 
-    @Override
-    public void insert(int parentKey, ReadableMap data) throws Exception {
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-        tree.insert(parentKey, new Node(DetailPlan.valueOf(data)));
+    /**
+     *
+     * 확정된 데이터가 아니므로 간이적으로 Goal 과 Perform 을 연결
+     *
+     * @param goalId
+     * @param r_perform
+     * @throws ParseException
+     */
+    public void insert(int goalId, ReadableMap r_perform) throws ParseException {
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
+        Perform perform = Perform.valueOf(r_perform);
+        goalRelationTree.select(goalId).addChild(new Node(perform));
+    }
+    
+    public void build(ReadableArray r_detailPlans) throws ParseException {
+        if(goalRelationTree != null)
+            throw new RuntimeException("The goalRelationTree is already created.");
+        goalRelationTree = RelationTree.builder().build(DetailPlans.valueOf(r_detailPlans));
     }
 
-    @Override
-    public void build(ReadableArray param) throws Exception{
-        if(tree != null)
-            throw new Exception("The tree is already created.");
-        DetailPlan[] list = new DetailPlan[param.size()];
-        for(int i = 0; i < param.size(); i++){
-            list[i] = DetailPlan.valueOf(param.getMap(i));
-        }
-        tree = new GPRelationTree(list);
+
+    public void deleteGoal(int goalId) {
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
+        goalRelationTree.delete(goalId);
     }
 
-    @Override
-    public void delete(int key) throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-        tree.delete(key);
+    public void deletePerform(int goalId, int performId){
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
+        goalRelationTree.select(goalId).removeChilde(performId);
     }
 
-    @Override
-    public void successor(int previousKey, ReadableMap data) throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-        tree.successor(previousKey, new Node(DetailPlan.valueOf(data)));
+
+    public void successor(int goalId, ReadableMap r_goal) throws ParseException {
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
+        goalRelationTree.successor(goalId, new Node(Goal.valueOf(r_goal)));
     }
 
-    @Override
-    public void modify(int key, ReadableMap param) throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
-        Node node = tree.select(key);
-        node.getData().modify(DetailPlan.valueOf(param));
+
+    public void modifyGoal(int goalId, ReadableMap r_goal) throws ParseException {
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
+        Node node = goalRelationTree.select(goalId);
+        ((Goal)node.getData()).modify(Goal.valueOf(r_goal));
     }
 
-    public WritableMap mapGoalBottomViewData() throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
+    public void modifyPerform(int goalId, int performId, ReadableMap r_perform) throws Exception {
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
+        Node node = goalRelationTree.select(goalId);
+        ((Goal)node.getData()).getPerforms().get(performId).modify(Perform.valueOf(r_perform));
+    }
 
-        Node root = tree.getRoot();
+    public WritableMap mapGoalBottomViewData() {
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
+
+        Node root = goalRelationTree.getRoot();
 
         WritableMap result = Arguments.createMap();
         List<Pair<Integer, Integer>> keyIndexList = new ArrayList<>();
@@ -99,27 +110,7 @@ public class GPRelationTreeService implements CaterPlannerDetailPlanTreeService 
         WritableArray brotherGroups = Arguments.createArray();
 
         int currentIndex = 0;
-
-        WritableArray firstbrotherGroup = Arguments.createArray();
-
-        for(Node child : root.getChildren()) {
-            WritableMap brother = Arguments.createMap();
-
-            brother.putInt("key", child.getKey());
-
-            if(child.getSuccessors().length != 0){
-                brother.putInt("successorHead", child.getSuccessors()[0].getKey());
-            }
-
-            keyIndexList.add(new Pair<>(child.getKey(), currentIndex));
-            firstbrotherGroup.pushMap(brother);
-
-            stack.push(child);
-        }
-
-        brotherGroups.pushArray(firstbrotherGroup);
-
-        currentIndex++;
+        stack.push(root);
 
         while(!stack.isEmpty()){
             Node element = stack.pop();
@@ -129,7 +120,7 @@ public class GPRelationTreeService implements CaterPlannerDetailPlanTreeService 
             for(Node successor : element.getSuccessors()){
                 WritableMap brother = Arguments.createMap();
 
-                brother.putInt("key", successor.getKey());
+                brother.putInt("id", successor.getKey());
                 if(successor.getSuccessors().length != 0){
                     brother.putInt("successorHead", successor.getSuccessors()[0].getKey());
                 }
@@ -158,11 +149,11 @@ public class GPRelationTreeService implements CaterPlannerDetailPlanTreeService 
         return result;
     }
 
-    public WritableMap mapGoalTopViewData() throws Exception{
-        if(tree == null)
-            throw new Exception("Please create a tree first.");
+    public WritableMap mapGoalTopViewData() {
+        if(goalRelationTree == null)
+            throw new RuntimeException("Please create a goalRelationTree first.");
 
-        Node root = tree.getRoot();
+        Node root = goalRelationTree.getRoot();
 
         class Space {
             int key;
@@ -191,12 +182,8 @@ public class GPRelationTreeService implements CaterPlannerDetailPlanTreeService 
 
         HashMap<Integer, Space> spaceHashMap = new HashMap<>();
 
-        Node[] firstChildren = root.getChildren(); //root
 
-        for(int i = firstChildren.length - 1;  i >= 0; i--){
-            stack.push(firstChildren[i]);
-        }
-        //후에는 next로만 할 것이기 때문에 미리 root의 자식들을 init
+        stack.push(root);
 
         int previousFloorArrayIndex = 0;
 
@@ -204,7 +191,7 @@ public class GPRelationTreeService implements CaterPlannerDetailPlanTreeService 
             Node element = stack.pop();
             FloorLevel floorLevel;
 
-            if(element.getConstructor().getChildren()[0] == element){
+            if(element.getConstructor().getSuccessors()[0] == element){
                 floorLevel = floorLevelList.get(previousFloorArrayIndex);
             }else{
                 floorLevel = new FloorLevel(); //currentpos를 부모로부터 이어받아야함
@@ -240,7 +227,7 @@ public class GPRelationTreeService implements CaterPlannerDetailPlanTreeService 
 
             for(Space space : level.elements){
                 WritableMap spaceMap = Arguments.createMap();
-                spaceMap.putInt("key", space.key);
+                spaceMap.putInt("id", space.key);
                 spaceMap.putInt("pos", space.pos);
                 elementArray.pushMap(spaceMap);
             }

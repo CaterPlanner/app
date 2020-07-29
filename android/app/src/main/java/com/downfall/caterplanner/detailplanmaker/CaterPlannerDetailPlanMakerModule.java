@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.detailplanmaker;
 
-import com.downfall.caterplanner.detailplanmaker.service.GPRelationTreeService;
+import com.downfall.caterplanner.detailplanmaker.service.CaterPlannerDetailPlanMakerService;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -11,21 +11,21 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
 
-public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule {
+public class CaterPlannerDetailPlanMakerModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
-    private GPRelationTreeService service;
+    private CaterPlannerDetailPlanMakerService service;
 
 
-    public CaterPlannerDetailPlanTreeModule(ReactApplicationContext reactContext) {
+    public CaterPlannerDetailPlanMakerModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-        this.service = new GPRelationTreeService();
+        this.service = new CaterPlannerDetailPlanMakerService();
     }
 
     @Override
     public String getName() {
-        return "CaterPlannerDetailPlanTree";
+        return "CaterPlannerDetailPlanMaker";
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
@@ -36,7 +36,7 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap get(Integer key){
         try{
-            return service.get(key);
+            return service.getGoal(key);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -54,16 +54,15 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void insert(Integer parentKey, ReadableMap data, Promise promise) {
+    public void insert(Integer goalKey, ReadableMap r_perform, Promise promise) {
         try {
-            service.insert(parentKey, data);
+            service.insert(goalKey, r_perform);
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject("TREE ERROR" , e);
         }
     }
 
-    @Deprecated
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap mapGoalTopViewData(){
         try{
@@ -74,7 +73,6 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
         return null;
     }
 
-    @Deprecated
     @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableMap mapGoalBottomViewData(){
         try {
@@ -86,9 +84,9 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void modify(Integer key, ReadableMap param, Promise promise){
+    public void modifyGoal(Integer goalKey, ReadableMap r_goal, Promise promise){
         try{
-            service.modify(key, param);
+            service.modifyGoal(goalKey, r_goal);
             promise.resolve(null);
         }catch (Exception e){
             promise.reject("TREE ERROR" ,e);
@@ -105,20 +103,20 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
         }
     }
 
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableArray schedules(){
-        try {
-           return service.schedules();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    @ReactMethod(isBlockingSynchronousMethod = true)
+//    public WritableArray schedules(){
+//        try {
+//           return service.schedules();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     @ReactMethod
-    public void delete(Integer key, Promise promise){
+    public void deleteGoal(Integer goalKey, Promise promise){
         try {
-            service.delete(key);
+            service.deleteGoal(goalKey);
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject("TREE ERROR" ,e);
@@ -126,9 +124,9 @@ public class CaterPlannerDetailPlanTreeModule extends ReactContextBaseJavaModule
     }
 
     @ReactMethod
-    public void successor(Integer previousKey, ReadableMap data, Promise promise){
+    public void successor(Integer goalKey, ReadableMap r_goal, Promise promise){
         try {
-            service.successor(previousKey, data);
+            service.successor(goalKey, r_goal);
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject("TREE ERROR" ,e);

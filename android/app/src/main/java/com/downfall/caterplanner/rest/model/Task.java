@@ -26,16 +26,16 @@ public class Task {
 
     public static Task valueOf(ReadableMap data) throws Exception{
         return Task.builder()
-                .purposeId(data.hasKey("purposeId") ? data.getInt("purposeId") : null)
-                .detailPlanKey(data.getInt("detailPlanKey"))
+                .purposeId(data.hasKey("headerId") ? data.getInt("headerId") : null)
+                .detailPlanKey(data.getInt("goalId"))
                 .previousDetailPlanKey(data.hasKey("previousDetailPlanKey") ? data.getInt("previousDetailPlanKey") : null)
                 .build();
     }
 
     public static WritableMap parseWritableMap(Task purpose){
         WritableMap writableMap = Arguments.createMap();
-        writableMap.putInt("purposeId", (int)purpose.getPurposeId());
-        writableMap.putInt("detailPlanKey", purpose.getDetailPlanKey());
+        writableMap.putInt("headerId", (int)purpose.getPurposeId());
+        writableMap.putInt("goalId", purpose.getDetailPlanKey());
         writableMap.putInt("previousDetailPlanKey", purpose.getPreviousDetailPlanKey());
         return writableMap;
     }

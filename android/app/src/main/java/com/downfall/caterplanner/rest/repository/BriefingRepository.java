@@ -16,29 +16,31 @@ public class BriefingRepository extends BaseRepository{
         super(helper);
     }
 
-    public List<Briefing> selectBypurposeIdAndDetailPlanKey(long purposeId, long detailPlanKey) throws ParseException {
+    public List<Briefing> selectByHeaderId(long headerId) throws ParseException {
         final String sql =
-                "select purpose_id, detailplan_key, create_at, score " +
+                "select header_id, goal_key, perfrom_id, create_at, score " +
                         "from briefing " +
-                        "where purpose_id = ? and detailplan_key = ?";
-
-        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(purposeId), String.valueOf(detailPlanKey)});
+                        "where header_id = ?";
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
         List<Briefing> briefings = new ArrayList<>();
         while(c.moveToNext()){
-                briefings.add(
+            briefings.add(
                     Briefing.builder()
-                    .purposeId(c.getLong(1))
-                    .detailPlanKey(c.getInt(2))
-                    .createAt(DateUtil.parseToDateTime(c.getString(3)))
-                    .score(c.getInt(4))
-                    .build());
+                            .headerId(c.getLong(1))
+                            .goalKey(c.getInt(2))
+                            .performId(c.getInt(3))
+                            .createAt(DateUtil.parseToDateTime(c.getString(4)))
+                            .score(c.getInt(5))
+                            .build()
+            );
         }
-        return briefings.size() == 0 ? null : briefings;
+        return briefings;
     }
 
-    public void insert(long purposeId, long detailPlanKey){
+
+    public void insert(long headerId, int goalKey, int performId){
         final String sql =
-                "insert into briefing values(?, ? , datetime(\'now\'), 0)";
-        db.execSQL(sql, new String[]{String.valueOf(purposeId), String.valueOf(detailPlanKey)});
+                "insert into briefing values(?, ?, ?, datetime(\'now\'), 0)";
+        db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(goalKey), String.valueOf(performId)});
     }
 }

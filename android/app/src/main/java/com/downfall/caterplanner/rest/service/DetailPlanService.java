@@ -1,10 +1,12 @@
 package com.downfall.caterplanner.rest.service;
 
+import com.downfall.caterplanner.rest.model.Briefing;
+import com.downfall.caterplanner.rest.model.DetailPlans;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
-import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
+import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
 import com.downfall.caterplanner.rest.repository.PerformRepository;
 import com.facebook.react.bridge.ReadableArray;
@@ -12,7 +14,6 @@ import com.facebook.react.bridge.ReadableMap;
 
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DetailPlanService extends BaseService {
@@ -20,65 +21,67 @@ public class DetailPlanService extends BaseService {
     private GoalRepository goalRepository;
     private PerformRepository performRepository;
     private BriefingRepository briefingRepository;
+    private DetailPlanHeaderRepository detailPlanHeaderRepository;
 
     public DetailPlanService(
             SQLiteHelper helper,
             GoalRepository goalRepository,
             PerformRepository performRepository,
-            BriefingRepository briefingRepository) {
+            BriefingRepository briefingRepository,
+            DetailPlanHeaderRepository detailPlanHeaderRepository) {
         super(helper);
 
         this.goalRepository = goalRepository;
         this.performRepository = performRepository;
         this.briefingRepository = briefingRepository;
+        this.detailPlanHeaderRepository = detailPlanHeaderRepository;
     }
 
-    public void createByReact(Integer purposeId, ReadableArray r_detailPlans) throws Exception{
-        SQLiteHelper.transaction(db, () -> {
+    public long createByReact(ReadableArray r_detailPlans, Integer authorId, String authorName, Integer baseId) throws Exception{
+        return SQLiteHelper.transaction(db, () -> {
+            long headerId = detailPlanHeaderRepository.insert((long) authorId, authorName, (long)baseId);
 
-            for(int i = 0; i < r_detailPlans.size(); i++){
-                ReadableMap map = r_detailPlans.getMap(i);
-                Goal goal = Goal.valueOf(map);
-                goal.setPurposeId(purposeId);
-                ReadableArray r_performs = map.getArray("performs");
+            DetailPlans.quest(r_detailPlans, (goal, r_performs) -> {
 
-                for(int j = 0; j < r_performs.size(); j++){
+                for(int i = 0; i < r_performs.size(); i++){
                     Perform perform = Perform.valueOf(r_performs.getMap(i));
-                    perform.setGoalKey(goal.getKey());
+                    perform.setGoalId(goal.getId());
                     performRepository.insert(perform);
                 }
 
                 goalRepository.insert(goal);
-            }
+            });
+
+
+            return headerId;
         });
+    }
+
+    public long createByReact(ReadableArray r_detailPlans, Integer authorId, String authorName) throws Exception{
+        return this.createByReact(r_detailPlans, authorId, authorName, null);
     }
 
 
     /**
      * headerId와 일치하는 모든 detailPlan 들을 가져옴
+     * headerId와 관련있는 모든 데이터들을 가져온 다음 껴맞춤
      *
-     * @param purposeId
+     * @param headerId
      * @return
      * @throws ParseException
      */
-    public Goal[] read(long purposeId) throws ParseException {
-        Goal[] goals = this.goalRepository.selectByPurposeId(purposeId);
-        Perform[] performs = this.performRepository.selectByPurposeId(purposeId);
+    public DetailPlans read(long headerId) throws ParseException {
+        List<Goal> goals = this.goalRepository.selectByHeaderId(headerId);
+        List<Perform> performs = this.performRepository.selectByHeaderId(headerId);
+        List<Briefing> briefings = this.briefingRepository.selectByHeaderId(headerId);
 
-        List<Perform>[] performListByGoal = new List[goals.length];
-        for(Perform perform : performs){
-            final int INDEX = perform.getGoalKey() - 1;
-            if(performListByGoal[INDEX] == null){
-                performListByGoal[INDEX] = new ArrayList<>();
-            }
-            performListByGoal[INDEX].add(perform);
-        }
+        return DetailPlans.valueOf(goals, performs, briefings);
+    }
 
-        for(int i = 0; i < performs.length; i++){
-            goals[i].setPerforms(performListByGoal[i].toArray(new Perform[performListByGoal[i].size()]));
-        }
-
-        return goals;
+    public DetailPlans readShort(long headerId) throws ParseException{
+        List<Goal> goals = this.goalRepository.selectByHeaderId(headerId);
+        List<Perform> performs = this.performRepository.selectByHeaderId(headerId);
+        return DetailPlans.valueOf(goals, performs);
     }
 
     /**
@@ -86,27 +89,25 @@ public class DetailPlanService extends BaseService {
      * 기존 detailPlan 데이터를 모두 삭제후 새로운 데이터를 집어넣음
      * (서로 데이터들은 복잡한 관계를 맺고 잇으므로 update로 하나하나 바꿔주기엔 무리가 있음 안전성을 위해)
      *
-     * @param purposeId
+     * @param headerId
      * @param r_detailPlans
      * @throws Exception
      */
-    public void updateByReact(Integer purposeId, ReadableArray r_detailPlans) throws Exception {
+    public void updateByReact(Integer headerId, ReadableArray r_detailPlans) throws Exception {
         SQLiteHelper.transaction(db, () -> {
-            goalRepository.deleteByPurposeId(purposeId);
+            goalRepository.deleteByHeaderId(headerId);
             //CASCADE 관계로 하위의 Goals 모두 삭제
 
-            for(int i = 0; i < r_detailPlans.size(); i++){
-                ReadableMap map = r_detailPlans.getMap(i);
-                Goal goal = Goal.valueOf(map);
-                ReadableArray r_performs = map.getArray("performs");
+            DetailPlans.quest(r_detailPlans, (goal, r_performs) -> {
 
-                for(int j = 0; j < r_performs.size(); j++){
+                for(int i = 0; i < r_performs.size(); i++){
                     Perform perform = Perform.valueOf(r_performs.getMap(i));
+                    perform.setGoalId(goal.getId());
                     performRepository.insert(perform);
                 }
 
                 goalRepository.insert(goal);
-            }
+            });
 
         });
     }
@@ -114,10 +115,10 @@ public class DetailPlanService extends BaseService {
     /**
      * detailPlan을 통으로 삭제
      *
-     * @param purposeId
+     * @param headerId
      */
-    public void deleteByReact(Integer purposeId){
-        this.goalRepository.deleteByPurposeId(purposeId);
+    public void deleteByReact(Integer headerId){
+        this.goalRepository.deleteByHeaderId(headerId);
     }
 
 

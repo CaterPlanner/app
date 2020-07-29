@@ -11,8 +11,9 @@ import lombok.Getter;
 @Builder
 public class Briefing {
 
-    private long purposeId;
-    private int detailPlanKey;
+    private long headerId;
+    private int goalKey;
+    private int performId;
     private LocalDateTime createAt;
     private int score;
 

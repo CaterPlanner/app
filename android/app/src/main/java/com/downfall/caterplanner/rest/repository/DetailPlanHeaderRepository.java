@@ -10,10 +10,12 @@ public class DetailPlanHeaderRepository extends BaseRepository{
         super(helper);
     }
 
-    public void insert(long purposeId, long authorId, String authorName, long baseId){
-        final String sql =
-                "insert into detailPlan_header values(?,?,?,?)";
-        db.execSQL(sql, new String[]{String.valueOf(purposeId), String.valueOf(authorId), String.valueOf(authorName), String.valueOf(baseId)});
+    public long insert(Long authorId, String authorName, Long baseId){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("author_id", authorId);
+        contentValues.put("author_name", authorName);
+        contentValues.put("base_id", baseId);
+        return db.insert("detailPlan_header", null, contentValues);
     }
 
     public void deleteById(long id){
