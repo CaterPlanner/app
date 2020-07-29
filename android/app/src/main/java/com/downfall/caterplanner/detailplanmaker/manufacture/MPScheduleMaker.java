@@ -1,10 +1,10 @@
-package com.downfall.caterplanner.detailplantree.manufacture;
+package com.downfall.caterplanner.detailplanmaker.manufacture;
 
 
-import com.downfall.caterplanner.detailplantree.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
 import com.downfall.caterplanner.rest.model.DetailPlan;
-import com.downfall.caterplanner.detailplantree.algorithm.Node;
-import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Node;
+import com.downfall.caterplanner.detailplanmaker.util.NodeSearcher;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;

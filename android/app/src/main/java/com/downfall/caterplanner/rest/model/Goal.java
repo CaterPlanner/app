@@ -1,8 +1,14 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplantree.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
+import com.downfall.caterplanner.util.DateUtil;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
 import org.joda.time.LocalDate;
+
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -20,31 +26,26 @@ public class Goal extends StatisticsDetailPlan{
     private LocalDate startDate;
     private LocalDate endDate;
     private int hopeAchievement;
+    private String color;
     private int stat;
 
     @Getter
-    private Perform[] performs;
+    private List<Perform> performs;
 
 
-    public Goal(long purposeId, int key, String name, LocalDate startDate, LocalDate endDate, int hopeAchievement, int stat) {
+    public Goal(long purposeId, int key, String name, LocalDate startDate, LocalDate endDate, int hopeAchievement, String color, int stat) {
         this.purposeId = purposeId;
         this.key = key;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.hopeAchievement = hopeAchievement;
+        this.color = color;
         this.stat = stat;
     }
 
-    public Goal(long purposeId, int key, String name, LocalDate startDate, LocalDate endDate, int hopeAchievement, int stat, Perform[] performs) {
-        this(purposeId, key, name, startDate, endDate, hopeAchievement, stat);
-        this.performs = performs;
 
-        statistion();
-    }
-
-
-    public void setPerforms(Perform[] performs) {
+    public void setPerforms(List<Perform> performs) {
         this.performs = performs;
         statistion();
     }
@@ -72,5 +73,33 @@ public class Goal extends StatisticsDetailPlan{
     @Override
     public int getCurrentBriefingCount() {
         return achieve() == 100 ? super.getMaxTime() :  super.getCurrentBriefingCount();
+    }
+
+    public static Goal valueOf(ReadableMap data) throws Exception{
+
+        return Goal.builder()
+                .key(data.getInt("key"))
+                .purposeId((long) data.getInt("purposeId"))
+                .name(data.getString("name"))
+                .startDate(DateUtil.parseToDate(data.getString("startDate")))
+                .endDate(DateUtil.parseToDate(data.getString("endDate")))
+                .hopeAchievement(data.hasKey("hopeAchievement") ? data.getInt("hopeAchievement") : null)
+                .color(data.getString("color"))
+                .stat(data.getInt("stat"))
+                .build();
+    }
+
+    public static WritableMap parseWritableMap(Goal goal) throws Exception{
+
+        WritableMap goalMap = Arguments.createMap();
+        goalMap.putInt("key", goal.getKey());
+        goalMap.putInt("purposeId", (int) goal.getPurposeId());
+        goalMap.putString("name", goal.getName());
+        goalMap.putString("startDate", DateUtil.formatFromDate(goal.getStartDate()));
+        goalMap.putString("endDate", DateUtil.formatFromDate(goal.getEndDate()));
+        goalMap.putInt("hopeAchievement", goal.getHopeAchievement());
+        goalMap.putString("color", goal.getColor());
+        goalMap.putInt("stat", goal.getStat());
+        return goalMap;
     }
 }

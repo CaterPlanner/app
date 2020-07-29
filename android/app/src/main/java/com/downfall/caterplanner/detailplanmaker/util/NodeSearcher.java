@@ -1,7 +1,7 @@
-package com.downfall.caterplanner.detailplantree.util;
+package com.downfall.caterplanner.detailplanmaker.util;
 
 
-import com.downfall.caterplanner.detailplantree.algorithm.Node;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Node;
 
 import java.util.ArrayList;
 import java.util.List;

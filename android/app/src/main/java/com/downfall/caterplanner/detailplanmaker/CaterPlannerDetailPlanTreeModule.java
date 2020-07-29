@@ -1,6 +1,6 @@
-package com.downfall.caterplanner.detailplantree;
+package com.downfall.caterplanner.detailplanmaker;
 
-import com.downfall.caterplanner.detailplantree.service.GPRelationTreeService;
+import com.downfall.caterplanner.detailplanmaker.service.GPRelationTreeService;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;

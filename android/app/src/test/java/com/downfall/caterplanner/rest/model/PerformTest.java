@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplantree.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;

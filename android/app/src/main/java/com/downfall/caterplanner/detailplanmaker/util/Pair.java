@@ -1,4 +1,4 @@
-package com.downfall.caterplanner.detailplantree.util;
+package com.downfall.caterplanner.detailplanmaker.util;
 
 public class Pair<K,V> {
     private K key;
