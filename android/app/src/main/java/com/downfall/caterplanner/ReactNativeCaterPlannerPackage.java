@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.downfall.caterplanner.detailplanmaker.CaterPlannerDetailPlanTreeModule;
+import com.downfall.caterplanner.detailplanmaker.CaterPlannerDetailPlanMakerModule;
 import com.downfall.caterplanner.rest.DetailPlansControllerModule;
 import com.downfall.caterplanner.rest.PurposeControllerModule;
 import com.downfall.caterplanner.scheduler.CaterPlannerSchedulerModule;
@@ -17,7 +17,7 @@ public class ReactNativeCaterPlannerPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         return Arrays.<NativeModule>asList(
-                new CaterPlannerDetailPlanTreeModule(reactContext),
+                new CaterPlannerDetailPlanMakerModule(reactContext),
                 new DetailPlansControllerModule(reactContext),
                 new PurposeControllerModule(reactContext),
                 new CaterPlannerSchedulerModule(reactContext));

@@ -1,5 +1,6 @@
 package com.downfall.caterplanner.rest.model;
 
+import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
 import com.downfall.caterplanner.util.DateUtil;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -10,7 +11,7 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
 
-
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +21,10 @@ import lombok.Setter;
 
 @Data
 @Builder
-public class Perform extends StatisticsDetailPlan{
+public class Perform extends StatisticsModel implements RelationTreeEntity{
 
-    private long purposeId;
-    private int goalKey;
+    private long headerId;
+    private int goalId;
     private int id;
     private String name;
     private LocalDate startDate;
@@ -39,14 +40,16 @@ public class Perform extends StatisticsDetailPlan{
     private LocalDate today;
 
 
-    public Perform(long purposeId, int goalKey, int id, String name, LocalDate startDate, LocalDate endDate, String cycle) {
-        this.purposeId = purposeId;
-        this.goalKey = goalKey;
+    public Perform(long headerId, int goalId, int id, String name, LocalDate startDate, LocalDate endDate, String cycle) {
+        this.headerId = headerId;
+        this.goalId = goalId;
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.cycle = cycle;
+
+        this.briefings = new ArrayList<>();
 
         today = LocalDate.now();
 
@@ -77,8 +80,9 @@ public class Perform extends StatisticsDetailPlan{
         statistion();
     }
 
-
-
+    public boolean isActive(){
+        return today.isAfter(startDate) && today.isBefore(endDate);
+    }
 
     @Override
     public void statistion() {
@@ -221,9 +225,9 @@ public class Perform extends StatisticsDetailPlan{
         return this.briefings.get(this.briefings.size()- 1).getCreateAt().toLocalDate();
     }
 
-    public static Perform valueOf(ReadableMap data) throws Exception{
+    public static Perform valueOf(ReadableMap data) throws ParseException {
         return Perform.builder()
-                .goalKey(data.getInt("goalKey"))
+                .goalId(data.getInt("goalId"))
                 .id(data.getInt("id"))
                 .name(data.getString("name"))
                 .startDate(DateUtil.parseToDate(data.getString("startDate")))
@@ -232,9 +236,9 @@ public class Perform extends StatisticsDetailPlan{
                 .build();
     }
 
-    public static WritableMap parseWritableMap(Perform perform) throws Exception{
+    public static WritableMap parseWritableMap(Perform perform){
         WritableMap performMap = Arguments.createMap();
-        performMap.putInt("goalKey",  perform.getGoalKey());
+        performMap.putInt("goalId",  perform.getGoalId());
         performMap.putInt("id", perform.getId());
         performMap.putString("name", perform.getName());
         performMap.putString("startDate", DateUtil.formatFromDate(perform.getStartDate()));
@@ -243,4 +247,35 @@ public class Perform extends StatisticsDetailPlan{
         return performMap;
     }
 
+    public void modify(Perform copy) {
+        this.name = copy.getName();
+        this.startDate = copy.getStartDate();
+        this.endDate = copy.getEndDate();
+        this.cycle = copy.getCycle();
+    }
+
+    @Override
+    public int getKey() {
+        return id;
+    }
+
+    @Override
+    public void setKey(int key) {
+        this.id = key;
+    }
+
+    @Override
+    public int getConstructorKey() {
+        return this.goalId;
+    }
+
+    @Override
+    public void setConstructorKey(int key) {
+        this.goalId = key;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.P;
+    }
 }

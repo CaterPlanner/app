@@ -9,23 +9,20 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
-
-import java.util.List;
-
-import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NonNull;
+
 
 @Data
-public class Purpose implements BriefingStatizable {
+@Builder
+public class Purpose{
 
     private long id;
     private String authorName;
     private Long authorId;
     private String groupName;
     private Long groupId;
-
     private String name;
     private String description;
     private String imageUrl;
@@ -33,105 +30,24 @@ public class Purpose implements BriefingStatizable {
     private LocalDateTime startAt;
     private LocalDate decimalDay;
     private int stat; //0 진행중 1 성공 2 실패 3 보류중
-    private Long baseId;
+    private Long detailPlanHeaderId;
+    private DetailPlans detailPlans;
 
-    private List<Goal> goals;
-    private boolean isStatizable;
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private int entryMaxTime;
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private int entryCurrentBriefingCount;
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private int entryCurrentPerfectTime;
-
-    public Purpose(long id, String authorName, Long authorId, String groupName, Long groupId, String name, String description, String imageUrl, int disclosureScope, LocalDateTime startAt, LocalDate decimalDay, int stat, Long baseId) {
-        this.id = id;
-        this.authorName = authorName;
-        this.authorId = authorId;
-        this.groupName = groupName;
-        this.groupId = groupId;
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.disclosureScope = disclosureScope;
-        this.startAt = startAt;
-        this.decimalDay = decimalDay;
-        this.stat = stat;
-        this.baseId = baseId;
+    public boolean isStatizable(){
+        return detailPlans != null && detailPlans.isStatizable();
     }
 
-
-    public static PurposeBuilder builder() {
-        return new PurposeBuilder();
-    }
-
-    public void setGoals(List<Goal> goals) {
-        this.goals = goals;
-    }
-
-
-    @Override
-    public void statistion(){
-        if(this.goals == null)
-            throw new RuntimeException();
-
-        this.entryMaxTime = 0;
-        this.entryCurrentBriefingCount = 0;
-        this.entryCurrentPerfectTime = 0;
-
-
-        for(StatisticsDetailPlan detailPlan : goals){
-            if(!detailPlan.isStatizable)
-                throw new RuntimeException();
-
-            entryCurrentPerfectTime += detailPlan.getCurrentPerfectTime();
-            entryCurrentBriefingCount += detailPlan.getCurrentBriefingCount();
-            entryMaxTime += detailPlan.getMaxTime();
-        }
-
-        this.isStatizable = true;
-    }
-
-
-    @Override
     public int progress() {
-        if(!isStatizable)
+        if(detailPlans == null || !detailPlans.isStatizable())
             throw new RuntimeException();
-        return Math.round(((float) getCurrentBriefingCount() / getMaxTime()) * 100);
+        return detailPlans.progress();
     }
 
-    @Override
     public int achieve() {
-        if(!isStatizable)
+        if(detailPlans == null || !detailPlans.isStatizable())
             throw new RuntimeException();
-        return Math.round(((float) getCurrentPerfectTime() / getMaxTime()) * 100);
-    }
-
-    @Override
-    public int getMaxTime() {
-        if(!isStatizable)
-            throw new RuntimeException();
-        return entryMaxTime;
-    }
-
-    @Override
-    public int getCurrentPerfectTime() {
-        if(!isStatizable)
-            throw new RuntimeException();
-        return entryCurrentPerfectTime;
-    }
-
-    @Override
-    public int getCurrentBriefingCount() {
-        if(!isStatizable)
-            throw new RuntimeException();
-        return entryCurrentBriefingCount;
+        return detailPlans.achieve();
     }
 
     public static Purpose valueOf(ReadableMap data) throws Exception{
@@ -148,7 +64,7 @@ public class Purpose implements BriefingStatizable {
                 .startAt(data.hasKey("startAt") ? DateUtil.parseToDateTime(data.getString("startAt")) : null)
                 .decimalDay(data.hasKey("decimalDay") ? DateUtil.parseToDate(data.getString("decimalDay")) : null)
                 .stat(data.getInt("stat"))
-                .baseId(data.hasKey("baseId") ? (long) data.getInt("baseId") : null)
+                .detailPlanHeaderId(data.hasKey("detailPlanHeaderId") ? (long) data.getInt("detailPlanHeaderId") : null)
                 .build();
     }
 
@@ -166,7 +82,7 @@ public class Purpose implements BriefingStatizable {
         writableMap.putString("startAt", DateUtil.formatFromDateTime(purpose.getStartAt()));
         writableMap.putString("decimalDay", DateUtil.formatFromDate(purpose.getDecimalDay()));
         writableMap.putInt("stat", purpose.getStat());
-        writableMap.putInt("baseId", purpose.getBaseId().intValue());
+        writableMap.putInt("detailPlanHeaderId", purpose.getDetailPlanHeaderId().intValue());
         return writableMap;
     }
 
@@ -176,97 +92,4 @@ public class Purpose implements BriefingStatizable {
         return new Period(LocalDate.now(), decimalDay, PeriodType.days()).getDays();
     }
 
-    public static class PurposeBuilder {
-        private long id;
-        private String authorName;
-        private Long authorId;
-        private String groupName;
-        private Long groupId;
-        private String name;
-        private String description;
-        private String imageUrl;
-        private int disclosureScope;
-        private LocalDateTime startAt;
-        private LocalDate decimalDay;
-        private int stat;
-        private Long baseId;
-
-        PurposeBuilder() {
-        }
-
-        public PurposeBuilder id(long id) {
-            this.id = id;
-            return this;
-        }
-
-        public PurposeBuilder authorName(String authorName) {
-            this.authorName = authorName;
-            return this;
-        }
-
-        public PurposeBuilder authorId(Long authorId) {
-            this.authorId = authorId;
-            return this;
-        }
-
-        public PurposeBuilder groupName(String groupName) {
-            this.groupName = groupName;
-            return this;
-        }
-
-        public PurposeBuilder groupId(Long groupId) {
-            this.groupId = groupId;
-            return this;
-        }
-
-        public PurposeBuilder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public PurposeBuilder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public PurposeBuilder imageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
-            return this;
-        }
-
-        public PurposeBuilder disclosureScope(int disclosureScope) {
-            this.disclosureScope = disclosureScope;
-            return this;
-        }
-
-        public PurposeBuilder startAt(LocalDateTime startAt) {
-            this.startAt = startAt;
-            return this;
-        }
-
-        public PurposeBuilder decimalDay(LocalDate decimalDay) {
-            this.decimalDay = decimalDay;
-            return this;
-        }
-
-        public PurposeBuilder stat(int stat) {
-            this.stat = stat;
-            return this;
-        }
-
-        public PurposeBuilder baseId(Long baseId){
-            this.baseId = baseId;
-            return this;
-        }
-
-        public Purpose build() {
-            return new Purpose(id, authorName, authorId, groupName, groupId, name, description, imageUrl, disclosureScope, startAt, decimalDay, stat, baseId);
-        }
-
-        public String toString() {
-            return "Purpose.PurposeBuilder(id=" + this.id + ", authorName=" + this.authorName + ", authorId=" + this.authorId + ", groupName=" + this.groupName
-                    + ", groupId=" + this.groupId + ", name=" + this.name + ", description=" + this.description + ", imageUrl=" + this.imageUrl
-                    + ", disclosureScope=" + this.disclosureScope + ", startAt=" + this.startAt + ", decimalDay=" + this.decimalDay + ", stat=" + this.stat + ", baseId="+ baseId + ")";
-        }
-    }
 }

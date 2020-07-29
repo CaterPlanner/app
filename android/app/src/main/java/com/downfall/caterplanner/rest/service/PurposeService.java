@@ -1,11 +1,9 @@
 package com.downfall.caterplanner.rest.service;
 
-import com.downfall.caterplanner.rest.model.DetailPlan;
+import com.downfall.caterplanner.rest.model.DetailPlans;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.model.Purpose;
-import com.downfall.caterplanner.rest.model.StatisticsDetailPlan;
-import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
@@ -18,6 +16,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
 import java.text.ParseException;
+import java.util.List;
 
 public class PurposeService extends BaseService {
 
@@ -25,7 +24,6 @@ public class PurposeService extends BaseService {
     private DetailPlanService detailPlanService;
     private BriefingRepository briefingRepository;
     private TaskRepositiory taskRepositiory;
-    private DetailPlanHeaderRepository detailPlanHeaderRepository;
 
     public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, TaskRepositiory taskRepositiory) {
         super(helper);
@@ -78,11 +76,11 @@ public class PurposeService extends BaseService {
         return SQLiteHelper.transaction(db, () -> {
             Purpose purpose = Purpose.valueOf(r_purpose);
             purpose.setStat(3);
-            purpose.setBaseId((long) baseId);
+            purpose.setDetailPlanHeaderId((long) baseId);
             Long id = purposeRepository.insert(purpose);
-
             if(r_detailPlans != null){
-                detailPlanService.createByReact(id.intValue(), r_detailPlans);
+                long detailPlanHeaderId = detailPlanService.createByReact(r_detailPlans, purpose.getAuthorId().intValue(), purpose.getAuthorName(), baseId);
+                purpose.setDetailPlanHeaderId(detailPlanHeaderId);
             }
             return id;
         });
@@ -99,8 +97,8 @@ public class PurposeService extends BaseService {
      */
     private Purpose read(long id) throws ParseException {
         Purpose purpose = purposeRepository.selectById(id);
-        Goal[] goals = this.detailPlanService.read(purpose.getId());
-        purpose.setGoals(goals);
+        DetailPlans detailPlans = this.detailPlanService.read(purpose.getDetailPlanHeaderId());
+        purpose.setDetailPlans(detailPlans);
         return purpose;
     }
 
@@ -111,7 +109,7 @@ public class PurposeService extends BaseService {
      * @return
      * @throws ParseException
      */
-    public WritableMap readByReact(Integer id) throws ParseException {
+    public WritableMap readForCardByReact(Integer id) throws ParseException {
         return writableCard(read(id));
     }
 
@@ -122,7 +120,7 @@ public class PurposeService extends BaseService {
      * @return
      * @throws ParseException
      */
-    public WritableArray readAllByReact() throws ParseException {
+    public WritableArray readForCardAllByReact() throws ParseException {
         Purpose[] purposes = this.purposeRepository.selectByStatIsActive();
         WritableArray result = Arguments.createArray();
         for(Purpose purpose : purposes){
@@ -149,15 +147,15 @@ public class PurposeService extends BaseService {
     public void addBriefing(Integer id, int detailPlanKey) throws Exception {
         SQLiteHelper.transaction(db, () -> {
 //            Purpose purpose = read(id);
-//            this.briefingRepository.insert(purpose.getId(), detailPlanKey);
+//            this.briefingRepository.insert(purpose.getId(), goalId);
 //
 //            Briefing briefing =
 //                    Briefing.builder()
-//                            .purposeId(purpose.getId())
-//                            .detailPlanKey(detailPlanKey)
+//                            .headerId(purpose.getId())
+//                            .goalId(goalId)
 //                            .score(0).build();
 //
-//            Perform perform = (Perform) purpose.getDetailPlans()[detailPlanKey - 1];
+//            Perform perform = (Perform) purpose.getDetailPlans()[goalId - 1];
 //            perform.getBriefings().add(briefing);
 //
 //            perform.statistion();
@@ -169,15 +167,15 @@ public class PurposeService extends BaseService {
 //
 //            if(goal.achieve() == 100){
 //                goal.setStat(1);
-//                detailPlanRepository.updateStatByKey(purpose.getId(), goal.getKey(), goal.getStat());
+//                detailPlanRepository.updateStatByKey(purpose.getId(), goal.getId(), goal.getStat());
 //
 //                for(Perform perform1 : goal.getPerforms()){
 //                    perform1.setStat(1);
-//                    detailPlanRepository.updateStatByKey(purpose.getId(), perform1.getKey(), perform1.getStat());
+//                    detailPlanRepository.updateStatByKey(purpose.getId(), perform1.getId(), perform1.getStat());
 //
-//                    Task task = taskRepositiory.selectByKey(purpose.getId(), perform1.getKey());
-//                    taskRepositiory.updateActive(purpose.getId(), task.getDetailPlanKey());
-//                    taskRepositiory.deleteByKey(purpose.getId(), task.getDetailPlanKey());
+//                    Task task = taskRepositiory.selectByKey(purpose.getId(), perform1.getId());
+//                    taskRepositiory.updateActive(purpose.getId(), task.getGoalId());
+//                    taskRepositiory.deleteByKey(purpose.getId(), task.getGoalId());
 //                }
 //            }
         });
@@ -195,15 +193,22 @@ public class PurposeService extends BaseService {
         writablePurpose.putInt("leftDay", purpose.getLeftDay());
 
         WritableArray writableActivePerforms = Arguments.createArray();
-        for(Goal goal : purpose.getGoals()){
-            if(detailPlan.getType() == Type.P){
-                WritableMap writablePerformInfo = Arguments.createMap();
-                Perform perform = (Perform) detailPlan;
-                writablePerformInfo.putString("name", perform.getName());
-                writablePerformInfo.putDouble("progress", perform.progress());
-                writablePerformInfo.putDouble("achieve", perform.achieve());
-                writablePerformInfo.putInt("nextDay", perform.getNextLeftDayCount());
-                writableActivePerforms.pushMap(writablePerformInfo);
+
+        for(Goal goal : purpose.getDetailPlans().getEntryData()){
+            if(goal.getStat() >= 1)
+                continue;
+
+            for(Perform perform : goal.getPerforms()){
+
+                if(!perform.isActive())
+                    continue;
+
+                WritableMap w_perform = Arguments.createMap();
+                w_perform.putString("name", perform.getName());
+                w_perform.putDouble("progress", perform.progress());
+                w_perform.putDouble("achieve", perform.achieve());
+                w_perform.putInt("nextDay", perform.getNextLeftDayCount());
+                w_perform.putString("goalName", goal.getName());
             }
         }
 

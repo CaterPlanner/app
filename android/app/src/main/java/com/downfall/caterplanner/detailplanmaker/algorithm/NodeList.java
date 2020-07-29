@@ -28,7 +28,7 @@ public class NodeList {
         data = new Node[capacity];
     }
 
-    private void insert(int index, Node node) {
+    public void insert(int index, Node node) {
         if(index < 0) {
             throw new IndexOutOfBoundsException("index < 0 <- not allowed as indexes");
         }else if(index >= capacity) {

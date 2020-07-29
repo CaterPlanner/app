@@ -56,7 +56,7 @@ public class PurposeControllerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void read(Integer id, Promise promise){
         try{
-            promise.resolve(purposeService.readByReact(id));
+            promise.resolve(purposeService.readForCardByReact(id));
         }catch (Exception e){
             promise.reject(e);
         }
@@ -65,7 +65,7 @@ public class PurposeControllerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void readAll(Promise promise){
         try{
-            promise.resolve(purposeService.readAllByReact());
+            promise.resolve(purposeService.readForCardAllByReact());
         }catch (Exception e){
             promise.reject(e);
         }

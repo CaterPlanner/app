@@ -42,28 +42,28 @@ class PerformTest {
         briefings.add(
                 Briefing.builder()
                         .headerId(0L)
-                        .detailPlanKey(2)
+                        .goalKey(2)
                         .createAt(new LocalDateTime(2020, 7, 7, 0,0,0,0))
                         .score(0).build()
         );
         briefings.add(
                 Briefing.builder()
                         .headerId(0L)
-                        .detailPlanKey(2)
+                        .goalKey(2)
                         .createAt(new LocalDateTime(2020, 7, 13, 0,0,0,0))
                         .score(0).build()
         );
         briefings.add(
                 Briefing.builder()
                         .headerId(0L)
-                        .detailPlanKey(2)
+                        .goalKey(2)
                         .createAt(new LocalDateTime(2020, 7, 14, 0,0,0,0))
                         .score(0).build()
         );
         briefings.add(
                 Briefing.builder()
                         .headerId(0L)
-                        .detailPlanKey(2)
+                        .goalKey(2)
                         .createAt(new LocalDateTime(2020, 7, 20, 0,0,0,0))
                         .score(0).build()
         );
