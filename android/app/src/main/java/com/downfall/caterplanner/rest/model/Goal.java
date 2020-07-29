@@ -4,26 +4,45 @@ import com.downfall.caterplanner.detailplantree.algorithm.Type;
 
 import org.joda.time.LocalDate;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 
+@Getter
+@Setter
+@Builder
 public class Goal extends StatisticsDetailPlan{
+
+    private long purposeId;
+    private int key;
+    private String name;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private int hopeAchievement;
+    private int stat;
 
     @Getter
     private Perform[] performs;
 
-    public Goal(int key, Long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
-        super(key, purposeId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
+
+    public Goal(long purposeId, int key, String name, LocalDate startDate, LocalDate endDate, int hopeAchievement, int stat) {
+        this.purposeId = purposeId;
+        this.key = key;
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.hopeAchievement = hopeAchievement;
+        this.stat = stat;
     }
 
-    public Goal(int key, Long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, Perform[] performs) {
-        super(key, purposeId ,constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, null, stat);
-
+    public Goal(long purposeId, int key, String name, LocalDate startDate, LocalDate endDate, int hopeAchievement, int stat, Perform[] performs) {
+        this(purposeId, key, name, startDate, endDate, hopeAchievement, stat);
         this.performs = performs;
 
         statistion();
-
     }
+
 
     public void setPerforms(Perform[] performs) {
         this.performs = performs;
@@ -43,7 +62,6 @@ public class Goal extends StatisticsDetailPlan{
 
         isStatizable = true;
     }
-
 
     @Override
     public int achieve() {

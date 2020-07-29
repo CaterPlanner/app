@@ -16,19 +16,33 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class Perform extends StatisticsDetailPlan {
+public class Perform extends StatisticsDetailPlan{
+
+    private long purposeId;
+    private int goalKey;
+    private int id;
+    private String name;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String cycle;
 
     private List<Briefing> briefings;
-
     private char cycleType;
     private int[] cycleParams;
+
 
     @Setter //Debug
     private LocalDate today;
 
 
-    public Perform(int key, Long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
-        super(key, purposeId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
+    public Perform(long purposeId, int goalKey, int id, String name, LocalDate startDate, LocalDate endDate, String cycle) {
+        this.purposeId = purposeId;
+        this.goalKey = goalKey;
+        this.id = id;
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.cycle = cycle;
 
         today = LocalDate.now();
 
@@ -51,11 +65,11 @@ public class Perform extends StatisticsDetailPlan {
 
         this.maxTime = getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams);
         this.currentPerfectTime = getBetweenMaxBriefing(startDate, today, cycleType, cycleParams);
+
     }
 
-    public Perform(int key, Long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat, List<Briefing> briefings) {
-        this(key, purposeId, constructorKey, constructorRelationType, name, type, startDate, endDate, null, color, cycle, stat);
-
+    public Perform(long purposeId, int goalKey, int id, String name, LocalDate startDate, LocalDate endDate, String cycle, List<Briefing> briefings) {
+        this(purposeId, goalKey, id, name, startDate, endDate, cycle);
         this.briefings = briefings;
         statistion();
     }
@@ -65,6 +79,7 @@ public class Perform extends StatisticsDetailPlan {
         statistion();
     }
 
+
     @Override
     public void statistion() {
         if(this.briefings == null)
@@ -73,6 +88,8 @@ public class Perform extends StatisticsDetailPlan {
         this.currentBriefingCount = this.briefings.size();
         this.isStatizable = true;
     }
+
+
     public int getNextLeftDayCount(){
         return new Period(today, getNextLeftDay(), PeriodType.days()).getDays();
     }

@@ -4,16 +4,13 @@ import com.downfall.caterplanner.detailplantree.algorithm.Type;
 
 import org.joda.time.LocalDate;
 
-public abstract class StatisticsDetailPlan extends DetailPlan implements BriefingStatizable{
+public abstract class StatisticsDetailPlan implements BriefingStatizable{
 
     protected int maxTime;
     protected int currentPerfectTime;
     protected int currentBriefingCount;
     protected boolean isStatizable;
 
-    public StatisticsDetailPlan(int key, long purposeId, int constructorKey, int constructorRelationType, String name, Type type, LocalDate startDate, LocalDate endDate, Integer hopeAchievement, String color, String cycle, int stat) {
-        super(key, purposeId, constructorKey, constructorRelationType, name, type, startDate, endDate, hopeAchievement, color, cycle, stat);
-    }
 
     @Override
     public int getMaxTime() {
