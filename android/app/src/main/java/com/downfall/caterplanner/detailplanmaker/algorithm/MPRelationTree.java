@@ -1,20 +1,21 @@
-package com.downfall.caterplanner.detailplantree.algorithm;
+package com.downfall.caterplanner.detailplanmaker.algorithm;
 
 import com.downfall.caterplanner.rest.model.DetailPlan;
-import com.downfall.caterplanner.detailplantree.util.NodeSearcher;
+import com.downfall.caterplanner.detailplanmaker.util.NodeSearcher;
 
 import java.util.List;
 
-public class GPRelationTree {
+@Deprecated
+public class MPRelationTree {
 
     private NodeList nodeList;
 
-    public GPRelationTree(){
-        nodeList = new NodeList();
+    public MPRelationTree(NodeList nodeList){
+        nodeList = nodeList;
         nodeList.add(Node.createRoot());
     }
 
-    public GPRelationTree(DetailPlan[] list) throws Exception {
+    public MPRelationTree(NodeList nodeList, DetailPlan[] list) throws Exception {
 
         Node[] nodes = new Node[list.length + 1];
         nodes[0] = Node.createRoot();
@@ -45,15 +46,7 @@ public class GPRelationTree {
     }
 
     public Node insert(int key, Node node) throws Exception {
-        if(node.getType() != Type.P)
-            throw new Exception("Only P-type nodes can be inserted.");
-
         Node constructor = nodeList.get(key);
-
-        if(constructor.getType() != Type.G)
-            throw new Exception("The constructor node must be of type G when insert");
-
-
         constructor.addChild(node);
         nodeList.add(node);
         node.setKey(nodeList.size() - 1);
@@ -61,14 +54,7 @@ public class GPRelationTree {
     }
 
     public Node successor(int key, Node node) throws Exception {
-        if(node.getType() != Type.G)
-            throw new Exception("Only G-type nodes can be successored.");
-
         Node constructor = nodeList.get(key);
-
-        if(constructor.getType() != Type.G)
-            throw new Exception("The constructor node must be of type G when successor");
-
         constructor.addSuccessor(node);
         nodeList.add(node);
         node.setKey(nodeList.size() - 1);
@@ -99,10 +85,10 @@ public class GPRelationTree {
         return node;
     }
 
-    public Node[] getUseNodes() {
+    public Node[] getNodes() {
         return this.nodeList.getAll(node -> node.getType() != Type.R);
     }
 
-
+    public Node[] getPNodes() {return this.nodeList.getAll(node -> node.getType() == Type.P);}
 
 }

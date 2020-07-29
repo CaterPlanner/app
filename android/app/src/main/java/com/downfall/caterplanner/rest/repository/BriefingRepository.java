@@ -33,7 +33,7 @@ public class BriefingRepository extends BaseRepository{
                     .score(c.getInt(4))
                     .build());
         }
-        return briefings.length == 0 ? null : briefings;
+        return briefings.size() == 0 ? null : briefings;
     }
 
     public void insert(long purposeId, long detailPlanKey){

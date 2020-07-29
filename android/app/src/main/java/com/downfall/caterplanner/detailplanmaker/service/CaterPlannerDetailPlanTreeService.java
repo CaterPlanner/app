@@ -1,4 +1,4 @@
-package com.downfall.caterplanner.detailplantree.service;
+package com.downfall.caterplanner.detailplanmaker.service;
 
 
 import com.facebook.react.bridge.ReadableArray;

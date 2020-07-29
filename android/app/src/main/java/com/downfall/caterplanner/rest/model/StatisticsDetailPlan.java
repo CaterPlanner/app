@@ -1,14 +1,16 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplantree.algorithm.Type;
-
-import org.joda.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
 public abstract class StatisticsDetailPlan implements BriefingStatizable{
 
     protected int maxTime;
     protected int currentPerfectTime;
     protected int currentBriefingCount;
+
+    @Getter
+    @Setter
     protected boolean isStatizable;
 
 

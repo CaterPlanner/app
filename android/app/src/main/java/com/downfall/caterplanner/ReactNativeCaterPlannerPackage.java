@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.downfall.caterplanner.detailplantree.CaterPlannerDetailPlanTreeModule;
+import com.downfall.caterplanner.detailplanmaker.CaterPlannerDetailPlanTreeModule;
 import com.downfall.caterplanner.rest.DetailPlansControllerModule;
 import com.downfall.caterplanner.rest.PurposeControllerModule;
 import com.downfall.caterplanner.scheduler.CaterPlannerSchedulerModule;

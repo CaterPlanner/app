@@ -1,7 +1,9 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplantree.algorithm.Type;
 import com.downfall.caterplanner.util.DateUtil;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -12,10 +14,12 @@ import org.joda.time.PeriodType;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Setter;
 
-@Getter
+@Data
+@Builder
 public class Perform extends StatisticsDetailPlan{
 
     private long purposeId;
@@ -68,16 +72,12 @@ public class Perform extends StatisticsDetailPlan{
 
     }
 
-    public Perform(long purposeId, int goalKey, int id, String name, LocalDate startDate, LocalDate endDate, String cycle, List<Briefing> briefings) {
-        this(purposeId, goalKey, id, name, startDate, endDate, cycle);
-        this.briefings = briefings;
-        statistion();
-    }
-
     public void setBriefings(List<Briefing> briefings) {
         this.briefings = briefings;
         statistion();
     }
+
+
 
 
     @Override
@@ -219,6 +219,28 @@ public class Perform extends StatisticsDetailPlan{
 
     public LocalDate getLastBriefingDay(){
         return this.briefings.get(this.briefings.size()- 1).getCreateAt().toLocalDate();
+    }
+
+    public static Perform valueOf(ReadableMap data) throws Exception{
+        return Perform.builder()
+                .goalKey(data.getInt("goalKey"))
+                .id(data.getInt("id"))
+                .name(data.getString("name"))
+                .startDate(DateUtil.parseToDate(data.getString("startDate")))
+                .endDate(DateUtil.parseToDate(data.getString("endDate")))
+                .cycle(data.getString("cycle"))
+                .build();
+    }
+
+    public static WritableMap parseWritableMap(Perform perform) throws Exception{
+        WritableMap performMap = Arguments.createMap();
+        performMap.putInt("goalKey",  perform.getGoalKey());
+        performMap.putInt("id", perform.getId());
+        performMap.putString("name", perform.getName());
+        performMap.putString("startDate", DateUtil.formatFromDate(perform.getStartDate()));
+        performMap.putString("endDate", DateUtil.formatFromDate(perform.getEndDate()));
+        performMap.putString("cycle", perform.getCycle());
+        return performMap;
     }
 
 }

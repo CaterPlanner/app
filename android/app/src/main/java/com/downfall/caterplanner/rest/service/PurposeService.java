@@ -1,17 +1,14 @@
 package com.downfall.caterplanner.rest.service;
 
-import com.downfall.caterplanner.rest.model.Briefing;
 import com.downfall.caterplanner.rest.model.DetailPlan;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.model.StatisticsDetailPlan;
-import com.downfall.caterplanner.rest.model.Task;
-import com.downfall.caterplanner.detailplantree.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
-import com.downfall.caterplanner.rest.repository.DetailPlanRepository;
 import com.downfall.caterplanner.rest.repository.PurposeRepository;
 import com.downfall.caterplanner.rest.repository.TaskRepositiory;
 import com.facebook.react.bridge.Arguments;
@@ -25,21 +22,18 @@ import java.text.ParseException;
 public class PurposeService extends BaseService {
 
     private PurposeRepository purposeRepository;
-    private DetailPlansService detailPlansService;
+    private DetailPlanService detailPlanService;
     private BriefingRepository briefingRepository;
-    private DetailPlanRepository detailPlanRepository;
     private TaskRepositiory taskRepositiory;
     private DetailPlanHeaderRepository detailPlanHeaderRepository;
 
-    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlansService detailPlansService, BriefingRepository briefingRepository, DetailPlanRepository detailPlanRepository, TaskRepositiory taskRepositiory, DetailPlanHeaderRepository detailPlanHeaderRepository) {
+    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, TaskRepositiory taskRepositiory) {
         super(helper);
 
         this.purposeRepository = purposeRepository;
         this.briefingRepository = briefingRepository;
-        this.detailPlansService = detailPlansService;
-        this.detailPlanRepository = detailPlanRepository;
+        this.detailPlanService = detailPlanService;
         this.taskRepositiory = taskRepositiory;
-        this.detailPlanHeaderRepository = detailPlanHeaderRepository;
     }
 
     /**
@@ -84,19 +78,11 @@ public class PurposeService extends BaseService {
         return SQLiteHelper.transaction(db, () -> {
             Purpose purpose = Purpose.valueOf(r_purpose);
             purpose.setStat(3);
+            purpose.setBaseId((long) baseId);
             Long id = purposeRepository.insert(purpose);
 
             if(r_detailPlans != null){
-                DetailPlan[] detailPlans = new DetailPlan[r_detailPlans.size()];
-                for(int i = 0; i < r_detailPlans.size(); i++){
-                    detailPlans[i] = DetailPlan.valueOf(r_detailPlans.getMap(i));
-                }
-
-                this.detailPlanHeaderRepository.insert(id, purpose.getAuthorId(), purpose.getAuthorName(), baseId);
-                for(DetailPlan detailPlan : detailPlans){
-                    detailPlan.setPurposeId(id);
-                    this.detailPlanRepository.insert(detailPlan);
-                }
+                detailPlanService.createByReact(id.intValue(), r_detailPlans);
             }
             return id;
         });
@@ -113,8 +99,8 @@ public class PurposeService extends BaseService {
      */
     private Purpose read(long id) throws ParseException {
         Purpose purpose = purposeRepository.selectById(id);
-        StatisticsDetailPlan[] detailPlans = (StatisticsDetailPlan[]) this.detailPlansService.read(purpose.getId());
-        purpose.setDetailPlans(detailPlans);
+        Goal[] goals = this.detailPlanService.read(purpose.getId());
+        purpose.setGoals(goals);
         return purpose;
     }
 
@@ -156,7 +142,7 @@ public class PurposeService extends BaseService {
                 throw new Exception();
 
             this.purposeRepository.deleteById(id);
-            this.detailPlansService.deleteByReact((int) purpose.getId());
+            this.detailPlanService.deleteByReact((int) purpose.getId());
         });
     }
 
@@ -199,23 +185,17 @@ public class PurposeService extends BaseService {
 
 
     private WritableMap writableCard(Purpose purpose) throws ParseException {
+        if(!purpose.isStatizable())
+            throw new RuntimeException();
+
         WritableMap writablePurpose = Purpose.parseWritableMap(purpose);
-
-        StatisticsDetailPlan[] detailPlans;
-
-        if(!purpose.isStatizable()){
-            detailPlans = (StatisticsDetailPlan[]) this.detailPlansService.read(purpose.getId());
-            purpose.setDetailPlans(detailPlans);
-        }else{
-            detailPlans = purpose.getDetailPlans();
-        }
 
         writablePurpose.putDouble("progress", purpose.progress());
         writablePurpose.putDouble("achieve", purpose.achieve());
         writablePurpose.putInt("leftDay", purpose.getLeftDay());
 
         WritableArray writableActivePerforms = Arguments.createArray();
-        for(StatisticsDetailPlan detailPlan : detailPlans){
+        for(Goal goal : purpose.getGoals()){
             if(detailPlan.getType() == Type.P){
                 WritableMap writablePerformInfo = Arguments.createMap();
                 Perform perform = (Perform) detailPlan;

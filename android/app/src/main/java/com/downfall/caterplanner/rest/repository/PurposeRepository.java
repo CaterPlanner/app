@@ -29,13 +29,14 @@ public class PurposeRepository extends BaseRepository {
         contentValues.put("startAt", purpose.getStartAt().toString());
         contentValues.put("decimalDay", purpose.getDecimalDay().toString());
         contentValues.put("stat", purpose.getStat());
+        contentValues.put("baseId", purpose.getBaseId());
         return db.insert("purpose", null, contentValues);
     }
 
     public Purpose selectById(long id) throws ParseException {
         final String sql =
                 "select id , author_name, author_id, group_name, group_id, name, " +
-                        "description, image_url, disclosure_scope, start_at, decimal_day, stat " +
+                        "description, image_url, disclosure_scope, start_at, decimal_day, stat, base_id " +
                         "from purpose where id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(id)});
         Purpose purpose = null;
@@ -53,6 +54,7 @@ public class PurposeRepository extends BaseRepository {
                     .startAt(DateUtil.parseToDateTime(c.getString(10)))
                     .decimalDay(DateUtil.parseToDate(c.getString(11)))
                     .stat(c.getInt(12))
+                    .baseId(c.getLong(13))
                     .build();
 
         }
@@ -81,6 +83,7 @@ public class PurposeRepository extends BaseRepository {
                     .startAt(DateUtil.parseToDateTime(c.getString(10)))
                     .decimalDay(DateUtil.parseToDate(c.getString(11)))
                     .stat(c.getInt(12))
+                    .baseId(c.getLong(13))
                     .build();
         }
         return purposes.length == 0 ? null : purposes;

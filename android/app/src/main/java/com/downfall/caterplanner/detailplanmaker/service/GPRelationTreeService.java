@@ -1,10 +1,9 @@
-package com.downfall.caterplanner.detailplantree.service;
+package com.downfall.caterplanner.detailplanmaker.service;
 
-import com.downfall.caterplanner.detailplantree.util.Pair;
+import com.downfall.caterplanner.detailplanmaker.util.Pair;
 import com.downfall.caterplanner.rest.model.DetailPlan;
-import com.downfall.caterplanner.detailplantree.algorithm.GPRelationTree;
-import com.downfall.caterplanner.detailplantree.algorithm.Node;
-import com.downfall.caterplanner.rest.model.Task;
+import com.downfall.caterplanner.detailplanmaker.algorithm.GPRelationTree;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Node;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -16,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+//perform추가는 여기에서
+//nodeList는 밖으로 뺀다
 public class GPRelationTreeService implements CaterPlannerDetailPlanTreeService {
 
     private GPRelationTree tree;

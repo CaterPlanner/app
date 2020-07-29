@@ -1,9 +1,7 @@
-package com.downfall.caterplanner.detailplantree.manufacture;
+package com.downfall.caterplanner.detailplanmaker.manufacture;
 
-import com.downfall.caterplanner.detailplantree.algorithm.Node;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Node;
 import com.downfall.caterplanner.rest.model.Task;
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.WritableArray;
 
 import java.util.ArrayList;
 import java.util.List;

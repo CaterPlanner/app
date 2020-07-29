@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplantree.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
 import com.downfall.caterplanner.util.DateUtil;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -15,6 +15,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
+@Deprecated
 public class DetailPlan {
 
 	private int key;

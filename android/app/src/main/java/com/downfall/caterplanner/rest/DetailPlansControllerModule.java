@@ -3,7 +3,7 @@ package com.downfall.caterplanner.rest;
 import androidx.annotation.NonNull;
 
 import com.downfall.caterplanner.SingletonContainer;
-import com.downfall.caterplanner.rest.service.DetailPlansService;
+import com.downfall.caterplanner.rest.service.DetailPlanService;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -12,11 +12,11 @@ import com.facebook.react.bridge.ReadableArray;
 
 public class DetailPlansControllerModule extends ReactContextBaseJavaModule {
 
-    private DetailPlansService detailPlansService;
+    private DetailPlanService detailPlanService;
 
     public DetailPlansControllerModule(ReactApplicationContext reactContext){
         super(reactContext);
-        detailPlansService = SingletonContainer.get(DetailPlansService.class);
+        detailPlanService = SingletonContainer.get(DetailPlanService.class);
     }
 
     @NonNull
@@ -29,7 +29,7 @@ public class DetailPlansControllerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void update(Integer purposeId, ReadableArray readableDetailPlans, Promise promise){
         try{
-            detailPlansService.updateByReact(purposeId, readableDetailPlans);
+            detailPlanService.updateByReact(purposeId, readableDetailPlans);
         }catch (Exception e){
             promise.reject(e);
         }
@@ -39,7 +39,7 @@ public class DetailPlansControllerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void delete(Integer purposeId, Promise promise){
         try{
-            detailPlansService.deleteByReact(purposeId);
+            detailPlanService.deleteByReact(purposeId);
         }catch (Exception e){
             promise.reject(e);
         }
