@@ -25,11 +25,10 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
 
     private Long headerId;
     private Integer id;
-    private Integer previousKey;
+    private Integer level;
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
-    private int hopeAchievement;
     private String color;
     private int stat;  //0 : 진행중, 1 : 성공 , 2: 실패 , 3: 루트
 
@@ -38,14 +37,13 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
     private List<Perform> performs;
 
 
-    public Goal(long headerId, int id, int previousKey, String name, LocalDate startDate, LocalDate endDate, int hopeAchievement, String color, int stat) {
+    public Goal(long headerId, int id, int level, String name, LocalDate startDate, LocalDate endDate, String color, int stat) {
         this.headerId = headerId;
         this.id = id;
-        this.previousKey = previousKey;
+        this.level = level;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.hopeAchievement = hopeAchievement;
         this.color = color;
         this.stat = stat;
 
@@ -100,11 +98,10 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         return Goal.builder()
                 .id(data.getInt("id"))
                 .headerId((long) data.getInt("headerId"))
-                .previousKey(data.getInt("previousKey"))
+                .level(data.getInt("level"))
                 .name(data.getString("name"))
                 .startDate(DateUtil.parseToDate(data.getString("startDate")))
                 .endDate(DateUtil.parseToDate(data.getString("endDate")))
-                .hopeAchievement(data.hasKey("hopeAchievement") ? data.getInt("hopeAchievement") : null)
                 .color(data.getString("color"))
                 .stat(data.getInt("stat"))
                 .build();
@@ -115,7 +112,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         WritableMap goalMap = Arguments.createMap();
         goalMap.putInt("id", goal.getId());
         goalMap.putInt("headerId", goal.getHeaderId().intValue());
-        goalMap.putInt("previousKey", goal.getConstructorKey());
+        goalMap.putInt("level", goal.getConstructorKey());
         goalMap.putString("name", goal.getName());
         goalMap.putString("startDate", DateUtil.formatFromDate(goal.getStartDate()));
         goalMap.putString("endDate", DateUtil.formatFromDate(goal.getEndDate()));
@@ -129,7 +126,6 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         this.name = copy.getName();
         this.startDate = copy.getStartDate();
         this.endDate = copy.getEndDate();
-        this.hopeAchievement = copy.getHopeAchievement();
         this.color = copy.getColor();
         this.stat = copy.getStat();
     }
@@ -146,12 +142,12 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
 
     @Override
     public int getConstructorKey() {
-        return this.previousKey;
+        return this.level;
     }
 
     @Override
     public void setConstructorKey(int key) {
-        this.previousKey = key;
+        this.level = key;
     }
 
     @Override

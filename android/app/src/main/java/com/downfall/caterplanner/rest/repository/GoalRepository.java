@@ -42,7 +42,7 @@ public class GoalRepository extends BaseRepository {
                     Goal.builder()
                         .headerId(c.getLong(0))
                         .id(c.getInt(1))
-                        .previousKey(c.getInt(2))
+                        .level(c.getInt(2))
                         .name(c.getString(3))
                         .startDate(DateUtil.parseToDate(c.getString(4)))
                         .endDate(DateUtil.parseToDate(c.getString(5)))
