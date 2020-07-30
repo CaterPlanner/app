@@ -27,6 +27,7 @@ public class PerformRepository extends BaseRepository{
     public List<Perform> selectByHeaderId(long headerId) throws ParseException {
         final String sql =
                 "select header_id, goal_id, id, name, start_date, end_date, cycle " +
+                        "from perform " +
                         "where header_id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
         List<Perform> performs = new ArrayList<>(c.getCount());
@@ -49,6 +50,7 @@ public class PerformRepository extends BaseRepository{
     public Perform[] selectByKey(long headerId, int goalId) throws ParseException {
         final String sql =
                 "select header_id, goal_id, id, name, start_date, end_date, cycle " +
+                        "from perform " +
                         "where header_id = ? and goal_id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId) ,String.valueOf(goalId)});
         Perform[] performs = new Perform[c.getCount()];

@@ -103,15 +103,6 @@ public class CaterPlannerDetailPlanMakerModule extends ReactContextBaseJavaModul
         }
     }
 
-//    @ReactMethod(isBlockingSynchronousMethod = true)
-//    public WritableArray schedules(){
-//        try {
-//           return service.schedules();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
 
     @ReactMethod
     public void deleteGoal(Integer goalKey, Promise promise){
