@@ -4,9 +4,7 @@ import com.downfall.caterplanner.detailplanmaker.util.NodeSearcher;
 import com.downfall.caterplanner.rest.model.DetailPlans;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
-import com.facebook.react.bridge.ReadableArray;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**

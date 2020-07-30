@@ -1,7 +1,5 @@
 package com.downfall.caterplanner.detailplanmaker.algorithm;
 
-import com.downfall.caterplanner.detailplanmaker.util.IsElementMatch;
-import java.util.Arrays;
 import java.util.List;
 
 public class NodeList {
@@ -114,9 +112,6 @@ public class NodeList {
         return result;
     }
 
-    public Node[] getAll(IsElementMatch<Node> filter) {
-        return Arrays.asList(this.data).stream().filter(node -> node != null && filter.isMatch(node)).toArray(size -> new Node[size]);
-    }
 
     public int size() {
         return size;
