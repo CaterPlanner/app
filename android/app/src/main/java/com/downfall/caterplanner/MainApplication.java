@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
-import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
@@ -13,7 +12,7 @@ import com.downfall.caterplanner.rest.repository.PurposeRepository;
 import com.downfall.caterplanner.rest.repository.TaskRepositiory;
 import com.downfall.caterplanner.rest.service.DetailPlanService;
 import com.downfall.caterplanner.rest.service.PurposeService;
-import com.downfall.caterplanner.rest.service.TaskService;
+import com.downfall.caterplanner.rest.service.TasksService;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -67,18 +66,18 @@ public class MainApplication extends Application implements ReactApplication {
       PurposeRepository purposeRepository = new PurposeRepository(sqLiteHelper);
       TaskRepositiory taskRepositiory = new TaskRepositiory(sqLiteHelper);
 
-      DetailPlanService detailPlanService = new DetailPlanService(sqLiteHelper, goalRepository, performRepository, briefingRepository, detailPlanHeaderRepository);
-      PurposeService purposeService = new PurposeService(sqLiteHelper, purposeRepository, detailPlanService,briefingRepository, taskRepositiory);
-      TaskService taskService = new TaskService(sqLiteHelper, taskRepositiory);
+      PurposeService purposeService = new PurposeService(sqLiteHelper, purposeRepository, briefingRepository, detailPlanHeaderRepository, taskRepositiory);
+      TasksService tasksService = new TasksService(sqLiteHelper, taskRepositiory, goalRepository);
+      DetailPlanService detailPlanService = new DetailPlanService(sqLiteHelper, goalRepository, performRepository, briefingRepository, detailPlanHeaderRepository, tasksService);
+
 
       SingletonContainer.register(SQLiteHelper.class, sqLiteHelper);
       SingletonContainer.register(BriefingRepository.class, briefingRepository);
       SingletonContainer.register(DetailPlanHeaderRepository.class, detailPlanHeaderRepository);
       SingletonContainer.register(PurposeRepository.class, purposeRepository);
       SingletonContainer.register(TaskRepositiory.class, taskRepositiory);
-
-
-      SingletonContainer.register(TaskService.class, taskService);
+      
+      SingletonContainer.register(TasksService.class, tasksService);
       SingletonContainer.register(DetailPlanService.class, detailPlanService);
       SingletonContainer.register(PurposeService.class, purposeService);
 
