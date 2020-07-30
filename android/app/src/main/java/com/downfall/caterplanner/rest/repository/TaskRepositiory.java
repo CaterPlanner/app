@@ -12,13 +12,13 @@ public class TaskRepositiory extends BaseRepository{
     }
 
     public void insert(long headerId, Task task){
-        String sql =
+        final String sql =
                 "insert into task values(?, ?, ?)";
         db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(task.getGoalId()), String.valueOf(task.getPerformId())});
     }
 
     public Task selectByHeaderIdAndPreviousGoalId(long headerId, int previousGoalId){
-        String sql =
+        final String sql =
                 "select header_id, goal_id, perform_id, previous_goal_id from task where header_id = ? and previous_goal_id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId), String.valueOf(previousGoalId)});
         Task task = null;
@@ -33,7 +33,7 @@ public class TaskRepositiory extends BaseRepository{
     }
 
     public Task[] selectActive(){
-        String sql =
+        final String sql =
                 "select header_id, goal_id, perform_id, previous_goal_id from task where previous_goal_id is null";
         Cursor c = db.rawQuery(sql, null);
         Task[] tasks = new Task[c.getCount()];
@@ -49,16 +49,34 @@ public class TaskRepositiory extends BaseRepository{
         return tasks;
     }
 
+    @Deprecated
+    public int[] selectGoalIdByPreviousGoalId(long headerId, int previousGoalId){
+        final String sql =
+                "select goal_id from task where header_id = ? and previous_goal_id = ?";
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId), String.valueOf(previousGoalId)});
+        int[] goalIdList = new int[c.getCount()];
+        while(c.moveToNext()){
+            goalIdList[c.getPosition()] = c.getInt(0);
+        }
+        return goalIdList;
+    }
+
     public void updateActive(long headerId, int previousGoalId){
-        String sql =
+        final String sql =
                 "update task set previous_goal_id = null where header_id = ? and previous_goal_id = ?";
         db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(previousGoalId)});
     }
 
-    public void deleteByheaderIdAndGoalId(long headerId, int goalId){
-        String sql =
+    public void deleteByHeaderIdAndGoalId(long headerId, int goalId){
+        final String sql =
                 "delete from task where header_id = ? and previous_goal_id = ?";
         db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(goalId)});
+    }
+
+    public void deleteByHeaderID(long headerId){
+        final String sql =
+                "delete from task where header_id = ?";
+        db.execSQL(sql, new String[]{String.valueOf(headerId)});
     }
 
 

@@ -65,7 +65,7 @@ public class PurposeRepository extends BaseRepository {
         final String sql =
                 "select id , author_name, author_id, group_name, group_id, name, " +
                         "description, image_url, disclosure_scope, start_at, decimal_day, stat, detailPlan_header_id " +
-                        "from purpose where stat = 0";
+                        "from purpose where stat = 1";
         Cursor c = db.rawQuery(sql, null);
         Purpose[] purposes = new Purpose[c.getCount()];
         if(c.moveToNext()){

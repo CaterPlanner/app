@@ -34,6 +34,7 @@ public class GoalRepository extends BaseRepository {
     public List<Goal> selectByHeaderId(long headerId) throws ParseException {
         final String sql =
                 "select header_id, id, previous_id, name, start_date, end_date, hope_achievement, color, stat " +
+                        "from goal " +
                         "where header_id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
         List<Goal> goals = new ArrayList<>(c.getCount());
