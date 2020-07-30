@@ -10,7 +10,6 @@ import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
 import com.downfall.caterplanner.rest.repository.PerformRepository;
 import com.facebook.react.bridge.ReadableArray;
-import com.facebook.react.bridge.ReadableMap;
 
 
 import java.text.ParseException;
@@ -22,19 +21,23 @@ public class DetailPlanService extends BaseService {
     private PerformRepository performRepository;
     private BriefingRepository briefingRepository;
     private DetailPlanHeaderRepository detailPlanHeaderRepository;
+    private TasksService tasksService;
 
     public DetailPlanService(
             SQLiteHelper helper,
             GoalRepository goalRepository,
             PerformRepository performRepository,
             BriefingRepository briefingRepository,
-            DetailPlanHeaderRepository detailPlanHeaderRepository) {
+            DetailPlanHeaderRepository detailPlanHeaderRepository,
+            TasksService tasksService) {
         super(helper);
 
         this.goalRepository = goalRepository;
         this.performRepository = performRepository;
         this.briefingRepository = briefingRepository;
         this.detailPlanHeaderRepository = detailPlanHeaderRepository;
+        this.tasksService = tasksService;
+
     }
 
     public long createByReact(ReadableArray r_detailPlans, Integer authorId, String authorName, Integer baseId) throws Exception{
@@ -108,6 +111,8 @@ public class DetailPlanService extends BaseService {
 
                 goalRepository.insert(goal);
             });
+
+            this.tasksService.updateSchedule(headerId, tasksService.create(DetailPlans.valueOf(r_detailPlans)));
 
         });
     }

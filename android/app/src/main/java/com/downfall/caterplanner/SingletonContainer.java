@@ -8,7 +8,10 @@ public class SingletonContainer {
     public static Map<Class, Object> container = new HashMap<>();
 
     public static <T>  T get(Class<T> key){
-        return (T) container.get(key);
+        T t = (T) container.get(key);
+        if(t == null)
+            throw new RuntimeException();
+        return t;
     }
 
     public static <T> void register(Class<T> key, T object){

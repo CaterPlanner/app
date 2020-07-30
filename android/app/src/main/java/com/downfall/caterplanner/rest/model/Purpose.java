@@ -29,7 +29,7 @@ public class Purpose{
     private int disclosureScope;
     private LocalDateTime startAt;
     private LocalDate decimalDay;
-    private int stat; //0 진행중 1 성공 2 실패 3 보류중
+    private int stat; //0 보류중 1 진행중 2 성공 3 실패
     private Long detailPlanHeaderId;
     private DetailPlans detailPlans;
 

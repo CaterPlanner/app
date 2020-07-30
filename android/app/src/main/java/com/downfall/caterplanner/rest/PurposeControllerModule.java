@@ -74,7 +74,7 @@ public class PurposeControllerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void update(Integer id, ReadableMap purpose, Promise promise){
         try{
-            purposeService.updatePurposeByReact(id, purpose);
+            purposeService.updateShortByReact(id, purpose);
         }catch (Exception e){
             promise.reject(e);
         }

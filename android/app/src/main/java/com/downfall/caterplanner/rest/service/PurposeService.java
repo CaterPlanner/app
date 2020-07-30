@@ -9,7 +9,7 @@ import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
 import com.downfall.caterplanner.rest.model.Task;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
-import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
+import com.downfall.caterplanner.rest.repository.GoalRepository;
 import com.downfall.caterplanner.rest.repository.PurposeRepository;
 import com.downfall.caterplanner.rest.repository.TaskRepositiory;
 import com.facebook.react.bridge.Arguments;
@@ -18,23 +18,28 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
+import org.joda.time.LocalDate;
+
 import java.text.ParseException;
-import java.util.List;
 
 public class PurposeService extends BaseService {
 
     private PurposeRepository purposeRepository;
     private DetailPlanService detailPlanService;
     private BriefingRepository briefingRepository;
-    private TaskService taskService;
+    private TasksService tasksService;
+    private TaskRepositiory taskRepositiory;
+    private GoalRepository goalRepository;
 
-    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, TaskService taskService) {
+    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, TasksService tasksService, TaskRepositiory taskRepositiory, GoalRepository goalRepository) {
         super(helper);
 
         this.purposeRepository = purposeRepository;
         this.briefingRepository = briefingRepository;
         this.detailPlanService = detailPlanService;
-        this.taskService = taskService;
+        this.tasksService = tasksService;
+        this.taskRepositiory = taskRepositiory;
+        this.goalRepository = goalRepository;
     }
 
     /**
@@ -47,7 +52,7 @@ public class PurposeService extends BaseService {
      */
     public Long createByReact(ReadableMap r_purpose) throws Exception {
         Purpose purpose = Purpose.valueOf(r_purpose);
-        purpose.setStat(3);
+        purpose.setStat(0);
         return purposeRepository.insert(purpose);
     }
 
@@ -78,7 +83,7 @@ public class PurposeService extends BaseService {
     public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans, Integer baseId) throws Exception{
         return SQLiteHelper.transaction(db, () -> {
             Purpose purpose = Purpose.valueOf(r_purpose);
-            purpose.setStat(3);
+            purpose.setStat(0);
             purpose.setDetailPlanHeaderId((long) baseId);
             Long id = purposeRepository.insert(purpose);
             if(r_detailPlans != null){
@@ -126,8 +131,15 @@ public class PurposeService extends BaseService {
         return result;
     }
 
-    public void updatePurposeByReact(Integer id, ReadableMap r_purpose) throws Exception {
+    public void updateShortByReact(Integer id, ReadableMap r_purpose) throws Exception {
         this.purposeRepository.updatePurposeDate(id, Purpose.valueOf(r_purpose));
+    }
+
+    public void updateByReact(Integer id, ReadableMap r_purpose, ReadableArray r_detailPlans) throws Exception {
+        SQLiteHelper.transaction(db, () -> {
+            this.purposeRepository.updatePurposeDate(id, Purpose.valueOf(r_purpose));
+            this.detailPlanService.updateByReact(id, r_detailPlans);
+        });
     }
 
     public void deleteByReact(Integer id) throws Exception{
@@ -141,40 +153,48 @@ public class PurposeService extends BaseService {
         });
     }
 
-    public void addBriefing(Integer id, int detailPlanKey) throws Exception {
+    @Deprecated
+    public void refresh() throws Exception {
         SQLiteHelper.transaction(db, () -> {
-//            Purpose purpose = read(id);
-//            this.briefingRepository.insert(purpose.getId(), goalId);
-//
-//            Briefing briefing =
-//                    Briefing.builder()
-//                            .headerId(purpose.getId())
-//                            .goalId(goalId)
-//                            .score(0).build();
-//
-//            Perform perform = (Perform) purpose.getDetailPlans()[goalId - 1];
-//            perform.getBriefings().add(briefing);
-//
-//            perform.statistion();
-//
-//            Goal goal = (Goal) this.detailPlans[perform.getConstructorKey() - 1];
-//            goal.statistion();
-//
-//            perform.statistion();
-//
-//            if(goal.achieve() == 100){
-//                goal.setStat(1);
-//                detailPlanRepository.updateStatByKey(purpose.getId(), goal.getId(), goal.getStat());
-//
-//                for(Perform perform1 : goal.getPerforms()){
-//                    perform1.setStat(1);
-//                    detailPlanRepository.updateStatByKey(purpose.getId(), perform1.getId(), perform1.getStat());
-//
-//                    Task task = taskRepositiory.selectByKey(purpose.getId(), perform1.getId());
-//                    taskRepositiory.updateActive(purpose.getId(), task.getGoalId());
-//                    taskRepositiory.deleteByKey(purpose.getId(), task.getGoalId());
-//                }
-//            }
+            Purpose[] purposes = purposeRepository.selectByStatIsActive();
+            LocalDate today = LocalDate.now();
+
+            for(Purpose purpose : purposes){
+                DetailPlans unStatisDetailPlans = detailPlanService.readShort(purpose.getDetailPlanHeaderId());
+                for(Goal goal : unStatisDetailPlans.getEntryData()){
+//                    if(goal.getStat() == 0 && goal.getSt)
+
+
+
+                    for(Perform perform : goal.getPerforms()){
+
+                    }
+                }
+            }
+        });
+    }
+
+    @Deprecated //종료 날짜가 다가오기전 희망 달성 수치를 넘었을때 어떻게 처리할건지
+    public void addBriefing(Integer id, int goalId, int performId) throws Exception {
+        SQLiteHelper.transaction(db, () -> {
+            Purpose purpose = purposeRepository.selectById(id);
+            briefingRepository.insert(purpose.getDetailPlanHeaderId(), goalId, performId);
+
+            DetailPlans detailPlans = detailPlanService.read(purpose.getDetailPlanHeaderId());
+            Goal goal = detailPlans.getEntryData().get(goalId - 1);
+
+            if(goal.isClear() && goal.getStat() == 0){
+                goal.setStat(1);
+                taskRepositiory.updateActive(purpose.getDetailPlanHeaderId(), goalId);
+                taskRepositiory.deleteByHeaderIdAndGoalId(purpose.getDetailPlanHeaderId(), goalId);
+
+                goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goalId, 1);
+            }
+
+            if(purpose.achieve() == 100 && purpose.getStat() == 1){
+                purpose.setStat(2);
+                purposeRepository.updatePurposeDate(purpose.getId(), purpose);
+            }
         });
     }
 
@@ -183,19 +203,23 @@ public class PurposeService extends BaseService {
             Purpose purpose = purposeRepository.selectById(id);
             DetailPlans detailPlans = detailPlanService.readShort(purpose.getDetailPlanHeaderId());
 
-            RelationTree tree = RelationTree.Builder.build(detailPlans);
-            GPScheduleMaker maker = new GPScheduleMaker();
+            tasksService.registerSchedule(purpose.getDetailPlanHeaderId(), tasksService.create(detailPlans));
 
-            Task[] tasks = maker.make(tree.getRoot());
-            taskService.registerSchedule(purpose.getDetailPlanHeaderId(), tasks);
+            purpose.setStat(1);
+            purposeRepository.updatePurposeDate(id, purpose);
         });
     }
 
-    public void stopSchedule(Integer id){
-
+    public void stopSchedule(Integer id) throws Exception {
+        SQLiteHelper.transaction(db, () -> {
+            Purpose purpose = purposeRepository.selectById(id);
+            tasksService.unregisterSchedule(purpose.getDetailPlanHeaderId());
+            purpose.setStat(0);
+            purposeRepository.updatePurposeDate(id, purpose);
+        });
     }
 
-    private WritableMap writableCard(Purpose purpose) throws ParseException {
+    private WritableMap writableCard(Purpose purpose){
         if(!purpose.isStatizable())
             throw new RuntimeException();
 
@@ -212,7 +236,6 @@ public class PurposeService extends BaseService {
                 continue;
 
             for(Perform perform : goal.getPerforms()){
-
                 if(!perform.isActive())
                     continue;
 
