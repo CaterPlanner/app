@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.PlanType;
 import com.downfall.caterplanner.util.DateUtil;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -30,7 +30,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
     private LocalDate startDate;
     private LocalDate endDate;
     private String color;
-    private int stat;  //0 : 진행중, 1 : 성공 , 2: 실패 , 3: 루트
+    private State stat;  //0 : 진행중, 1 : 대기중 , 2: 성공 , 3: 실패
 
     @Getter
     @Setter(AccessLevel.NONE)
@@ -45,7 +45,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         this.startDate = startDate;
         this.endDate = endDate;
         this.color = color;
-        this.stat = stat;
+        this.stat = State.findByValue(stat);
 
         this.performs = new ArrayList<>();
     }
@@ -54,18 +54,15 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         this.performs = performs;
     }
 
-    public boolean isClear(){
-        return this.stat > 0;
-    }
 
     @Override
-    public void statistion() {
+    public void statistics() {
         if(this.performs == null)
             throw new RuntimeException();
 
         for (Perform p : performs) {
             if(!p.isStatizable())
-                p.statistion();
+                p.statistics();
 
             this.maxTime += p.getMaxTime();
             this.currentPerfectTime += p.getCurrentPerfectTime();
@@ -77,7 +74,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
 
     @Override
     public int achieve() {
-        return stat == 1 ? 100 : super.achieve();
+        return stat == State.SUCCESS ? 100 : super.achieve();
     }
 
     @Override
@@ -95,7 +92,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
                 .startDate(DateUtil.parseToDate(data.getString("startDate")))
                 .endDate(DateUtil.parseToDate(data.getString("endDate")))
                 .color(data.getString("color"))
-                .stat(data.getInt("stat"))
+                .stat(State.findByValue(data.getInt("stat")))
                 .build();
     }
 
@@ -109,7 +106,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         goalMap.putString("startDate", DateUtil.formatFromDate(goal.getStartDate()));
         goalMap.putString("endDate", DateUtil.formatFromDate(goal.getEndDate()));
         goalMap.putString("color", goal.getColor());
-        goalMap.putInt("stat", goal.getStat());
+        goalMap.putInt("stat", goal.getStat().getValue());
         return goalMap;
     }
 
@@ -123,8 +120,8 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
 
 
     @Override
-    public Type getType() {
-        return Type.G;
+    public PlanType getType() {
+        return PlanType.G;
     }
 
 }

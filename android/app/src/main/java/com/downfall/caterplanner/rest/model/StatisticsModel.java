@@ -1,5 +1,6 @@
 package com.downfall.caterplanner.rest.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,6 @@ public abstract class StatisticsModel implements BriefingStatizable{
     protected int currentBriefingCount;
 
     @Getter
-    @Setter
     protected boolean isStatizable;
 
 

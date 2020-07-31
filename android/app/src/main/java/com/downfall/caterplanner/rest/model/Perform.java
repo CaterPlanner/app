@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.PlanType;
 import com.downfall.caterplanner.util.DateUtil;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -89,7 +89,7 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
     }
 
     @Override
-    public void statistion() {
+    public void statistics() {
         if(this.briefings == null || startDate == null || endDate == null)
             throw new RuntimeException();
 
@@ -259,7 +259,7 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
     }
 
     @Override
-    public Type getType() {
-        return Type.P;
+    public PlanType getType() {
+        return PlanType.P;
     }
 }

@@ -25,12 +25,12 @@ public class Node implements IndexListElement {
     public Node(RelationTreeEntity data) {
         this.data = data;
 
-        if(data.getType() == Type.G)
+        if(data.getType() == PlanType.G)
             children = new IndexList<Node>();
     }
 
     public Node(RelationTreeEntity data, IndexList<Node> children){
-        if(data.getType() != Type.G)
+        if(data.getType() != PlanType.G)
             throw new RuntimeException();
         this.data = data;
         this.children = children;
@@ -73,10 +73,10 @@ public class Node implements IndexListElement {
         return data;
     }
 
-    public Type getType() {return data.getType();}
+    public PlanType getType() {return data.getType();}
 
     public void addChild(Node node){
-        if(node.getType() != Type.P)
+        if(node.getType() != PlanType.P)
             throw new RuntimeException("must P");
 
         node.setLevel(level);

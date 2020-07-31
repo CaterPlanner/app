@@ -3,6 +3,7 @@ package com.downfall.caterplanner.rest.repository;
 import android.database.Cursor;
 
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.util.DateUtil;
 
@@ -45,9 +46,8 @@ public class PerformRepository extends BaseRepository{
         return performs;
     }
 
-    @Deprecated
-    //자세한 정보는 필요하지 않으니 조인으로 활성화된 perform만 찾도록하자
-    public List<Perform> selectByHeaderIdAndInGoalId(long headerId, long[] goalIdList){
+
+    public List<Perform> selectByHeaderIdAndInGoalId(long headerId, List<Goal> goals){
         final String sql =
                 "select header_id, goal_id, id, name, cycle " +
                         "from perform " +
@@ -55,10 +55,10 @@ public class PerformRepository extends BaseRepository{
                         "and goal_id in (?)";
 
         StringBuilder builder = new StringBuilder();
-        builder.append(goalIdList[0]);
-        for(int i = 1; i < goalIdList.length; i++) {
+        builder.append(goals.get(0).getId());
+        for(int i = 1; i < goals.size(); i++) {
             builder.append(",");
-            builder.append(goalIdList[i]);
+            builder.append(goals.get(i).getId());
         }
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId), builder.toString()});
         List<Perform> performs = new ArrayList<>(c.getCount());

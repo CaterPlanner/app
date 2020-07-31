@@ -15,34 +15,31 @@ import com.facebook.react.bridge.ReadableArray;
 import java.text.ParseException;
 import java.util.List;
 
-public class DetailPlanService extends BaseService {
+public class DetailPlansService extends BaseService {
 
     private GoalRepository goalRepository;
     private PerformRepository performRepository;
     private BriefingRepository briefingRepository;
     private DetailPlanHeaderRepository detailPlanHeaderRepository;
-    private TasksService tasksService;
 
-    public DetailPlanService(
+    public DetailPlansService(
             SQLiteHelper helper,
             GoalRepository goalRepository,
             PerformRepository performRepository,
             BriefingRepository briefingRepository,
-            DetailPlanHeaderRepository detailPlanHeaderRepository,
-            TasksService tasksService) {
+            DetailPlanHeaderRepository detailPlanHeaderRepository) {
         super(helper);
 
         this.goalRepository = goalRepository;
         this.performRepository = performRepository;
         this.briefingRepository = briefingRepository;
         this.detailPlanHeaderRepository = detailPlanHeaderRepository;
-        this.tasksService = tasksService;
 
     }
 
-    public long createByReact(ReadableArray r_detailPlans, Integer authorId, String authorName, Integer baseId) throws Exception{
+    public long createByReact(ReadableArray r_detailPlans, Long authorId, String authorName, Long baseId) throws Exception{
         return SQLiteHelper.transaction(db, () -> {
-            long headerId = detailPlanHeaderRepository.insert((long) authorId, authorName, (long)baseId);
+            long headerId = detailPlanHeaderRepository.insert(authorId, authorName, baseId);
 
             DetailPlans.quest(r_detailPlans, (goal, r_performs) -> {
 
@@ -60,10 +57,9 @@ public class DetailPlanService extends BaseService {
         });
     }
 
-    public long createByReact(ReadableArray r_detailPlans, Integer authorId, String authorName) throws Exception{
+    public long createByReact(ReadableArray r_detailPlans, Long authorId, String authorName) throws Exception{
         return this.createByReact(r_detailPlans, authorId, authorName, null);
     }
-
 
     /**
      * headerId와 일치하는 모든 detailPlan 들을 가져옴
@@ -87,9 +83,11 @@ public class DetailPlanService extends BaseService {
         return DetailPlans.valueOf(goals, performs);
     }
 
-    public DetailPlans readActive(long headerId) throws ParseException {
+    @Deprecated //목표 화면 ui에 정해진 것이 없음
+    public DetailPlans readInActive(long headerId) throws ParseException {
         List<Goal> goals = this.goalRepository.selectByHeaderIdAndStat(headerId, 0);
-        List<Perform>
+        List<Perform> performs = this.performRepository.selectByHeaderIdAndInGoalId(headerId, goals);
+        return DetailPlans.valueOf(goals, performs);
     }
 
     /**
@@ -101,7 +99,7 @@ public class DetailPlanService extends BaseService {
      * @param r_detailPlans
      * @throws Exception
      */
-    public void updateByReact(Integer headerId, ReadableArray r_detailPlans) throws Exception {
+    public void update(long headerId, ReadableArray r_detailPlans) throws Exception {
         SQLiteHelper.transaction(db, () -> {
             goalRepository.deleteByHeaderId(headerId);
             //CASCADE 관계로 하위의 Goals 모두 삭제
@@ -124,9 +122,10 @@ public class DetailPlanService extends BaseService {
      *
      * @param headerId
      */
-    public void deleteByReact(Integer headerId){
+    public void delete(Integer headerId){
         this.goalRepository.deleteByHeaderId(headerId);
     }
+
 
 
     //setClear

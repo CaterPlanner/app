@@ -1,7 +1,7 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.PlanType;
 
 public interface RelationTreeEntity{
-    Type getType();
+    PlanType getType();
 }

@@ -5,7 +5,7 @@ public interface BriefingStatizable {
     int progress();
     int achieve();
 
-    void statistion();
+    void statistics();
 
     int getMaxTime();
     int getCurrentPerfectTime();

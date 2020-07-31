@@ -11,7 +11,6 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
 
 
 @Data
@@ -29,7 +28,7 @@ public class Purpose{
     private int disclosureScope;
     private LocalDateTime startAt;
     private LocalDate decimalDay;
-    private int stat; //0 보류중 1 진행중 2 성공 3 실패
+    private State stat; //0 보류중 1 진행중 2 성공 3 실패
     private Long detailPlanHeaderId;
     private DetailPlans detailPlans;
 
@@ -50,6 +49,12 @@ public class Purpose{
         return detailPlans.achieve();
     }
 
+    public void statistion(){
+        if(detailPlans == null)
+            throw new RuntimeException();
+        detailPlans.statistics();
+    }
+
     public static Purpose valueOf(ReadableMap data) throws Exception{
         return Purpose.builder()
                 .id(data.getInt("id"))
@@ -63,7 +68,7 @@ public class Purpose{
                 .disclosureScope( data.getInt("disclosureScope"))
                 .startAt(data.hasKey("startAt") ? DateUtil.parseToDateTime(data.getString("startAt")) : null)
                 .decimalDay(data.hasKey("decimalDay") ? DateUtil.parseToDate(data.getString("decimalDay")) : null)
-                .stat(data.getInt("stat"))
+                .stat(State.findByValue(data.getInt("stat")))
                 .detailPlanHeaderId(data.hasKey("detailPlanHeaderId") ? (long) data.getInt("detailPlanHeaderId") : null)
                 .build();
     }
@@ -81,7 +86,7 @@ public class Purpose{
         writableMap.putInt("disclosureScope", purpose.getDisclosureScope());
         writableMap.putString("startAt", DateUtil.formatFromDateTime(purpose.getStartAt()));
         writableMap.putString("decimalDay", DateUtil.formatFromDate(purpose.getDecimalDay()));
-        writableMap.putInt("stat", purpose.getStat());
+        writableMap.putInt("stat", purpose.getStat().getValue());
         writableMap.putInt("detailPlanHeaderId", purpose.getDetailPlanHeaderId().intValue());
         return writableMap;
     }

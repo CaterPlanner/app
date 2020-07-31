@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.model.State;
 import com.downfall.caterplanner.util.DateUtil;
 
 import java.text.ParseException;
@@ -28,7 +29,7 @@ public class PurposeRepository extends BaseRepository {
         contentValues.put("disclosureScope",purpose.getDisclosureScope());
         contentValues.put("startAt", purpose.getStartAt().toString());
         contentValues.put("decimalDay", purpose.getDecimalDay().toString());
-        contentValues.put("stat", purpose.getStat());
+        contentValues.put("stat", purpose.getStat().getValue());
         contentValues.put("detailPlanHeaderId", purpose.getDetailPlanHeaderId());
         return db.insert("purpose", null, contentValues);
     }
@@ -53,7 +54,7 @@ public class PurposeRepository extends BaseRepository {
                     .disclosureScope( c.getInt(9))
                     .startAt(DateUtil.parseToDateTime(c.getString(10)))
                     .decimalDay(DateUtil.parseToDate(c.getString(11)))
-                    .stat(c.getInt(12))
+                    .stat(State.findByValue(c.getInt(12)))
                     .detailPlanHeaderId(c.getLong(13))
                     .build();
 
@@ -82,7 +83,7 @@ public class PurposeRepository extends BaseRepository {
                     .disclosureScope( c.getInt(9))
                     .startAt(DateUtil.parseToDateTime(c.getString(10)))
                     .decimalDay(DateUtil.parseToDate(c.getString(11)))
-                    .stat(c.getInt(12))
+                    .stat(State.findByValue(c.getInt(12)))
                     .detailPlanHeaderId(c.getLong(13))
                     .build();
         }
@@ -99,7 +100,19 @@ public class PurposeRepository extends BaseRepository {
                 new String[]{
                     purpose.getName(), purpose.getDescription(), purpose.getImageUrl(),
                         String.valueOf(purpose.getDisclosureScope()), purpose.getStartAt().toString(), purpose.getDecimalDay().toString(),
-                        String.valueOf(purpose.getStat()), String.valueOf(purpose.getDetailPlanHeaderId())
+                        String.valueOf(purpose.getStat().getValue()), String.valueOf(purpose.getDetailPlanHeaderId())
+                });
+    }
+
+    public void updateStatById(long id, State stat){
+        final String sql =
+                "update purpose " +
+                        "set stat = ? " +
+                        "where id = ?";
+        db.execSQL(sql,
+                new String[]{
+                        String.valueOf(id),
+                        String.valueOf(stat.getValue())
                 });
     }
 

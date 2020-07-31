@@ -10,28 +10,33 @@ import com.facebook.react.bridge.WritableMap;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
 
-@Getter
+
 public class DetailPlans extends StatisticsModel{
 
+    @Getter
     private List<Goal> entryData;
+    private Map<Integer, List<Goal>> levelBox;
 
-    private DetailPlans(List<Goal> entryData, boolean isStatizable){
-        this.entryData = entryData;
-        this.isStatizable = isStatizable;
-
-        if(isStatizable)
-            statistion();
+    private DetailPlans(){
+        this.levelBox = new HashMap<>();
+        this.isStatizable = false;
     }
 
+
     public static DetailPlans valueOf(Node[] nodes){
+        DetailPlans detailPlans = new DetailPlans();
         List<Goal> entryData = new ArrayList<>();
         for(Node node : nodes){
             Goal goal = (Goal) node.getData();
             List<Perform> performs = new ArrayList<>();
+
+            detailPlans.insertLevelView(goal.getLevel(), goal);
 
             Node[] children = node.getChildren();
 
@@ -40,26 +45,35 @@ public class DetailPlans extends StatisticsModel{
             }
             entryData.add(goal);
         }
-        return new DetailPlans(entryData, false);
+        detailPlans.setEntryData(entryData);
+        return detailPlans;
     }
 
     public static DetailPlans valueOf(ReadableArray r_detailPlans) throws ParseException {
-        List<Goal> goals = new ArrayList<>();
+        DetailPlans detailPlans = new DetailPlans();
+        List<Goal> entryData = new ArrayList<>();
         for(int i = 0; i < r_detailPlans.size(); i++){
             ReadableMap r_goal = r_detailPlans.getMap(i);
-            goals.add(Goal.valueOf(r_goal));
+            Goal goal = Goal.valueOf(r_goal);
+
+            detailPlans.insertLevelView(goal.getLevel(), goal);
+
+            entryData.add(goal);
             ReadableArray r_performs = r_goal.getArray("performs");
 
             List<Perform> performs = new ArrayList<>();
             for(int j = 0; j < r_performs.size(); j++){
                 performs.add(Perform.valueOf(r_performs.getMap(i)));
             }
-            goals.get(i).setPerforms(performs, false);
+            entryData.get(i).setPerforms(performs);
         }
-        return new DetailPlans(goals, false);
+        detailPlans.setEntryData(entryData);
+        return detailPlans;
     }
 
     public static DetailPlans valueOf(List<Goal> goals, List<Perform> performs, List<Briefing> briefings){
+
+        DetailPlans detailPlans = new DetailPlans();
 
         for(Perform perform : performs){
             Goal goal = goals.get(perform.getGoalId() - 1);
@@ -75,13 +89,16 @@ public class DetailPlans extends StatisticsModel{
             }
 
             for(Goal goal : goals){
-                goal.statistion();
+                detailPlans.insertLevelView(goal.getLevel(), goal);
             }
 
-            return new DetailPlans(goals, true);
+            detailPlans.setEntryData(goals);
+            detailPlans.statistics();
         }else{
-            return new DetailPlans(goals, false);
+            detailPlans.setEntryData(goals);
         }
+
+        return detailPlans;
     }
 
     public static DetailPlans valueOf(List<Goal> goals, List<Perform> performs){
@@ -115,14 +132,14 @@ public class DetailPlans extends StatisticsModel{
 
 
     @Override
-    public void statistion() {
+    public void statistics() {
 
         for(Goal goal : entryData){
             if(!goal.isStatizable)
                 throw new RuntimeException();
 
             if(!goal.isStatizable())
-                goal.statistion();
+                goal.statistics();
 
             this.currentPerfectTime += goal.getCurrentPerfectTime();
             this.currentBriefingCount += goal.getCurrentBriefingCount();
@@ -131,6 +148,30 @@ public class DetailPlans extends StatisticsModel{
 
         this.isStatizable = true;
     }
+
+    private void insertLevelView(int level, Goal goal){
+        if(!levelBox.containsKey(level))
+            levelBox.put(level, new ArrayList<>());
+        levelBox.get(level).add(goal);
+    }
+
+    private void setEntryData(List<Goal> entryData) {
+        this.entryData = entryData;
+    }
+
+    public boolean isLevelClear(int level){
+        List<Goal> goals = levelBox.get(level);
+        for(Goal goal : goals){
+            if(!goal.getStat().isPass())
+                return false;
+        }
+        return true;
+    }
+
+    public List<Goal> getGoalsByLevel(int level){
+        return levelBox.get(level);
+    }
+
 
     @FunctionalInterface
     public interface TouchGoal{

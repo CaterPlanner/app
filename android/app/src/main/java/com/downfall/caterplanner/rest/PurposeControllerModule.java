@@ -36,18 +36,18 @@ public class PurposeControllerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createWithDetailPlans(ReadableMap purpose, ReadableArray readableDetailPlans, Promise promise){
+    public void createWithDetailPlans(ReadableMap r_purpose, ReadableArray r_detailPlans, Promise promise){
         try{
-            promise.resolve(purposeService.createByReact(purpose, readableDetailPlans));
+            promise.resolve(purposeService.createByReact(r_purpose, r_detailPlans));
         }catch (Exception e){
             promise.reject(e);
         }
     }
 
     @ReactMethod
-    public void createWithDetailPlansByOther(ReadableMap purpose, ReadableArray readableDetailPlans, Integer baseId, Promise promise){
+    public void createWithDetailPlansByOther(ReadableMap r_purpose, ReadableArray r_detailPlans, Integer baseId, Promise promise){
         try{
-            promise.resolve(purposeService.createByReact(purpose, readableDetailPlans, baseId));
+            promise.resolve(purposeService.createByReact(r_purpose, r_detailPlans, baseId.longValue()));
         }catch (Exception e){
             promise.reject(e);
         }
@@ -56,7 +56,7 @@ public class PurposeControllerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void read(Integer id, Promise promise){
         try{
-            promise.resolve(purposeService.readForCardByReact(id));
+            promise.resolve(purposeService.readForCard(id));
         }catch (Exception e){
             promise.reject(e);
         }
@@ -65,25 +65,25 @@ public class PurposeControllerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void readAll(Promise promise){
         try{
-            promise.resolve(purposeService.readForCardAllByReact());
+            promise.resolve(purposeService.readAllForCard());
         }catch (Exception e){
             promise.reject(e);
         }
     }
 
     @ReactMethod
-    public void update(Integer id, ReadableMap purpose, Promise promise){
+    public void updateShort(Integer id, ReadableMap r_purpose, Promise promise){
         try{
-            purposeService.updateShortByReact(id, purpose);
+            purposeService.updateShort(id, r_purpose);
         }catch (Exception e){
             promise.reject(e);
         }
     }
 
     @ReactMethod
-    public void addBriefing(Integer id, Integer detailPlanKey, Promise promise){
+    public void update(Integer id, ReadableMap r_purpose, ReadableArray r_detailPlans, Promise promise){
         try{
-            purposeService.addBriefing(id, detailPlanKey);
+            purposeService.update(id, r_purpose, r_detailPlans);
         }catch (Exception e){
             promise.reject(e);
         }
@@ -92,9 +92,37 @@ public class PurposeControllerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void delete(Integer id, Promise promise){
         try{
-            purposeService.deleteByReact(id);
+            purposeService.delete(id);
         }catch (Exception e){
             promise.reject(e);
         }
     }
+
+    @ReactMethod
+    public void addBriefing(Integer id, Integer goalId, Integer performId, Promise promise){
+        try{
+            purposeService.addBriefing(id, goalId, performId);
+        }catch (Exception e){
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void startSchedule(Integer id, Promise promise){
+        try{
+            purposeService.startSchedule(id);
+        }catch (Exception e){
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void stopSchedule(Integer id, Promise promise){
+        try{
+            purposeService.startSchedule(id);
+        }catch (Exception e){
+            promise.reject(e);
+        }
+    }
+
 }
