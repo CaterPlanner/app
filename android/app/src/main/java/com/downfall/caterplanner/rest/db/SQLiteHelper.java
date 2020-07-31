@@ -24,10 +24,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static <T> T transaction(SQLiteDatabase db, TransactionReturnableTask<T> method) throws Exception{
         T result;
+        boolean isMain = false;
         try{
-            boolean isMain = false;
 
-            if(!db.inTransaction()) {
+            if(!db.inTransaction() && !inTransactionShare) {
                 db.beginTransaction();
                 inTransactionShare = true;
                 isMain = true;
@@ -36,23 +36,24 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
             if(db.inTransaction() && isMain) {
                 db.setTransactionSuccessful();
-                inTransactionShare = false;
             }
         }catch (Exception e){
             throw e;
         }finally {
-            if(db.inTransaction())
+            if(db.inTransaction() && isMain) {
                 db.endTransaction();
+                inTransactionShare = false;
+            }
         }
         return result;
     }
 
 
     public static void transaction(SQLiteDatabase db, TransactionTask method) throws Exception{
+        boolean isMain = false;
         try{
-            boolean isMain = false;
 
-            if(!db.inTransaction()) {
+            if(!db.inTransaction() && !inTransactionShare) {
                 db.beginTransaction();
                 inTransactionShare = true;
                 isMain = true;
@@ -61,13 +62,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
             if(db.inTransaction() && isMain) {
                 db.setTransactionSuccessful();
-                inTransactionShare = false;
             }
         }catch (Exception e){
             throw e;
         }finally {
-            if(db.inTransaction())
+            if(db.inTransaction() && isMain) {
                 db.endTransaction();
+                inTransactionShare = false;
+            }
         }
     }
 
