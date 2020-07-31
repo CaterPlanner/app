@@ -50,15 +50,8 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         this.performs = new ArrayList<>();
     }
 
-
     public void setPerforms(List<Perform> performs) {
-        setPerforms(performs, true);
-    }
-
-    public void setPerforms(List<Perform> performs, boolean statistion) {
         this.performs = performs;
-        if(statistion)
-            statistion();
     }
 
     public boolean isClear(){
@@ -84,8 +77,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
 
     @Override
     public int achieve() {
-        int value = super.achieve();
-        return value >= this.getHopeAchievement() ? 100 : value;
+        return stat == 1 ? 100 : super.achieve();
     }
 
     @Override
@@ -112,11 +104,10 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         WritableMap goalMap = Arguments.createMap();
         goalMap.putInt("id", goal.getId());
         goalMap.putInt("headerId", goal.getHeaderId().intValue());
-        goalMap.putInt("level", goal.getConstructorKey());
+        goalMap.putInt("level", goal.getLevel());
         goalMap.putString("name", goal.getName());
         goalMap.putString("startDate", DateUtil.formatFromDate(goal.getStartDate()));
         goalMap.putString("endDate", DateUtil.formatFromDate(goal.getEndDate()));
-        goalMap.putInt("hopeAchievement", goal.getHopeAchievement());
         goalMap.putString("color", goal.getColor());
         goalMap.putInt("stat", goal.getStat());
         return goalMap;
@@ -130,31 +121,10 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         this.stat = copy.getStat();
     }
 
-    @Override
-    public int getKey() {
-        return id;
-    }
-
-    @Override
-    public void setKey(int key) {
-        this.id = key;
-    }
-
-    @Override
-    public int getConstructorKey() {
-        return this.level;
-    }
-
-    @Override
-    public void setConstructorKey(int key) {
-        this.level = key;
-    }
 
     @Override
     public Type getType() {
         return Type.G;
     }
-
-
 
 }

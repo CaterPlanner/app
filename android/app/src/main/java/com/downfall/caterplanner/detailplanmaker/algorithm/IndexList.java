@@ -1,32 +1,31 @@
 package com.downfall.caterplanner.detailplanmaker.algorithm;
 
-import java.util.List;
+public class IndexList<T extends IndexListElement> {
 
-public class NodeList {
-
-    private Node[] data;
+    private IndexListElement[] data;
     private int size;
     private int capacity;
 
-    public NodeList() {
+    public IndexList() {
         this(10);
     }
 
-    public NodeList(Node[] nodes) {
+    public IndexList(T[] nodes) {
         this(nodes.length);
 
-        for(Node node : nodes) {
+        for(T node : nodes) {
             insert(node.getKey(), node);
         }
     }
 
-    public NodeList(int initCapacity) {
+    public IndexList(int initCapacity) {
         this.capacity = initCapacity;
         this.size = 0;
-        data = new Node[capacity];
+        data = new IndexListElement[capacity];
     }
 
-    public void insert(int index, Node node) {
+    @Deprecated
+    public void insert(int index, T node) {
         if(index < 0) {
             throw new IndexOutOfBoundsException("index < 0 <- not allowed as indexes");
         }else if(index >= capacity) {
@@ -37,10 +36,19 @@ public class NodeList {
         size++;
     }
 
+    @Deprecated
+    public boolean isComplete(){
+        for(int i = 0; i < data.length; i++){
+            if(data[i] == null)
+                return false;
+        }
+        return true;
+    }
+
 
     private void expansion() {
         capacity = (int) Math.ceil(capacity * 1.5f);
-        Node[] newArray = new Node[capacity];
+        IndexListElement[] newArray = new Node[capacity];
         for (int i = 0; i < size; i++)
             newArray[i] = data[i];
         data = newArray;
@@ -63,18 +71,22 @@ public class NodeList {
 
     }
 
-    public Node get(int index) {
-        if (index >= size || index < 0) {
-            throw new IndexOutOfBoundsException("Can't find that node.");
-        }
+    public boolean contain(int index){
+        return !(index >= size || index < 0);
+    }
+
+    public T get(int index) {
         if (size == 0) {
             throw new IndexOutOfBoundsException("Array is empty.");
         }
+        if (index >= size || index < 0) {
+            throw new IndexOutOfBoundsException("Can't find that node.");
+        }
 
-        return data[index];
+        return (T) data[index];
     }
 
-    public void add(Node node) {
+    public void add(T node) {
         if (size >= capacity) {
             expansion();
         }
@@ -96,21 +108,11 @@ public class NodeList {
         defragmentation();
     }
 
-    public void removeAll(List<Node> nodes) {
-        for (int i = 0; i < nodes.size(); i++)
-            remove(data[nodes.get(i).getKey()].getKey());
 
-        defragmentation();
-
+    public T[] getAll() {
+        return (T[]) data;
     }
 
-    public Node[] getAll() {
-
-        Node[] result = new Node[size];
-        for (int i = 0; i < size; i++)
-            result[i] = data[i];
-        return result;
-    }
 
 
     public int size() {

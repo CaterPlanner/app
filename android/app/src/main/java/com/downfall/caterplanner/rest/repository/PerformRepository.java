@@ -19,14 +19,14 @@ public class PerformRepository extends BaseRepository{
     //id not AI
     public void insert(Perform perform){
         final String sql =
-                "insert into perform values(?,?,?,?,?,?)";
+                "insert into perform values(?,?,?,?)";
         db.execSQL(sql, new String[]{String.valueOf(perform.getHeaderId()) ,String.valueOf(perform.getGoalId()), String.valueOf(perform.getId()),
-                String.valueOf(perform.getName()), String.valueOf(perform.getStartDate()), String.valueOf(perform.getEndDate()), String.valueOf(perform.getCycle())});
+                String.valueOf(perform.getName()), String.valueOf(perform.getCycle())});
     }
 
     public List<Perform> selectByHeaderId(long headerId) throws ParseException {
         final String sql =
-                "select header_id, goal_id, id, name, start_date, end_date, cycle " +
+                "select header_id, goal_id, id, name, cycle " +
                         "from perform " +
                         "where header_id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
@@ -38,35 +38,43 @@ public class PerformRepository extends BaseRepository{
                             .goalId(c.getInt(1))
                             .id(c.getInt(2))
                             .name(c.getString(3))
-                            .startDate(DateUtil.parseToDate(c.getString(4)))
-                            .endDate(DateUtil.parseToDate(c.getString(5)))
-                            .cycle(c.getString(6))
+                            .cycle(c.getString(4))
                             .build()
             );
         }
         return performs;
     }
 
-    public Perform[] selectByKey(long headerId, int goalId) throws ParseException {
+    @Deprecated
+    //자세한 정보는 필요하지 않으니 조인으로 활성화된 perform만 찾도록하자
+    public List<Perform> selectByHeaderIdAndInGoalId(long headerId, long[] goalIdList){
         final String sql =
-                "select header_id, goal_id, id, name, start_date, end_date, cycle " +
+                "select header_id, goal_id, id, name, cycle " +
                         "from perform " +
-                        "where header_id = ? and goal_id = ?";
-        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId) ,String.valueOf(goalId)});
-        Perform[] performs = new Perform[c.getCount()];
+                        "where header_id = ? " +
+                        "and goal_id in (?)";
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(goalIdList[0]);
+        for(int i = 1; i < goalIdList.length; i++) {
+            builder.append(",");
+            builder.append(goalIdList[i]);
+        }
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId), builder.toString()});
+        List<Perform> performs = new ArrayList<>(c.getCount());
         while(c.moveToNext()){
-            performs[c.getPosition()] =
+            performs.add(
                     Perform.builder()
                         .headerId(c.getLong(0))
                         .goalId(c.getInt(1))
                         .id(c.getInt(2))
                         .name(c.getString(3))
-                        .startDate(DateUtil.parseToDate(c.getString(4)))
-                        .endDate(DateUtil.parseToDate(c.getString(5)))
-                        .cycle(c.getString(6))
-                        .build();
+                        .cycle(c.getString(4))
+                        .build()
+            );
         }
         return performs;
     }
+
 
 }
