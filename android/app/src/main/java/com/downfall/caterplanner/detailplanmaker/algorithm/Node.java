@@ -4,15 +4,11 @@ import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.model.RelationTreeEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 
-public class Node{
+public class Node implements IndexListElement {
 
     @Getter
     private int level;
@@ -24,21 +20,29 @@ public class Node{
     @Getter
     private RelationTreeEntity data;
 
-    @Getter
-    private NodeList children;
+    private IndexList<Node> children;
 
     public Node(RelationTreeEntity data) {
         this.data = data;
 
         if(data.getType() == Type.G)
-            children = new NodeList();
+            children = new IndexList<Node>();
+    }
+
+    public Node(RelationTreeEntity data, IndexList<Node> children){
+        if(data.getType() != Type.G)
+            throw new RuntimeException();
+        this.data = data;
+        this.children = children;
     }
 
 
+    @Override
     public int getKey() {
         return this.key;
     }
 
+    @Override
     public void setKey(int key) {
         this.key = key;
     }
@@ -47,6 +51,10 @@ public class Node{
         this.level = level;
         for(Node child : children.getAll())
             child.setLevel(level);
+    }
+
+    public Node[] getChildren() {
+        return children.getAll();
     }
 
     public RelationTreeEntity getData() {
@@ -58,7 +66,7 @@ public class Node{
                 break;
             case P:
                 Perform perform = (Perform) data;
-                data.setKey(key);
+                perform.setKey(key);
                 break;
         }
 

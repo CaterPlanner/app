@@ -56,7 +56,7 @@ public class CaterPlannerDetailPlanMakerModule extends ReactContextBaseJavaModul
     @ReactMethod
     public void insert(Integer goalKey, ReadableMap r_perform, Promise promise) {
         try {
-            service.insert(goalKey, r_perform);
+            service.insertPerform(goalKey, r_perform);
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject("TREE ERROR" , e);
@@ -117,7 +117,7 @@ public class CaterPlannerDetailPlanMakerModule extends ReactContextBaseJavaModul
     @ReactMethod
     public void successor(Integer goalKey, ReadableMap r_goal, Promise promise){
         try {
-            service.successor(goalKey, r_goal);
+            service.insertGoal(goalKey, r_goal);
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject("TREE ERROR" ,e);

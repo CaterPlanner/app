@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class Level {
+public class Level implements IndexListElement {
 
     private int level;
     private List<Node> nodeList;
@@ -41,4 +41,13 @@ public class Level {
     }
 
 
+    @Override
+    public int getKey() {
+        return level;
+    }
+
+    @Override
+    public void setKey(int key) {
+        setLevel(key);
+    }
 }

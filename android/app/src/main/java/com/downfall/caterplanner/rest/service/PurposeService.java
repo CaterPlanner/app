@@ -1,17 +1,13 @@
 package com.downfall.caterplanner.rest.service;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.RelationTree;
-import com.downfall.caterplanner.detailplanmaker.manufacture.GPScheduleMaker;
 import com.downfall.caterplanner.rest.model.DetailPlans;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
-import com.downfall.caterplanner.rest.model.Task;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
 import com.downfall.caterplanner.rest.repository.PurposeRepository;
-import com.downfall.caterplanner.rest.repository.TaskRepositiory;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -27,18 +23,14 @@ public class PurposeService extends BaseService {
     private PurposeRepository purposeRepository;
     private DetailPlanService detailPlanService;
     private BriefingRepository briefingRepository;
-    private TasksService tasksService;
-    private TaskRepositiory taskRepositiory;
     private GoalRepository goalRepository;
 
-    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, TasksService tasksService, TaskRepositiory taskRepositiory, GoalRepository goalRepository) {
+    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, GoalRepository goalRepository) {
         super(helper);
 
         this.purposeRepository = purposeRepository;
         this.briefingRepository = briefingRepository;
         this.detailPlanService = detailPlanService;
-        this.tasksService = tasksService;
-        this.taskRepositiory = taskRepositiory;
         this.goalRepository = goalRepository;
     }
 

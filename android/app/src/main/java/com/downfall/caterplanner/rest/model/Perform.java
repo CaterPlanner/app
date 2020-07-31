@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
@@ -27,9 +28,12 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
     private int goalId;
     private int id;
     private String name;
-    private LocalDate startDate;
-    private LocalDate endDate;
     private String cycle;
+
+    @Setter(AccessLevel.NONE)
+    private LocalDate startDate;
+    @Setter(AccessLevel.NONE)
+    private LocalDate endDate;
 
     private List<Briefing> briefings;
     private char cycleType;
@@ -40,16 +44,18 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
     private LocalDate today;
 
 
-    public Perform(long headerId, int goalId, int id, String name, LocalDate startDate, LocalDate endDate, String cycle) {
+    public Perform(long headerId, int goalId, int id, String name, String cycle){
         this.headerId = headerId;
         this.goalId = goalId;
         this.id = id;
         this.name = name;
+        this.cycle = cycle;
+        this.briefings = new ArrayList<>();
+    }
+
+    public void setDate(LocalDate startDate, LocalDate endDate){
         this.startDate = startDate;
         this.endDate = endDate;
-        this.cycle = cycle;
-
-        this.briefings = new ArrayList<>();
 
         today = LocalDate.now();
 
@@ -72,12 +78,10 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
 
         this.maxTime = getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams);
         this.currentPerfectTime = getBetweenMaxBriefing(startDate, today, cycleType, cycleParams);
-
     }
 
     public void setBriefings(List<Briefing> briefings) {
         this.briefings = briefings;
-        statistion();
     }
 
     public boolean isActive(){
@@ -86,7 +90,7 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
 
     @Override
     public void statistion() {
-        if(this.briefings == null)
+        if(this.briefings == null || startDate == null || endDate == null)
             throw new RuntimeException();
 
         this.currentBriefingCount = this.briefings.size();
@@ -252,26 +256,6 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
         this.startDate = copy.getStartDate();
         this.endDate = copy.getEndDate();
         this.cycle = copy.getCycle();
-    }
-
-    @Override
-    public int getKey() {
-        return id;
-    }
-
-    @Override
-    public void setKey(int key) {
-        this.id = key;
-    }
-
-    @Override
-    public int getConstructorKey() {
-        return this.goalId;
-    }
-
-    @Override
-    public void setConstructorKey(int key) {
-        this.goalId = key;
     }
 
     @Override

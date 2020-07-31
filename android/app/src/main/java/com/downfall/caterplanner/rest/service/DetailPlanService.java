@@ -87,6 +87,11 @@ public class DetailPlanService extends BaseService {
         return DetailPlans.valueOf(goals, performs);
     }
 
+    public DetailPlans readActive(long headerId) throws ParseException {
+        List<Goal> goals = this.goalRepository.selectByHeaderIdAndStat(headerId, 0);
+        List<Perform>
+    }
+
     /**
      * detailPlan 들을 수정
      * 기존 detailPlan 데이터를 모두 삭제후 새로운 데이터를 집어넣음
@@ -111,9 +116,6 @@ public class DetailPlanService extends BaseService {
 
                 goalRepository.insert(goal);
             });
-
-            this.tasksService.updateSchedule(headerId, tasksService.create(DetailPlans.valueOf(r_detailPlans)));
-
         });
     }
 

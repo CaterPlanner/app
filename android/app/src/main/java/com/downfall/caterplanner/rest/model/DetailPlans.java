@@ -32,7 +32,10 @@ public class DetailPlans extends StatisticsModel{
         for(Node node : nodes){
             Goal goal = (Goal) node.getData();
             List<Perform> performs = new ArrayList<>();
-            for(Node childNode : node.getChildren()){
+
+            Node[] children = node.getChildren();
+
+            for(Node childNode : children){
                 performs.add((Perform) childNode.getData());
             }
             entryData.add(goal);
@@ -57,15 +60,20 @@ public class DetailPlans extends StatisticsModel{
     }
 
     public static DetailPlans valueOf(List<Goal> goals, List<Perform> performs, List<Briefing> briefings){
+
         for(Perform perform : performs){
-            goals.get(perform.getGoalId() - 1).getPerforms().add(perform);
+            Goal goal = goals.get(perform.getGoalId() - 1);
+            goal.getPerforms().add(perform);
+            perform.setDate(goal.getStartDate(), goal.getEndDate());
         }
 
         if(briefings != null) {
 
             for (Briefing briefing : briefings) {
-                goals.get(briefing.getGoalKey() - 1).getPerforms().get(briefing.getPerformId()).getBriefings().add(briefing);
+                Perform perform = goals.get(briefing.getGoalKey() - 1).getPerforms().get(briefing.getPerformId());
+                perform.getBriefings().add(briefing);
             }
+
             for(Goal goal : goals){
                 goal.statistion();
             }
