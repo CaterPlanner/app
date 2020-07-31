@@ -5,6 +5,7 @@ import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.model.Purpose;
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.model.State;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
 import com.downfall.caterplanner.rest.repository.PurposeRepository;
@@ -21,11 +22,11 @@ import java.text.ParseException;
 public class PurposeService extends BaseService {
 
     private PurposeRepository purposeRepository;
-    private DetailPlanService detailPlanService;
+    private DetailPlansService detailPlanService;
     private BriefingRepository briefingRepository;
     private GoalRepository goalRepository;
 
-    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlanService detailPlanService, BriefingRepository briefingRepository, GoalRepository goalRepository) {
+    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlansService detailPlanService, BriefingRepository briefingRepository, GoalRepository goalRepository) {
         super(helper);
 
         this.purposeRepository = purposeRepository;
@@ -44,7 +45,7 @@ public class PurposeService extends BaseService {
      */
     public Long createByReact(ReadableMap r_purpose) throws Exception {
         Purpose purpose = Purpose.valueOf(r_purpose);
-        purpose.setStat(0);
+        purpose.setStat(State.WAIT);
         return purposeRepository.insert(purpose);
     }
 
@@ -72,14 +73,14 @@ public class PurposeService extends BaseService {
      * @return
      * @throws Exception
      */
-    public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans, Integer baseId) throws Exception{
+    public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans, Long baseId) throws Exception{
         return SQLiteHelper.transaction(db, () -> {
             Purpose purpose = Purpose.valueOf(r_purpose);
-            purpose.setStat(0);
+            purpose.setStat(State.WAIT);
             purpose.setDetailPlanHeaderId((long) baseId);
             Long id = purposeRepository.insert(purpose);
             if(r_detailPlans != null){
-                long detailPlanHeaderId = detailPlanService.createByReact(r_detailPlans, purpose.getAuthorId().intValue(), purpose.getAuthorName(), baseId);
+                long detailPlanHeaderId = detailPlanService.createByReact(r_detailPlans, purpose.getAuthorId(), purpose.getAuthorName(), baseId);
                 purpose.setDetailPlanHeaderId(detailPlanHeaderId);
             }
             return id;
@@ -109,12 +110,12 @@ public class PurposeService extends BaseService {
      * @return
      * @throws ParseException
      */
-    public WritableMap readForCardByReact(Integer id) throws ParseException {
+    public WritableMap readForCard(long id) throws ParseException {
         return writableCard(read(id));
     }
 
 
-    public WritableArray readForCardAllByReact() throws ParseException {
+    public WritableArray readAllForCard() throws ParseException {
         Purpose[] purposes = this.purposeRepository.selectByStatIsActive();
         WritableArray result = Arguments.createArray();
         for(Purpose purpose : purposes){
@@ -123,26 +124,34 @@ public class PurposeService extends BaseService {
         return result;
     }
 
-    public void updateShortByReact(Integer id, ReadableMap r_purpose) throws Exception {
+    public void updateShort(long id, ReadableMap r_purpose) throws Exception {
         this.purposeRepository.updatePurposeDate(id, Purpose.valueOf(r_purpose));
     }
 
-    public void updateByReact(Integer id, ReadableMap r_purpose, ReadableArray r_detailPlans) throws Exception {
+    public void update(long id, ReadableMap r_purpose, ReadableArray r_detailPlans) throws Exception {
         SQLiteHelper.transaction(db, () -> {
             this.purposeRepository.updatePurposeDate(id, Purpose.valueOf(r_purpose));
-            this.detailPlanService.updateByReact(id, r_detailPlans);
+            this.detailPlanService.update(id, r_detailPlans);
         });
     }
 
-    public void deleteByReact(Integer id) throws Exception{
+    public void delete(long id) throws Exception{
         SQLiteHelper.transaction(db, () -> {
             Purpose purpose = this.purposeRepository.selectById(id);
             if(purpose == null)
                 throw new Exception();
 
             this.purposeRepository.deleteById(id);
-            this.detailPlanService.deleteByReact((int) purpose.getId());
+            this.detailPlanService.delete((int) purpose.getId());
         });
+    }
+
+    public void startSchedule(long id){
+        this.purposeRepository.updateStatById(id, State.PROCEED);
+    }
+
+    public void stopSchedule(long id){
+        this.purposeRepository.updateStatById(id, State.WAIT);
     }
 
     @Deprecated
@@ -152,22 +161,41 @@ public class PurposeService extends BaseService {
             LocalDate today = LocalDate.now();
 
             for(Purpose purpose : purposes){
-                DetailPlans unStatisDetailPlans = detailPlanService.readShort(purpose.getDetailPlanHeaderId());
-                for(Goal goal : unStatisDetailPlans.getEntryData()){
-//                    if(goal.getStat() == 0 && goal.getSt)
+                DetailPlans detailPlans = detailPlanService.readShort(purpose.getDetailPlanHeaderId());
 
+                int t_proceesUpdateLevel = -1;
 
+                for(Goal goal : detailPlans.getEntryData()) {
+                    if(goal.getLevel() >= t_proceesUpdateLevel)
+                        continue;
+                    if (goal.getStat().isPass())
+                        continue;
 
-                    for(Perform perform : goal.getPerforms()){
+                    if (today.isAfter(goal.getEndDate())) {
+                        goal.setStat(goal.achieve() >= 80 ? State.SUCCESS : State.PROCEED);
+                        goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goal.getId(), goal.getStat());
 
+                        if(detailPlans.isLevelClear(goal.getLevel())){
+                            for(Goal nextGoal : detailPlans.getGoalsByLevel(goal.getLevel() + 1)){
+                                goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), nextGoal.getId(), State.PROCEED);
+                                t_proceesUpdateLevel = goal.getLevel() + 1;
+                            }
+                        }
                     }
+
+                }
+
+                purpose.statistion();
+
+                if(today.isAfter(purpose.getDecimalDay())){
+                    purpose.setStat(purpose.achieve() == 100 ? State.SUCCESS : State.FAIL);
+                    purposeRepository.updateStatById(purpose.getId(), purpose.getStat());
                 }
             }
         });
     }
 
-    @Deprecated //종료 날짜가 다가오기전 희망 달성 수치를 넘었을때 어떻게 처리할건지
-    public void addBriefing(Integer id, int goalId, int performId) throws Exception {
+    public void addBriefing(long id, int goalId, int performId) throws Exception {
         SQLiteHelper.transaction(db, () -> {
             Purpose purpose = purposeRepository.selectById(id);
             briefingRepository.insert(purpose.getDetailPlanHeaderId(), goalId, performId);
@@ -175,41 +203,25 @@ public class PurposeService extends BaseService {
             DetailPlans detailPlans = detailPlanService.read(purpose.getDetailPlanHeaderId());
             Goal goal = detailPlans.getEntryData().get(goalId - 1);
 
-            if(goal.isClear() && goal.getStat() == 0){
-                goal.setStat(1);
-                taskRepositiory.updateActive(purpose.getDetailPlanHeaderId(), goalId);
-                taskRepositiory.deleteByHeaderIdAndGoalId(purpose.getDetailPlanHeaderId(), goalId);
 
-                goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goalId, 1);
+            if(goal.achieve() == 100 && goal.getStat() == State.PROCEED){
+                goal.setStat(State.SUCCESS);
+                goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goalId, State.SUCCESS);
+
+                if(detailPlans.isLevelClear(goal.getLevel())){
+                    for(Goal nextGoal : detailPlans.getGoalsByLevel(goal.getLevel() + 1)){
+                        goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), nextGoal.getId(), State.PROCEED);
+                    }
+                }
             }
-
-            if(purpose.achieve() == 100 && purpose.getStat() == 1){
-                purpose.setStat(2);
+            if(purpose.achieve() == 100 && purpose.getStat() == State.PROCEED){
+                purpose.setStat(State.SUCCESS);
                 purposeRepository.updatePurposeDate(purpose.getId(), purpose);
             }
         });
     }
 
-    public void startSchedule(Integer id) throws Exception {
-        SQLiteHelper.transaction(db, () -> {
-            Purpose purpose = purposeRepository.selectById(id);
-            DetailPlans detailPlans = detailPlanService.readShort(purpose.getDetailPlanHeaderId());
 
-            tasksService.registerSchedule(purpose.getDetailPlanHeaderId(), tasksService.create(detailPlans));
-
-            purpose.setStat(1);
-            purposeRepository.updatePurposeDate(id, purpose);
-        });
-    }
-
-    public void stopSchedule(Integer id) throws Exception {
-        SQLiteHelper.transaction(db, () -> {
-            Purpose purpose = purposeRepository.selectById(id);
-            tasksService.unregisterSchedule(purpose.getDetailPlanHeaderId());
-            purpose.setStat(0);
-            purposeRepository.updatePurposeDate(id, purpose);
-        });
-    }
 
     private WritableMap writableCard(Purpose purpose){
         if(!purpose.isStatizable())
@@ -224,7 +236,7 @@ public class PurposeService extends BaseService {
         WritableArray writableActivePerforms = Arguments.createArray();
 
         for(Goal goal : purpose.getDetailPlans().getEntryData()){
-            if(goal.getStat() >= 1)
+            if(goal.getStat().isPass())
                 continue;
 
             for(Perform perform : goal.getPerforms()){

@@ -9,7 +9,7 @@ import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
 import com.downfall.caterplanner.rest.repository.PerformRepository;
 import com.downfall.caterplanner.rest.repository.PurposeRepository;
-import com.downfall.caterplanner.rest.service.DetailPlanService;
+import com.downfall.caterplanner.rest.service.DetailPlansService;
 import com.downfall.caterplanner.rest.service.PurposeService;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -62,11 +62,9 @@ public class MainApplication extends Application implements ReactApplication {
       GoalRepository goalRepository = new GoalRepository(sqLiteHelper);
       PerformRepository performRepository = new PerformRepository(sqLiteHelper);
       PurposeRepository purposeRepository = new PurposeRepository(sqLiteHelper);
-      TaskRepositiory taskRepositiory = new TaskRepositiory(sqLiteHelper);
 
       PurposeService purposeService = new PurposeService(sqLiteHelper, purposeRepository, briefingRepository, detailPlanHeaderRepository, taskRepositiory);
-      TasksService tasksService = new TasksService(sqLiteHelper, taskRepositiory, goalRepository);
-      DetailPlanService detailPlanService = new DetailPlanService(sqLiteHelper, goalRepository, performRepository, briefingRepository, detailPlanHeaderRepository, tasksService);
+      DetailPlansService detailPlanService = new DetailPlansService(sqLiteHelper, goalRepository, performRepository, briefingRepository, detailPlanHeaderRepository, tasksService);
 
 
       SingletonContainer.register(SQLiteHelper.class, sqLiteHelper);
@@ -76,7 +74,7 @@ public class MainApplication extends Application implements ReactApplication {
       SingletonContainer.register(TaskRepositiory.class, taskRepositiory);
       
       SingletonContainer.register(TasksService.class, tasksService);
-      SingletonContainer.register(DetailPlanService.class, detailPlanService);
+      SingletonContainer.register(DetailPlansService.class, detailPlanService);
       SingletonContainer.register(PurposeService.class, purposeService);
 
     SoLoader.init(this, /* native exopackage */ false);

@@ -1,19 +1,19 @@
 package com.downfall.caterplanner.detailplanmaker.algorithm;
 
-public enum Type {
+public enum PlanType {
 	
 	M("M") , P("P"), R("R"), G("G");
 
 	private String value;
 	
-	Type(String value){
+	PlanType(String value){
 		this.value = value;
 	}
 
-	public static Type findByValue(String value){
-		for(Type type : values()){
-			if(type.getValue().equals(value))
-				return type;
+	public static PlanType findByValue(String value){
+		for(PlanType planType : values()){
+			if(planType.getValue().equals(value))
+				return planType;
 		}
 		return null;
 	}

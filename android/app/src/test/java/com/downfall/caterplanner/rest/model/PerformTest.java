@@ -1,6 +1,6 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.Type;
+import com.downfall.caterplanner.detailplanmaker.algorithm.PlanType;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -25,7 +25,7 @@ class PerformTest {
                 1,
                 0,
                 "TestPerform",
-                Type.P,
+                PlanType.P,
                 new LocalDate(2020, 7, 1),
                 new LocalDate(2020, 8, 4),
                 80,
