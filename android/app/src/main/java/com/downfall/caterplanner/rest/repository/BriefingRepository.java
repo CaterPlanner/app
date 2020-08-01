@@ -1,5 +1,6 @@
 package com.downfall.caterplanner.rest.repository;
 
+import android.content.Context;
 import android.database.Cursor;
 
 import com.downfall.caterplanner.rest.model.Briefing;
@@ -43,4 +44,6 @@ public class BriefingRepository extends BaseRepository{
                 "insert into briefing values(?, ?, ?, datetime(\'now\'), 0)";
         db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(goalKey), String.valueOf(performId)});
     }
+
+
 }
