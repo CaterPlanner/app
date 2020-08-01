@@ -187,6 +187,7 @@ public class PurposeService extends BaseService {
 
                 purpose.statistion();
 
+                //실패처리를 어떻게 할것인지
                 if(today.isAfter(purpose.getDecimalDay())){
                     purpose.setStat(purpose.achieve() == 100 ? State.SUCCESS : State.FAIL);
                     purposeRepository.updateStatById(purpose.getId(), purpose.getStat());

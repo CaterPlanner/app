@@ -1,6 +1,7 @@
 package com.downfall.caterplanner.rest.repository;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 
 import com.downfall.caterplanner.rest.model.Purpose;
@@ -121,6 +122,7 @@ public class PurposeRepository extends BaseRepository {
                 "delete from purpose where id = ?";
         db.execSQL(sql, new String[]{String.valueOf(id)});
     }
+
 
 
 }

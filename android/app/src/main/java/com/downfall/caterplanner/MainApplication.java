@@ -55,27 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
 
-      SQLiteHelper sqLiteHelper = new SQLiteHelper(getApplicationContext(), 0);
-
-      BriefingRepository briefingRepository = new BriefingRepository(sqLiteHelper);
-      DetailPlanHeaderRepository detailPlanHeaderRepository = new DetailPlanHeaderRepository(sqLiteHelper);
-      GoalRepository goalRepository = new GoalRepository(sqLiteHelper);
-      PerformRepository performRepository = new PerformRepository(sqLiteHelper);
-      PurposeRepository purposeRepository = new PurposeRepository(sqLiteHelper);
-
-      PurposeService purposeService = new PurposeService(sqLiteHelper, purposeRepository, briefingRepository, detailPlanHeaderRepository, taskRepositiory);
-      DetailPlansService detailPlanService = new DetailPlansService(sqLiteHelper, goalRepository, performRepository, briefingRepository, detailPlanHeaderRepository, tasksService);
-
-
-      SingletonContainer.register(SQLiteHelper.class, sqLiteHelper);
-      SingletonContainer.register(BriefingRepository.class, briefingRepository);
-      SingletonContainer.register(DetailPlanHeaderRepository.class, detailPlanHeaderRepository);
-      SingletonContainer.register(PurposeRepository.class, purposeRepository);
-      SingletonContainer.register(TaskRepositiory.class, taskRepositiory);
-      
-      SingletonContainer.register(TasksService.class, tasksService);
-      SingletonContainer.register(DetailPlansService.class, detailPlanService);
-      SingletonContainer.register(PurposeService.class, purposeService);
+    SingletonContainer.Helper.init(this);
 
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());

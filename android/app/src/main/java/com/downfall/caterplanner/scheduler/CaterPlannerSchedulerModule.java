@@ -9,7 +9,7 @@ import com.facebook.react.bridge.ReactMethod;
 
 public class CaterPlannerSchedulerModule extends ReactContextBaseJavaModule {
 
-    private
+    private SchedulerManager schedulerManager;
 
     public CaterPlannerSchedulerModule(ReactApplicationContext reactContext) {
         super(reactContext);

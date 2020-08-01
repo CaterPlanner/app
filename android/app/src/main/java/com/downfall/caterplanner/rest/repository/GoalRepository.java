@@ -1,5 +1,6 @@
 package com.downfall.caterplanner.rest.repository;
 
+import android.content.Context;
 import android.database.Cursor;
 
 import com.downfall.caterplanner.rest.db.SQLiteHelper;
@@ -90,5 +91,7 @@ public class GoalRepository extends BaseRepository {
                 String.valueOf(state.getValue())
         });
     }
+
+
 
 }
