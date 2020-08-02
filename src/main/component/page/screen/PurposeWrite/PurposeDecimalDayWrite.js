@@ -9,7 +9,7 @@ export default function PurposeDecimalDayWrite({ purpose }) {
 
     return (
         <View style={purposeStyles.container}>
-            <View style={purposeStyles.titleContainer}>
+            <View style={purposeStyles.headContainer}>
                 <Text style={purposeStyles.title}>
                     목표를 끝날 날짜를
                     {"\n"}

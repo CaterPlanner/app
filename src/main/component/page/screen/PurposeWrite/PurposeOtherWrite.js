@@ -14,7 +14,7 @@ export default function PurposeOtherWrite({ purpose }) {
 
     return (
         <View style={purposeStyles.container}>
-            <View style={purposeStyles.titleContainer}>
+            <View style={purposeStyles.headContainer}>
                 <Text style={purposeStyles.title}>
                     좋은 목표 계획이군요!
                     {"\n"}

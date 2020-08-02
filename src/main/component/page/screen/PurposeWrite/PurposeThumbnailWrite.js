@@ -12,7 +12,7 @@ export default function PurposeThumbnailWrite({ purpose }) {
 
     return (
         <View style={purposeStyles.container}>
-            <View style={[purposeStyles.titleContainer, { flex: 1 }]}>
+            <View style={[purposeStyles.headContainer, { flex: 1 }]}>
                 <Text style={purposeStyles.title}>
                     자신의 목표에 맞는{"\n"}
                     대표 이미지를 설정해주세요

@@ -1,8 +1,17 @@
 import React from 'react';
-import {Text} from 'react-native'
+import {View, Text} from 'react-native'
 
 export default function PageStateText({activeIndex, endIndex}){
     return(
-        <Text>{activeIndex}/{endIndex}</Text>
+        <View style={{
+        alignItems: "center",
+        backgroundColor: '#dfdfdf',
+        justifyContent: "center",
+        width: 65,
+        height: 25,
+        borderRadius: 12,
+        alignSelf: 'center'}}>
+            <Text>{activeIndex} / {endIndex}</Text>
+        </View>
     )
 }
