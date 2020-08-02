@@ -1,8 +1,9 @@
 package com.downfall.caterplanner.detailplanmaker.service;
 
 import com.downfall.caterplanner.detailplanmaker.algorithm.Level;
-import com.downfall.caterplanner.detailplanmaker.algorithm.LevelContainer;
+import com.downfall.caterplanner.detailplanmaker.algorithm.DetailPlanRelationContainer;
 import com.downfall.caterplanner.detailplanmaker.algorithm.Node;
+import com.downfall.caterplanner.detailplanmaker.algorithm.PlanType;
 import com.downfall.caterplanner.rest.model.DetailPlans;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
@@ -19,75 +20,78 @@ import java.util.List;
 //nodeList는 밖으로 뺀다
 public class CaterPlannerDetailPlanMakerService{
 
-    private LevelContainer goalLevelContainer;
+    private DetailPlanRelationContainer detailPlanRelationContainer;
 
     public void create(){
-        goalLevelContainer = new LevelContainer();
+        detailPlanRelationContainer = new DetailPlanRelationContainer();
     }
 
     public WritableArray entry() {
-        if(goalLevelContainer == null)
+        if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        return DetailPlans.parseWritableMap(DetailPlans.valueOf(goalLevelContainer.getAllNodes()));
+        return DetailPlans.parseWritableMap(DetailPlans.valueOf(detailPlanRelationContainer.getAllNodes()));
     }
 
     public void insertPerform(int goalId, ReadableMap r_perform) throws ParseException {
-        if(goalLevelContainer == null)
+        if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
+
         Perform perform = Perform.valueOf(r_perform);
-        goalLevelContainer.select(goalId).addChild(new Node(perform));
+        perform.setGoalId(goalId);
+        Node node = new Node(perform);
+        detailPlanRelationContainer.insert(goalId, node, PlanType.P);
     }
 
     public void insertGoal(int level, ReadableMap r_goal) throws ParseException {
-        if(goalLevelContainer == null)
+        if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        goalLevelContainer.insert(level, new Node(Goal.valueOf(r_goal)));
+        detailPlanRelationContainer.insert(level, new Node(Goal.valueOf(r_goal)), PlanType.G);
     }
 
     public void build(ReadableArray r_detailPlans) throws ParseException {
-        if(goalLevelContainer != null)
+        if(detailPlanRelationContainer != null)
             throw new RuntimeException("The goalRelationTree is already created.");
-        goalLevelContainer = LevelContainer.builder().build(DetailPlans.valueOf(r_detailPlans));
+        detailPlanRelationContainer = DetailPlanRelationContainer.builder().build(DetailPlans.valueOf(r_detailPlans));
     }
 
-    public WritableMap getGoal(int key)  {
-        return Goal.parseWritableMap((Goal) goalLevelContainer.select(key).getData());
+    public WritableMap getGoal(int id)  {
+        return Goal.parseWritableMap((Goal) detailPlanRelationContainer.select(id, PlanType.G).getData());
     }
 
-    public WritableMap getPerform(int goalId, int performId){
-        return Perform.parseWritableMap((Perform) goalLevelContainer.select(goalId).getChildren().get(performId).getData());
+    public WritableMap getPerform(int id){
+        return Perform.parseWritableMap((Perform) detailPlanRelationContainer.select(id, PlanType.P).getData());
     }
 
-    public void modifyGoal(int goalId, ReadableMap r_goal) throws ParseException {
-        if(goalLevelContainer == null)
+    public void modifyGoal(int id, ReadableMap r_goal) throws ParseException {
+        if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        Node node = goalLevelContainer.select(goalId);
+        Node node = detailPlanRelationContainer.select(id, PlanType.G);
         ((Goal)node.getData()).modify(Goal.valueOf(r_goal));
     }
 
-    public void modifyPerform(int goalId, int performId, ReadableMap r_perform) throws Exception {
-        if(goalLevelContainer == null)
+    public void modifyPerform(int id, ReadableMap r_perform) throws Exception {
+        if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        Node node = goalLevelContainer.select(goalId);
-        ((Goal)node.getData()).getPerforms().get(performId).modify(Perform.valueOf(r_perform));
+        Node node = detailPlanRelationContainer.select(id, PlanType.P);
+        ((Perform) node.getData()).modify(Perform.valueOf(r_perform));
     }
 
-    public void deleteGoal(int goalId) {
-        if(goalLevelContainer == null)
+    public void deleteGoal(int id) {
+        if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        goalLevelContainer.delete(goalId);
+        detailPlanRelationContainer.delete(id, PlanType.G);
     }
 
-    public void deletePerform(int goalId, int performId){
-        if(goalLevelContainer == null)
+    public void deletePerform(int id){
+        if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        goalLevelContainer.select(goalId).removeChilde(performId);
+        detailPlanRelationContainer.delete(id, PlanType.P);
     }
 
     public WritableArray goalViewData() {
-        if(goalLevelContainer == null)
+        if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        Level[] levelList = goalLevelContainer.getAllLevel();
+        Level[] levelList = detailPlanRelationContainer.getAllLevel();
         WritableArray result = Arguments.createArray();
 
         for(Level level : levelList){

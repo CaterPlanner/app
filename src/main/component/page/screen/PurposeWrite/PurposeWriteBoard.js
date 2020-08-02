@@ -1,9 +1,15 @@
 import React, { Component } from 'react'
 import {View, StyleSheet, Button, Dimensions} from 'react-native'
 import Carousel from 'react-native-snap-carousel';
-import {PurposeNameWrite, PurposeDescriptionWrite, PurposeThumbnailWrite, PurposeDecimalDayWrite, PurposeDetailPlansWrite, PurposeOtherWrite, PurposeWriteDone} from './PurposeWriteScreens'
+import PurposeNameWrite from './PurposeNameWrite';
+import PurposeDescriptionWrite from './PurposeDescriptionWrite';
+import PurposeThumbnailWrite from './PurposeThumbnailWrite';
+import PurposeDecimalDayWrite from './PurposeDecimalDayWrite';
+import PurposeDetailPlansWrite from './PurposeDetailPlansWrite';
+import PurposeOtherWrite from './PurposeOtherWrite';
+import PurposeWriteDone from './PurposeWriteDone';
+
 import PageStateText from '../../../atom/text/PageStateText'
-import Purpose from '../../../../rest/model/Purpose';
 
 const fullWidth = Dimensions.get('window').width;
 
@@ -15,7 +21,7 @@ export default class PurposeWriteBoard extends Component{
         this.state = {
             activeIndex : 0,
             endIndex : 7,
-            purpose : new Purpose()
+            purpose : {}
         }
         
         this.views = [
@@ -30,11 +36,9 @@ export default class PurposeWriteBoard extends Component{
     }
 
     _renderItem = ({item, index}) => {
-        return(
-            <View>
-                {item}
-            </View>
-        )
+        return (
+            item
+        );
     }
 
     _next = () => {
@@ -87,9 +91,6 @@ const styles = StyleSheet.create({
         flex: 0.35,
         alignItems: 'center',
         backgroundColor: 'white',
-        
-        elevation:5,
-
         paddingTop:'3%'
 
     },

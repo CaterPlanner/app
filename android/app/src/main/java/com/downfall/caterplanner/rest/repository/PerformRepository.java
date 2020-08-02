@@ -1,12 +1,10 @@
 package com.downfall.caterplanner.rest.repository;
 
-import android.content.Context;
 import android.database.Cursor;
 
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.db.SQLiteManager;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
-import com.downfall.caterplanner.util.DateUtil;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,15 +12,12 @@ import java.util.List;
 
 public class PerformRepository extends BaseRepository{
 
-    public PerformRepository(SQLiteHelper helper) {
-        super(helper);
-    }
 
     //id not AI
     public void insert(Perform perform){
         final String sql =
                 "insert into perform values(?,?,?,?)";
-        db.execSQL(sql, new String[]{String.valueOf(perform.getHeaderId()) ,String.valueOf(perform.getGoalId()), String.valueOf(perform.getId()),
+        db.execSQL(sql, new String[]{String.valueOf(perform.getId()), String.valueOf(perform.getHeaderId()) ,String.valueOf(perform.getGoalId()),
                 String.valueOf(perform.getName()), String.valueOf(perform.getCycle())});
     }
 

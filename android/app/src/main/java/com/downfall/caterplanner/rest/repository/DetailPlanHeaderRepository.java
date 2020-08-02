@@ -1,15 +1,11 @@
 package com.downfall.caterplanner.rest.repository;
 
 import android.content.ContentValues;
-import android.content.Context;
 
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.db.SQLiteManager;
 
 public class DetailPlanHeaderRepository extends BaseRepository{
 
-    public DetailPlanHeaderRepository(SQLiteHelper helper) {
-        super(helper);
-    }
 
     public long insert(Long authorId, String authorName, Long baseId){
         ContentValues contentValues = new ContentValues();

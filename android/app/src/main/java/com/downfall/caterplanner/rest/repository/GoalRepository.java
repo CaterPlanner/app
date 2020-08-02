@@ -1,9 +1,8 @@
 package com.downfall.caterplanner.rest.repository;
 
-import android.content.Context;
 import android.database.Cursor;
 
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.db.SQLiteManager;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.State;
 import com.downfall.caterplanner.util.DateUtil;
@@ -13,18 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoalRepository extends BaseRepository {
-    public GoalRepository(SQLiteHelper helper) {
-        super(helper);
-    }
 
     public void insert(Goal goal){
         final String sql =
-                "insert into goal values(?,?,?,?,?,?)";
+                "insert into goal values(?,?,?,?,?,?,?,?)";
         db.execSQL(sql, new String[]{
                 String.valueOf(goal.getHeaderId()),
                 String.valueOf(goal.getId()),
                 String.valueOf(goal.getLevel()),
                 String.valueOf(goal.getName()),
+                String.valueOf(goal.getStartDate()),
+                String.valueOf(goal.getEndDate()),
                 String.valueOf(goal.getColor()),
                 String.valueOf(goal.getStat())
         });
@@ -32,7 +30,7 @@ public class GoalRepository extends BaseRepository {
 
     public List<Goal> selectByHeaderIdAndStat(long headerId, int stat) throws ParseException {
         final String sql =
-                "select header_id, id, level, name, color, stat " +
+                "select header_id, id, level, name, start_date, end_date, color, stat " +
                         "from goal " +
                         "where header_id = ? and stat = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId), String.valueOf(stat)});
@@ -44,8 +42,10 @@ public class GoalRepository extends BaseRepository {
                             .id(c.getInt(1))
                             .level(c.getInt(2))
                             .name(c.getString(3))
-                            .color(c.getString(4))
-                            .stat(State.findByValue(c.getInt(5)))
+                            .startDate(DateUtil.parseToDate(c.getString(4)))
+                            .endDate(DateUtil.parseToDate(c.getString(5)))
+                            .color(c.getString(6))
+                            .stat(State.findByValue(c.getInt(7)))
                             .build()
             );
         }
@@ -54,7 +54,7 @@ public class GoalRepository extends BaseRepository {
 
     public List<Goal> selectByHeaderId(long headerId) throws ParseException {
         final String sql =
-                "select header_id, id, level, name, color, stat " +
+                "select header_id, id, level, name, start_date, end_date, color, stat " +
                         "from goal " +
                         "where header_id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
@@ -66,8 +66,10 @@ public class GoalRepository extends BaseRepository {
                            .id(c.getInt(1))
                            .level(c.getInt(2))
                            .name(c.getString(3))
-                           .color(c.getString(4))
-                           .stat(State.findByValue(c.getInt(5)))
+                           .startDate(DateUtil.parseToDate(c.getString(4)))
+                           .endDate(DateUtil.parseToDate(c.getString(5)))
+                           .color(c.getString(6))
+                           .stat(State.findByValue(c.getInt(7)))
                            .build()
            );
         }

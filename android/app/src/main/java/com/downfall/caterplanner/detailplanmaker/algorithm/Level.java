@@ -1,5 +1,7 @@
 package com.downfall.caterplanner.detailplanmaker.algorithm;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,5 +51,14 @@ public class Level implements IndexListElement {
     @Override
     public void setKey(int key) {
         setLevel(key);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(!(obj instanceof Level))
+            return false;
+
+        Level level = (Level) obj;
+        return this.level == level.getLevel();
     }
 }

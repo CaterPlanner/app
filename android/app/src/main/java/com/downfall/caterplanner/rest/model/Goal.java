@@ -12,32 +12,37 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
+@Data
+@EqualsAndHashCode(callSuper = false)
 @Builder
-@Getter
-@Setter
 public class Goal extends StatisticsModel implements RelationTreeEntity{
 
+
     private Long headerId;
+
     private Integer id;
+
     private Integer level;
+
     private String name;
+
     private LocalDate startDate;
+
     private LocalDate endDate;
+
     private String color;
+
     private State stat;  //0 : 진행중, 1 : 대기중 , 2: 성공 , 3: 실패
 
-    @Getter
-    @Setter(AccessLevel.NONE)
     private List<Perform> performs;
 
 
-    public Goal(long headerId, int id, int level, String name, LocalDate startDate, LocalDate endDate, String color, int stat) {
+    public Goal(Long headerId, Integer id, Integer level, String name, LocalDate startDate, LocalDate endDate, String color, State stat, List<Perform> performs) {
         this.headerId = headerId;
         this.id = id;
         this.level = level;
@@ -45,15 +50,11 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         this.startDate = startDate;
         this.endDate = endDate;
         this.color = color;
-        this.stat = State.findByValue(stat);
+        this.stat = stat;
+        this.performs = performs;
 
         this.performs = new ArrayList<>();
     }
-
-    public void setPerforms(List<Perform> performs) {
-        this.performs = performs;
-    }
-
 
     @Override
     public void statistics() {

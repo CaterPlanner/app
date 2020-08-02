@@ -1,11 +1,10 @@
 package com.downfall.caterplanner.rest.repository;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
 import com.downfall.caterplanner.rest.model.Purpose;
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.db.SQLiteManager;
 import com.downfall.caterplanner.rest.model.State;
 import com.downfall.caterplanner.util.DateUtil;
 
@@ -13,17 +12,13 @@ import java.text.ParseException;
 
 public class PurposeRepository extends BaseRepository {
 
-    public PurposeRepository(SQLiteHelper helper) {
-        super(helper);
-    }
-
     public long insert(Purpose purpose){
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", purpose.getId());
-        contentValues.put("author_id", purpose.getAuthorId());
         contentValues.put("author_name", purpose.getAuthorName());
-        contentValues.put("group_id", purpose.getGroupId());
+        contentValues.put("author_id", purpose.getAuthorId());
         contentValues.put("group_name", purpose.getGroupName());
+        contentValues.put("group_id", purpose.getGroupId());
         contentValues.put("name", purpose.getName());
         contentValues.put("description", purpose.getDescription());
         contentValues.put("imageUrl", purpose.getImageUrl());

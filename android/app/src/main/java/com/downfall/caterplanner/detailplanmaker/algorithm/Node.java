@@ -4,6 +4,8 @@ import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.model.RelationTreeEntity;
 
+import java.util.ArrayList;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,27 +15,22 @@ public class Node implements IndexListElement {
     @Getter
     private int level;
 
-    @Getter
-    @Setter
     private int key;
 
-    @Getter
     private RelationTreeEntity data;
 
-    private IndexList<Node> children;
+    @Getter
+    @Setter
+    private IndexListElement constructor;
+
+    @Getter
+    private ArrayList<Node> children;
 
     public Node(RelationTreeEntity data) {
         this.data = data;
 
         if(data.getType() == PlanType.G)
-            children = new IndexList<Node>();
-    }
-
-    public Node(RelationTreeEntity data, IndexList<Node> children){
-        if(data.getType() != PlanType.G)
-            throw new RuntimeException();
-        this.data = data;
-        this.children = children;
+            children = new ArrayList<Node>();
     }
 
 
@@ -49,12 +46,8 @@ public class Node implements IndexListElement {
 
     public void setLevel(int level) {
         this.level = level;
-        for(Node child : children.getAll())
+        for(Node child : children)
             child.setLevel(level);
-    }
-
-    public Node[] getChildren() {
-        return children.getAll();
     }
 
     public RelationTreeEntity getData() {
@@ -62,11 +55,11 @@ public class Node implements IndexListElement {
             case G:
                 Goal goal = (Goal) data;
                 goal.setLevel(level);
-                goal.setKey(key);
+                goal.setId(key);
                 break;
             case P:
                 Perform perform = (Perform) data;
-                perform.setKey(key);
+                perform.setId(key);
                 break;
         }
 
@@ -75,17 +68,18 @@ public class Node implements IndexListElement {
 
     public PlanType getType() {return data.getType();}
 
-    public void addChild(Node node){
+    public int addChild(Node node){
         if(node.getType() != PlanType.P)
             throw new RuntimeException("must P");
 
         node.setLevel(level);
 
         this.children.add(node);
+        return this.children.size() - 1;
     }
 
-    public void removeChilde(int index){
-        this.children.remove(index);
+    public void removeChild(Node node){
+        this.children.remove(node);
     }
 
 }

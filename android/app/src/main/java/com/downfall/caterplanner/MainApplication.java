@@ -3,14 +3,6 @@ package com.downfall.caterplanner;
 import android.app.Application;
 import android.content.Context;
 
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
-import com.downfall.caterplanner.rest.repository.BriefingRepository;
-import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
-import com.downfall.caterplanner.rest.repository.GoalRepository;
-import com.downfall.caterplanner.rest.repository.PerformRepository;
-import com.downfall.caterplanner.rest.repository.PurposeRepository;
-import com.downfall.caterplanner.rest.service.DetailPlansService;
-import com.downfall.caterplanner.rest.service.PurposeService;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;

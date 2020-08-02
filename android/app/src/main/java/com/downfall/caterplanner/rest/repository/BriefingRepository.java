@@ -1,10 +1,9 @@
 package com.downfall.caterplanner.rest.repository;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.downfall.caterplanner.rest.model.Briefing;
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.db.SQLiteManager;
 import com.downfall.caterplanner.util.DateUtil;
 
 import java.text.ParseException;
@@ -13,13 +12,10 @@ import java.util.List;
 
 public class BriefingRepository extends BaseRepository{
 
-    public BriefingRepository(SQLiteHelper helper) {
-        super(helper);
-    }
 
     public List<Briefing> selectByHeaderId(long headerId) throws ParseException {
         final String sql =
-                "select header_id, goal_key, perfrom_id, create_at, score " +
+                "select header_id, perfrom_id, create_at, score " +
                         "from briefing " +
                         "where header_id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
@@ -39,10 +35,10 @@ public class BriefingRepository extends BaseRepository{
     }
 
 
-    public void insert(long headerId, int goalKey, int performId){
+    public void insert(long headerId, int performId){
         final String sql =
-                "insert into briefing values(?, ?, ?, datetime(\'now\'), 0)";
-        db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(goalKey), String.valueOf(performId)});
+                "insert into briefing values(?, ?, datetime(\'now\'), 0)";
+        db.execSQL(sql, new String[]{String.valueOf(headerId), String.valueOf(performId)});
     }
 
 

@@ -16,11 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 @Data
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Builder
 public class Perform extends StatisticsModel implements RelationTreeEntity{
 
@@ -30,9 +34,7 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
     private String name;
     private String cycle;
 
-    @Setter(AccessLevel.NONE)
     private LocalDate startDate;
-    @Setter(AccessLevel.NONE)
     private LocalDate endDate;
 
     private List<Briefing> briefings;
@@ -78,10 +80,6 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
 
         this.maxTime = getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams);
         this.currentPerfectTime = getBetweenMaxBriefing(startDate, today, cycleType, cycleParams);
-    }
-
-    public void setBriefings(List<Briefing> briefings) {
-        this.briefings = briefings;
     }
 
     public boolean isActive(){

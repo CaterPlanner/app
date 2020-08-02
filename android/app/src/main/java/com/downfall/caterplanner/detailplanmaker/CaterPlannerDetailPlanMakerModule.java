@@ -1,5 +1,7 @@
 package com.downfall.caterplanner.detailplanmaker;
 
+import android.content.Intent;
+
 import com.downfall.caterplanner.detailplanmaker.service.CaterPlannerDetailPlanMakerService;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -34,16 +36,6 @@ public class CaterPlannerDetailPlanMakerModule extends ReactContextBaseJavaModul
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap get(Integer key){
-        try{
-            return service.getGoal(key);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @ReactMethod(isBlockingSynchronousMethod = true)
     public WritableArray entry(){
         try{
             return service.entry();
@@ -54,73 +46,95 @@ public class CaterPlannerDetailPlanMakerModule extends ReactContextBaseJavaModul
     }
 
     @ReactMethod
-    public void insert(Integer goalKey, ReadableMap r_perform, Promise promise) {
-        try {
-            service.insertPerform(goalKey, r_perform);
-            promise.resolve(null);
-        } catch (Exception e) {
-            promise.reject("TREE ERROR" , e);
+    public void insertGoal(Integer level, ReadableMap r_goal, Promise promise){
+        try{
+            service.insertGoal(level, r_goal);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void insertPerform(Integer goalId, ReadableMap r_perform, Promise promise){
+        try{
+            service.insertPerform(goalId, r_perform);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap mapGoalTopViewData(){
+    public WritableMap getGoal(int id){
         try{
-            return service.mapGoalTopViewData();
+            return service.getGoal(id);
         }catch (Exception e){
-           e.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableMap mapGoalBottomViewData(){
-        try {
-            return service.mapGoalBottomViewData();
-        } catch (Exception e) {
+    public WritableMap getPerform(int id){
+        try{
+            return service.getPerform(id);
+        }catch (Exception e){
             e.printStackTrace();
         }
         return null;
     }
 
     @ReactMethod
-    public void modifyGoal(Integer goalKey, ReadableMap r_goal, Promise promise){
+    public void modifyGoal(Integer goalId, ReadableMap r_goal, Promise promise){
         try{
-            service.modifyGoal(goalKey, r_goal);
-            promise.resolve(null);
+            service.modifyGoal(goalId, r_goal);
         }catch (Exception e){
-            promise.reject("TREE ERROR" ,e);
-        }
-    }
-
-
-    @ReactMethod(isBlockingSynchronousMethod = true)
-    public void build(ReadableArray param){
-        try {
-            service.build(param);
-        }catch(Exception e){
             e.printStackTrace();
         }
     }
 
-
     @ReactMethod
-    public void deleteGoal(Integer goalKey, Promise promise){
-        try {
-            service.deleteGoal(goalKey);
-            promise.resolve(null);
-        } catch (Exception e) {
-            promise.reject("TREE ERROR" ,e);
+    public void modifyPerform(Integer id, ReadableMap r_perform, Promise promise){
+        try{
+            service.modifyPerform(id, r_perform);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     @ReactMethod
-    public void successor(Integer goalKey, ReadableMap r_goal, Promise promise){
+    public void deleteGoal(Integer goalId, Promise promise){
+        try{
+            service.deleteGoal(goalId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void deletePerform(Integer performId, Promise promise){
+        try{
+            service.deletePerform(performId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public WritableArray goalViewData(){
+        try{
+            return service.goalViewData();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    public void build(ReadableArray r_detailPlans){
         try {
-            service.insertGoal(goalKey, r_goal);
-            promise.resolve(null);
-        } catch (Exception e) {
-            promise.reject("TREE ERROR" ,e);
+            service.build(r_detailPlans);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
