@@ -11,7 +11,7 @@ export default function PurposeDetailPlansWrite({ purpose, navigation }) {
     return (
         <View style={purposeStyles.container}>
 
-            <View style={[purposeStyles.titleContainer, { flex: 2 }]}>
+            <View style={[purposeStyles.headContainer, { flex: 2 }]}>
                 <View>
                     <Text style={purposeStyles.title}>
                         목표를 세부적으로

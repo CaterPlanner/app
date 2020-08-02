@@ -1,30 +1,34 @@
 const styles = {
-
     container: {
-        height: '100%',
-        width: '100%',
-        backgroundColor: 'white',
+        flex:1,
+        paddingHorizontal: 15,
+    },
+    headContainer: {
+        flex:1,
+        marginTop: 15,
+        marginBotton: 5
     },
 
-    titleContainer: {
-        marginHorizontal: 20,
-        marginVertical: 5,
-        marginTop: 20
-    } ,
+    titleArea: {
+        marginBottom: 10 
+    },
 
     title: {
         fontSize: 25
     },
 
+    subtitleArea: {
+
+    },
+
     subtitle: {
-        fontSize : 15,
+        fontSize : 12,
         color: 'gray'
     },
 
     bottomContainer : {
-        width: "91%",
-        marginHorizontal: 20,
-        marginVertical: 5
+        flex:2.5,
+        backgroundColor : 'red',
     }
 
 }
