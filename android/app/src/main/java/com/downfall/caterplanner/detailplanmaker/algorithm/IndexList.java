@@ -91,10 +91,10 @@ public class IndexList<T extends IndexListElement> {
             expansion();
         }
         data[++size - 1] = node;
-
+        node.setKey(size - 1);
     }
 
-    public void remove(int index) {
+    public IndexListElement remove(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Can't find that node.");
         }
@@ -102,10 +102,12 @@ public class IndexList<T extends IndexListElement> {
             throw new IndexOutOfBoundsException("Array is empty.");
         }
 
+        IndexListElement element = data[index];
         data[index] = null;
         size--;
 
         defragmentation();
+        return element;
     }
 
 

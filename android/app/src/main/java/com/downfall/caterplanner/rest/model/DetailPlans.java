@@ -38,7 +38,7 @@ public class DetailPlans extends StatisticsModel{
 
             detailPlans.insertLevelView(goal.getLevel(), goal);
 
-            Node[] children = node.getChildren();
+            List<Node> children = node.getChildren();
 
             for(Node childNode : children){
                 performs.add((Perform) childNode.getData());

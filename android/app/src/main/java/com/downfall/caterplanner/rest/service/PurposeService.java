@@ -4,7 +4,7 @@ import com.downfall.caterplanner.rest.model.DetailPlans;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
 import com.downfall.caterplanner.rest.model.Purpose;
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.db.SQLiteManager;
 import com.downfall.caterplanner.rest.model.State;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
@@ -19,16 +19,14 @@ import org.joda.time.LocalDate;
 
 import java.text.ParseException;
 
-public class PurposeService extends BaseService {
+public class PurposeService{
 
     private PurposeRepository purposeRepository;
     private DetailPlansService detailPlanService;
     private BriefingRepository briefingRepository;
     private GoalRepository goalRepository;
 
-    public PurposeService(SQLiteHelper helper, PurposeRepository purposeRepository, DetailPlansService detailPlanService, BriefingRepository briefingRepository, GoalRepository goalRepository) {
-        super(helper);
-
+    public PurposeService(PurposeRepository purposeRepository, DetailPlansService detailPlanService, BriefingRepository briefingRepository, GoalRepository goalRepository) {
         this.purposeRepository = purposeRepository;
         this.briefingRepository = briefingRepository;
         this.detailPlanService = detailPlanService;
@@ -74,7 +72,7 @@ public class PurposeService extends BaseService {
      * @throws Exception
      */
     public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans, Long baseId) throws Exception{
-        return SQLiteHelper.transaction(db, () -> {
+        return SQLiteManager.getInstance().transaction(() -> {
             Purpose purpose = Purpose.valueOf(r_purpose);
             purpose.setStat(State.WAIT);
             purpose.setDetailPlanHeaderId((long) baseId);
@@ -129,14 +127,14 @@ public class PurposeService extends BaseService {
     }
 
     public void update(long id, ReadableMap r_purpose, ReadableArray r_detailPlans) throws Exception {
-        SQLiteHelper.transaction(db, () -> {
+        SQLiteManager.getInstance().transaction(() -> {
             this.purposeRepository.updatePurposeDate(id, Purpose.valueOf(r_purpose));
             this.detailPlanService.update(id, r_detailPlans);
         });
     }
 
     public void delete(long id) throws Exception{
-        SQLiteHelper.transaction(db, () -> {
+        SQLiteManager.getInstance().transaction(() -> {
             Purpose purpose = this.purposeRepository.selectById(id);
             if(purpose == null)
                 throw new Exception();
@@ -156,7 +154,7 @@ public class PurposeService extends BaseService {
 
     @Deprecated
     public void refresh() throws Exception {
-        SQLiteHelper.transaction(db, () -> {
+        SQLiteManager.getInstance().transaction(() -> {
             Purpose[] purposes = purposeRepository.selectByStatIsActive();
             LocalDate today = LocalDate.now();
 
@@ -197,9 +195,9 @@ public class PurposeService extends BaseService {
     }
 
     public void addBriefing(long id, int goalId, int performId) throws Exception {
-        SQLiteHelper.transaction(db, () -> {
+        SQLiteManager.getInstance().transaction(() -> {
             Purpose purpose = purposeRepository.selectById(id);
-            briefingRepository.insert(purpose.getDetailPlanHeaderId(), goalId, performId);
+            briefingRepository.insert(purpose.getDetailPlanHeaderId(), performId);
 
             DetailPlans detailPlans = detailPlanService.read(purpose.getDetailPlanHeaderId());
             Goal goal = detailPlans.getEntryData().get(goalId - 1);

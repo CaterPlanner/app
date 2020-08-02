@@ -2,7 +2,7 @@ package com.downfall.caterplanner;
 
 import android.content.Context;
 
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.db.SQLiteManager;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
@@ -34,15 +34,15 @@ public class SingletonContainer {
             if(container.size() != 0)
                 return;
 
-            SQLiteHelper helper = new SQLiteHelper(context, 1);
-            BriefingRepository briefingRepository = new BriefingRepository(helper);
-            DetailPlanHeaderRepository detailPlanHeaderRepository = new DetailPlanHeaderRepository(helper);
-            GoalRepository goalRepository = new GoalRepository(helper);
-            PerformRepository performRepository = new PerformRepository(helper);
-            PurposeRepository purposeRepository = new PurposeRepository(helper);
+            SQLiteManager.init(context);
+
+            BriefingRepository briefingRepository = new BriefingRepository();
+            DetailPlanHeaderRepository detailPlanHeaderRepository = new DetailPlanHeaderRepository();
+            GoalRepository goalRepository = new GoalRepository();
+            PerformRepository performRepository = new PerformRepository();
+            PurposeRepository purposeRepository = new PurposeRepository();
 
             DetailPlansService detailPlansService = new DetailPlansService(
-                    helper,
                     goalRepository,
                     performRepository,
                     briefingRepository,
@@ -50,14 +50,12 @@ public class SingletonContainer {
             );
 
             PurposeService purposeService = new PurposeService(
-                    helper,
                     purposeRepository,
                     detailPlansService,
                     briefingRepository,
                     goalRepository
             );
 
-            register(SQLiteHelper.class, helper);
             register(BriefingRepository.class, briefingRepository);
             register(DetailPlanHeaderRepository.class, detailPlanHeaderRepository);
             register(GoalRepository.class, goalRepository);

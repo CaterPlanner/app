@@ -1,8 +1,8 @@
-import DetailPlanTreeStore from './DetailPlanTreeStore'
+import DetailPlanMakerStore from './DetailPlanMakerStore'
 
 
 export default class RootStore {
     constructor(){
-        this.detailPlanTreeStore = new DetailPlanTreeStore(this);
+        this.detailPlanMakerStore = new DetailPlanMakerStore(this);
     }
 }

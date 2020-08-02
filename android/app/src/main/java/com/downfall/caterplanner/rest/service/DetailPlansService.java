@@ -4,7 +4,7 @@ import com.downfall.caterplanner.rest.model.Briefing;
 import com.downfall.caterplanner.rest.model.DetailPlans;
 import com.downfall.caterplanner.rest.model.Goal;
 import com.downfall.caterplanner.rest.model.Perform;
-import com.downfall.caterplanner.rest.db.SQLiteHelper;
+import com.downfall.caterplanner.rest.db.SQLiteManager;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
 import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
@@ -15,7 +15,7 @@ import com.facebook.react.bridge.ReadableArray;
 import java.text.ParseException;
 import java.util.List;
 
-public class DetailPlansService extends BaseService {
+public class DetailPlansService{
 
     private GoalRepository goalRepository;
     private PerformRepository performRepository;
@@ -23,13 +23,10 @@ public class DetailPlansService extends BaseService {
     private DetailPlanHeaderRepository detailPlanHeaderRepository;
 
     public DetailPlansService(
-            SQLiteHelper helper,
             GoalRepository goalRepository,
             PerformRepository performRepository,
             BriefingRepository briefingRepository,
             DetailPlanHeaderRepository detailPlanHeaderRepository) {
-        super(helper);
-
         this.goalRepository = goalRepository;
         this.performRepository = performRepository;
         this.briefingRepository = briefingRepository;
@@ -38,7 +35,7 @@ public class DetailPlansService extends BaseService {
     }
 
     public long createByReact(ReadableArray r_detailPlans, Long authorId, String authorName, Long baseId) throws Exception{
-        return SQLiteHelper.transaction(db, () -> {
+        return SQLiteManager.getInstance().transaction(() -> {
             long headerId = detailPlanHeaderRepository.insert(authorId, authorName, baseId);
 
             DetailPlans.quest(r_detailPlans, (goal, r_performs) -> {
@@ -100,7 +97,7 @@ public class DetailPlansService extends BaseService {
      * @throws Exception
      */
     public void update(long headerId, ReadableArray r_detailPlans) throws Exception {
-        SQLiteHelper.transaction(db, () -> {
+        SQLiteManager.getInstance().transaction(() -> {
             goalRepository.deleteByHeaderId(headerId);
             //CASCADE 관계로 하위의 Goals 모두 삭제
 

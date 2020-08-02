@@ -10,9 +10,11 @@ import com.facebook.react.bridge.ReactMethod;
 public class CaterPlannerSchedulerModule extends ReactContextBaseJavaModule {
 
     private SchedulerManager schedulerManager;
+    private ReactApplicationContext reactApplicationContext;
 
     public CaterPlannerSchedulerModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        this.reactApplicationContext = reactContext;
     }
 
     @Override
@@ -21,13 +23,16 @@ public class CaterPlannerSchedulerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void onScheduler(){
+    public void onScheduler(int setBriefingRequestNoticehourOfDay){
+        SchedulerManager.Config config = SchedulerManager.getConfig(reactApplicationContext);
+        config.setBriefingRequestNoticeTIme(setBriefingRequestNoticehourOfDay);
 
+        SchedulerManager.start(reactApplicationContext);
     }
 
     @ReactMethod
     public void offScheduler(){
-
+        SchedulerManager.stop(reactApplicationContext);
     }
 
 }

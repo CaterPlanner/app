@@ -2,29 +2,28 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import GoalWriteBoardTop from '../../../organism/DetailPlanWrite/GoalWriteBoardTop'
 import GoalWriteBoardBottom from '../../../organism/DetailPlanWrite/GoalWriteBoardBottom'
-import { inject } from 'mobx-react'
-import { observer } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import CommonType from '../../../../util/CommonType'
 
 
 
-@inject(['detailPlanTreeStore'])
+@inject(['detailPlanMakerStore'])
 @observer
 export class GoalWriteBoard extends Component {
 
     constructor(props) {
         super(props);
 
-        this.detailPlanTreeStore = this.props.detailPlanTreeStore
+        this.detailPlanMakerStore = this.props.detailPlanMakerStore
         
-        this.detailPlanTreeStore.start(this.props.route.params.purpose);
+        this.detailPlanMakerStore.start(this.props.route.params.purpose);
 
         switch (props.route.params.startType) {
             case CommonType.CREATE:
-                this.detailPlanTreeStore.create();
+                this.detailPlanMakerStore.create();
                 break;
             case CommonType.MODIFY:
-                this.detailPlanTreeStore.buildTree(this.props.route.params.initData);
+                this.detailPlanMakerStore.build(this.props.route.params.initData);
                 break;
         }
     }
@@ -35,12 +34,12 @@ export class GoalWriteBoard extends Component {
             <View style={{ flex: 1 }}>
                 <View style={styles.planStateArea}>
                     <GoalWriteBoardTop
-                        detailPlanTreeStore={this.props.detailPlanTreeStore}
+                        detailPlanMakerStore={this.props.detailPlanMakerStore}
                     />
                 </View>
                 <View style={styles.planCreateArea}>
                     <GoalWriteBoardBottom
-                        detailPlanTreeStore={this.props.detailPlanTreeStore}
+                        detailPlanMakerStore={this.props.detailPlanMakerStore}
                         navigation={this.props.navigation}
                     />
                 </View>
@@ -49,7 +48,7 @@ export class GoalWriteBoard extends Component {
     }
 
     componentWillUnmount(){
-        this.props.route.params.result(this.detailPlanTreeStore.entry);
+        this.props.route.params.result(this.detailPlanMakerStore.entry);
     }
 }
 
