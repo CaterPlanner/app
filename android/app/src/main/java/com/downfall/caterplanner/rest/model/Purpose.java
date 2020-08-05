@@ -30,29 +30,16 @@ public class Purpose{
     private LocalDate decimalDay;
     private State stat; //0 보류중 1 진행중 2 성공 3 실패
     private Long detailPlanHeaderId;
+
     private DetailPlans detailPlans;
 
 
-    public boolean isStatizable(){
-        return detailPlans != null && detailPlans.isStatizable();
-    }
-
     public int progress() {
-        if(detailPlans == null || !detailPlans.isStatizable())
-            throw new RuntimeException();
         return detailPlans.progress();
     }
 
     public int achieve() {
-        if(detailPlans == null || !detailPlans.isStatizable())
-            throw new RuntimeException();
         return detailPlans.achieve();
-    }
-
-    public void statistion(){
-        if(detailPlans == null)
-            throw new RuntimeException();
-        detailPlans.statistics();
     }
 
     public static Purpose valueOf(ReadableMap data) throws Exception{

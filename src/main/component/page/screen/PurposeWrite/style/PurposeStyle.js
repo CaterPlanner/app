@@ -2,10 +2,11 @@ const styles = {
     container: {
         flex:1,
         paddingHorizontal: 15,
+        backgrondColor: 'white'
     },
     headContainer: {
         flex:1,
-        marginTop: 15,
+        marginTop: 5,
         marginBotton: 5
     },
 
@@ -14,7 +15,8 @@ const styles = {
     },
 
     title: {
-        fontSize: 25
+        fontSize: 25,
+        fontWeight: 'bold'
     },
 
     subtitleArea: {
@@ -27,8 +29,7 @@ const styles = {
     },
 
     bottomContainer : {
-        flex:2.5,
-        backgroundColor : 'red',
+        flex:2.5
     }
 
 }

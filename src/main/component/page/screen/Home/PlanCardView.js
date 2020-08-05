@@ -7,6 +7,8 @@ import Card from './Card'
 import ActiveCard from './ActiveCard'
 import Header_Main from '../../../molecule/Header_Main.js';
 
+import SplashScreen from 'react-native-splash-screen';
+
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
 YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
 
@@ -76,6 +78,10 @@ export default class PlanCardView extends Component {
         this.forceUpdate();
     };
 
+
+    componentDidMount(){
+        SplashScreen.hide();
+    }
 
     render() {
         return (

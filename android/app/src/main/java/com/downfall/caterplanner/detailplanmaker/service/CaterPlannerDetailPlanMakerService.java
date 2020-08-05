@@ -1,6 +1,5 @@
 package com.downfall.caterplanner.detailplanmaker.service;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.Level;
 import com.downfall.caterplanner.detailplanmaker.algorithm.DetailPlanRelationContainer;
 import com.downfall.caterplanner.detailplanmaker.algorithm.Node;
 import com.downfall.caterplanner.detailplanmaker.algorithm.PlanType;
@@ -29,7 +28,7 @@ public class CaterPlannerDetailPlanMakerService{
     public WritableArray entry() {
         if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        return DetailPlans.parseWritableMap(DetailPlans.valueOf(detailPlanRelationContainer.getAllNodes()));
+        return DetailPlans.parseWritableMap(DetailPlans.valueOf(detailPlanRelationContainer.getAllGNodes()));
     }
 
     public void insertPerform(int goalId, ReadableMap r_perform) throws ParseException {
@@ -91,28 +90,18 @@ public class CaterPlannerDetailPlanMakerService{
     public WritableArray goalViewData() {
         if(detailPlanRelationContainer == null)
             throw new RuntimeException("Please create a goalRelationTree first.");
-        Level[] levelList = detailPlanRelationContainer.getAllLevel();
+
+        Node[] goalList = detailPlanRelationContainer.getAllGNodes();
         WritableArray result = Arguments.createArray();
 
-        for(Level level : levelList){
-            WritableMap w_level = Arguments.createMap();
-            w_level.putInt("level", level.getLevel());
+        for(Node node : goalList){
+            WritableMap w_goal = Arguments.createMap();
+            Goal goal = (Goal) node.getData();
 
-            WritableArray w_elements = Arguments.createArray();
-            List<Node> nodeList = level.getNodeList();
-
-            for(Node node : nodeList){
-                WritableMap w_element = Arguments.createMap();
-                Goal goal = (Goal) node.getData();
-
-                w_element.putInt("id", goal.getId());
-                w_element.putString("color", goal.getColor());
-                w_element.putString("name", goal.getName());
-                w_elements.pushMap(w_element);
-            }
-
-            w_level.putArray("elements", w_elements);
-            result.pushMap(w_level);
+            w_goal.putInt("id", goal.getId());
+            w_goal.putString("color", goal.getColor());
+            w_goal.putString("name", goal.getName());
+            result.pushMap(w_goal);
         }
 
         return result;

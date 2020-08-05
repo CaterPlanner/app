@@ -14,61 +14,53 @@ public class DetailPlanRelationContainer {
     private IndexList<Node> goals;
     private IndexList<Node> performs;
 
-    private IndexList<Level> levelList;
-
     public static Builder builder() {return new Builder();}
 
     public DetailPlanRelationContainer(){
-        this(new IndexList(), new IndexList(), new IndexList());
+        this(new IndexList(), new IndexList());
     }
 
-    private DetailPlanRelationContainer(IndexList<Node> goals, IndexList<Level> levelList, IndexList<Node> performs){
+    private DetailPlanRelationContainer(IndexList<Node> goals, IndexList<Node> performs){
         this.goals = goals;
-        this.levelList = levelList;
+        this.performs = performs;
     }
 
     public Node select(int id, PlanType type){
         switch (type){
             case G:
-                return goals.get(id);
+                return goals.size() > id ? goals.get(id) : null;
             case P:
-                return performs.get(id);
+                return performs.size() > id ? performs.get(id) : null;
         }
         return null;
     }
 
     public void insert(int constructorKey, Node node, PlanType type){
+        Node constructorNode = select(constructorKey, PlanType.G);
         switch (type){
             case G:
-                if(levelList.size() < constructorKey){
-                    if(levelList.size() < constructorKey) {
-                        throw new RuntimeException("가능한 인덱스 범위를 벗어났습니다.");
-                    }else if(levelList.size() == constructorKey){
-                        levelList.add(new Level(constructorKey));
-                    }
-                    Level level = levelList.get(constructorKey);
-                    node.setConstructor(level);
-                    level.addNode(node);
+                if(constructorNode != null) {
+                    constructorNode.addNext(node);
                 }
+                goals.add(node);
                 break;
             case P:
-                Node goalNode = select(constructorKey, PlanType.G);
-                node.setConstructor(goalNode);
-                goalNode.addChild(node);
+                if(constructorNode != null) {
+                    constructorNode.addChild(node);
+                }
+                performs.add(node);
                 break;
         }
     }
 
     public void delete(int id, PlanType type){
         Node node = select(id, type);
+        Node constructorNode = node.getConstructor() != null ? select(node.getConstructor().getKey(), PlanType.G) : null;
+
         switch (type){
             case G:
-                Level level = (Level) node.getConstructor();
-                level.removeNode(node);
-
-                if(level.isEmpty()){
-                    levelList.remove(level.getKey());
-                }
+                if(constructorNode != null)
+                    constructorNode.removeNext(node);
 
                 goals.remove(node.getKey());
 
@@ -78,20 +70,17 @@ public class DetailPlanRelationContainer {
 
                 break;
             case P:
-                Node goalNode = (Node) node.getConstructor();
-                goalNode.removeChild(node);
+
+                if(constructorNode != null){
+                    constructorNode.removeChild(node);
+                }
 
                 performs.remove(node.getKey());
                 break;
         }
     }
 
-
-    public Level[] getAllLevel(){
-        return this.levelList.getAll();
-    }
-
-    public Node[] getAllNodes() {return this.goals.getAll();}
+    public Node[] getAllGNodes() {return this.goals.getAll();}
 
     public static class Builder{
 
@@ -99,7 +88,6 @@ public class DetailPlanRelationContainer {
             List<Goal> entryData =  detailPlans.getEntryData();
             Node[] nodes = new Node[entryData.size()];
 
-            IndexList<Level> levelList = new IndexList<>();
             ArrayList<Node> performs = new ArrayList<>();
 
             //level 어떻게 처리?
@@ -107,15 +95,6 @@ public class DetailPlanRelationContainer {
             for(int i = 0; i < nodes.length; i++){
                 Goal goal = entryData.get(i);
                 nodes[i] = new Node(goal);
-
-                if(!levelList.contain(goal.getLevel())){
-                    Level level = new Level(goal.getLevel());
-                    level.addNode(nodes[i]);
-                    levelList.insert(level.getKey(), level);
-                }else{
-                    levelList.get(goal.getLevel()).addNode(nodes[i]);
-                }
-
 
                 for(int j = 0; j < goal.getPerforms().size(); j++){
                     Node performNode = new Node(goal.getPerforms().get(j));
@@ -126,10 +105,7 @@ public class DetailPlanRelationContainer {
                 nodes[i] = new Node(entryData.get(i));
             }
 
-            if(!levelList.isComplete())
-                throw new RuntimeException();
-
-            return new DetailPlanRelationContainer(new IndexList<>(nodes), levelList, new IndexList<>(performs.toArray(new Node[performs.size()])));
+            return new DetailPlanRelationContainer(new IndexList<>(nodes), new IndexList<>(performs.toArray(new Node[performs.size()])));
         }
     }
 

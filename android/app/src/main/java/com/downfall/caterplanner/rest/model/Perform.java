@@ -22,92 +22,77 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
+//성공여부는 중요하지 않음 그냥 기간이 끝나면 끝나는 목표
+//스케줄 처리에서는 기간 낮은 것들만 하면됨
+
+
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Builder
 public class Perform extends StatisticsModel implements RelationTreeEntity{
 
+    private int id;
     private long headerId;
     private int goalId;
-    private int id;
     private String name;
     private String cycle;
-
     private LocalDate startDate;
     private LocalDate endDate;
 
     private List<Briefing> briefings;
-    private char cycleType;
-    private int[] cycleParams;
 
-
-    @Setter //Debug
-    private LocalDate today;
-
-
-    public Perform(long headerId, int goalId, int id, String name, String cycle){
-        this.headerId = headerId;
-        this.goalId = goalId;
-        this.id = id;
-        this.name = name;
-        this.cycle = cycle;
-        this.briefings = new ArrayList<>();
+    public char getCycleType(){
+        return this.cycle.toCharArray()[0];
     }
 
-    public void setDate(LocalDate startDate, LocalDate endDate){
-        this.startDate = startDate;
-        this.endDate = endDate;
-
-        today = LocalDate.now();
-
-        //cycle 분석
-        char[] cyclePiece = cycle.toCharArray();
-        List<Integer> t_cycleParams = new ArrayList<>();
-        for(int i = 0; i < cyclePiece.length; i++){
-            if(i == 0){
-                cycleType = cyclePiece[0];
-                continue;
-            }else if(cyclePiece[i] != 32){
-                t_cycleParams.add(Character.getNumericValue(cyclePiece[i]));
+    public int[] getCycleParams(){
+        int[] params = new int[(cycle.length() - 1) / 2];
+        int p = 0;
+        for(int i = 1; i < cycle.length(); i++){
+            if(cycle.charAt(i) != 32){
+                params[p++] = Character.getNumericValue(cycle.charAt(i));
             }
         }
-
-        this.cycleParams = new int[t_cycleParams.size()];
-        for(int i = 0; i < cycleParams.length; i++){
-            this.cycleParams[i] = t_cycleParams.get(i);
-        }
-
-        this.maxTime = getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams);
-        this.currentPerfectTime = getBetweenMaxBriefing(startDate, today, cycleType, cycleParams);
-    }
-
-    public boolean isActive(){
-        return today.isAfter(startDate) && today.isBefore(endDate);
+        return params;
     }
 
     @Override
-    public void statistics() {
-        if(this.briefings == null || startDate == null || endDate == null)
-            throw new RuntimeException();
+    public int getMaxTime() {
+        return getBetweenMaxBriefing(startDate, endDate, getCycleType(), getCycleParams());
+    }
 
-        this.currentBriefingCount = this.briefings.size();
-        this.isStatizable = true;
+    @Override
+    public int getCurrentPerfectTime() {
+        return getBetweenMaxBriefing(startDate, LocalDate.now(), getCycleType(), getCycleParams());
+    }
+
+    @Override
+    public int getCurrentBriefingCount() {
+        return this.briefings.size();
+    }
+
+    public boolean isActive(){
+        LocalDate today = LocalDate.now();
+        return today.isAfter(startDate) && today.isBefore(endDate);
     }
 
 
     public int getNextLeftDayCount(){
-        return new Period(today, getNextLeftDay(), PeriodType.days()).getDays();
+        return new Period(LocalDate.now(), getNextLeftDay(), PeriodType.days()).getDays();
     }
 
     public LocalDate getNextLeftDay(){
 
+        LocalDate today = LocalDate.now();
         LocalDate nextDay = null;
+
+        int[] cycleParams = getCycleParams();
 
         if(isNowBriefing()){
             nextDay = today;
         }else{
-            switch (this.cycleType){
+            switch (this.getCycleType()){
                 case 'A':
                     nextDay = today.plusDays(1);
                     break;
@@ -136,19 +121,22 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
 
     public boolean isNowBriefing(){
 
+        LocalDate today = LocalDate.now();
+        int[] cycleParams = getCycleParams();
+
         if(!getLastBriefingDay().equals(today)) {
-            switch (this.cycleType) {
+            switch (this.getCycleType()) {
                 case 'A':
                     return !this.getLastBriefingDay().equals(today) ? true : false;
                 case 'W':
-                    for (int wParam : this.cycleParams) {
+                    for (int wParam : cycleParams) {
                         if (wParam == today.getDayOfWeek()) {
                             return true;
                         }
                     }
                     return false;
                 case 'M':
-                    for (int mParam : this.cycleParams) {
+                    for (int mParam : cycleParams) {
                         if (mParam == today.getDayOfMonth()) {
                             return true;
                         }
@@ -230,6 +218,7 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
     public static Perform valueOf(ReadableMap data) throws ParseException {
         return Perform.builder()
                 .goalId(data.getInt("goalId"))
+                .headerId(data.hasKey("headerId") ? data.getInt("headerId") : null)
                 .id(data.getInt("id"))
                 .name(data.getString("name"))
                 .startDate(DateUtil.parseToDate(data.getString("startDate")))
@@ -242,6 +231,7 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
         WritableMap performMap = Arguments.createMap();
         performMap.putInt("goalId",  perform.getGoalId());
         performMap.putInt("id", perform.getId());
+        performMap.putInt("headerId", (int) perform.getHeaderId());
         performMap.putString("name", perform.getName());
         performMap.putString("startDate", DateUtil.formatFromDate(perform.getStartDate()));
         performMap.putString("endDate", DateUtil.formatFromDate(perform.getEndDate()));
@@ -259,5 +249,10 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
     @Override
     public PlanType getType() {
         return PlanType.P;
+    }
+
+    @Override
+    public void setConstructorKey(int constructorKey) {
+
     }
 }

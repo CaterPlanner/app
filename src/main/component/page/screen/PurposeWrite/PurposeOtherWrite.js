@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import { View, Text, Image} from 'react-native';
 import purposeStyles from './style/PurposeStyle';
+import useStores from '../../../../mobX/helper/useStores'
 
 
-export default function PurposeOtherWrite({ purpose }) {
+export default function PurposeOtherWrite() {
+
+    const { purposeWriteStore } = useStores();
+
 
     const [purposeScope, setPurposeScope] = useState();
     const [purposeGroup, setPurposeGroup] = useState();
@@ -15,13 +19,21 @@ export default function PurposeOtherWrite({ purpose }) {
     return (
         <View style={purposeStyles.container}>
             <View style={purposeStyles.headContainer}>
-                <Text style={purposeStyles.title}>
-                    좋은 목표 계획이군요!
-                    {"\n"}
-                    나머지 세부 설정만 남았습니다
-                </Text>
+                <View style={purposeStyles.titleArea}>
+                    <Text style={purposeStyles.title}>
+                        마지막으로
+                        {"\n"}
+                        몇개만 더 설정해 주세요.
+                    </Text>
+                </View>
+                <View style={purposeStyles.subtitleArea}>
+                    <Text style={purposeStyles.subtitle}>
+                        지금까지 설정한 모든 목적, 목표를 달성하고{"\n"}
+                        꿈을 향해 한 발자국 더 다가가길 응원할게요!
+                    </Text>
+                </View>
             </View>
-            <View >
+            <View style={purposeStyles.bottomContainer}>
                 <View style={{ textAlign: 'center', justifyContent: 'center', }}>
                     <Text style={{ marginTop: '10%', marginLeft: 20, fontSize: 18 }}>공개 범위</Text>
                 </View>

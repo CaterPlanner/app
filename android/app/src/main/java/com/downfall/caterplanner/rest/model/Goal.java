@@ -9,9 +9,9 @@ import com.facebook.react.bridge.WritableMap;
 import org.joda.time.LocalDate;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,57 +20,50 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Builder
+@AllArgsConstructor
 public class Goal extends StatisticsModel implements RelationTreeEntity{
 
-
     private Long headerId;
-
-    private Integer id;
-
-    private Integer level;
-
+    private int id;
+    private Integer previousGoalId;
     private String name;
-
     private LocalDate startDate;
-
     private LocalDate endDate;
-
     private String color;
-
     private State stat;  //0 : 진행중, 1 : 대기중 , 2: 성공 , 3: 실패
 
     private List<Perform> performs;
 
 
-    public Goal(Long headerId, Integer id, Integer level, String name, LocalDate startDate, LocalDate endDate, String color, State stat, List<Perform> performs) {
-        this.headerId = headerId;
-        this.id = id;
-        this.level = level;
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.color = color;
-        this.stat = stat;
-        this.performs = performs;
-
-        this.performs = new ArrayList<>();
+    @Override
+    public int getMaxTime() {
+        int maxTime = 0;
+        for(Perform p : performs){
+            maxTime += p.getMaxTime();
+        }
+        return maxTime;
     }
 
     @Override
-    public void statistics() {
-        if(this.performs == null)
-            throw new RuntimeException();
+    public int getCurrentPerfectTime() {
+        int currentPerfectTime = 0;
+        for(Perform p : performs){
+            currentPerfectTime += p.getCurrentPerfectTime();
+        }
+        return currentPerfectTime;
+    }
 
-        for (Perform p : performs) {
-            if(!p.isStatizable())
-                p.statistics();
+    @Override
+    public int getCurrentBriefingCount() {
+        if(achieve() == 100)
+            return getMaxTime();
 
-            this.maxTime += p.getMaxTime();
-            this.currentPerfectTime += p.getCurrentPerfectTime();
-            this.currentBriefingCount += p.getCurrentBriefingCount();
+        int currentBriefingCount = 0;
+        for(Perform p : performs){
+            currentBriefingCount += p.getCurrentBriefingCount();
         }
 
-        isStatizable = true;
+        return currentBriefingCount;
     }
 
     @Override
@@ -78,17 +71,13 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         return stat == State.SUCCESS ? 100 : super.achieve();
     }
 
-    @Override
-    public int getCurrentBriefingCount() {
-        return achieve() == 100 ? super.getMaxTime() :  super.getCurrentBriefingCount();
-    }
 
     public static Goal valueOf(ReadableMap data) throws ParseException {
 
         return Goal.builder()
                 .id(data.getInt("id"))
                 .headerId((long) data.getInt("headerId"))
-                .level(data.getInt("level"))
+                .previousGoalId(data.getInt("previousGoalId"))
                 .name(data.getString("name"))
                 .startDate(DateUtil.parseToDate(data.getString("startDate")))
                 .endDate(DateUtil.parseToDate(data.getString("endDate")))
@@ -102,7 +91,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         WritableMap goalMap = Arguments.createMap();
         goalMap.putInt("id", goal.getId());
         goalMap.putInt("headerId", goal.getHeaderId().intValue());
-        goalMap.putInt("level", goal.getLevel());
+        goalMap.putInt("previousGoalId", goal.getPreviousGoalId());
         goalMap.putString("name", goal.getName());
         goalMap.putString("startDate", DateUtil.formatFromDate(goal.getStartDate()));
         goalMap.putString("endDate", DateUtil.formatFromDate(goal.getEndDate()));
@@ -124,5 +113,11 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
     public PlanType getType() {
         return PlanType.G;
     }
+
+    @Override
+    public void setConstructorKey(int constructorKey) {
+        this.previousGoalId = constructorKey;
+    }
+
 
 }

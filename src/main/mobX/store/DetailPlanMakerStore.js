@@ -17,9 +17,11 @@ export default class DetailPlanMakerStore{
     @action 
     build = (detailPlans) => {
         CaterPlannerDetailPlanMaker.build(detailPlans)
+        .then(() => {
+            this.goalViewData = CaterPlannerDetailPlanMaker.goalViewData();
+        })
     }
 
-    @action 
     create = async () => {
         await CaterPlannerDetailPlanTree.create();
     }
@@ -40,12 +42,10 @@ export default class DetailPlanMakerStore{
         });
     }
 
-    @action
     getGoal = (goalId) => {
         return CaterPlannerDetailPlanMaker.getGoal(goalId);
     }
 
-    @action
     getPerform = (performId) => {
         return CaterPlannerDetailPlanMaker.getPerform(performId);
     }
@@ -80,11 +80,6 @@ export default class DetailPlanMakerStore{
         .then(() => {
             this.goalViewData = CaterPlannerDetailPlanMaker.goalViewData();
         })
-    }
-
-    @action
-    build = (detailPlans) => {
-        CaterPlannerDetailPlanMaker.build(detailPlans);
     }
 
     @action
