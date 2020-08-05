@@ -12,9 +12,6 @@ import lombok.Setter;
 
 public class Node implements IndexListElement {
 
-    @Getter
-    private int level;
-
     private int key;
 
     private RelationTreeEntity data;
@@ -44,24 +41,10 @@ public class Node implements IndexListElement {
         this.key = key;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-        for(Node child : children)
-            child.setLevel(level);
-    }
 
     public RelationTreeEntity getData() {
-        switch (getType()){
-            case G:
-                Goal goal = (Goal) data;
-                goal.setLevel(level);
-                goal.setId(key);
-                break;
-            case P:
-                Perform perform = (Perform) data;
-                perform.setId(key);
-                break;
-        }
+        data.setConstructorKey(constructor.getKey());
+        data.setId(key);
 
         return data;
     }
@@ -72,10 +55,21 @@ public class Node implements IndexListElement {
         if(node.getType() != PlanType.P)
             throw new RuntimeException("must P");
 
-        node.setLevel(level);
+        node.setConstructor(this);
 
         this.children.add(node);
         return this.children.size() - 1;
+    }
+
+    public void removeNext(Node node){
+        node.setConstructor(null);
+    }
+
+    public void addNext(Node node){
+        if(node.getType() != PlanType.G)
+            throw new RuntimeException("must G");
+
+        node.setConstructor(this);
     }
 
     public void removeChild(Node node){

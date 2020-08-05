@@ -6,12 +6,6 @@ import Create from '../screen/Main/Create'
 import Stories from '../screen/Main/Stories'
 import Record from '../screen/Main/Record'
 
-//TestScreen
-import PullTest from '../screen/TesterScreen/PullTest';
-import StoryCardTest from '../screen/TesterScreen/StoryCardTest'
-import StoryCardActive from '../screen/TesterScreen/StoryCardActive'
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,6 +28,21 @@ const MainNavigation = () => {
             } else if (route.name === 'Search') {
               iconName = focused ? 'ios-list-box' : 'ios-list';
             }
+
+            switch(route.name){
+              case "Home":
+                
+                break;
+              case "Search":
+                break;
+              case "Create":
+                break;
+              case "Stories":
+                break;
+              case "Record":
+                break;
+            }
+
 
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -64,8 +73,7 @@ const MainNavigation = () => {
       <Tab.Screen name="Home" component={Home}/>
       <Tab.Screen name="Search" component={SearchNavigation} />
       <Tab.Screen name="Create" component={Create}  />
-      <Tab.Screen name="Stories" component={StoryCardActive} />
-      {/**<Tab.Screen name="Stories" component={PullTest} /> */}
+      <Tab.Screen name="Stories" component={Stories} />
       <Tab.Screen name="Record" component={Record} />
       </Tab.Navigator>
   );

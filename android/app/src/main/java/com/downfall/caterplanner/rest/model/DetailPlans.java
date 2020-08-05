@@ -14,29 +14,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
-
+@AllArgsConstructor
+@Getter
+@Setter
 public class DetailPlans extends StatisticsModel{
 
-    @Getter
     private List<Goal> entryData;
-    private Map<Integer, List<Goal>> levelBox;
-
-    private DetailPlans(){
-        this.levelBox = new HashMap<>();
-        this.isStatizable = false;
-    }
-
 
     public static DetailPlans valueOf(Node[] nodes){
-        DetailPlans detailPlans = new DetailPlans();
         List<Goal> entryData = new ArrayList<>();
         for(Node node : nodes){
             Goal goal = (Goal) node.getData();
             List<Perform> performs = new ArrayList<>();
-
-            detailPlans.insertLevelView(goal.getLevel(), goal);
 
             List<Node> children = node.getChildren();
 
@@ -45,18 +38,15 @@ public class DetailPlans extends StatisticsModel{
             }
             entryData.add(goal);
         }
-        detailPlans.setEntryData(entryData);
-        return detailPlans;
+        return new DetailPlans(entryData);
     }
 
     public static DetailPlans valueOf(ReadableArray r_detailPlans) throws ParseException {
-        DetailPlans detailPlans = new DetailPlans();
         List<Goal> entryData = new ArrayList<>();
+
         for(int i = 0; i < r_detailPlans.size(); i++){
             ReadableMap r_goal = r_detailPlans.getMap(i);
             Goal goal = Goal.valueOf(r_goal);
-
-            detailPlans.insertLevelView(goal.getLevel(), goal);
 
             entryData.add(goal);
             ReadableArray r_performs = r_goal.getArray("performs");
@@ -67,18 +57,14 @@ public class DetailPlans extends StatisticsModel{
             }
             entryData.get(i).setPerforms(performs);
         }
-        detailPlans.setEntryData(entryData);
-        return detailPlans;
+        return new DetailPlans(entryData);
     }
-
+//웹, 서버 spring (mvc모델) mode, view controller
     public static DetailPlans valueOf(List<Goal> goals, List<Perform> performs, List<Briefing> briefings){
-
-        DetailPlans detailPlans = new DetailPlans();
 
         for(Perform perform : performs){
             Goal goal = goals.get(perform.getGoalId() - 1);
             goal.getPerforms().add(perform);
-            perform.setDate(goal.getStartDate(), goal.getEndDate());
         }
 
         if(briefings != null) {
@@ -88,17 +74,9 @@ public class DetailPlans extends StatisticsModel{
                 perform.getBriefings().add(briefing);
             }
 
-            for(Goal goal : goals){
-                detailPlans.insertLevelView(goal.getLevel(), goal);
-            }
-
-            detailPlans.setEntryData(goals);
-            detailPlans.statistics();
-        }else{
-            detailPlans.setEntryData(goals);
         }
 
-        return detailPlans;
+        return new DetailPlans(goals);
     }
 
     public static DetailPlans valueOf(List<Goal> goals, List<Perform> performs){
@@ -131,45 +109,36 @@ public class DetailPlans extends StatisticsModel{
     }
 
 
-    @Override
-    public void statistics() {
-
-        for(Goal goal : entryData){
-            if(!goal.isStatizable)
-                throw new RuntimeException();
-
-            if(!goal.isStatizable())
-                goal.statistics();
-
-            this.currentPerfectTime += goal.getCurrentPerfectTime();
-            this.currentBriefingCount += goal.getCurrentBriefingCount();
-            this.maxTime += goal.getMaxTime();
-        }
-
-        this.isStatizable = true;
-    }
-
-    private void insertLevelView(int level, Goal goal){
-        if(!levelBox.containsKey(level))
-            levelBox.put(level, new ArrayList<>());
-        levelBox.get(level).add(goal);
-    }
-
     private void setEntryData(List<Goal> entryData) {
         this.entryData = entryData;
     }
 
-    public boolean isLevelClear(int level){
-        List<Goal> goals = levelBox.get(level);
-        for(Goal goal : goals){
-            if(!goal.getStat().isPass())
-                return false;
+
+    @Override
+    public int getMaxTime() {
+        int maxTime = 0;
+        for(Goal g : entryData){
+            maxTime += g.getMaxTime();
         }
-        return true;
+        return maxTime;
     }
 
-    public List<Goal> getGoalsByLevel(int level){
-        return levelBox.get(level);
+    @Override
+    public int getCurrentPerfectTime() {
+        int currentPerfectTime = 0;
+        for(Goal g : entryData){
+            currentPerfectTime += g.getCurrentPerfectTime();
+        }
+        return currentPerfectTime;
+    }
+
+    @Override
+    public int getCurrentBriefingCount() {
+        int currentBriefingCount = 0;
+        for(Goal g : entryData){
+            currentBriefingCount += g.getCurrentBriefingCount();
+        }
+        return currentBriefingCount;
     }
 
 

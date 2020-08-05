@@ -2,35 +2,40 @@ import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, Button } from 'react-native';
 import CommonType from '../../../../util/CommonType'
 import purposeStyles from './style/PurposeStyle';
+import useStores from '../../../../mobX/helper/useStores'
+import ImageButton from '../../../atom/button/ImageButton';
 
 
-export default function PurposeDetailPlansWrite({ purpose, navigation }) {
+export default function PurposeDetailPlansWrite({navigation }) {
+
+    const { purposeWriteStore } = useStores();
 
     const [purposeDetailPlans, setPurposeDetailPlans] = useState();
 
     return (
         <View style={purposeStyles.container}>
 
-            <View style={[purposeStyles.headContainer, { flex: 2 }]}>
-                <View>
+            <View style={purposeStyles.headContainer}>
+                <View style={purposeStyles.titleArea}>
                     <Text style={purposeStyles.title}>
-                        목표를 세부적으로
-                    {"\n"}
-                    설정하는 시간입니다.
+                        목적과 관련된                        
+                        {"\n"}
+                        목표를 설정해야 해요.
                 </Text>
                 </View>
-                <View style={{ marginTop: 10 }}>
+                <View style={[purposeStyles.subtitleArea, {flexDirection: 'row', justifyContent: 'space-between'}]}>
                     <Text style={purposeStyles.subtitle}>
-                        자신이 직접 세부 목표 계획을 세우거나 다른 사람의 목표 계획을 가져와 사용할 수 있습니다.
-                </Text>
-                </View>
-            </View>
-            <View style={[purposeStyles.bottomContainer, { flex: 6.5 }]}>
-                <View style={{ flex: 1 }}>
-                    <Button
-                        title="+"
+                        목적만으로는 당신의 꿈이 이루어 질 수 없어요.{"\n"}
+                        목표를 설정해서 원하는 것을 모두 이루어 봐요.
+                    </Text>
+                    <ImageButton
+                        text="검"
+                        width={45}
+                        height={45}
                     />
                 </View>
+            </View>
+            <View style={purposeStyles.bottomContainer}>
                 <View style={{ flex: 3 }}>
                     <TouchableOpacity
                         style={{
@@ -44,10 +49,10 @@ export default function PurposeDetailPlansWrite({ purpose, navigation }) {
                                 screen: 'DetailPlanWriteBoard',
                                 params: {
                                     startType: CommonType.CREATE,
-                                    purpose : purpose, 
+                                    purpose : purposeWriteStore.purpose, 
                                     result: (detailPlans) => {
                                         setPurposeDetailPlans(detailPlans);
-                                        purpose.detailPlans = detailPlans;
+                                        purposeWriteStore.purpose.detailPlans = detailPlans;
                                     }
                                 }
                             })

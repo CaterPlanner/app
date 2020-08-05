@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput } from 'react-native';
+import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 
-export default function PurposeDescriptionWrite({ purpose }) {
+export default function PurposeDescriptionWrite({next}) {
 
+    const {purposeWriteStore} = useStores();
     const [purposeDescription, setPurposeDescription] = useState("");
 
     return (
@@ -14,7 +16,7 @@ export default function PurposeDescriptionWrite({ purpose }) {
                         style={purposeStyles.title}>
                         당신의 목적은...
                     {"\n"}
-                        {purpose.name}
+                        {purposeWriteStore.purpose.name}
                 </Text>
                 </View>
                 <View style={purposeStyles.subtitleArea}>
@@ -25,12 +27,30 @@ export default function PurposeDescriptionWrite({ purpose }) {
                 </View>                
             </View>
             <View style={purposeStyles.bottomContainer}>
-                <TextInput
+            <Text style={{marginBottom : 6, fontWeight: 'bold'}}>
+                자세히 입력하기
+            </Text>
+            <TextInput
+                    underlineColorAndroid="transparent"
                     multiline={true}
-                    placeholder="정한 목표에 대한 설명이나 시작하게 된 동기를 적어주세요."
+                    placeholder={"정한 목표에 대한 설명이나 시작하게 된 동기를 적어주세요."}
+                    style={{
+                            fontSize: 15,
+                            paddingVertical: 0,
+                            paddingLeft: 0,
+                            borderBottomColor: '#000', // Add this to specify bottom border color
+                            borderBottomWidth: 1
+                    }}
                     onChangeText={text => {
                         setPurposeDescription(text);
-                        purpose.description = text;
+                        purposeWriteStore.purpose.description = text;
+
+                        if(text === ""){
+                            purposeWriteStore.changePermit(false);
+                        }else{
+                            purposeWriteStore.changePermit(true);
+                        }
+
                     }}
                     value={purposeDescription}
                 />

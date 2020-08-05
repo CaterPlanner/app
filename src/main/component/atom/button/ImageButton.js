@@ -1,10 +1,11 @@
 import React from 'react';
-import {TouchableOpacity, Text} from 'react-native';
+import {TouchableOpacity, Image } from 'react-native';
 
-export default function imageButton({text, height, width, image, onPress}){
+export default function imageButton({height, width, source, onPress, disabled = false}){
     return(
-        <TouchableOpacity onPress={onPress} style={{width : width, height: height, backgroundColor: 'red'}}>
-            <Text>{text}</Text>
+        <TouchableOpacity onPress={onPress} 
+            disabled={disabled}>
+            <Image style={{width : width, height: height}} source={source}/> 
         </TouchableOpacity>
     )
 }

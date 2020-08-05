@@ -152,6 +152,8 @@ public class PurposeService{
         this.purposeRepository.updateStatById(id, State.WAIT);
     }
 
+    //수행 방법이 목표 기간을 따라가지 않으므로 둘다 독립적으로 처리하도록 할 수 있는 방법을 생각해봐야한다.
+
     @Deprecated
     public void refresh() throws Exception {
         SQLiteManager.getInstance().transaction(() -> {
@@ -164,26 +166,19 @@ public class PurposeService{
                 int t_proceesUpdateLevel = -1;
 
                 for(Goal goal : detailPlans.getEntryData()) {
-                    if(goal.getLevel() >= t_proceesUpdateLevel)
+                    if(goal.getPreviousGoalId() >= t_proceesUpdateLevel)
                         continue;
                     if (goal.getStat().isPass())
                         continue;
 
-                    if (today.isAfter(goal.getEndDate())) {
-                        goal.setStat(goal.achieve() >= 80 ? State.SUCCESS : State.PROCEED);
+                    if (today.isAfter(goal.getEndDate())) { //목표가 끝난경우
+                        goal.setStat(goal.achieve() >= 80 ? State.SUCCESS : State.FAIL);
                         goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goal.getId(), goal.getStat());
-
-                        if(detailPlans.isLevelClear(goal.getLevel())){
-                            for(Goal nextGoal : detailPlans.getGoalsByLevel(goal.getLevel() + 1)){
-                                goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), nextGoal.getId(), State.PROCEED);
-                                t_proceesUpdateLevel = goal.getLevel() + 1;
-                            }
-                        }
+                        goalRepository.updateStatByHeaderIdAndPreviousGoalId(purpose.getDetailPlanHeaderId(), goal.getId(), State.PROCEED);
                     }
 
                 }
 
-                purpose.statistion();
 
                 //실패처리를 어떻게 할것인지
                 if(today.isAfter(purpose.getDecimalDay())){
@@ -194,6 +189,7 @@ public class PurposeService{
         });
     }
 
+    @Deprecated
     public void addBriefing(long id, int goalId, int performId) throws Exception {
         SQLiteManager.getInstance().transaction(() -> {
             Purpose purpose = purposeRepository.selectById(id);
@@ -205,13 +201,9 @@ public class PurposeService{
 
             if(goal.achieve() == 100 && goal.getStat() == State.PROCEED){
                 goal.setStat(State.SUCCESS);
-                goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goalId, State.SUCCESS);
+                goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goal.getId(), State.SUCCESS);
 
-                if(detailPlans.isLevelClear(goal.getLevel())){
-                    for(Goal nextGoal : detailPlans.getGoalsByLevel(goal.getLevel() + 1)){
-                        goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), nextGoal.getId(), State.PROCEED);
-                    }
-                }
+                goalRepository.updateStatByHeaderIdAndPreviousGoalId(purpose.getDetailPlanHeaderId(), goal.getId(), State.PROCEED);
             }
             if(purpose.achieve() == 100 && purpose.getStat() == State.PROCEED){
                 purpose.setStat(State.SUCCESS);
@@ -223,8 +215,6 @@ public class PurposeService{
 
 
     private WritableMap writableCard(Purpose purpose){
-        if(!purpose.isStatizable())
-            throw new RuntimeException();
 
         WritableMap writablePurpose = Purpose.parseWritableMap(purpose);
 

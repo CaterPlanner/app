@@ -2,8 +2,11 @@ import React from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import {PurposeController} from '../../../../native/RestService'
 import purposeStyles from './style/PurposeStyle';
+import useStores from '../../../../mobX/helper/useStores'
 
 export default function PurposeWriteDone({navigation }) {
+
+    const { purposeWriteStore } = useStores();
 
 
     return (
@@ -27,14 +30,14 @@ export default function PurposeWriteDone({navigation }) {
                     justifyContent: 'center'
                 }}
                 onPress={() => {
-                        PurposeController.createWithDetailPlans(purpose, purpose.detailPlans)
+                        PurposeController.createWithDetailPlans(purposeWriteStore.purpose, purposeWriteStore.purpose.detailPlans)
                         .then((id) => {
                             navigation.navigate('MainNavigation', {
                                 screen: 'Home',
                                 params: {
                                     screen: 'PlanView',
                                     params: {
-                                        purpose: purpose
+                                        purpose: purposeWriteStore.purpose
                                     }
                                 }
                             })
