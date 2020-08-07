@@ -25,56 +25,53 @@ public class SQLiteManager{
         helper = new SQLiteOpenHelper(context, "CaterPlanner.db", null,1) {
             @Override
             public void onCreate(SQLiteDatabase db) {
-                db.execSQL("create table detailPlan_header( " +
-                        "id integer primary key autoincrement, " +
-                        "author_id integer, " +
-                        "author_name text, " +
-                        "base_id integer " +
-                        ")");
                 db.execSQL("create table purpose( " +
                         "id integer primary key autoincrement, " +
-                        "author_name text, " +
-                        "author_id integer, " +
                         "name text not null, " +
                         "description text not null, " +
-                        "image_rul text not null, " +
+                        "image_url text not null, " +
                         "disclosure_scope integer not null, " +
                         "start_at text not null, " +
                         "decimal_day text " +
-                        "stat integer not null, " +
-                        "detailPlan_header_id integer, " +
-                        "foreign key(detailPlan_header_id) references detailPlan_header(id) on update cascade on delete set null" +
+                        "stat integer not null" +
                         ")");
+//                db.execSQL("create table purpose( " + detailPlanHeader는 그냥 삭제하기로 결정 왜냐면 사용자가 편집할때마다 새로운 아이디가 생성되야하므로
+//                        "id integer primary key autoincrement, " +     왜냐면 변경하였을때 어떤 사용자가 적용하였을경우 그 데이터는 남아있어얗마ㅡ로
+//                        "purpose_id integer, " +
+//                        "detailPlan_header_id integer," +
+//                        "foreign key(purpose_id) references purpose(id) on update cascade on delete cascade" +
+//                        ")");
                 db.execSQL("create table goal( " +
-                        "header_id integer, " +
+                        "purpose_id integer, " +
                         "id integer, " +
-                        "level integer not null, " +
                         "name text not null, " +
                         "start_date text not null, " +
                         "end_date text not null, " +
                         "color text not null, " +
                         "stat integer not null, " +
-                        "foreign key(header_id) references detailPlan_header(id) on update cascade on delete cascade," +
-                        "primary key(id, header_id)" +
+                        "foreign key(purpose_id) references purpose(id) on update cascade on delete cascade," +
+                        "primary key(id, purpose_id)" +
                         ")");
                 db.execSQL("create table perform( " +
                         "id integer, " +
-                        "header_id integer, " +
+                        "purpose_id integer, " +
                         "goal_id integer not null, " +
                         "name text not null, " +
                         "cycle text not null, " +
+                        "start_date text not null, " +
+                        "end_date text not null," +
                         "foreign key(goal_id) references goal(id) on update cascade on delete cascade, " +
-                        "foreign key(header_id) references detailPlan_header(id) on update cascade on delete cascade, " +
-                        "primary key(id, header_id)" +
+                        "foreign key(purpose_id) references purpose(id) on update cascade on delete cascade, " +
+                        "primary key(id, purpose_id)" +
                         ")");
                 db.execSQL("create table briefing( " +
-                        "header_id integer, " +
+                        "purpose_id integer, " +
                         "perform_id integer, " +
                         "create_at text not null, " +
                         "score integer default 0, " +
-                        "foreign key(header_id) references detailPlan_header(id) on update cascade on delete cascade, " +
+                        "foreign key(purpose_id) references purpose(id) on update cascade on delete cascade, " +
                         "foreign key(perform_id) references perform(id) on update cascade on delete cascade, " +
-                        "primary key(header_id, perform_id)" +
+                        "primary key(purpose_id, perform_id)" +
                         ")");
             }
 

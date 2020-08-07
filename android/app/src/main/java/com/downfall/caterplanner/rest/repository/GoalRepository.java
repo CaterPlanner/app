@@ -14,11 +14,10 @@ public class GoalRepository extends BaseRepository {
 
     public void insert(Goal goal){
         final String sql =
-                "insert into goal values(?,?,?,?,?,?,?,?)";
+                "insert into goal values(?,?,?,?,?,?,?)";
         db.execSQL(sql, new String[]{
-                String.valueOf(goal.getHeaderId()),
+                String.valueOf(goal.getPurposeId()),
                 String.valueOf(goal.getId()),
-                String.valueOf(goal.getPreviousGoalId()),
                 String.valueOf(goal.getName()),
                 String.valueOf(goal.getStartDate()),
                 String.valueOf(goal.getEndDate()),
@@ -27,19 +26,18 @@ public class GoalRepository extends BaseRepository {
         });
     }
 
-    public List<Goal> selectByHeaderIdAndStat(long headerId, int stat) throws ParseException {
+    public List<Goal> selectByHeaderIdAndStat(long purposeId, State stat) throws ParseException {
         final String sql =
-                "select header_id, id, previous_goal_id, name, start_date, end_date, color, stat " +
+                "select purpose_id, id, name, start_date, end_date, color, stat " +
                         "from goal " +
-                        "where header_id = ? and stat = ?";
-        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId), String.valueOf(stat)});
+                        "where purpose_id = ? and stat = ?";
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(purposeId), String.valueOf(stat)});
         List<Goal> goals = new ArrayList<>();
         while(c.moveToNext()){
             goals.add(
                     Goal.builder()
-                            .headerId(c.getLong(0))
+                            .purposeId(c.getLong(0))
                             .id(c.getInt(1))
-                            .previousGoalId(c.getInt(2))
                             .name(c.getString(3))
                             .startDate(DateUtil.parseToDate(c.getString(4)))
                             .endDate(DateUtil.parseToDate(c.getString(5)))
@@ -51,19 +49,18 @@ public class GoalRepository extends BaseRepository {
         return goals;
     }
 
-    public List<Goal> selectByHeaderId(long headerId) throws ParseException {
+    public List<Goal> selectByPurposeId(long purposeId) throws ParseException {
         final String sql =
-                "select header_id, id, previous_goal_id, name, start_date, end_date, color, stat " +
+                "select purpose_id, id, name, start_date, end_date, color, stat " +
                         "from goal " +
-                        "where header_id = ?";
-        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(headerId)});
+                        "where purpose_id = ?";
+        Cursor c = db.rawQuery(sql, new String[]{String.valueOf(purposeId)});
         List<Goal> goals = new ArrayList<>(c.getCount());
         while(c.moveToNext()){
            goals.add(
                    Goal.builder()
-                           .headerId(c.getLong(0))
+                           .purposeId(c.getLong(0))
                            .id(c.getInt(1))
-                           .previousGoalId(c.getInt(2))
                            .name(c.getString(3))
                            .startDate(DateUtil.parseToDate(c.getString(4)))
                            .endDate(DateUtil.parseToDate(c.getString(5)))
@@ -75,35 +72,24 @@ public class GoalRepository extends BaseRepository {
         return goals;
     }
 
-    public void deleteByHeaderId(long headerId){
+    public void deleteByPurposeId(long purposeId){
         final String sql =
-                "delete from goal where header_id = ?";
-        db.execSQL(sql, new String[]{String.valueOf(headerId)});
+                "delete from goal where purpose_id = ?";
+        db.execSQL(sql, new String[]{String.valueOf(purposeId)});
     }
 
-    public void updateStatByKey(long headerId, int id, State state){
+    public void updateStatByKey(long purposeId, int id, State state){
         final String sql =
                 "update goal " +
                         "set stat = ? " +
-                        "where header_id = ? and id = ?";
+                        "where purpose_id = ? and id = ?";
         db.execSQL(sql, new String[]{
                 String.valueOf(state.getValue()),
-                String.valueOf(headerId),
+                String.valueOf(purposeId),
                 String.valueOf(id)
         });
     }
 
-    public void updateStatByHeaderIdAndPreviousGoalId(long headerId, int previousGoalId, State state){
-        final String sql =
-                "update goal " +
-                        "set stat = ? " +
-                        "where header_id = ? and previous_goal_id = ?";
-        db.execSQL(sql, new String[]{
-                String.valueOf(state.getValue()),
-                String.valueOf(headerId),
-                String.valueOf(previousGoalId)
-        });
-    }
 
 
 

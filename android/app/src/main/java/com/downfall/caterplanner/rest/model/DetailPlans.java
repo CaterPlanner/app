@@ -1,6 +1,5 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.Node;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -10,9 +9,7 @@ import com.facebook.react.bridge.WritableMap;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,25 +21,12 @@ import lombok.Setter;
 public class DetailPlans extends StatisticsModel{
 
     private List<Goal> entryData;
+    private List<Perform> performList;
 
-    public static DetailPlans valueOf(Node[] nodes){
-        List<Goal> entryData = new ArrayList<>();
-        for(Node node : nodes){
-            Goal goal = (Goal) node.getData();
-            List<Perform> performs = new ArrayList<>();
-
-            List<Node> children = node.getChildren();
-
-            for(Node childNode : children){
-                performs.add((Perform) childNode.getData());
-            }
-            entryData.add(goal);
-        }
-        return new DetailPlans(entryData);
-    }
 
     public static DetailPlans valueOf(ReadableArray r_detailPlans) throws ParseException {
         List<Goal> entryData = new ArrayList<>();
+        List<Perform> performList = new ArrayList<>();
 
         for(int i = 0; i < r_detailPlans.size(); i++){
             ReadableMap r_goal = r_detailPlans.getMap(i);
@@ -53,30 +37,31 @@ public class DetailPlans extends StatisticsModel{
 
             List<Perform> performs = new ArrayList<>();
             for(int j = 0; j < r_performs.size(); j++){
-                performs.add(Perform.valueOf(r_performs.getMap(i)));
+                Perform p = Perform.valueOf(r_performs.getMap(i));
+                performs.add(p);
+                performList.add(p);
             }
             entryData.get(i).setPerforms(performs);
         }
-        return new DetailPlans(entryData);
+        return new DetailPlans(entryData, performList);
     }
 //웹, 서버 spring (mvc모델) mode, view controller
     public static DetailPlans valueOf(List<Goal> goals, List<Perform> performs, List<Briefing> briefings){
 
         for(Perform perform : performs){
-            Goal goal = goals.get(perform.getGoalId() - 1);
+            Goal goal = goals.get(perform.getGoalId());
             goal.getPerforms().add(perform);
         }
 
         if(briefings != null) {
 
             for (Briefing briefing : briefings) {
-                Perform perform = goals.get(briefing.getGoalKey() - 1).getPerforms().get(briefing.getPerformId());
-                perform.getBriefings().add(briefing);
+                performs.get(briefing.getPerformId()).getBriefings().add(briefing);
             }
 
         }
 
-        return new DetailPlans(goals);
+        return new DetailPlans(goals, performs);
     }
 
     public static DetailPlans valueOf(List<Goal> goals, List<Perform> performs){

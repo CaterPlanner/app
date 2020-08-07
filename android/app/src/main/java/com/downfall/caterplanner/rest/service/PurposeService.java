@@ -19,6 +19,9 @@ import org.joda.time.LocalDate;
 
 import java.text.ParseException;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class PurposeService{
 
     private PurposeRepository purposeRepository;
@@ -26,12 +29,6 @@ public class PurposeService{
     private BriefingRepository briefingRepository;
     private GoalRepository goalRepository;
 
-    public PurposeService(PurposeRepository purposeRepository, DetailPlansService detailPlanService, BriefingRepository briefingRepository, GoalRepository goalRepository) {
-        this.purposeRepository = purposeRepository;
-        this.briefingRepository = briefingRepository;
-        this.detailPlanService = detailPlanService;
-        this.goalRepository = goalRepository;
-    }
 
     /**
      * react native 에서 전달받아
@@ -67,19 +64,16 @@ public class PurposeService{
      *
      * @param r_purpose
      * @param r_detailPlans
-     * @param baseId
      * @return
      * @throws Exception
      */
-    public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans, Long baseId) throws Exception{
+    public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans, Long detailPlanHeaderId) throws Exception{
         return SQLiteManager.getInstance().transaction(() -> {
             Purpose purpose = Purpose.valueOf(r_purpose);
             purpose.setStat(State.WAIT);
-            purpose.setDetailPlanHeaderId((long) baseId);
             Long id = purposeRepository.insert(purpose);
             if(r_detailPlans != null){
-                long detailPlanHeaderId = detailPlanService.createByReact(r_detailPlans, purpose.getAuthorId(), purpose.getAuthorName(), baseId);
-                purpose.setDetailPlanHeaderId(detailPlanHeaderId);
+                detailPlanService.createByReact(r_detailPlans, id, detailPlanHeaderId);
             }
             return id;
         });
@@ -96,7 +90,7 @@ public class PurposeService{
      */
     private Purpose read(long id) throws ParseException {
         Purpose purpose = purposeRepository.selectById(id);
-        DetailPlans detailPlans = this.detailPlanService.read(purpose.getDetailPlanHeaderId());
+        DetailPlans detailPlans = this.detailPlanService.read(purpose.getId());
         purpose.setDetailPlans(detailPlans);
         return purpose;
     }
@@ -152,58 +146,55 @@ public class PurposeService{
         this.purposeRepository.updateStatById(id, State.WAIT);
     }
 
-    //수행 방법이 목표 기간을 따라가지 않으므로 둘다 독립적으로 처리하도록 할 수 있는 방법을 생각해봐야한다.
 
-    @Deprecated
     public void refresh() throws Exception {
         SQLiteManager.getInstance().transaction(() -> {
             Purpose[] purposes = purposeRepository.selectByStatIsActive();
             LocalDate today = LocalDate.now();
 
             for(Purpose purpose : purposes){
-                DetailPlans detailPlans = detailPlanService.readShort(purpose.getDetailPlanHeaderId());
+                DetailPlans detailPlans = detailPlanService.read(purpose.getId());
 
-                int t_proceesUpdateLevel = -1;
 
-                for(Goal goal : detailPlans.getEntryData()) {
-                    if(goal.getPreviousGoalId() >= t_proceesUpdateLevel)
+
+                //goal들 state 변경
+                for(Goal goal : detailPlans.getEntryData()){
+                    if(goal.getStat().isPass())
                         continue;
-                    if (goal.getStat().isPass())
-                        continue;
 
-                    if (today.isAfter(goal.getEndDate())) { //목표가 끝난경우
+                    if(today.isAfter(goal.getEndDate())){
                         goal.setStat(goal.achieve() >= 80 ? State.SUCCESS : State.FAIL);
-                        goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goal.getId(), goal.getStat());
-                        goalRepository.updateStatByHeaderIdAndPreviousGoalId(purpose.getDetailPlanHeaderId(), goal.getId(), State.PROCEED);
+                    }else if(goal.getStat() == State.WAIT && today.isAfter(goal.getStartDate()) && today.isBefore(goal.getEndDate())){
+                        goal.setStat(State.PROCEED);
                     }
+                    goalRepository.updateStatByKey(purpose.getId(), goal.getId(), goal.getStat());
 
                 }
 
-
                 //실패처리를 어떻게 할것인지
                 if(today.isAfter(purpose.getDecimalDay())){
-                    purpose.setStat(purpose.achieve() == 100 ? State.SUCCESS : State.FAIL);
+                    purpose.setStat(detailPlans.achieve() >= 80 ? State.SUCCESS : State.FAIL);
                     purposeRepository.updateStatById(purpose.getId(), purpose.getStat());
                 }
             }
         });
     }
 
-    @Deprecated
+
     public void addBriefing(long id, int goalId, int performId) throws Exception {
         SQLiteManager.getInstance().transaction(() -> {
             Purpose purpose = purposeRepository.selectById(id);
-            briefingRepository.insert(purpose.getDetailPlanHeaderId(), performId);
 
-            DetailPlans detailPlans = detailPlanService.read(purpose.getDetailPlanHeaderId());
+
+            briefingRepository.insert(purpose.getId(), performId);
+
+            DetailPlans detailPlans = detailPlanService.read(purpose.getId());
             Goal goal = detailPlans.getEntryData().get(goalId - 1);
 
 
             if(goal.achieve() == 100 && goal.getStat() == State.PROCEED){
                 goal.setStat(State.SUCCESS);
-                goalRepository.updateStatByKey(purpose.getDetailPlanHeaderId(), goal.getId(), State.SUCCESS);
-
-                goalRepository.updateStatByHeaderIdAndPreviousGoalId(purpose.getDetailPlanHeaderId(), goal.getId(), State.PROCEED);
+                goalRepository.updateStatByKey(purpose.getId(), goal.getId(), State.SUCCESS);
             }
             if(purpose.achieve() == 100 && purpose.getStat() == State.PROCEED){
                 purpose.setStat(State.SUCCESS);

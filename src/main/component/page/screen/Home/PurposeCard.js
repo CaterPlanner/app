@@ -1,32 +1,20 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Button, Dimensions, YellowBox, Text, Image, TouchableOpacity } from 'react-native'
 import Carousel from 'react-native-snap-carousel';
-import PlanView from './PlanView.js'
 import PageStateText from '../../../atom/text/PageStateText'
 import Card from './Card'
-import ActiveCard from './ActiveCard'
-import Header_Main from '../../../molecule/Header_Main.js';
-
 import SplashScreen from 'react-native-splash-screen';
+import MainHeader from '../../../molecule/MainHeader'
 
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
 YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
 
 const fullWidth = Dimensions.get('window').width;
-
-
-//진행률 값 
 const progresValue = 30;
-const defaultDCater = '../../../../../../asset/DDC.gif'
 
-//함정카드 발동
-var actuationCard = true;
 
-var tabText = '자세히 보기'
-var tabColor = 'black'
-var tabFonC = 'gray'
 
-export default class PlanCardView extends Component {
+export default class PurposeCard extends Component {
 
 
     constructor(props) {
@@ -36,7 +24,7 @@ export default class PlanCardView extends Component {
             activeIndex: 0,
             endIndex: 4,
             item: [{
-                image: 'https://www.aramamotoru.com/wp-content/uploads/2018/02/google-amp-icin-goruntu-boyut-gereksinimini-neredeyse-iki-katina-cikardi-1280x720.png',
+                image: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Sans_undertale.jpg/220px-Sans_undertale.jpg',
                 title: '하루 O시간 OO하기',
                 date: 'D - O',
                 //함정카드 발동 
@@ -57,66 +45,42 @@ export default class PlanCardView extends Component {
     //
     _renderItem = ({ item, index }) => {
         return (
-            <View>
-                <Card image={item.image} title={item.title} date={item.date} />
-                {/*
-                    <ActiveCard progresValue={item.progresValue}></ActiveCard>
-                    */}
-            </View>
+            <Card image={item.image} title={item.title} date={item.date} />
         )
     }
 
-    _next = () => {
-        this.carousel._snapToItem(this.state.activeIndex + 1)
-    }
 
-    _previous = () => {
-        this.carousel._snapToItem(this.state.activeIndex - 1)
-    }
-
-    forceUpdateHandler = () => {
-        this.forceUpdate();
-    };
-
-
-    componentDidMount(){
+    componentDidMount() {
         SplashScreen.hide();
     }
 
     render() {
         return (
-            <View style={{ flex: 1, backgroundColor: 'white' }}>
-
-                <Header_Main/>
-                <View style={styles.baseLay}>
-                    <View style={styles.in_SideLay}></View>
-                    <View style={styles.centerLay}>
-                        <Image style={{ width: 100, height: 93, marginBottom: 0, }
-                        } source={require(defaultDCater)} />
-
-                        <Carousel
-                            ref={(ref) => { this.carousel = ref; }}
-                            data={this.state.item}
-                            renderItem={this._renderItem}
-                            scrollEnabled={true}
-                            sliderWidth={fullWidth}
-                            itemWidth={fullWidth - 120}
-                            onSnapToItem={
-                                index => this.setState({ activeIndex: index })}
-                            hasParallaxImages={true}
-                        />
-
+            <View style={{ flex: 1}}>
+                <MainHeader />
+                <View style={{flex: 1}}>
+                    <View style={{flex: 11, justifyContent : 'center'}}>
+                        <View>
+                            <Carousel
+                                ref={(ref) => { this.carousel = ref; }}
+                                data={this.state.item}
+                                renderItem={this._renderItem}
+                                scrollEnabled={true}
+                                sliderWidth={fullWidth}
+                                itemWidth={fullWidth - 95}
+                                onSnapToItem={
+                                    index => this.setState({ activeIndex: index })}
+                                hasParallaxImages={true}
+                            />
+                        </View>
                     </View>
-                    <View style={styles.in_SideLay}></View>
+                    <View style={{justifyContent : 'flex-start', flex: 1}}>
+                        <PageStateText
+                            activeIndex={this.state.activeIndex + 1}
+                            endIndex={this.state.endIndex}
+                        />
+                    </View>
                 </View>
-                <View style={styles.indexNum}>
-                    <PageStateText
-                        activeIndex={this.state.activeIndex + 1}
-                        endIndex={this.state.endIndex}
-                    />
-
-                </View>
-
             </View>
 
 

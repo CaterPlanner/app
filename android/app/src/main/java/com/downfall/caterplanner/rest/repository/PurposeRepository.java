@@ -15,43 +15,33 @@ public class PurposeRepository extends BaseRepository {
     public long insert(Purpose purpose){
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", purpose.getId());
-        contentValues.put("author_name", purpose.getAuthorName());
-        contentValues.put("author_id", purpose.getAuthorId());
-        contentValues.put("group_name", purpose.getGroupName());
-        contentValues.put("group_id", purpose.getGroupId());
         contentValues.put("name", purpose.getName());
         contentValues.put("description", purpose.getDescription());
-        contentValues.put("imageUrl", purpose.getImageUrl());
-        contentValues.put("disclosureScope",purpose.getDisclosureScope());
-        contentValues.put("startAt", purpose.getStartAt().toString());
-        contentValues.put("decimalDay", purpose.getDecimalDay().toString());
+        contentValues.put("image_url", purpose.getImageUrl());
+        contentValues.put("disclosure_scopes",purpose.getDisclosureScope());
+        contentValues.put("start_at", purpose.getStartAt().toString());
+        contentValues.put("decimal_day", purpose.getDecimalDay().toString());
         contentValues.put("stat", purpose.getStat().getValue());
-        contentValues.put("detailPlanHeaderId", purpose.getDetailPlanHeaderId());
         return db.insert("purpose", null, contentValues);
     }
 
     public Purpose selectById(long id) throws ParseException {
         final String sql =
-                "select id , author_name, author_id, group_name, group_id, name, " +
-                        "description, image_url, disclosure_scope, start_at, decimal_day, stat, detailPlan_header_id " +
+                "select id, name, " +
+                        "description, image_url, disclosure_scope, start_at, decimal_day, stat " +
                         "from purpose where id = ?";
         Cursor c = db.rawQuery(sql, new String[]{String.valueOf(id)});
         Purpose purpose = null;
         if(c.moveToFirst()){
             purpose = Purpose.builder()
                     .id(c.getLong(1))
-                    .authorName(c.isNull(2) ? null : c.getString(2))
-                    .authorId(c.isNull(3) ? null : c.getLong(3))
-                    .groupName(c.isNull(4) ? null : c.getString(4))
-                    .groupId(c.isNull(5) ? null :  c.getLong(5))
-                    .name(c.getString(6))
-                    .description(c.getString(7))
-                    .imageUrl(c.getString(8))
-                    .disclosureScope( c.getInt(9))
-                    .startAt(DateUtil.parseToDateTime(c.getString(10)))
-                    .decimalDay(DateUtil.parseToDate(c.getString(11)))
-                    .stat(State.findByValue(c.getInt(12)))
-                    .detailPlanHeaderId(c.getLong(13))
+                    .name(c.getString(2))
+                    .description(c.getString(3))
+                    .imageUrl(c.getString(4))
+                    .disclosureScope( c.getInt(5))
+                    .startAt(DateUtil.parseToDateTime(c.getString(6)))
+                    .decimalDay(DateUtil.parseToDate(c.getString(7)))
+                    .stat(State.findByValue(c.getInt(8)))
                     .build();
 
         }
@@ -60,8 +50,8 @@ public class PurposeRepository extends BaseRepository {
 
     public Purpose[] selectByStatIsActive() throws ParseException {
         final String sql =
-                "select id , author_name, author_id, group_name, group_id, name, " +
-                        "description, image_url, disclosure_scope, start_at, decimal_day, stat, detailPlan_header_id " +
+                "select id, name, " +
+                        "description, image_url, disclosure_scope, start_at, decimal_day, stat " +
                         "from purpose where stat = 1";
         Cursor c = db.rawQuery(sql, null);
         Purpose[] purposes = new Purpose[c.getCount()];
@@ -69,18 +59,13 @@ public class PurposeRepository extends BaseRepository {
             purposes[c.getPosition()] =
                     Purpose.builder()
                     .id(c.getLong(1))
-                    .authorName(c.isNull(2) ? null : c.getString(2))
-                    .authorId(c.isNull(3) ? null : c.getLong(3))
-                    .groupName(c.isNull(4) ? null : c.getString(4))
-                    .groupId(c.isNull(5) ? null :  c.getLong(5))
-                    .name(c.getString(6))
-                    .description(c.getString(7))
-                    .imageUrl(c.getString(8))
-                    .disclosureScope( c.getInt(9))
-                    .startAt(DateUtil.parseToDateTime(c.getString(10)))
-                    .decimalDay(DateUtil.parseToDate(c.getString(11)))
-                    .stat(State.findByValue(c.getInt(12)))
-                    .detailPlanHeaderId(c.getLong(13))
+                    .name(c.getString(2))
+                    .description(c.getString(3))
+                    .imageUrl(c.getString(4))
+                    .disclosureScope( c.getInt(5))
+                    .startAt(DateUtil.parseToDateTime(c.getString(6)))
+                    .decimalDay(DateUtil.parseToDate(c.getString(7)))
+                    .stat(State.findByValue(c.getInt(8)))
                     .build();
         }
         return purposes.length == 0 ? null : purposes;
@@ -90,13 +75,13 @@ public class PurposeRepository extends BaseRepository {
         final String sql =
                 "update purpose " +
                         "set name = ?, description = ?, image_url = ?, disclosure_scope = ?, " +
-                        "start_at = ?, decimal_day = ?, stat = ?, detailPlan_header_id = ? " +
+                        "start_at = ?, decimal_day = ?, stat = ?" +
                         "where id = ?";
         db.execSQL(sql,
                 new String[]{
                     purpose.getName(), purpose.getDescription(), purpose.getImageUrl(),
                         String.valueOf(purpose.getDisclosureScope()), purpose.getStartAt().toString(), purpose.getDecimalDay().toString(),
-                        String.valueOf(purpose.getStat().getValue()), String.valueOf(purpose.getDetailPlanHeaderId())
+                        String.valueOf(purpose.getStat().getValue())
                 });
     }
 

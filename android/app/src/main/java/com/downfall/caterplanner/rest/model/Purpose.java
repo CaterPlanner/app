@@ -18,10 +18,6 @@ import lombok.Data;
 public class Purpose{
 
     private long id;
-    private String authorName;
-    private Long authorId;
-    private String groupName;
-    private Long groupId;
     private String name;
     private String description;
     private String imageUrl;
@@ -29,7 +25,6 @@ public class Purpose{
     private LocalDateTime startAt;
     private LocalDate decimalDay;
     private State stat; //0 보류중 1 진행중 2 성공 3 실패
-    private Long detailPlanHeaderId;
 
     private DetailPlans detailPlans;
 
@@ -45,10 +40,6 @@ public class Purpose{
     public static Purpose valueOf(ReadableMap data) throws Exception{
         return Purpose.builder()
                 .id(data.getInt("id"))
-                .authorName(data.hasKey("authorName") ?  data.getString("authorName") : null)
-                .authorId(data.hasKey("authorId") ? Long.valueOf(data.getInt("authorId")) : null)
-                .groupName(data.hasKey("groupName") ? data.getString("groupName") : null)
-                .groupId( data.hasKey("groupId") ? Long.valueOf(data.getInt("groupId")) : null)
                 .name(data.getString("name"))
                 .description(data.getString("description"))
                 .imageUrl(data.getString("imageUrl"))
@@ -56,7 +47,6 @@ public class Purpose{
                 .startAt(data.hasKey("startAt") ? DateUtil.parseToDateTime(data.getString("startAt")) : null)
                 .decimalDay(data.hasKey("decimalDay") ? DateUtil.parseToDate(data.getString("decimalDay")) : null)
                 .stat(State.findByValue(data.getInt("stat")))
-                .detailPlanHeaderId(data.hasKey("detailPlanHeaderId") ? (long) data.getInt("detailPlanHeaderId") : null)
                 .build();
     }
 
@@ -64,9 +54,6 @@ public class Purpose{
         WritableMap writableMap = Arguments.createMap();
         writableMap.putInt("id", (int)purpose.getId());
         writableMap.putString("authorName", purpose.getName());
-        writableMap.putInt("authorId", purpose.getAuthorId().intValue());
-        writableMap.putString("groupName", purpose.getGroupName());
-        writableMap.putInt("groupId", purpose.getGroupId().intValue());
         writableMap.putString("name", purpose.getName());
         writableMap.putString("description", purpose.getDescription());
         writableMap.putString("imageUrl", purpose.getImageUrl());
@@ -74,7 +61,6 @@ public class Purpose{
         writableMap.putString("startAt", DateUtil.formatFromDateTime(purpose.getStartAt()));
         writableMap.putString("decimalDay", DateUtil.formatFromDate(purpose.getDecimalDay()));
         writableMap.putInt("stat", purpose.getStat().getValue());
-        writableMap.putInt("detailPlanHeaderId", purpose.getDetailPlanHeaderId().intValue());
         return writableMap;
     }
 

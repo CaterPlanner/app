@@ -12,14 +12,14 @@ export default function PurposeWriteDone({navigation }) {
     return (
         <View style={purposeStyles.container}>
 
-            <Image source={require('../../../../../../asset/DDC.gif')} style={{
+            {/* <Image source={require('../../../../../../asset/DDC.gif')} style={{
 
                 height: 180,
                 width: 180,
                 alignSelf: 'center',
                 marginTop: '32%'
 
-            }}></Image>
+            }}></Image> */}
 
             <Text style={purposeStyles.title}>목표 생성이 완료되었습니다</Text>
             <Text style={purposeStyles.subtitle}>목표를 지킬 수 있도록 노력해 주세요!</Text>

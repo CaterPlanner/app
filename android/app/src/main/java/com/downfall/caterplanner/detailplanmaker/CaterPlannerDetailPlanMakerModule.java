@@ -48,7 +48,7 @@ public class CaterPlannerDetailPlanMakerModule extends ReactContextBaseJavaModul
     @ReactMethod
     public void insertGoal(Integer level, ReadableMap r_goal, Promise promise){
         try{
-            service.insertGoal(level, r_goal);
+            service.insertGoal(r_goal);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -120,9 +120,9 @@ public class CaterPlannerDetailPlanMakerModule extends ReactContextBaseJavaModul
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public WritableArray goalViewData(){
+    public WritableArray goalGraphData(String purposeStartDate, String purposeEndDate){
         try{
-            return service.goalViewData();
+            return service.goalGraphData(purposeStartDate, purposeEndDate);
         }catch (Exception e){
             e.printStackTrace();
         }

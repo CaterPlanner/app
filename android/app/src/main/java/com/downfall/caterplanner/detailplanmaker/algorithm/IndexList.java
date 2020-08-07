@@ -1,8 +1,13 @@
 package com.downfall.caterplanner.detailplanmaker.algorithm;
 
-public class IndexList<T extends IndexListElement> {
+import com.downfall.caterplanner.rest.model.RelationTreeEntity;
 
-    private IndexListElement[] data;
+import java.util.Arrays;
+import java.util.List;
+
+public class IndexList<T extends RelationTreeEntity> {
+
+    private RelationTreeEntity[] data;
     private int size;
     private int capacity;
 
@@ -10,18 +15,18 @@ public class IndexList<T extends IndexListElement> {
         this(10);
     }
 
-    public IndexList(T[] nodes) {
-        this(nodes.length);
+    public IndexList(List<T> nodes) {
+        this(nodes.size());
 
         for(T node : nodes) {
-            insert(node.getKey(), node);
+            insert(node.getId(), node);
         }
     }
 
     public IndexList(int initCapacity) {
         this.capacity = initCapacity;
         this.size = 0;
-        data = new IndexListElement[capacity];
+        data = new RelationTreeEntity[capacity];
     }
 
     @Deprecated
@@ -48,7 +53,7 @@ public class IndexList<T extends IndexListElement> {
 
     private void expansion() {
         capacity = (int) Math.ceil(capacity * 1.5f);
-        IndexListElement[] newArray = new Node[capacity];
+        RelationTreeEntity[] newArray = new RelationTreeEntity[capacity];
         for (int i = 0; i < size; i++)
             newArray[i] = data[i];
         data = newArray;
@@ -64,7 +69,7 @@ public class IndexList<T extends IndexListElement> {
             if (data[i] != null && pointer != -1) {
                 data[pointer] = data[i];
                 data[i] = null;
-                data[pointer].setKey(pointer);
+                data[pointer].setId(pointer);
                 pointer++;
             }
         }
@@ -91,10 +96,10 @@ public class IndexList<T extends IndexListElement> {
             expansion();
         }
         data[++size - 1] = node;
-        node.setKey(size - 1);
+        node.setId(size - 1);
     }
 
-    public IndexListElement remove(int index) {
+    public RelationTreeEntity remove(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException("Can't find that node.");
         }
@@ -102,7 +107,7 @@ public class IndexList<T extends IndexListElement> {
             throw new IndexOutOfBoundsException("Array is empty.");
         }
 
-        IndexListElement element = data[index];
+        RelationTreeEntity element = data[index];
         data[index] = null;
         size--;
 
@@ -111,8 +116,8 @@ public class IndexList<T extends IndexListElement> {
     }
 
 
-    public T[] getAll() {
-        return (T[]) data;
+    public List<T> getAll() {
+        return (List<T>) Arrays.asList(data);
     }
 
 

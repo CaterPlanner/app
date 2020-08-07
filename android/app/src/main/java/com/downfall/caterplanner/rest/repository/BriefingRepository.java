@@ -24,7 +24,6 @@ public class BriefingRepository extends BaseRepository{
             briefings.add(
                     Briefing.builder()
                             .headerId(c.getLong(1))
-                            .goalKey(c.getInt(2))
                             .performId(c.getInt(3))
                             .createAt(DateUtil.parseToDateTime(c.getString(4)))
                             .score(c.getInt(5))

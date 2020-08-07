@@ -70,7 +70,7 @@ export default class PurposeWriteBoard extends Component {
     
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: '#ffffff'}}>
                 <View style={styles.topContainer}>
                     {/* <PageStateText activeIndex={this.state.activeIndex + 1} endIndex={this.state.endIndex}/> */}
                     <ImageButton

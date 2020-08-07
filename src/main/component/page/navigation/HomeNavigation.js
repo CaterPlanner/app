@@ -1,7 +1,7 @@
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack';
-import PlanCardView from '../screen/Home/PlanCardView'
-import PlanView from '../screen/Home/PlanView'
+import PurposeCard from '../screen/Home/PurposeCard'
+import PurposeDetailView from '../screen/Home/PurposeDetailView'
 
 
 
@@ -11,8 +11,8 @@ const Stack = createStackNavigator();
 const HomeNavigation = () => {
     return(
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="PlanCardView" component={PlanCardView} />
-            <Stack.Screen name="PlanView" component={PlanView} />
+            <Stack.Screen name="PurposeCard" component={PurposeCard} />
+            <Stack.Screen name="PurposeDetailView" component={PurposeDetailView} />
         </Stack.Navigator>
     )
 }
