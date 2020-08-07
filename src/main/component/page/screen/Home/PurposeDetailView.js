@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, AsyncStorage } from 'react-native'
 
 
-export default class PlanView extends Component {
+export default class PurposeDetailView extends Component {
 
   constructor(props) {
     super(props);

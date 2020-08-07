@@ -1,81 +1,83 @@
 import React from 'react';
+import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screen/Main/Home'
-import SearchNavigation from '../navigation/SearchNavigation'
-import Create from '../screen/Main/Create'
-import Stories from '../screen/Main/Stories'
-import Record from '../screen/Main/Record'
+import SearchNavigation from './SearchNavigation'
+import Make from '../screen/Main/Make'
+import Story from '../screen/Main/Story'
+import MyPage from '../screen/Main/MyPage'
+import { createStackNavigator } from '@react-navigation/stack';
+
+
+const Stack = createStackNavigator();
+const SNSNavigation = () => {
+  return(
+    <Stack.Screen name= />
+  )
+}
+
 
 
 const Tab = createBottomTabNavigator();
-
 const MainNavigation = () => {
- 
-  
+
   return (
 
-<Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused }) => {
+          let iconSource;
 
-            //일단 저거 아이콘 가져와지는게
-            //안되서 Label True하고 Icon false함
-            if (route.name === 'Home') {
-              iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline';
-            } else if (route.name === 'Search') {
-              iconName = focused ? 'ios-list-box' : 'ios-list';
-            }
+          switch (route.name) {
+            case "Home":
+              iconSource = focused ?
+                require('../../../../../asset/icon/tab_icon_active_home.png') :
+                require('../../../../../asset/icon/tab_icon_inactive_home.png')
+              break;
+            case "Search":
+              iconSource = focused ?
+                require('../../../../../asset/icon/tab_icon_active_search.png') :
+                require('../../../../../asset/icon/tab_icon_inactive_search.png')
+              break;
+            case "Make":
+              iconSource = focused ?
+                require('../../../../../asset/icon/tab_icon_active_make.png') :
+                require('../../../../../asset/icon/tab_icon_inactive_make.png')
+              break;
+            case "Story":
+              iconSource = focused ?
+                require('../../../../../asset/icon/tab_icon_active_story.png') :
+                require('../../../../../asset/icon/tab_icon_inactive_story.png')
+              break;
+            case "MyPage":
+              iconSource = focused ?
+                require('../../../../../asset/icon/tab_icon_active_mypage.png') :
+                require('../../../../../asset/icon/tab_icon_inactive_mypage.png')
+              break;
+          }
 
-            switch(route.name){
-              case "Home":
-                
-                break;
-              case "Search":
-                break;
-              case "Create":
-                break;
-              case "Stories":
-                break;
-              case "Record":
-                break;
-            }
-
-
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-        })}
-
-        
-
-        tabBarOptions={{
-          iconStyle: { height: 35 },
-          activeTintColor: '#ffffff', //선택 되었을 때의 색상
-          inactiveTintColor: '#55d517',//선택되지 않았을 때의 색상
-          upperCaseLabel: false,
-          showLabel: true,//탭의 이름을 표시함 
-          showIcon: false,//아이콘 보이게 하는 친구임
-          tabStyle : { borderBottomWidth : 0.01, },
-          
-          swipeEnabled: true,
-         activeBackgroundColor: '#83D74E',
-         indicatorStyle: {
-         display: 'none',
+          return <Image source={iconSource} />
         },
-          
-          style : { backgroundColor:'white', height:50},
-        }}
-        options={{ headerShown: false }}
-      >
-      <Tab.Screen name="Home" component={Home}/>
+      })}
+      tabBarOptions={{
+        iconStyle: { height: 35 },
+        upperCaseLabel: false,
+        showLabel: false,//탭의 이름을 표시함 
+        showIcon: true,//아이콘 보이게 하는 친구임
+        tabStyle: { borderBottomWidth: 0.01, },
+        swipeEnabled: true,
+        indicatorStyle: {
+          display: 'none',
+        },
+        style: { backgroundColor: 'white', height: 50 },
+      }}
+    >
+      <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Search" component={SearchNavigation} />
-      <Tab.Screen name="Create" component={Create}  />
-      <Tab.Screen name="Stories" component={Stories} />
-      <Tab.Screen name="Record" component={Record} />
-      </Tab.Navigator>
+      <Tab.Screen name="Make" component={Make} />
+      <Tab.Screen name="Story" component={Story} />
+      <Tab.Screen name="MyPage" component={MyPage} />
+    </Tab.Navigator>
   );
 }
 

@@ -1,6 +1,5 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.PlanType;
 import com.downfall.caterplanner.util.DateUtil;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -12,15 +11,12 @@ import org.joda.time.PeriodType;
 
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
 
 //성공여부는 중요하지 않음 그냥 기간이 끝나면 끝나는 목표
 //스케줄 처리에서는 기간 낮은 것들만 하면됨
@@ -33,7 +29,7 @@ import lombok.Setter;
 public class Perform extends StatisticsModel implements RelationTreeEntity{
 
     private int id;
-    private long headerId;
+    private long purposeId;
     private int goalId;
     private String name;
     private String cycle;
@@ -218,7 +214,7 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
     public static Perform valueOf(ReadableMap data) throws ParseException {
         return Perform.builder()
                 .goalId(data.getInt("goalId"))
-                .headerId(data.hasKey("headerId") ? data.getInt("headerId") : null)
+                .purposeId(data.hasKey("purposeId") ? data.getInt("purposeId") : null)
                 .id(data.getInt("id"))
                 .name(data.getString("name"))
                 .startDate(DateUtil.parseToDate(data.getString("startDate")))
@@ -231,7 +227,7 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
         WritableMap performMap = Arguments.createMap();
         performMap.putInt("goalId",  perform.getGoalId());
         performMap.putInt("id", perform.getId());
-        performMap.putInt("headerId", (int) perform.getHeaderId());
+        performMap.putInt("purposeId", (int) perform.getPurposeId());
         performMap.putString("name", perform.getName());
         performMap.putString("startDate", DateUtil.formatFromDate(perform.getStartDate()));
         performMap.putString("endDate", DateUtil.formatFromDate(perform.getEndDate()));
@@ -246,13 +242,4 @@ public class Perform extends StatisticsModel implements RelationTreeEntity{
         this.cycle = copy.getCycle();
     }
 
-    @Override
-    public PlanType getType() {
-        return PlanType.P;
-    }
-
-    @Override
-    public void setConstructorKey(int constructorKey) {
-
-    }
 }

@@ -22,11 +22,7 @@ export default function Card({ progresValue }) {
     return (
 
 
-
         <View style={styles.container}>
-
-
-
             <View style={styles.goalProgsContainer_out}>
 
                 <ScrollView style={styles.goalProgsContainer} showsVerticalScrollIndicator={false}>
@@ -41,6 +37,10 @@ export default function Card({ progresValue }) {
                         marginTop: 15
                     }}>
                         <View style={{ height: '90%', flexDirection: 'column', }}>
+
+
+
+
                             <View style={{ flex: 1, flexDirection: 'row', }}>
                                 <View>
                                     <Text style={{ marginTop: 5, marginLeft: 10 }}>개발 족같이 하기</Text>
@@ -52,6 +52,9 @@ export default function Card({ progresValue }) {
                             <View style={{ flex: 1 }}>
                                 <Text style={{ marginTop: 7, marginLeft: 10, fontSize: 10 }}>{BarPers}% 달성!</Text>
                             </View>
+
+
+
                         </View>
 
                         <View style={{ alignItems: 'center', width: '100%' }}>

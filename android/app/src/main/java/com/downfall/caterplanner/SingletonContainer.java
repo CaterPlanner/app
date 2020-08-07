@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.downfall.caterplanner.rest.db.SQLiteManager;
 import com.downfall.caterplanner.rest.repository.BriefingRepository;
-import com.downfall.caterplanner.rest.repository.DetailPlanHeaderRepository;
 import com.downfall.caterplanner.rest.repository.GoalRepository;
 import com.downfall.caterplanner.rest.repository.PerformRepository;
 import com.downfall.caterplanner.rest.repository.PurposeRepository;
@@ -37,7 +36,6 @@ public class SingletonContainer {
             SQLiteManager.init(context);
 
             BriefingRepository briefingRepository = new BriefingRepository();
-            DetailPlanHeaderRepository detailPlanHeaderRepository = new DetailPlanHeaderRepository();
             GoalRepository goalRepository = new GoalRepository();
             PerformRepository performRepository = new PerformRepository();
             PurposeRepository purposeRepository = new PurposeRepository();
@@ -45,8 +43,7 @@ public class SingletonContainer {
             DetailPlansService detailPlansService = new DetailPlansService(
                     goalRepository,
                     performRepository,
-                    briefingRepository,
-                    detailPlanHeaderRepository
+                    briefingRepository
             );
 
             PurposeService purposeService = new PurposeService(
@@ -57,7 +54,6 @@ public class SingletonContainer {
             );
 
             register(BriefingRepository.class, briefingRepository);
-            register(DetailPlanHeaderRepository.class, detailPlanHeaderRepository);
             register(GoalRepository.class, goalRepository);
             register(PerformRepository.class, performRepository);
             register(PurposeRepository.class, purposeRepository);

@@ -12,7 +12,6 @@ import lombok.Getter;
 public class Briefing {
 
     private long headerId;
-    private int goalKey;
     private int performId;
     private LocalDateTime createAt;
     private int score;

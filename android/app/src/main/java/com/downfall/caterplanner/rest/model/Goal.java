@@ -1,6 +1,5 @@
 package com.downfall.caterplanner.rest.model;
 
-import com.downfall.caterplanner.detailplanmaker.algorithm.PlanType;
 import com.downfall.caterplanner.util.DateUtil;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
@@ -23,9 +22,8 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 public class Goal extends StatisticsModel implements RelationTreeEntity{
 
-    private Long headerId;
+    private Long purposeId;
     private int id;
-    private Integer previousGoalId;
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -76,8 +74,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
 
         return Goal.builder()
                 .id(data.getInt("id"))
-                .headerId((long) data.getInt("headerId"))
-                .previousGoalId(data.getInt("previousGoalId"))
+                .purposeId((long) data.getInt("purposeId"))
                 .name(data.getString("name"))
                 .startDate(DateUtil.parseToDate(data.getString("startDate")))
                 .endDate(DateUtil.parseToDate(data.getString("endDate")))
@@ -90,8 +87,7 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
 
         WritableMap goalMap = Arguments.createMap();
         goalMap.putInt("id", goal.getId());
-        goalMap.putInt("headerId", goal.getHeaderId().intValue());
-        goalMap.putInt("previousGoalId", goal.getPreviousGoalId());
+        goalMap.putInt("purposeId", goal.getPurposeId().intValue());
         goalMap.putString("name", goal.getName());
         goalMap.putString("startDate", DateUtil.formatFromDate(goal.getStartDate()));
         goalMap.putString("endDate", DateUtil.formatFromDate(goal.getEndDate()));
@@ -108,16 +104,6 @@ public class Goal extends StatisticsModel implements RelationTreeEntity{
         this.stat = copy.getStat();
     }
 
-
-    @Override
-    public PlanType getType() {
-        return PlanType.G;
-    }
-
-    @Override
-    public void setConstructorKey(int constructorKey) {
-        this.previousGoalId = constructorKey;
-    }
 
 
 }
