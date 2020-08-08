@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import GoalWriteBoardTop from '../../../organism/DetailPlanWrite/GoalWriteBoardTop'
 import GoalWriteBoardBottom from '../../../organism/DetailPlanWrite/GoalWriteBoardBottom'
-import { inject, observer } from 'mobx-react'
+import { inject, observer } from './node_modules/mobx-react'
 import CommonType from '../../../../util/CommonType'
 
 

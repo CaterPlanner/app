@@ -4,7 +4,7 @@ import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
 import Card from './Card'
 import SplashScreen from 'react-native-splash-screen';
-import MainHeader from '../../../molecule/MainHeader'
+import MainHeader from '../../../molecule/header/MainHeader'
 
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
 YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
@@ -14,7 +14,7 @@ const progresValue = 30;
 
 
 
-export default class PurposeCard extends Component {
+export default class Home extends Component {
 
 
     constructor(props) {
@@ -57,7 +57,7 @@ export default class PurposeCard extends Component {
     render() {
         return (
             <View style={{ flex: 1}}>
-                <MainHeader />
+            <MainHeader navigation={this.props.navigation}/>
                 <View style={{flex: 1}}>
                     <View style={{flex: 11, justifyContent : 'center'}}>
                         <View>

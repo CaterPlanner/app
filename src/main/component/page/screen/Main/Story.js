@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native'
 
-const Stories = () => {
+const Story = () => {
     return(
         <View>
             <Text>Hello I am Stories :D</Text>
@@ -9,4 +9,4 @@ const Stories = () => {
     )
 }
 
-export default Stories;
+export default Story;
