@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import recommend from '../screen/Search/RecommendGoals'
-import newGoals from '../screen/Search/NewGoals'
-import popularGaols from '../screen/Search/PopularGaols'
-import category from '../screen/Search/Category'
+import recommend from '../screen/search/RecommendGoals'
+import newGoals from '../screen/search/NewGoals'
+import popularGaols from '../screen/search/PopularGaols'
+import category from '../screen/search/Category'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 const Tab = createMaterialTopTabNavigator();

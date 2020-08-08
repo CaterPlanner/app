@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { View, Image, Text} from 'react-native';
-import MainHeader from '../../../molecule/MainHeader'
+import MainHeader from '../../../molecule/header/MainHeader'
 import ColorButton from '../../../atom/button/ColorButton'
 
 
-export default function Create({navigation}){
+export default function Make({navigation}){
     return(
         <View style={{flex: 1}}>
-            <MainHeader/>
+            <MainHeader navigation={navigation}/>
             <View style={{flex: 1, justifyContent: 'center'}}>
                 
                 <View style={{

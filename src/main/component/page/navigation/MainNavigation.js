@@ -1,20 +1,11 @@
 import React from 'react';
 import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from '../screen/Main/Home'
+import HomeNavigation from './HomeNavigation'
 import SearchNavigation from './SearchNavigation'
-import Make from '../screen/Main/Make'
-import Story from '../screen/Main/Story'
-import MyPage from '../screen/Main/MyPage'
-import { createStackNavigator } from '@react-navigation/stack';
-
-
-const Stack = createStackNavigator();
-const SNSNavigation = () => {
-  return(
-    <Stack.Screen name= />
-  )
-}
+import Make from '../screen/main/Make'
+import StoryNavigation from './StoryNavigation'
+import MyProfile from '../screen/main/MyProfile'
 
 
 
@@ -29,12 +20,12 @@ const MainNavigation = () => {
           let iconSource;
 
           switch (route.name) {
-            case "Home":
+            case "HomeNavigation":
               iconSource = focused ?
                 require('../../../../../asset/icon/tab_icon_active_home.png') :
                 require('../../../../../asset/icon/tab_icon_inactive_home.png')
               break;
-            case "Search":
+            case "SearchNavigation":
               iconSource = focused ?
                 require('../../../../../asset/icon/tab_icon_active_search.png') :
                 require('../../../../../asset/icon/tab_icon_inactive_search.png')
@@ -44,12 +35,12 @@ const MainNavigation = () => {
                 require('../../../../../asset/icon/tab_icon_active_make.png') :
                 require('../../../../../asset/icon/tab_icon_inactive_make.png')
               break;
-            case "Story":
+            case "StoryNavigation":
               iconSource = focused ?
                 require('../../../../../asset/icon/tab_icon_active_story.png') :
                 require('../../../../../asset/icon/tab_icon_inactive_story.png')
               break;
-            case "MyPage":
+            case "MyProfile":
               iconSource = focused ?
                 require('../../../../../asset/icon/tab_icon_active_mypage.png') :
                 require('../../../../../asset/icon/tab_icon_inactive_mypage.png')
@@ -72,11 +63,11 @@ const MainNavigation = () => {
         style: { backgroundColor: 'white', height: 50 },
       }}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Search" component={SearchNavigation} />
+      <Tab.Screen name="HomeNavigation" component={HomeNavigation} />
+      <Tab.Screen name="SearchNavigation" component={SearchNavigation} />
       <Tab.Screen name="Make" component={Make} />
-      <Tab.Screen name="Story" component={Story} />
-      <Tab.Screen name="MyPage" component={MyPage} />
+      <Tab.Screen name="StoryNavigation" component={StoryNavigation} />
+      <Tab.Screen name="MyProfile" component={MyProfile} />
     </Tab.Navigator>
   );
 }
