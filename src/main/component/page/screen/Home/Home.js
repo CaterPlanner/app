@@ -3,7 +3,6 @@ import { View, StyleSheet, Button, Dimensions, YellowBox, Text, Image, Touchable
 import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
 import Card from './Card'
-import SplashScreen from 'react-native-splash-screen';
 import MainHeader from '../../../molecule/header/MainHeader'
 
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
@@ -51,7 +50,7 @@ export default class Home extends Component {
 
 
     componentDidMount() {
-        SplashScreen.hide();
+
     }
 
     render() {

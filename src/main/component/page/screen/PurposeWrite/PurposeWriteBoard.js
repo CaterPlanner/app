@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Dimensions, BackHandler } from 'react-native'
-import {inject, observer} from './node_modules/mobx-react'
+import {inject, observer} from 'mobx-react'
 
-import Carousel from '../home/node_modules/react-native-snap-carousel';
+import Carousel from 'react-native-snap-carousel';
 import PurposeNameWrite from './PurposeNameWrite';
 import PurposeDescriptionWrite from './PurposeDescriptionWrite';
 import PurposeThumbnailWrite from './PurposeThumbnailWrite';

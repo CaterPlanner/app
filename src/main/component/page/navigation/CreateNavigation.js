@@ -1,7 +1,7 @@
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack';
 import DetailPlanNavigation from './DetailPlanNavigation'
-import ChoiceImage from '../screen/purposeWrite/ChoiceImage'
+import ChoiceImage from '../screen/purposeWrite/ChoiceGroup'
 import ChoiceGroup from '../screen/purposeWrite/ChoiceGroup'
 import PurposeWriteBoard from '../screen/purposeWrite/PurposeWriteBoard'
 
