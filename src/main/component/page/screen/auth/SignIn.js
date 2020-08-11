@@ -1,13 +1,13 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import { View, Text, Button, AsyncStorage } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores';
-import { Button } from 'native-base';
+import { GoogleSigninButton } from '@react-native-community/google-signin';
 
-export default function SignIn(){
-    
-    const {authStore} = useStores();
+export default function SignIn() {
 
-    return(
+    const { authStore } = useStores();
+
+    return (
         <View style={{
             flex: 1,
             backgroundColor: 'white',
@@ -15,13 +15,21 @@ export default function SignIn(){
             justifyContent: 'center'
         }}>
             <Text>
-            Hello I am SignIn;
+                Hello I am SignIn;
             </Text>
 
+            <GoogleSigninButton
+                style={{ width: 192, height: 48 }}
+                size={GoogleSigninButton.Size.Wide}
+                color={GoogleSigninButton.Color.Dark}
+                onPress={authStore.signInByGoogle}
+                />
+
             <Button
-                title="Google Sign-In"
-                onPress={() => authStore.signInByGoogle}
+                title="Log out"
+                onPress={authStore.logout}
             />
+
         </View>
     );
 }
