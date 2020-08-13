@@ -1,43 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, Dimensions, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, StyleSheet, Image } from 'react-native';
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
+import Goal from '../../../../../rest/model/Goal';
+import Perform from '../../../../../rest/model/Perform';
+import Briefing from '../../../../../rest/model/Briefing';
 
 
-const data = {
-    name: '생존수영 수업 받기',
-    startDate: '2020-06-01',
-    endDate: '2020-07-30',
-    color: '#F8C2C2',
-    performs: [
-        {
-            name: '잠수 심화 수업 듣기',
-            endDate: new Date('2020-07-31'),
-            cycle: 'A 1 2'
-        },
-        {
-            name: '생존 수영 강의 듣기',
-            endDate: new Date('2020-07-31'),
-            cycle: 'W 1 2'
-        },
-        {
-            name: '30분 물에 떠 있기',
-            endDate: new Date('2020-07-31'),
-            cycle: 'A 1 2'
-        },
-        {
-            name: '3분 물 속 잠수하기',
-            endDate: new Date('2020-07-31'),
-            cycle: 'A 1 2'
-        }
-    ]
-}
 
 const DAYS = ['월', '화', '수', '목', '금', '토', '일']
 
 function PerfromInfo({ goalColor, perform }) {
 
-    const cyclePiece = perform.cycle.split(' ');
-    const cylceParam = cyclePiece.slice(1, cyclePiece.length);
+    const cylceParams = perform.cycleParams;
 
     return (
         <View style={perfomInfoStyles.container}>
@@ -49,7 +23,7 @@ function PerfromInfo({ goalColor, perform }) {
                 <Text style={perfomInfoStyles.fontStyle}>브리핑 주기</Text>
                 <Text style={perfomInfoStyles.fontStyle}>
                     {
-                        perform.cycle[0] == 'A' ? '매일' : '매주'
+                        perform.cycleType == 'A' ? '매일' : '매주'
                     }
                 </Text>
             </View>
@@ -61,7 +35,7 @@ function PerfromInfo({ goalColor, perform }) {
                                 width: 40, height: 40, borderRadius: 40,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                backgroundColor: cylceParam.includes(index.toString()) || perform.cycle[0] == 'A' ? goalColor : '#C4C4C4'
+                                backgroundColor: cylceParams.includes(index.toString()) || perform.cycleType == 'A' ? goalColor : '#C4C4C4'
                             }}>
                                 <Text>{dayName}</Text>
                             </View>
@@ -70,19 +44,20 @@ function PerfromInfo({ goalColor, perform }) {
                 }
             </View>
             <View style={perfomInfoStyles.propertyContainer}>
-                <Text style={perfomInfoStyles.fontStyle}>9/9 수행</Text>
-                <Text style={perfomInfoStyles.fontStyle}>100%</Text>
+            <Text style={perfomInfoStyles.fontStyle}>{perform.currentBriefingCount}/{perform.maxTime} 수행</Text>
+            <Text style={perfomInfoStyles.fontStyle}>{perform.achieve}%</Text>
             </View>
             <View style={{ paddingTop: 8, paddingBottom: 20 }}>
                 <ProgressBarAnimated style={{
-                    alignSelf: 'center', justifyContent: 'center'}} 
-                    value={100} height={7} width={Dimensions.get('window').width - 18} animated={true} backgroundColor={'#5EDF8C'} unfilledColor={'#AFAFAF'} borderRadius={0} borderWidth={0} />
+                    alignSelf: 'center', justifyContent: 'center'
+                }}
+                    value={perform.achieve} height={7} width={Dimensions.get('window').width - 18} animated={true} backgroundColor={goalColor} unfilledColor={'#AFAFAF'} borderRadius={0} borderWidth={0} />
             </View>
         </View>
     )
 }
 
-function PerformAccordian({ name, performInfo, animationEnd }) {
+function PerformAccordian({ name, goalColor,  performInfo, animationEnd }) {
 
     const [expanded, setExpanded] = useState(false);
 
@@ -96,7 +71,7 @@ function PerformAccordian({ name, performInfo, animationEnd }) {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut, animationEnd);
                 setExpanded(!expanded);
             }}>
-                <View style={performAccordianStyles.icon} />
+                <View style={[performAccordianStyles.icon, {backgroundColor : goalColor}]} />
                 <Text style={performAccordianStyles.titleFont}>{name}</Text>
                 <View style={{ flex: 1 }} />
                 <View style={{ marginRight: 10 }}>
@@ -123,40 +98,95 @@ function PerformAccordian({ name, performInfo, animationEnd }) {
 
 export default function DetailGoal({ goal }) {
 
-    goal = data;
+ 
 
-    console.log('hello')
+    goal = new Goal(0, 0, '생존수영 수업 받기', '2020-06-01', '2020-07-30', '#F8C2C2' , 1);
+    performs = [
+        new Perform(0, 0, 0,'잠수 심화 수업 듣기', 'W 1 2' ,'2020-06-01', '2020-07-30' ),
+        new Perform(1, 0, 0,'생존 수영 강의 듣기', 'W 1 2' ,'2020-06-01', '2020-07-30' ),
+        new Perform(2, 0, 0,'30분 물에 떠 있기', 'A' ,'2020-06-01', '2020-07-30' ),
+        new Perform(3, 0, 0,'3분 물 속 잠수하기', 'W 2 3' ,'2020-06-01', '2020-07-30' ),
+        new Perform(4, 0, 0,'3분 물 속 잠수하기', 'W 2 3' ,'2020-06-01', '2020-07-30' ),
+        new Perform(5, 0, 0,'3분 물 속 잠수하기', 'W 2 3' ,'2020-06-01', '2020-07-30' ),
+        new Perform(6, 0, 0,'3분 물 속 잠수하기', 'W 2 3' ,'2020-06-01', '2020-07-30' ),
+    ]
+    goal.setPerforms(performs);
+    goal.performs[0].setBriefings(
+        [
+            new Briefing(0, 0, '2020-06-02', 0),
+            new Briefing(0, 0, '2020-06-03', 0),
+        ]
+    )
+    goal.performs[1].setBriefings(
+        [
+            new Briefing(0, 0, '2020-06-02', 0),
+            new Briefing(0, 0, '2020-06-03', 0),
+        ]
+    )
+    goal.performs[2].setBriefings(
+        [
+            new Briefing(0, 0, '2020-06-02', 0),
+            new Briefing(0, 0, '2020-06-03', 0),
+        ]
+    )
+    goal.performs[3].setBriefings(
+        [
+            new Briefing(0, 0, '2020-06-02', 0),
+            new Briefing(0, 0, '2020-06-03', 0),
+        ]
+    )
+    goal.performs[4].setBriefings(
+        [
+            new Briefing(0, 0, '2020-06-02', 0),
+            new Briefing(0, 0, '2020-06-03', 0),
+        ]
+    )
+    goal.performs[5].setBriefings(
+        [
+            new Briefing(0, 0, '2020-06-02', 0),
+            new Briefing(0, 0, '2020-06-03', 0),
+        ]
+    )
+    goal.performs[6].setBriefings(
+        [
+            new Briefing(0, 0, '2020-06-02', 0),
+            new Briefing(0, 0, '2020-06-03', 0),
+        ]
+    )
+
+    
     return (
         <ScrollView
             ref={(scrollView) => { this.scrollView = scrollView }}
-            style={{ flex: 1 }}>
+            style={{ flex: 1 }}
+        >
             <View
-                style={detailGoalstyles.topBackground}>
-            </View>
+                style={detailGoalstyles.topBackground}/>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <Text style={detailGoalstyles.goalNameFont}>
                     {goal.name}
                 </Text>
                 <Text style={detailGoalstyles.goalDecimalDayFont}>
-                    {goal.d_day}
+                    D-3
                 </Text>
-                <View>
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                <View style={{ marginHorizontal: 12, paddingVertical: 12 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                         <Text>
-                            {goal.startDate.toString()}                            
+                            {goal.startDate.toString()}
                         </Text>
                         <Text>
                             {goal.endDate.toString()}
                         </Text>
                     </View>
-                    <View style={{alignItems : 'center'}}>
+                    <View style={{ alignItems: 'center' }}>
                         <ProgressBarAnimated style={{
-                            alignSelf: 'center', justifyContent: 'center'}} 
-                            value={100} height={7} width={Dimensions.get('window').width - 18} animated={true} backgroundColor={goal.color} unfilledColor={'#AFAFAF'} borderRadius={0} borderWidth={0} />
+                            alignSelf: 'center', justifyContent: 'center'
+                        }}
+                            value={goal.achieve} height={7} width={Dimensions.get('window').width - 18} animated={true} backgroundColor={goal.color} unfilledColor={'#AFAFAF'} borderRadius={0} borderWidth={0} />
                     </View>
                 </View>
             </View>
-            <View style={{ width: '100%', backgroundColor: 'white', marginTop: 10, paddingBottom : 30 }}>
+            <View style={{ width: '100%', backgroundColor: 'white', marginTop: 10, paddingBottom: 30 }}>
                 <Text style={{ fontSize: 15, marginLeft: 12, marginVertical: 6 }}>
                     수행 방법 리스트
                 </Text>
@@ -169,8 +199,9 @@ export default function DetailGoal({ goal }) {
                                     performInfo={(
                                         <PerfromInfo perform={perform} goalColor={goal.color} />
                                     )}
+                                    goalColor={goal.color}
                                     animationEnd={() => {
-                                        this.scrollView.scrollToEnd({ animated: true,  duration: 500 });
+                                        
                                     }}
                                 />
                             )
@@ -211,7 +242,6 @@ const performAccordianStyles = StyleSheet.create({
         width: 35,
         height: 35,
         borderRadius: 35,
-        backgroundColor: '#5EDF8C',
         marginRight: 10
     }
 })
@@ -230,10 +260,9 @@ const detailGoalstyles = StyleSheet.create({
         paddingBottom: 8
     },
     goalDecimalDayFont: {
-        fontSize: 15,
+        fontSize: 17,
         textAlign: 'center',
-        paddingTop: 8,
-        paddingBottom: 20
+        paddingTop: 12
     }
 
 })

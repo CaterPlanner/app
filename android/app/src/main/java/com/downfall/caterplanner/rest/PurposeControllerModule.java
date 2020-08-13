@@ -45,9 +45,9 @@ public class PurposeControllerModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void createWithDetailPlansByOther(ReadableMap r_purpose, ReadableArray r_detailPlans, Integer baseId, Promise promise){
+    public void createWithDetailPlansByOther(ReadableMap r_purpose, ReadableArray r_detailPlans, Promise promise){
         try{
-            promise.resolve(purposeService.createByReact(r_purpose, r_detailPlans, baseId.longValue()));
+            promise.resolve(purposeService.createByReact(r_purpose, r_detailPlans));
         }catch (Exception e){
             promise.reject(e);
         }

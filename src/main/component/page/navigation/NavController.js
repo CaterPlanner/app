@@ -39,7 +39,8 @@ export default class NavController extends Component{
             //         this.appStore.isBegin  ? <BeginNavigation/> : <AppNavigation/>    
             //     }
             // </View>
-            <SignIn/>
+            // <SignIn/>
+            <AppNavigation/> 
         );
     }
 }

@@ -31,11 +31,14 @@ export default function PurposeThumbnailWrite() {
                 </View>
             </View>
 
-            <View style={purposeStyles.bottomContainer}>
-                <ImageButton
-                    text="image"
-                    width="100%"
-                    height="100%"
+            <View style={[purposeStyles.bottomContainer, {justifyContent: 'center', alignItmes:'center'}]}>
+            <ImageButton
+                    backgroundStyle={{ flex:1}}
+                    imageStyle={{ width: 100, height: 100, marginLeft: 5 }}
+                    source={require('../../../../../../asset/button/select_thumbnail_button.png')}
+                    onPress={() => {
+                        console.log('hi');
+                    }}
                 />
             </View>
         </View>
