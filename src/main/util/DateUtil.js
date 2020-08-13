@@ -23,8 +23,10 @@ const DateUtil =
              return date.getYear() % 4 == 0 && date.getYear() % 100 != 0 || date.getYear() % 400 == 0 ? 29 : 28;
       }         
     },
-    betweenDateCount: (date1, date2) => {
-        return Math.abs(Math.ceil((date1.getTime() - date2.getTime()) / DateUtil.DAY_TIME))
+    between : (date1, date2) => {
+        return {
+            day: Math.abs(Math.ceil((date1.getTime() - date2.getTime()) / DateUtil.DAY_TIME))
+        }
     },
     betweenMonthCount: (date1, date2) => {
         const a = date1 > date2 ? date1 : date2;

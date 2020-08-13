@@ -21,33 +21,23 @@ const MainNavigation = () => {
 
           switch (route.name) {
             case "HomeNavigation":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_home.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_home.png')
+              iconSource = require('../../../../../asset/icon/tab_icon_home.png');
               break;
             case "SearchNavigation":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_search.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_search.png')
+              iconSource =  require('../../../../../asset/icon/tab_icon_search.png');
               break;
             case "Make":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_make.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_make.png')
+              iconSource = require('../../../../../asset/icon/tab_icon_make.png');
               break;
             case "StoryNavigation":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_story.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_story.png')
+              iconSource = require('../../../../../asset/icon/tab_icon_story.png');
               break;
             case "MyProfile":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_mypage.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_mypage.png')
+              iconSource = require('../../../../../asset/icon/tab_icon_mypage.png');
               break;
           }
 
-          return <Image source={iconSource} />
+          return <Image source={iconSource} style={{tintColor : focused ? '#25B046' : undefined}} />
         },
       })}
       tabBarOptions={{

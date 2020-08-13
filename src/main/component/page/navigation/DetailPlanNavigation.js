@@ -1,7 +1,7 @@
 import React from 'react'
 import {Button} from 'react-native'
 import {createStackNavigator} from '@react-navigation/stack';
-import {GoalWriteBoard} from '../screen/detailPlanWrite/GoalWriteBoard'
+import {GoalWriteBoard} from '../screen/detailPlanWrite/GoalWriteBoards'
 import GoalInsert from '../screen/detailPlanWrite/GoalInsert'
 import CommonType from '../../../util/CommonType';
 

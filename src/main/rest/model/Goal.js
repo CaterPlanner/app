@@ -1,6 +1,15 @@
+import State from '../State';
+
 export default class Goal {
 
     constructor(id, purposeId, name, startDate, endDate, color, stat) {
+        this.id = id;
+        this.purposeId = purposeId;
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.color = color;
+        this.stat = stat;
     }
 
     setPerforms = (performs) => {
@@ -9,59 +18,50 @@ export default class Goal {
     
     get maxTime(){
         let maxTime = 0;
-        for(p in this.performs){
-            maxTime += p.getMaxTime();
-        }
+
+        this.performs.forEach((p) => {
+            maxTime += p.maxTime;
+        })
+
         return maxTime;
     }
 
    get currentPerfectTime() {
         let currentPerfectTime = 0;
-        for(p in this.performs){
-            currentPerfectTime += p.currentPerfectTime();
-        }
+
+        this.performs.forEach((p) => {
+            currentPerfectTime += p.currentPerfectTime;
+        })
+
         return currentPerfectTime;
     }
 
-    get briefingCount(){
-        if(this.achieve == 100)
+    get currentBriefingCount(){
+        if(this.stat == State.SUCCEES)
             return this.maxTime;
         
         let currentBriefingCount = 0;
-        for(p in this.performs){
-            currentBriefingCount += p.currentBriefingCount();
-        }
+
+        this.performs.forEach((p) => {
+            currentBriefingCount += p.currentBriefingCount;
+        })
+
         return currentBriefingCount;
     }
 
     get achieve(){
-        return this.stat == S
+        if(!this.performs)
+            return null;
+
+        return this.stat == State.SUCCEES ? 100 : Math.round((this.currentBriefingCount / this.maxTime) * 100);
     }
 
-    get performsBreifingCount() {
-        if (!this.isSpecific)
-            throw Error('Must add a briefing first.');
+    get progress(){
+        if(!this.performs)
+            return null;
 
-        let value = 0;
-
-        this.performs.forEach((perform) => {
-            value += perform.briefingCount;
-        });
-
-        return value;
+        return Math.round((this.currentPerfectTime / this.maxTime) * 100);
     }
 
-    get progress() {
-        if (!this.isSpecific)
-            throw Error('Must add a briefing first.');
 
-        return Math.round(this.performsCurrentPerfectTime / this.performsMaxTime).toFixed(2);
-    }
-
-    get achieve() {
-        if (!this.isSpecific)
-            throw Error('Must add a briefing first.');
-
-        return Math.round(this.performsBreifingCount / this.maxTimperformsMaxTimee).toFixed(2);
-    }
 }

@@ -44,18 +44,18 @@ public class PurposeService{
         return purposeRepository.insert(purpose);
     }
 
-    /**
-     * react native 에서 전달받아
-     * Purpose 등록 동시에 자신이 만든 detailPlan 들도 등록
-     *
-     * @param r_purpose
-     * @param r_detailPlans
-     * @return
-     * @throws Exception
-     */
-    public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans) throws Exception{
-        return createByReact(r_purpose, r_detailPlans, null);
-    }
+//    /**
+//     * react native 에서 전달받아
+//     * Purpose 등록 동시에 자신이 만든 detailPlan 들도 등록
+//     *
+//     * @param r_purpose
+//     * @param r_detailPlans
+//     * @return
+//     * @throws Exception
+//     */
+//    public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans) throws Exception{
+//        return createByReact(r_purpose, r_detailPlans);
+//    }
 
     /**
      *
@@ -67,13 +67,13 @@ public class PurposeService{
      * @return
      * @throws Exception
      */
-    public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans, Long detailPlanHeaderId) throws Exception{
+    public Long createByReact(ReadableMap r_purpose, ReadableArray r_detailPlans) throws Exception{
         return SQLiteManager.getInstance().transaction(() -> {
             Purpose purpose = Purpose.valueOf(r_purpose);
             purpose.setStat(State.WAIT);
             Long id = purposeRepository.insert(purpose);
             if(r_detailPlans != null){
-                detailPlanService.createByReact(r_detailPlans, id, detailPlanHeaderId);
+                detailPlanService.createByReact(r_detailPlans, id);
             }
             return id;
         });
