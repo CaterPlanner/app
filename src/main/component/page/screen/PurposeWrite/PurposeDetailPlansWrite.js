@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { View, Text, TouchableOpacity, Button } from 'react-native';
-import CommonType from '../../../../util/CommonType'
 import purposeStyles from './style/PurposeStyle';
 import useStores from '../../../../mobX/helper/useStores'
 import ImageButton from '../../../atom/button/ImageButton';
+import EasyDate from '../../../../util/EasyDate';
 
 
 export default function PurposeDetailPlansWrite({navigation }) {
@@ -35,30 +35,22 @@ export default function PurposeDetailPlansWrite({navigation }) {
                     />
                 </View>
             </View>
-            <View style={purposeStyles.bottomContainer}>
-                <View style={{ flex: 3 }}>
-                    <TouchableOpacity
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            alignSelf: 'center',
-                            borderWidth: 1
-                        }}
-                        onPress={() => {
-                            navigation.navigate('DetailPlanNavigation', {
-                                screen: 'DetailPlanWriteBoard',
-                                params: {
-                                    startType: CommonType.CREATE,
-                                    purpose : purposeWriteStore.purpose, 
-                                    result: (detailPlans) => {
-                                        setPurposeDetailPlans(detailPlans);
-                                        purposeWriteStore.purpose.detailPlans = detailPlans;
-                                    }
-                                }
-                            })
-                        }}>
-                    </TouchableOpacity>
-                </View>
+            <View style={[purposeStyles.bottomContainer, {justifyContent: 'center', alignItmes:'center'}]}>
+                <ImageButton
+                    backgroundStyle={{ flex:1}}
+                    imageStyle={{ width: 100, height: 110 }}
+                    source={require('../../../../../../asset/button/plan_insert_button.png')}
+                    onPress={() => {
+                        navigation.navigate('DetailPlanWriteNavigation', {
+                            screen : 'DetailPlanWriteBoard',
+                            params : {
+                                startDate : EasyDate.now(),
+                                endDate : purposeWriteStore.purpose.decimalday,
+                                setPurposeDetailPlans : setPurposeDetailPlans
+                            }
+                        })
+                    }}
+                />
             </View>
         </View>
     );

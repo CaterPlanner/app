@@ -1,5 +1,7 @@
 export default class EasyDate extends Date{
 
+
+
     static DAY_TIME =  (1000 * 3600 * 24);
 
     static now = () =>{
@@ -7,9 +9,16 @@ export default class EasyDate extends Date{
     }
 
     static between = (date1, date2) => {
+        date1 = EasyDate.trim(date1);
+        date2 = EasyDate.trim(date2);
+
         return {
             day: Math.abs(Math.ceil((date1.getTime() - date2.getTime()) / EasyDate.DAY_TIME))
         }
+    }
+
+    static trim = (date) => {
+        return new EasyDate(date.getFullYear(), date.getMonth(), date.getDate());
     }
 
     static waitingDayOfWeekCount (date, hopeDayOfWeek){
@@ -17,11 +26,11 @@ export default class EasyDate extends Date{
     }
 
     isAfter = (date) => {
-        return this.getDate() < date.getDate();
+        return this.getTime() < date.getTime();
     }
 
     isBefore = (date) => {
-        return this.getDate() > date.getDate();
+        return this.getTime() > date.getTime();
     }
 
     minusDays = (days) => {
@@ -33,11 +42,22 @@ export default class EasyDate extends Date{
     }
 
     equalsDate = (days) => {
-        this.getFullYear() === days.getFullYear() && this.getMonth() === days.getMonth() && this.getDate() === days.getDate();
+        return this.getFullYear() == days.getFullYear() && this.getMonth() == days.getMonth() && this.getDate() == days.getDate();
     }
 
-    trim = (date) => {
-        this.date.setHour
+
+    toStringDateByData = () => {
+        let text = this.getFullYear() + "-"
+        text += (this.getMonth() + 1 < 10 ? '0' : '') + (this.getMonth() + 1) + "-";
+        text += (this.getDate() < 10 ? '0' : '') + this.getDate();
+        return text;
+    }
+
+    toStringDateByView = () => {
+        let text = this.getFullYear() + "년 "
+        text += (this.getMonth() + 1 < 10 ? '0' : '') + (this.getMonth() + 1) + "월 ";
+        text += (this.getDate() < 10 ? '0' : '') + this.getDate() + "일"
+        return text;
     }
 
 }

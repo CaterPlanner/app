@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {View, Text, TextInput } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
+import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput';
 
 export default function PurposeNameWrite({next}) {
 
@@ -22,27 +23,15 @@ export default function PurposeNameWrite({next}) {
                     </View>
                 </View>
                 <View style={purposeStyles.bottomContainer}>
-                    <Text style={{marginBottom : 6, fontWeight: 'bold'}}>
-                        목적 이름 설정하기
-                    </Text>
-                    <TextInput
-                        underlineColorAndroid="transparent"
+                    <CaterPlannerTextInput
+                        label={'목적 이름 설정하기'}
                         numberOfLines={1}
-                        returnKeyType = {"next"}
                         maxLength={32}
-                        placeholder={"목표 이름을 적어주세요!"}
-                        style={{
-                            fontSize: 15,
-                            paddingVertical: 0,
-                            paddingLeft: 0,
-                            borderBottomColor: '#000', // Add this to specify bottom border color
-                            borderBottomWidth: 1
-                        }}
+                        placeHolder={"목표 이름을 적어주세요!"}
                         onSubmitEditing={event => {
                             if(purposeWriteStore.isPermitNextScene)
-                                next();
+                            next();
                         }}
-
                         onChangeText={text => {
                             setPurposeName(text);
                             purposeWriteStore.purpose.name = text;
@@ -52,7 +41,6 @@ export default function PurposeNameWrite({next}) {
                             } else{
                                 purposeWriteStore.changePermit(true);
                             }
-
                         }}
                         value={purposeName}
                     />

@@ -7,7 +7,7 @@ const styles = {
     headContainer: {
         flex:1,
         marginTop: 5,
-        marginBotton: 5
+        marginBottom: 5
     },
 
     titleArea: {

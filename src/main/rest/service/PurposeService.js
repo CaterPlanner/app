@@ -1,13 +1,11 @@
-const { defineBoundAction } = require("mobx/lib/internal");
-
 import State from '../State';
 import PurposeRepository from '../repository/PurposeRepository';
-import PerfromRepository from '../repository/PerformRepository';
 import GoalRepository from '../repository/GoalRepository';
-import DetailPlans from '../model/DetailPlans';
 import BriefingRepository from '../repository/BriefingRepository';
 import EasyDate from '../../util/EasyDate';
+import SQLiteManager from '../../util/SQLiteManager';
 
+const db = SQLiteManager.getConnection();
 
 const PurposeService = {
 
@@ -17,16 +15,11 @@ const PurposeService = {
                 async (txn) => {
                     purpose.stat = State.WAIT;
                     let id = await PurposeRepository.insert(txn, purpose);
-                    if (detailPlans) {
-                        await detailPlans.foreach(async (goal) => {
-                            await goal.performs.foreach(async (perform) => {
-                                perform.purposeId = id;
-                                perform.goalId = goal.id;
-                                await PerfromRepository.insert(txn, perform);
-                            });
+                    if(detailPlans){
+                        for(goal of detailPlans){
                             goal.purposeId = id;
                             await GoalRepository.insert(txn, goal);
-                        })
+                        }
                     }
                     resolve(id);
                 }
@@ -37,14 +30,16 @@ const PurposeService = {
     read: (id) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let purpose = await PurposeRepository.selectById(db, id);
-                purpose.setDetailPlans(
-                    DetailPlans.valueOf(
-                        await GoalRepository.selectByPurposeId(db, id),
-                        await PerfromRepository.selectByPurposeId(db, id),
-                        await BriefingRepository.selectByPurposeId(db, id)
-                    )
-                );
+                const purpose = await PurposeRepository.selectById(db, id);
+                const goals = GoalRepository.selectByPurposeId(db, id);
+                const briefings = await BriefingRepository.selectByPurposeId(db, id);
+
+                briefings.forEach((briefing) => {
+                    briefing.purposeId = purpose.id;
+                    goals[briefing.goalId].briefings.push(briefing);
+                })
+
+                purpose.setDetailPlans(goals);
                 resolve(purpose);
             } catch (e) {
                 reject(e);
@@ -58,13 +53,16 @@ const PurposeService = {
                 let purposes = await PurposeRepository.selectByStatIsActive(db);
                 resolve(
                     purposes.map((purpose) => {
-                        purpose.setDetailPlans(
-                            DetailPlans.valueOf(
-                                await GoalRepository.selectByPurposeId(db, id),
-                                await PerfromRepository.selectByPurposeId(db, id),
-                                await BriefingRepository.selectByPurposeId(db, id)
-                            )
-                        );
+
+                        const goals = GoalRepository.selectByPurposeId(db, purpose.id);
+                        const briefings = await BriefingRepository.selectByPurposeId(db, purpose.id);
+        
+                        briefings.forEach((briefing) => {
+                            briefing.purposeId = purpose.id;
+                            goals[briefing.goalId].briefings.push(briefing);
+                        })      
+
+                        purpose.setDetailPlans(goals);
                     })
                 )
             } catch (e) {
@@ -78,17 +76,14 @@ const PurposeService = {
             db.transaction(
                 async (txn) => {
                     await PurposeRepository.updatePurposeDate(txn, purpose);
+
                     if (detailPlans) {
                         await GoalRepository.deleteByPurposeId(txn, id);
-                        await detailPlans.foreach(async (goal) => {
-                            goal.performs.foreach((perform) => {
-                                perform.purposeId = id;
-                                perform.goalId = goal.id;
-                                await PerfromRepository.insert(txn, perform);
-                            });
+
+                        for(goal of detailPlans){
                             goal.purposeId = id;
                             await GoalRepository.insert(txn, goal);
-                        });
+                        }
                     }
                 }
                 , reject)
@@ -131,14 +126,18 @@ const PurposeService = {
                 purposes = await PurposeRepository.selectByStatIsActive(txn);
                 today = EasyDate.now();
 
-                for (purpose in purposes) {
-                    detailPlans = DetailPlans.valueOf(
-                        await GoalRepository.selectByPurposeId(txn, purposes.id),
-                        await PerfromRepository.selectByPurposeId(txn, purposes.id),
-                        await BriefingRepository.selectByPurposeId(txn, purposes.id)
-                    );
+                for (purpose of purposes) {
 
-                    for (goal in detailPlans.entryData) {
+                    const goals = GoalRepository.selectByPurposeId(db, purpose.id);
+                    const briefings = await BriefingRepository.selectByPurposeId(db, purpose.id);
+    
+
+                    briefings.forEach((briefing) => {
+                        briefing.purposeId = purpose.id;
+                        goals[briefing.goalId].briefings.push(briefing);
+                    })
+
+                    for (goal of goals) {
                         if (State.isPass(goal.stat))
                             continue;
 
@@ -162,18 +161,24 @@ const PurposeService = {
     },
     addBriefing: (id, goalId, performId) => {
         return new Promise(async (resolve, reject) => {
+            
             db.transaction(async (txn) => {
                 const purpose = await PurposeRepository.selectById(txn, id);
 
                 await BriefingRepository.insert(txn, purposes.id, performId);
-                const detailPlans = DetailPlans.valueOf(
-                    await GoalRepository.selectByPurposeId(txn, id),
-                    await PerfromRepository.selectByPurposeId(txn, id),
-                    await BriefingRepository.selectByPurposeId(txn, id)
-                )
-                purpose.setDetailPlans(detailPlans);
+
+                const goals = GoalRepository.selectByPurposeId(db, purpose.id);
+                const briefings = await BriefingRepository.selectByPurposeId(db, purpose.id);
+
+                briefings.forEach((briefing) => {
+                    briefing.purposeId = purpose.id;
+                    goals[briefing.goalId].briefings.push(briefing);
+                })
+
+
+                purpose.setDetailPlans(goals);
                 
-                const goal = detailPlans.entryData[goalId];
+                const goal = purpose.detailPlans[goalId];
 
                 if(goal.achieve == 100 && goal.stat == State.PROCEED){
                     goal.stat = State.SUCCEES;

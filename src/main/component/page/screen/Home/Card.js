@@ -6,21 +6,25 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 export default function Card({ image, title, date }) {
     return (
         <View style={{
-            height: 400
+            height: '100%', justifyContent: 'center'
         }}>
             <View style={{
-                borderTopRightRadius: 40,
-                borderTopLeftRadius: 40,
+                borderTopRightRadius: 45,
+                borderTopLeftRadius: 45,
                 borderBottomStartRadius: 40,
                 borderBottomEndRadius: 40,
                 backgroundColor: '#ffffff',
                 elevation: 3,
-                flex: 1,
+                height: 380,
                 margin: 3,
             }}
             >
                 <View style={{
                     flex: 2,
+                    borderWidth: 5,
+                    borderColor: 'white',
+                    borderTopRightRadius: 45,
+                    borderTopLeftRadius: 45,
                 }}>
                     <Image
                         source={{ uri: image }}
@@ -29,6 +33,13 @@ export default function Card({ image, title, date }) {
                             borderTopLeftRadius: 40,
                         }}
                     />
+                    <View style={{ position: 'absolute', top: -35, width: '100%', alignItems:'center'}}>
+                        <Image
+                            resizeMode="stretch"
+                            style={{ width: '90%', height: 80, tintColor: '#585858' }}
+                            source={require('../../../../../../asset/image/card_header.png')}
+                        />
+                    </View>
                 </View>
                 <View style={{
                     flex: 1

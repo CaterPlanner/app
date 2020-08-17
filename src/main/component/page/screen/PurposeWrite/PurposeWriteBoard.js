@@ -24,13 +24,14 @@ export default class PurposeWriteBoard extends Component {
     constructor(props) {
         super(props)
 
+
         this.views = [
-            <PurposeNameWrite next={this._next} />,
-            <PurposeDescriptionWrite next={this._next} />,
-            <PurposeThumbnailWrite />,
+            <PurposeOtherWrite />,
             <PurposeDecimalDayWrite />,
             <PurposeDetailPlansWrite navigation={this.props.navigation} />,
-            <PurposeOtherWrite />,
+            <PurposeNameWrite next={this._next} />,
+            <PurposeDescriptionWrite next={this._next} />,
+            <PurposeThumbnailWrite navigation={this.props.navigation}/>,
             <PurposeWriteDone navigation={this.props.navigation} />
         ]
 
@@ -61,10 +62,10 @@ export default class PurposeWriteBoard extends Component {
         BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.purposeWriteStore.activeIndex != 0) {
                 this._previous();
-                return true;
             } else {
                 return false;
             }
+            return true;
         })
     }
 
