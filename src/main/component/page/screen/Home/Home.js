@@ -3,7 +3,7 @@ import { View, StyleSheet, Button, Dimensions, YellowBox, Text, Image, Touchable
 import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
 import Card from './Card'
-import MainHeader from '../../../molecule/header/MainHeader'
+import MainHeader from '../../../organism/header/MainHeader'
 
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
 YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
@@ -56,7 +56,6 @@ export default class Home extends Component {
     render() {
         return (
             <View style={{ flex: 1}}>
-            <MainHeader navigation={this.props.navigation}/>
                 <View style={{flex: 1}}>
                     <View style={{flex: 11, justifyContent : 'center'}}>
                         <View>
@@ -89,57 +88,3 @@ export default class Home extends Component {
 }
 
 
-const styles = StyleSheet.create({
-
-
-
-    buttomContainer: {
-        flex: 0.6,
-        alignItems: 'center',
-        backgroundColor: 'rgba(20,20,20,0)'
-
-    },//fuck this
-
-    baseLay: {
-        flex: 6,
-        backgroundColor: 'white',
-        flexDirection: 'row'
-    },
-
-    in_SideLay: {
-        //  backgroundColor:'blue',
-        flex: 1,
-        //   borderColor:'tomato',
-        //   borderWidth:15
-    },
-
-    centerLay: {
-        paddingTop: '7%',
-        //  backgroundColor:'aqua',
-        flex: 12,
-        justifyContent: "center",
-        alignItems: "center",
-
-    },
-
-    indexNum: {
-
-        marginTop: "4%",
-        alignItems: "center",
-        backgroundColor: '#dfdfdf',
-        justifyContent: "center",
-        width: 65,
-        height: 25,
-        borderRadius: 12,
-        alignSelf: 'center',
-        marginBottom: '5%'
-
-    },
-    moreCon: {
-
-
-    }
-
-
-
-})

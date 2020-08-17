@@ -18,7 +18,7 @@ public class PurposeRepository extends BaseRepository {
         contentValues.put("name", purpose.getName());
         contentValues.put("description", purpose.getDescription());
         contentValues.put("image_url", purpose.getImageUrl());
-        contentValues.put("disclosure_scopes",purpose.getDisclosureScope());
+        contentValues.put("disclosure_scope",purpose.getDisclosureScope());
         contentValues.put("start_at", purpose.getStartAt().toString());
         contentValues.put("decimal_day", purpose.getDecimalDay().toString());
         contentValues.put("stat", purpose.getStat().getValue());

@@ -1,9 +1,13 @@
 import React from 'react'
+import {Button} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import DetailPlanNavigation from './DetailPlanNavigation'
-import ChoiceImage from '../screen/purposeWrite/ChoiceGroup'
-import ChoiceGroup from '../screen/purposeWrite/ChoiceGroup'
+import DetailPlanWriteNavigation from './DetailPlanWriteNavigation'
 import PurposeWriteBoard from '../screen/purposeWrite/PurposeWriteBoard'
+import SelectAlbum from '../screen/purposeWrite/SelectAlbum'
+import SelectPhoto from '../screen/purposeWrite/SelectPhoto';
+
+import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle'
+import useStores from '../../../mobX/helper/useStores';
 
 
 const Stack = createStackNavigator();
@@ -11,11 +15,30 @@ const Stack = createStackNavigator();
 
 const CreateNavigation = () => {
     return(
-          <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Navigator >
             <Stack.Screen options={{headerShown: false}} name="PurposeWriteBoard" component={PurposeWriteBoard}  />
-            <Stack.Screen name="DetailPlanNavigation" component={DetailPlanNavigation} />
-            <Stack.Screen name="ChoiceImage" component={ChoiceImage} />
-            <Stack.Screen name="ChoiceGroup" component={ChoiceGroup} />
+            <Stack.Screen options={{headerShown: false}} name="DetailPlanWriteNavigation" component={DetailPlanWriteNavigation} />
+            <Stack.Screen options={{
+                ...defaultHeaderStyle,
+                headerTitle: ''
+            }} name="SelectAlbum" component={SelectAlbum} />
+            <Stack.Screen name="SelectPhoto" component={SelectPhoto} options={({route, navigation}) => ({
+                ...defaultHeaderStyle,
+                headerTitle : route.params.photoName,
+                headerRight : () => {
+                    // const enable = route.params.purposeWriteStore.isSelectPh
+                    
+                    // const {purposeStore} = useStores();
+
+                    return <Button
+                        title="완료"
+                        // disabled={!purposeStore.isSelectPhoto}
+                        onPress={() => {
+                            navigation.navigator('DetailPlanNavigation');
+                        }}
+                    />
+                }
+            })}/>
         </Stack.Navigator>
     )
     

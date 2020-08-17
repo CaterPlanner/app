@@ -3,10 +3,9 @@ import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeNavigation from './HomeNavigation'
 import SearchNavigation from './SearchNavigation'
-import Make from '../screen/main/Make'
 import StoryNavigation from './StoryNavigation'
 import MyProfile from '../screen/main/MyProfile'
-
+import Make from '../screen/main/Make'
 
 
 const Tab = createBottomTabNavigator();
@@ -15,43 +14,33 @@ const MainNavigation = () => {
   return (
 
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={({ route, navigation }) => ({
         tabBarIcon: ({ focused }) => {
           let iconSource;
 
           switch (route.name) {
             case "HomeNavigation":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_home.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_home.png')
+              iconSource = require('../../../../../asset/icon/tab_icon_home.png');
               break;
             case "SearchNavigation":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_search.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_search.png')
+              iconSource =  require('../../../../../asset/icon/tab_icon_search.png');
               break;
             case "Make":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_make.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_make.png')
+              iconSource = require('../../../../../asset/icon/tab_icon_make.png');
               break;
             case "StoryNavigation":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_story.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_story.png')
+              iconSource = require('../../../../../asset/icon/tab_icon_story.png');
               break;
             case "MyProfile":
-              iconSource = focused ?
-                require('../../../../../asset/icon/tab_icon_active_mypage.png') :
-                require('../../../../../asset/icon/tab_icon_inactive_mypage.png')
+              iconSource = require('../../../../../asset/icon/tab_icon_profile.png');
               break;
           }
 
-          return <Image source={iconSource} />
+          return <Image source={iconSource} resizeMode="stretch"  style={{tintColor : focused ? '#25B046' : undefined , width: '90%', height: '100%'}} />
         },
       })}
       tabBarOptions={{
-        iconStyle: { height: 35 },
+        iconStyle: { height: 40 },
         upperCaseLabel: false,
         showLabel: false,//탭의 이름을 표시함 
         showIcon: true,//아이콘 보이게 하는 친구임
@@ -65,7 +54,12 @@ const MainNavigation = () => {
     >
       <Tab.Screen name="HomeNavigation" component={HomeNavigation} />
       <Tab.Screen name="SearchNavigation" component={SearchNavigation} />
-      <Tab.Screen name="Make" component={Make} />
+      <Tab.Screen name="Make" component={Make} listeners={({navigation}) => ({
+        tabPress : e => {
+          navigation.navigate('CreateNavigation');
+          e.preventDefault();
+        },
+      })} />
       <Tab.Screen name="StoryNavigation" component={StoryNavigation} />
       <Tab.Screen name="MyProfile" component={MyProfile} />
     </Tab.Navigator>

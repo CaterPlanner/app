@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Dimensions, BackHandler } from 'react-native'
-import {inject, observer} from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
 import PurposeNameWrite from './PurposeNameWrite';
@@ -24,13 +24,14 @@ export default class PurposeWriteBoard extends Component {
     constructor(props) {
         super(props)
 
+
         this.views = [
-            <PurposeNameWrite next={this._next}/>,
-            <PurposeDescriptionWrite next={this._next}/>,
-            <PurposeThumbnailWrite/>,
-            <PurposeDecimalDayWrite/>,
+            <PurposeOtherWrite />,
+            <PurposeDecimalDayWrite />,
             <PurposeDetailPlansWrite navigation={this.props.navigation} />,
-            <PurposeOtherWrite/>,
+            <PurposeNameWrite next={this._next} />,
+            <PurposeDescriptionWrite next={this._next} />,
+            <PurposeThumbnailWrite navigation={this.props.navigation}/>,
             <PurposeWriteDone navigation={this.props.navigation} />
         ]
 
@@ -45,14 +46,14 @@ export default class PurposeWriteBoard extends Component {
     }
 
     _next = () => {
-        
-        if(this.purposeWriteStore.hasNext){
+
+        if (this.purposeWriteStore.hasNext) {
             this.purposeWriteStore.next(this.carousel);
         }
     }
 
     _previous = () => {
-        if(this.purposeWriteStore.hasPrevious){
+        if (this.purposeWriteStore.hasPrevious) {
             this.purposeWriteStore.previous(this.carousel);
         }
     }
@@ -61,33 +62,36 @@ export default class PurposeWriteBoard extends Component {
         BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.purposeWriteStore.activeIndex != 0) {
                 this._previous();
-                return true;
             } else {
                 return false;
             }
+            return true;
         })
     }
-    
+
     render() {
         return (
-            <View style={{ flex: 1, backgroundColor: '#ffffff'}}>
+            <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
                 <View style={styles.topContainer}>
                     {/* <PageStateText activeIndex={this.state.activeIndex + 1} endIndex={this.state.endIndex}/> */}
-                    <ImageButton
-                        source={this.purposeWriteStore.hasPrevious ? 
-                            require('../../../../../../asset/button/exit_button.png') :
-                            require('../../../../../../asset/button/exit_button.png')
-                        }
-                        width={40}
-                        height={40}
-                        onPress={() => {
-                            if(this.purposeWriteStore.hasPrevious){
-                                this._previous();
-                            }else{
-                                this.props.navigation.goBack();
+                    {this.purposeWriteStore.hasPrevious ?
+                        <ImageButton
+                            source={
+                                require('../../../../../../asset/button/arrow_button.png')
                             }
-                        }}
+
+                            backgroundStyle={{ width: 40, height: 40 }}
+                            imageStyle={{ width: 25, height: 22 }}
+                            onPress={this._previous}
+                        />
+                        :
+                        <ImageButton
+                        source={require('../../../../../../asset/button/exit_button.png')}
+                        backgroundStyle={{ width:40, height:40}}
+                        imageStyle={{ width: 22, height: 22}}
+                        onPress={this.props.navigation.goBack}
                     />
+                    }
                 </View>
                 <View style={styles.viewContainer}>
                     <Carousel
@@ -100,24 +104,21 @@ export default class PurposeWriteBoard extends Component {
                         itemWidth={fullWidth}
                     />
                 </View>
-                <View style={styles.bottomContainer}>
-                    <View style={{ width: "30%" }}>
+                <View style={styles.bottomContainer} />
+                {this.purposeWriteStore.hasNext &&
+                    <View style={{ position: 'absolute', bottom: 30, right: 22 }}>
+                        <ImageButton
+                            backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#25B046' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
+                            imageStyle={{ width: 18, height: 30, marginLeft: 5, tintColor: this.purposeWriteStore.isPermitNextScene ? undefined : '#888888' }}
+                            source={require('../../../../../../asset/button/next_button.png')}
+                            disabled={!this.purposeWriteStore.isPermitNextScene}
+                            onPress={this._next}
+                        />
                     </View>
-                    <View style={{ width: "40%", alignItems: 'center' }}>
+                }
+                <View style={{ position: 'absolute', bottom: 45, width: '100%', alignItmes: 'center' }}>
+                    <View>
                         <PageStateText activeIndex={this.purposeWriteStore.activeIndex + 1} endIndex={this.purposeWriteStore.endIndex} />
-                    </View>
-                    <View style={{ width: "30%", alignItems: 'flex-end', paddingRight: 12 }}>
-                        {this.purposeWriteStore.hasNext &&
-                            <ImageButton
-                                source={this.purposeWriteStore.isPermitNextScene ? 
-                                    require('../../../../../../asset/button/active_next_button.png') :
-                                    require('../../../../../../asset/button/inactive_next_button.png')
-                                }
-                                width={60}
-                                height={60}
-                                disabled={!this.purposeWriteStore.isPermitNextScene}
-                                onPress={this._next}/>
-                        }
                     </View>
                 </View>
             </View>
@@ -127,18 +128,19 @@ export default class PurposeWriteBoard extends Component {
 
 const styles = StyleSheet.create({
     topContainer: {
-        flex: 0.6,
+        flex: 0.52,
         alignItems: 'flex-start',
         justifyContent: 'center',
         paddingLeft: 7.5
 
     },
     viewContainer: {
-        flex: 6
+        flex: 5.21
     },
     bottomContainer: {
         flex: 1,
         flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: "center"
     },
 

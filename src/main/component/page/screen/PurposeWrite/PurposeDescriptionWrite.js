@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, TextInput } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
+import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput'
 
 export default function PurposeDescriptionWrite({next}) {
 
@@ -27,20 +28,17 @@ export default function PurposeDescriptionWrite({next}) {
                 </View>                
             </View>
             <View style={purposeStyles.bottomContainer}>
-            <Text style={{marginBottom : 6, fontWeight: 'bold'}}>
-                자세히 입력하기
-            </Text>
-            <TextInput
-                    underlineColorAndroid="transparent"
-                    multiline={true}
-                    placeholder={"정한 목표에 대한 설명이나 시작하게 된 동기를 적어주세요."}
-                    style={{
-                            fontSize: 15,
-                            paddingVertical: 0,
-                            paddingLeft: 0,
-                            borderBottomColor: '#000', // Add this to specify bottom border color
-                            borderBottomWidth: 1
-                    }}
+                <CaterPlannerTextInput
+                    label={'자세히 입력하기'}
+                    multiLines={true}
+                    placeHolder={'정한 목표에 대한 설명이나 시작하게 된 동기를 적어주세요.'}
+                    blueOnSumbit={true}
+                    onSubmitEditing={
+                        event => {
+                            if(purposeWriteStore.isPermitNextScene)
+                            next();
+                        }
+                    }
                     onChangeText={text => {
                         setPurposeDescription(text);
                         purposeWriteStore.purpose.description = text;
@@ -50,9 +48,9 @@ export default function PurposeDescriptionWrite({next}) {
                         }else{
                             purposeWriteStore.changePermit(true);
                         }
-
                     }}
                     value={purposeDescription}
+
                 />
             </View>
         </View>
