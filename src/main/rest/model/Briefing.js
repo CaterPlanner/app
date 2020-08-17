@@ -1,7 +1,7 @@
 export default class Briefing{
-    constructor(headerId, performId, createAt, score){
-        this.headerId = headerId;
-        this.performId = performId;
+    constructor(purposeId, goalId, createAt, score){
+        this.purposeId = purposeId;
+        this.goalId = goalId;
         this.createAt = createAt;
         this.score = score;
     }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Dimensions, ScrollView, TouchableOpacity, LayoutAnimation, Platform, UIManager, StyleSheet, Image } from 'react-native';
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import Goal from '../../../../../rest/model/Goal';
-import Perform from '../../../../../rest/model/Perform';
+// import Perform from '../../../../../rest/model/Perform';
 import Briefing from '../../../../../rest/model/Briefing';
 
 

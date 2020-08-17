@@ -9,12 +9,17 @@ export default class PurposeWriteStore{
     endIndex = 7;
     purpose;
 
+    isSelectPhoto;
+
 
     start = (endIndex) => {
         this.activeIndex = 0;
         this.endIndex = endIndex;
         this.purpose = {};
+
+        //date awlays true
         this.permitCache = [false, false, false, false, false, false, false];
+        this.isSelectPhoto = false;
     }
 
     set = (carousel) => {

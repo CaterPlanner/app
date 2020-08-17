@@ -3,8 +3,8 @@ import Goal from '../model/Goal'
 const GoalRepository = {
     insert : async (txn, goal) => {
         await txn.executeSql(
-            'insert into goal values(?,?,?,?,?,?,?)',
-            [goal.id, goal.purposeId, goal.name, goal.startDate, goal.endDate, goal.color, goal.stat]
+            'insert into goal values(?,?,?,?,?,?,?,?)',
+            [goal.id, goal.purposeId, goal.name, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.stat]
         )
     },
     

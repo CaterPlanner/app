@@ -11,6 +11,8 @@ export default class Purpose {
         this.startAt = new EasyDate(startAt);
         this.decimalday = new EasyDate(decimalday);
         this.stat = stat;
+
+        this.detailPlans = [];
     }
 
     setDetailPlans = (detailPlans) => {
