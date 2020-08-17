@@ -5,11 +5,12 @@ import useStores from '../../../../mobX/helper/useStores'
 import ImageButton from '../../../atom/button/ImageButton';
 
 
-export default function PurposeThumbnailWrite() {
+
+export default function PurposeThumbnailWrite({navigation}) {
 
     const { purposeWriteStore } = useStores();
 
-    const [purposeTumbnail, setPurposeTumbnail] = useState("");
+    const [purposeTumbnailUri, setPurposeTumbnailUri] = useState(null);
     const ImageBtn = './../../../../../asset/sample_Image/Sam.png';
 
 
@@ -31,12 +32,35 @@ export default function PurposeThumbnailWrite() {
                 </View>
             </View>
 
-            <View style={purposeStyles.bottomContainer}>
-                <ImageButton
-                    text="image"
-                    width="100%"
-                    height="100%"
+            <View style={[purposeStyles.bottomContainer, {justifyContent: 'center', alignItmes:'center'}]}>
+            {purposeTumbnailUri ? 
+                (
+                    <ImageButton
+                    backgroundStyle={{ flex:1}}
+                    imageStyle={{flex : 1, width : '100%' , height : undefined}}
+                    source={
+                        {uri : purposeTumbnailUri}}
+                    onPress={() => {
+                        navigation.navigate('SelectAlbum' , {
+                            setPurposeTumbnailUri : setPurposeTumbnailUri
+                        })
+                    }}
+                    />
+                ) :
+                (
+                    <ImageButton
+                    backgroundStyle={{ flex:1}}
+                    imageStyle={{ width: 100, height: 100, marginLeft: 5 }}
+                    source={require('../../../../../../asset/button/select_thumbnail_button.png')}
+                    onPress={() => {
+                        navigation.navigate('SelectAlbum' , {
+                            setPurposeTumbnailUri : setPurposeTumbnailUri
+                        })
+                    }}
                 />
+                )
+            }
+            
             </View>
         </View>
     );

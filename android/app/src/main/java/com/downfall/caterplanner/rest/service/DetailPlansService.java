@@ -25,7 +25,7 @@ public class DetailPlansService{
     private BriefingRepository briefingRepository;
 
 
-    public void createByReact(ReadableArray r_detailPlans, Long purposeId, Long detailPlanHeaderId) throws Exception{
+    public void createByReact(ReadableArray r_detailPlans, Long purposeId) throws Exception{
         SQLiteManager.getInstance().transaction(() -> {
 
             DetailPlans.quest(r_detailPlans, (goal, r_performs) -> {
@@ -45,9 +45,6 @@ public class DetailPlansService{
     }
 
 
-    public void createByReact(ReadableArray r_detailPlans, Long purposeId) throws Exception{
-        this.createByReact(r_detailPlans, purposeId, null);
-    }
 
     /**
      * headerId와 일치하는 모든 detailPlan 들을 가져옴
