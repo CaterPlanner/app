@@ -26,13 +26,11 @@ export default class PurposeWriteBoard extends Component {
 
 
         this.views = [
-            <PurposeOtherWrite />,
-            <PurposeDecimalDayWrite />,
-            <PurposeDetailPlansWrite navigation={this.props.navigation} />,
             <PurposeNameWrite next={this._next} />,
             <PurposeDescriptionWrite next={this._next} />,
-            <PurposeThumbnailWrite navigation={this.props.navigation}/>,
-            <PurposeWriteDone navigation={this.props.navigation} />
+            <PurposeThumbnailWrite navigation={this.props.navigation} />,
+            <PurposeDecimalDayWrite />,
+            <PurposeDetailPlansWrite navigation={this.props.navigation} />,
         ]
 
         this.purposeWriteStore = this.props.purposeWriteStore
@@ -59,7 +57,7 @@ export default class PurposeWriteBoard extends Component {
     }
 
     componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', () => {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.purposeWriteStore.activeIndex != 0) {
                 this._previous();
             } else {
@@ -70,62 +68,79 @@ export default class PurposeWriteBoard extends Component {
     }
 
     render() {
+        if(this.purposeWriteStore.isFinish)
+            this.backHandler.remove();
+
         return (
             <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
-                <View style={styles.topContainer}>
-                    {/* <PageStateText activeIndex={this.state.activeIndex + 1} endIndex={this.state.endIndex}/> */}
-                    {this.purposeWriteStore.hasPrevious ?
-                        <ImageButton
-                            source={
-                                require('../../../../../../asset/button/arrow_button.png')
-                            }
+                {this.purposeWriteStore.isFinish ? <PurposeWriteDone navigation={this.props.navigation} /> : (
+                    <View style={{ flex: 1 }}>
+                        <View style={styles.topContainer}>
+                            {/* <PageStateText activeIndex={this.state.activeIndex + 1} endIndex={this.state.endIndex}/> */}
+                            {this.purposeWriteStore.hasPrevious ?
+                                <ImageButton
+                                    source={
+                                        require('../../../../../../asset/button/arrow_button.png')
+                                    }
 
-                            backgroundStyle={{ width: 40, height: 40 }}
-                            imageStyle={{ width: 25, height: 22 }}
-                            onPress={this._previous}
-                        />
-                        :
-                        <ImageButton
-                        source={require('../../../../../../asset/button/exit_button.png')}
-                        backgroundStyle={{ width:40, height:40}}
-                        imageStyle={{ width: 22, height: 22}}
-                        onPress={this.props.navigation.goBack}
-                    />
-                    }
-                </View>
-                <View style={styles.viewContainer}>
-                    <Carousel
-                        style={{ flex: 1 }}
-                        ref={ref => this.carousel = ref}
-                        data={this.views}
-                        renderItem={this._renderItem}
-                        scrollEnabled={false}
-                        sliderWidth={fullWidth}
-                        itemWidth={fullWidth}
-                    />
-                </View>
-                <View style={styles.bottomContainer} />
-                {this.purposeWriteStore.hasNext &&
-                    <View style={{ position: 'absolute', bottom: 30, right: 22 }}>
-                        <ImageButton
-                            backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#25B046' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
-                            imageStyle={{ width: 18, height: 30, marginLeft: 5, tintColor: this.purposeWriteStore.isPermitNextScene ? undefined : '#888888' }}
-                            source={require('../../../../../../asset/button/next_button.png')}
-                            disabled={!this.purposeWriteStore.isPermitNextScene}
-                            onPress={this._next}
-                        />
-                    </View>
-                }
-                <View style={{ position: 'absolute', bottom: 45, width: '100%', alignItmes: 'center' }}>
-                    <View>
-                        <PageStateText activeIndex={this.purposeWriteStore.activeIndex + 1} endIndex={this.purposeWriteStore.endIndex} />
-                    </View>
-                </View>
+                                    backgroundStyle={{ width: 40, height: 40 }}
+                                    imageStyle={{ width: 25, height: 22 }}
+                                    onPress={this._previous}
+                                />
+                                :
+                                <ImageButton
+                                    source={require('../../../../../../asset/button/exit_button.png')}
+                                    backgroundStyle={{ width: 40, height: 40 }}
+                                    imageStyle={{ width: 22, height: 22 }}
+                                    onPress={this.props.navigation.goBack}
+                                />
+                            }
+                        </View>
+                        <View style={styles.viewContainer}>
+                            <Carousel
+                                style={{ flex: 1 }}
+                                ref={ref => this.carousel = ref}
+                                data={this.views}
+                                renderItem={this._renderItem}
+                                scrollEnabled={false}
+                                sliderWidth={fullWidth}
+                                itemWidth={fullWidth}
+                            />
+                        </View>
+                        <View style={{ position: 'absolute', bottom: 30, right: 22 }}>
+                            <ImageButton
+                                backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#25B046' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
+                                imageStyle={[
+                                    (!this.purposeWriteStore.isLast ? 
+                                    {width: 18, height: 28, marginLeft: 5} :
+                                    {width: 40, height: 40}),
+                                    {tintColor: this.purposeWriteStore.isPermitNextScene ? undefined : '#888888'}
+                                ]}
+                                source={
+                                    !this.purposeWriteStore.isLast ?
+                                        require('../../../../../../asset/button/next_button.png') :
+                                        require('../../../../../../asset/button/check_button.png')
+                                }
+                                disabled={!this.purposeWriteStore.isPermitNextScene}
+                                onPress={this._next}
+                            />
+                        </View>
+                        {/* <View style={{ position: 'absolute', bottom: 45, width: '100%', alignItmes: 'flex-end' }}>
+                            <View style={{ alginSelf: 'center' }}>
+                                <PageStateText activeIndex={this.purposeWriteStore.activeIndex + 1} endIndex={this.purposeWriteStore.endIndex} />
+                            </View>
+                        </View> */}
+                    </View>)}
             </View>
         );
     }
-}
 
+    componentWillUnmount() {
+        this.backHandler.remove();
+    }
+}
+/*
+*/
 const styles = StyleSheet.create({
     topContainer: {
         flex: 0.52,

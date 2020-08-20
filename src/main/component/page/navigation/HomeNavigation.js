@@ -2,14 +2,11 @@ import React from 'react'
 import { View, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screen/home/Home'
-import PurposeDetailView from '../screen/home/PurposeDetailView'
 import BriefingPurposeList from '../screen/home/BriefingPurposeList'
 
 import ImageButton from '../../atom/button/ImageButton'
+import PublicNavigation from './PublicNavigation'
 
-import SNSNavigation from './SNSNavigation'
-import DetailPurpose from '../../page/screen/common/purpose/DetailPurpose';
-import UserProfile from '../../page/screen/common/profile/UserProfile';
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 import BriefingGoalList from '../screen/home/BriefingGoalList';
 
@@ -60,8 +57,7 @@ const HomeNavigation = () => {
                     )
                 }
             )} name="Home" component={Home} />
-            <Stack.Screen options={{ headerShown: false }} name="PurposeDetailView" component={PurposeDetailView} />
-            <Stack.Screen options={{ headerShown: false }} name="SNSNavigation" component={SNSNavigation} />
+            <Stack.Screen options={{ headerShown: false }} name="PublicNavigation" component={PublicNavigation} />
             <Stack.Screen options={({ navigation }) => ({
                 ...defaultHeaderStyle,
                 headerTitle: '브리핑 리스트',

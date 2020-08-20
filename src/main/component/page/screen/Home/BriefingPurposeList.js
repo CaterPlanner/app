@@ -1,51 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, FlatList } from 'react-native';
 import PurposePaper from '../../../atom/button/PurposePaper';
+import useStores from '../../../../mobX/helper/useStores';
+import Loader from '../../Loader';
 
 
 export default function BriefingPurposeList({ navigation }) {
 
-    const [data, setData] = useState([{
-        id: 0,
-        name: '해상 라이프가드 되기',
-        count: 23,
-        imagUri: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Sans_undertale.jpg/220px-Sans_undertale.jpg',
-        goals: [
-            {
-                id: 1,
-                name: '생존수업 수영 받기',
-                acheive: 70
-            }
-        ]
-    },
+    const [isLoading, setIsLoading] = useState(true);
+    const [data, setData] = useState(null);
 
-    ]);
+    const { purposeService } = useStores();
 
+    const getDate = async () => {
+
+        try {
+            const purposes = await purposeService.findPurposeForBrifingList();
+            setData(purposes);
+            setIsLoading(false);
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     useEffect(() => {
-        console.log('hello')
+        getDate();
     }, [])
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', paddingHorizontal: 10 }}>
-            {
-                data.map((purpose) => {
-                    return (
-                        <PurposePaper
-                            imageUri={purpose.imagUri}
-                            name={purpose.name}
-                            count={purpose.count}
-                            onPress={() => {
-                                navigation.navigate('BriefingGoalList', {
-                                    purposeName: purpose.name,
-                                    goals: purpose.goals
-                                })
-                            }}
-                        />
-                    )
-                })
+        <View style={{ flex: 1 }}>
+            {isLoading ? <Loader /> : (
+                <FlatList
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 10}}
+                    data={data}
+                    renderItem={({ item : purpose }) => (
+                        <View style={{ marginTop: 8 }}>
+                            <PurposePaper
+                                imageUri={purpose.imageUrl}
+                                name={purpose.name}
+                                count={purpose.detailPlans.length}
+                                onPress={() => {
+                                    navigation.navigate('BriefingGoalList', {
+                                        purposeName: purpose.name,
+                                        goals: purpose.detailPlans
+                                    })
+                                }}
+                            />
+                        </View>
+                    )}
+                />
+            )
             }
         </View>
-    )
+    );
 }
-

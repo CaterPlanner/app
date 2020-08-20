@@ -25,19 +25,19 @@ const CreateNavigation = () => {
             <Stack.Screen name="SelectPhoto" component={SelectPhoto} options={({route, navigation}) => ({
                 ...defaultHeaderStyle,
                 headerTitle : route.params.photoName,
-                headerRight : () => {
-                    // const enable = route.params.purposeWriteStore.isSelectPh
+                // headerRight : () => {
+                //     // const enable = route.params.purposeWriteStore.isSelectPh
                     
-                    // const {purposeStore} = useStores();
+                //     // const {purposeStore} = useStores();
 
-                    return <Button
-                        title="완료"
-                        // disabled={!purposeStore.isSelectPhoto}
-                        onPress={() => {
-                            navigation.navigator('DetailPlanNavigation');
-                        }}
-                    />
-                }
+                //     return <Button
+                //         title="완료"
+                //         // disabled={!purposeStore.isSelectPhoto}
+                //         onPress={() => {
+                //             navigation.navigator('DetailPlanNavigation');
+                //         }}
+                //     />
+                // }
             })}/>
         </Stack.Navigator>
     )

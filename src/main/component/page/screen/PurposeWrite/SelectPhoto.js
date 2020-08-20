@@ -6,28 +6,6 @@ import defaultHeaderStyle from '../../../organism/header/defaultHeaderStyle';
 
 export default class SelectPhoto extends Component{
 
-    static navigationOptions = ({navigation, screenProps}) => {
-        return {
-            title : 'HELLO'
-        }
-        // return {
-        // ...defaultHeaderStyle,
-        // title : screenProps.photoName,
-        // headerRight : () => {
-        //     // const enable = route.params.purposeWriteStore.isSelectPh
-            
-        //     // const {purposeStore} = useStores();
-
-        //     return <Button
-        //         title="완료"
-        //         // disabled={!purposeStore.isSelectPhoto}
-        //         onPress={() => {
-        //             navigation.navigator('DetailPlanNavigation');
-        //         }}
-        //     />
-        // }
-
-    };
 
     constructor(props) {
         super(props)
@@ -39,7 +17,6 @@ export default class SelectPhoto extends Component{
             photos : null
         }
 
-        console.log(this.props.route.params)
     }
 
     _formatData = (data, numColumns) => {

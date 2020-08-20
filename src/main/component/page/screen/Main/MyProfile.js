@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-import ProfileNavigation from '../../navigation/ProfileNavigation'
 
 export default class MyProfile extends Component{
 
@@ -10,7 +9,9 @@ export default class MyProfile extends Component{
 
     render(){
         return(
-            <ProfileNavigation/>
+           <View>
+
+           </View> 
         )
     }
 }

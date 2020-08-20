@@ -10,7 +10,13 @@ export default function PurposeDetailPlansWrite({navigation }) {
 
     const { purposeWriteStore } = useStores();
 
-    const [purposeDetailPlans, setPurposeDetailPlans] = useState();
+    const [purposeDetailPlans, setPurposeDetailPlans] = useState(null);
+
+    const setDetailPlans = (detailPlans) => {
+        setPurposeDetailPlans(true);
+        purposeWriteStore.detailPlans = detailPlans;
+        purposeWriteStore.changePermit(true);
+    }
 
     return (
         <View style={purposeStyles.container}>
@@ -45,8 +51,8 @@ export default function PurposeDetailPlansWrite({navigation }) {
                             screen : 'DetailPlanWriteBoard',
                             params : {
                                 startDate : EasyDate.now(),
-                                endDate : purposeWriteStore.purpose.decimalday,
-                                setPurposeDetailPlans : setPurposeDetailPlans
+                                endDate : purposeWriteStore.purpose.endDate,
+                                setPurposeDetailPlans : setDetailPlans
                             }
                         })
                     }}

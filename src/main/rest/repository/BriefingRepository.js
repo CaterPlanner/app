@@ -3,22 +3,40 @@ import Briefing from "../model/Briefing";
 
 const BriefingRepository = {
 
-    selectByPurposeId : async (txn, purposeId) => {
-        return (await txn.executeSql(
-            'select purpose_id, goal_id, create_at, score from briefing where purpose_id = ?',
-            [purposeId],
-        )).rows.map((row) => {
-            return res.rows.map((row) => {
-                return new Briefing(row.purpose_id, row.goal_id, row.creat_at, row.score);
-            })
+    selectByPurposeId : (txn, purposeId) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'select purpose_id, goal_id, create_at, score from briefing where purpose_id = ?',
+                [purposeId],
+                (tx, res) => {
+                    let data = [];
+                    for(let i =0; i < res.rows.length; i++){
+                        const row = res.rows.item(i);
+                        data.push(new Briefing(row.purpose_id, row.goal_id, row.create_date, row.score))
+                    }
+
+                    resolve(data);
+                },
+                (error) => {
+                    reject(error);
+                }
+            )
         })
     },
 
-    insert : async (txn, purposeId, goalId) => {
-        await txn.executeSql(
-            'insert into briefing values(?, ?, datetime(\'now\'), 0',
-            [purposeId, goalId]
-        );
+    insert : (txn, purposeId, goalId) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'insert into briefing(purpose_id, goal_id, create_at, score) values(?, ?, datetime(\'now\'), 0',
+                [purposeId, goalId],
+                (tx, res) => {
+                    resolve();
+                },
+                (error) => {
+                    reject(error);
+                }
+            )
+        })
     }
 
 }

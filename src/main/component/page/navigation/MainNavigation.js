@@ -6,6 +6,7 @@ import SearchNavigation from './SearchNavigation'
 import StoryNavigation from './StoryNavigation'
 import MyProfile from '../screen/main/MyProfile'
 import Make from '../screen/main/Make'
+import PublicNavigation from './PublicNavigation'
 
 
 const Tab = createBottomTabNavigator();
@@ -31,7 +32,7 @@ const MainNavigation = () => {
             case "StoryNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_story.png');
               break;
-            case "MyProfile":
+            case "PublicNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_profile.png');
               break;
           }
@@ -61,7 +62,7 @@ const MainNavigation = () => {
         },
       })} />
       <Tab.Screen name="StoryNavigation" component={StoryNavigation} />
-      <Tab.Screen name="MyProfile" component={MyProfile} />
+      <Tab.Screen name="PublicNavigation" component={PublicNavigation} />
     </Tab.Navigator>
   );
 }

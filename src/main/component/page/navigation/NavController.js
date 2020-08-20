@@ -1,46 +1,52 @@
-import React, {Component} from 'react';
-import {AsyncStorage, View} from 'react-native'
-import {inject, observer} from 'mobx-react'
+import React, { Component } from 'react';
+import { AsyncStorage, View, StatusBar } from 'react-native'
+import { inject, observer } from 'mobx-react'
 
 import SignIn from '../screen/auth/SignIn';
 import AppNavigation from './AppNavigation';
 import BeginNavigation from './BeginNavigation'
+import App from '../../../../../App';
 
 
 @inject(stores => {
-    return{
-        authStore : stores.authStore,
+    return {
+        authStore: stores.authStore,
         appStore: stores.appStore
     }
 })
 @observer
-export default class NavController extends Component{
+export default class NavController extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.authStore = this.props.authStore;
         this.appStore = this.props.appStore;
     }
 
-    async componentDidMount(){
-        try{
+    async componentDidMount() {
+        try {
             await this.appStore.boot();
             await this.authStore.load();
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
     }
 
-    render(){
-        return(
-            // <View style={{flex: 1}}>
-            //     {!this.authStore.isLogin ? <SignIn/> :
-            //         this.appStore.isBegin  ? <BeginNavigation/> : <AppNavigation/>    
-            //     }
-            // </View>
-            // <SignIn/>
-            <AppNavigation/> 
+    render() {
+
+        console.log(this.appStore.isBegin)
+
+        return (
+            <View style={{ flex: 1 }}>
+                <StatusBar
+                    barStyle="white-content"
+                    backgroundColor="#94EB3E"
+                />
+                {this.appStore.isBegin ?
+                    <BeginNavigation /> : <AppNavigation />
+                }
+            </View>
         );
     }
 }

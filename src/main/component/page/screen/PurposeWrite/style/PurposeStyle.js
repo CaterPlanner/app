@@ -5,6 +5,7 @@ const styles = {
         backgrondColor: 'white'
     },
     headContainer: {
+
         flex:1,
         marginTop: 5,
         marginBottom: 5
@@ -29,7 +30,8 @@ const styles = {
     },
 
     bottomContainer : {
-        flex:2.5
+        flex:2.5,
+        marginBottom: 100
     }
 
 }
