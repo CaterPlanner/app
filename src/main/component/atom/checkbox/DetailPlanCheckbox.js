@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, TouchableOpacity, CheckBox } from 'react-native';
 import MyProgressBar from '../progressBar/MyProgressBar';
 
-export default function DetailPlanCheckBox({ color, name, value}) {
+export default function DetailPlanCheckBox({ color, name, acheive}) {
     return (
-        <View style={{ width: '100%', height: 65, backgroundColor: 'white', elevation: 5 }}>
+        <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItmes: 'center', width: '100%', height: 65, backgroundColor: 'white', elevation: 5 }}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
                 <View
                     style={{ height: '100%', width: 30, backgroundColor: color }}
@@ -15,7 +15,7 @@ export default function DetailPlanCheckBox({ color, name, value}) {
                             {name}
                         </Text>
                         <MyProgressBar
-                            value={value}
+                            value={acheive}
                             height={6}
                             width={200}
                             animated={true}

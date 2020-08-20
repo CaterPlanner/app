@@ -11,9 +11,11 @@ export default function PurposeThumbnailWrite({navigation}) {
     const { purposeWriteStore } = useStores();
 
     const [purposeTumbnailUri, setPurposeTumbnailUri] = useState(null);
-    const ImageBtn = './../../../../../asset/sample_Image/Sam.png';
 
-
+    const setThumbnail = (image) => {
+        setPurposeTumbnailUri(image);
+        purposeWriteStore.changePermit(true);
+    } 
 
     return (
         <View style={purposeStyles.container}>
@@ -33,34 +35,20 @@ export default function PurposeThumbnailWrite({navigation}) {
             </View>
 
             <View style={[purposeStyles.bottomContainer, {justifyContent: 'center', alignItmes:'center'}]}>
-            {purposeTumbnailUri ? 
-                (
                     <ImageButton
                     backgroundStyle={{ flex:1}}
-                    imageStyle={{flex : 1, width : '100%' , height : undefined}}
+                    imageStyle={
+                        purposeTumbnailUri ?  {flex : 1, width : '100%' , height : undefined} : { width: 100, height: 100, marginLeft: 5 }
+                    }
                     source={
-                        {uri : purposeTumbnailUri}}
+                        purposeTumbnailUri ? {uri : purposeTumbnailUri} : require('../../../../../../asset/button/select_thumbnail_button.png')
+                    }
                     onPress={() => {
                         navigation.navigate('SelectAlbum' , {
-                            setPurposeTumbnailUri : setPurposeTumbnailUri
+                            setPurposeTumbnailUri : setThumbnail
                         })
                     }}
-                    />
-                ) :
-                (
-                    <ImageButton
-                    backgroundStyle={{ flex:1}}
-                    imageStyle={{ width: 100, height: 100, marginLeft: 5 }}
-                    source={require('../../../../../../asset/button/select_thumbnail_button.png')}
-                    onPress={() => {
-                        navigation.navigate('SelectAlbum' , {
-                            setPurposeTumbnailUri : setPurposeTumbnailUri
-                        })
-                    }}
-                />
-                )
-            }
-            
+                    />           
             </View>
         </View>
     );

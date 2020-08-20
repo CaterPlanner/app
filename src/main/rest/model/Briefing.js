@@ -1,8 +1,8 @@
 export default class Briefing{
-    constructor(purposeId, goalId, createAt, score){
+    constructor(purposeId, goalId, createDate, score){
         this.purposeId = purposeId;
         this.goalId = goalId;
-        this.createAt = createAt;
+        this.createDate = createDate;
         this.score = score;
     }
 }

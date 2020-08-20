@@ -20,7 +20,8 @@ export default class DetailPlanWriteBoard extends Component {
         //init
         this.props.navigation.setParams({
             isGraph: this.state.isGraph,
-            changeShow: this._changeShow
+            changeShow: this._changeShow,
+            saveDetailPlans: this._saveDetailPlans
         });
 
         this.detailPlanWriteStore = this.props.detailPlanWriteStore;
@@ -29,8 +30,7 @@ export default class DetailPlanWriteBoard extends Component {
 
     _changeShow = () => {
         this.props.navigation.setParams({
-            isGraph: !this.state.isGraph,
-            saveDetailPlans: this._saveDetailPlans
+            isGraph: !this.state.isGraph
         })
         this.setState({
             isGraph: !this.state.isGraph

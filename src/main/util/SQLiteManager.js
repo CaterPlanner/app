@@ -1,13 +1,11 @@
 import SQLite from 'react-native-sqlite-storage';
 
-SQLite.DEBUG(true);
-SQLite.enablePromise(true);
 
 const connection = SQLite.openDatabase({
     name: 'CaterPlanner.db',
-    location: '/rest/CaterPlanner.db'
+    createFromLocation : 1 
 },
-    shchema,
+    () => {console.log('DB Connected!')},
     error => { console.log(error); }
 )
 
@@ -59,10 +57,14 @@ function shchema(db) {
             `
         )
     })
+    .then(()=>{
+        console.log('DB Connected!')
+    })
     .catch((error) => {
         console.log(error);
     })
 }
+
 
 export default {
     getConnection: () => connection

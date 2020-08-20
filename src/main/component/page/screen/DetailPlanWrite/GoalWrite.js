@@ -333,8 +333,19 @@ export default function GoalWrite({ navigation, route }) {
                                         }}
                                         onPress={() => {
                                             goalCycleParamByDays[index] = !goalCycleParamByDays[index];
-                                            const data = goalCycleParamByDays.slice();
-                                            setGoalCycleParamByDays(data);
+
+                                            let isFull = true;
+                                            goalCycleParamByDays.forEach((value) => {
+                                                if(!value)
+                                                    isFull = false;
+                                            });
+
+                                            if(isFull){
+                                                setGoalCycleType(0);
+                                                setGoalCycleParamByDays([false, false, false, false, false, false, false])
+                                            }else{
+                                                setGoalCycleParamByDays(goalCycleParamByDays.slice());
+                                            }
                                         }}
                                     >
                                         <Text>{dayName}</Text>

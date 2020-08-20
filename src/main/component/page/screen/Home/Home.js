@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Button, Dimensions, YellowBox, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Dimensions, YellowBox} from 'react-native'
 import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
 import Card from './Card'
-import MainHeader from '../../../organism/header/MainHeader'
+
+import { inject } from 'mobx-react';
 
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
 YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
@@ -11,46 +12,42 @@ YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
 const fullWidth = Dimensions.get('window').width;
 const progresValue = 30;
 
-
-
+@inject(['purposeService'])
 export default class Home extends Component {
 
 
     constructor(props) {
         super(props)
 
+        this.purposeService = this.props.purposeService;
+
+
         this.state = {
-            activeIndex: 0,
-            endIndex: 4,
-            item: [{
-                image: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Sans_undertale.jpg/220px-Sans_undertale.jpg',
-                title: '하루 O시간 OO하기',
-                date: 'D - O',
-                //함정카드 발동 
-                progresValue: progresValue,
-
-            },
-            {
-                image: 'https://www.aramamotoru.com/wp-content/uploads/2018/02/google-amp-icin-goruntu-boyut-gereksinimini-neredeyse-iki-katina-cikardi-1280x720.png',
-                title: '하루 O시간 OO하기',
-                date: 'D - O',
-                //함정카드 발동 
-                progresValue: progresValue,
-
-            }
-            ]
+            activeIndex: 0
         }
     }
     //
     _renderItem = ({ item, index }) => {
+        console.log(item.leftDay);
         return (
-            <Card image={item.image} title={item.title} date={item.date} />
+            <Card id={item.id} image={item.imageUrl} title={item.name} date={item.leftDay}
+                onPress={() => {this.props.navigation.navigate('DetailPurpose')}}
+            />
         )
     }
 
 
     componentDidMount() {
-
+        this.purposeService.findPurposesForCard()
+        .then((data) => {
+            this.setState({
+                endIndex : data.length,
+                data : data
+            })
+        })
+        .catch(e => {
+            console.log(e);
+        })
     }
 
     render() {
@@ -61,7 +58,7 @@ export default class Home extends Component {
                         <View>
                             <Carousel
                                 ref={(ref) => { this.carousel = ref; }}
-                                data={this.state.item}
+                                data={this.state.data}
                                 renderItem={this._renderItem}
                                 scrollEnabled={true}
                                 sliderWidth={fullWidth}

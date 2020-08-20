@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import DecimalDayWidget from '../../../atom/icon/DecimalDayWidget';
 
 
-export default function Card({ image, title, date }) {
+export default function Card({ id,  image, title, date, onPress }) {
     return (
-        <View style={{
+        <TouchableOpacity style={{
             height: '100%', justifyContent: 'center'
-        }}>
+        }} activeOpacity={1}>
             <View style={{
                 borderTopRightRadius: 45,
                 borderTopLeftRadius: 45,
@@ -33,7 +33,7 @@ export default function Card({ image, title, date }) {
                             borderTopLeftRadius: 40,
                         }}
                     />
-                    <View style={{ position: 'absolute', top: -35, width: '100%', alignItems:'center'}}>
+                    <View style={{ position: 'absolute', top: -40, width: '100%', alignItems:'center'}}>
                         <Image
                             resizeMode="stretch"
                             style={{ width: '90%', height: 80, tintColor: '#585858' }}
@@ -56,13 +56,11 @@ export default function Card({ image, title, date }) {
                         </Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                        <Text style={styles.date}>
-                            {date}
-                        </Text>
+                        <DecimalDayWidget stat={0} decimalDay={date}/>
                     </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

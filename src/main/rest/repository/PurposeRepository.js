@@ -1,50 +1,101 @@
-const { default: Purpose } = require("../model/Purpose");
+import Purpose from "../model/Purpose";
 
 const PurposeRepository = {
 
-    insert : async (txn, purpose) => {
-        const result = await txn.executeSql(
-            'insert into purpose values(?,?,?,?,?,?,?,?)',
-            [purpose.id, purpose.name, purpose.description, purpose.imageUrl, purpose.disclosureScope, purpose.startAt, purpose.decimalDay, purpose.stat]
-        )
-        return result.insertId;
-    },
-
-    selectById : async (txn, id) => {
-        const result = await txn.executeSql(
-            'select id, name, description, image_url, disclosureScope, start_at, decimal_day, stat from purpose where id = ?',
-            [id]
-        )
-        return result.rows.item(0);
-    },
-
-    selectByStatIsActive : async (txn) => {
-        return (await txn.executeSql(
-            'select id, name, description, image_url, disclosureScope, start_at, decimal_day, stat from purpose where stat = 1'
-        )).rows.map((row) => {
-            return new Purpose( row.id, row,name, row.description, row.image_url, row.disclosure_scope, row.start_at, row.deicmal_day, row.stat);
+    insert : (txn, purpose) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'insert into purpose(id, name, description, image_url, disclosure_scope, start_date, end_date, stat) values(?,?,?,?,?,?,?,?)',
+                [purpose.id, purpose.name, purpose.description, purpose.imageUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat],
+                (tx, res) => {
+                    resolve(res.insertId);
+                },
+                (error) => {
+                    resolve(error);
+                }
+            )
         })
     },
 
-    updatePurposeDate : async (txn, id, purpose) => {
-        await txn.executeSql(
-            'update purpose set name = ?, description = ?, image_url = ?, disclosure_scope = ?, start_at = ?, decimal_dat = ?, stat = ? where id = ?',
-            [purpose.name, purpose.description, purpose.imageUrl, purpose.disclosureScope, purpose.startAt, purpose.decimalDay, purpose.stat, id]
-        );
+    selectById : (txn, id) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'select id, name, description, image_url, disclosure_scope, start_date, end_date, stat from purpose where id = ?',
+                [id],
+                (tx, res) => {
+                    const row = res.rows.item(0);
+                    resolve(new Purpose( row.id, row.name, row.description, row.image_url, row.disclosure_scope, row.start_date, row.end_date, row.stat));
+                },
+                (error) => {
+                    reject(error);
+                }
+            )
+        })
+    },
+    
+    selectByStatIsActive : (txn) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                "select id, name, description, image_url, disclosure_scope, start_date, end_date, stat from purpose where stat = 1",
+                [],
+                (res) => {
+                    let data = [];
+                    for(let i = 0; i < res.rows.length; i++){
+                        const row = res.rows.item(i);
+                        data.push(new Purpose( row.id, row.name, row.description, row.image_url, row.disclosure_scope, row.start_date, row.end_date, row.stat))
+                    }
+                    resolve(data);
+                },
+                (error) => {
+                    reject(error);
+                }          
+            )
+        })
     },
 
-    updateStatById : async (txn, id, stat) => {
-        await txn.executeSql(
-            'update purpose set stat = ? where id = ?',
-            [stat, id]
-        );
+    updatePurposeDate : (txn, id, purpose) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'update purpose set name = ?, description = ?, image_url = ?, disclosure_scope = ?, start_date = ?, decimal_dat = ?, stat = ? where id = ?',
+                [purpose.name, purpose.description, purpose.imageUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat, id],
+                (tx, res) => {
+                    resolve();
+                },
+                (error) => {
+                    reject(error);
+                }
+            )
+        })
+    },
+
+    updateStatById : (txn, id, stat) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'update purpose set stat = ? where id = ?',
+                [stat, id],
+                (tx, res) => {
+                    resolve();
+                },
+                (error) => {
+                    reject(error);
+                }
+            )
+        })
     },
 
     deleteById : async(txn, id) => {
-        await txn.executeSql(
-            'delete from purpose where id = ?',
-            [id]
-        );
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'delete from purpose where id = ?',
+                [id],
+                (tx, res) => {
+                    resolve();
+                },
+                (error) => {
+                    reject(error);
+                }
+            )
+        })
     }
 }
 

@@ -2,15 +2,15 @@ import EasyDate from "../../util/EasyDate";
 
 export default class Purpose {
 
-    constructor(id, name, description, imageUrl, disclosureScope, startAt, decimalday, stat){
+    constructor(id, name, description, imageUrl, disclosureScope, startDate, endDate, stat){
         this.id = id;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
         this.disclosureScope = disclosureScope;
-        this.startAt = new EasyDate(startAt);
-        this.decimalday = new EasyDate(decimalday);
-        this.stat = stat;
+        this.startDate = new EasyDate(startDate);
+        this.endDate = new EasyDate(endDate);
+        this.stat = stat; 
 
         this.detailPlans = [];
     }
@@ -19,8 +19,8 @@ export default class Purpose {
         this.detailPlans = detailPlans;
     }
 
-    get LeftDay(){
-        return EasyDate.between(EasyDate.now(), this.decimalday).day;
+    get leftDay(){
+        return EasyDate.between(EasyDate.now(), this.endDate).day;
     }
 
     get progress() {

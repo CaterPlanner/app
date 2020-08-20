@@ -162,7 +162,7 @@ export default class Goal {
     }
 
     get lastBriefingDay(){
-        return this.briefings[this.briefings.length - 1].createAt;
+        return this.briefings[this.briefings.length - 1].createDate;
     }
 
 
