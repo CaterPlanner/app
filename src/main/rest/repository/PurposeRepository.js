@@ -56,7 +56,7 @@ const PurposeRepository = {
     updatePurposeDate : (txn, id, purpose) => {
         return new Promise((resolve, reject) => {
             txn.executeSql(
-                'update purpose set name = ?, description = ?, image_url = ?, disclosure_scope = ?, start_date = ?, decimal_dat = ?, stat = ? where id = ?',
+                'update purpose set name = ?, description = ?, image_url = ?, disclosure_scope = ?, start_date = ?, end_date = ?, stat = ? where id = ?',
                 [purpose.name, purpose.description, purpose.imageUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat, id],
                 (tx, res) => {
                     resolve();
