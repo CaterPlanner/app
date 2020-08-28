@@ -1,12 +1,11 @@
 import React from 'react'
-import { Button } from 'react-native'
+import { Button , View} from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import DetailPlanWriteBoard from '../screen/detailPlanWrite/DetailPlanWriteBoard';
 import ImageButton from '../../atom/button/ImageButton';
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 import GoalWrite from '../screen/detailPlanWrite/GoalWrite';
-import { View } from 'native-base';
-
+import DetailPlanDecimalDayWrite from '../screen/detailPlanWrite/DetailPlanDecimalDayWrite'
 
 const Stack = createStackNavigator();
 
@@ -14,6 +13,7 @@ const Stack = createStackNavigator();
 const DetailPlanWriteNavigation = () => {
     return (
         <Stack.Navigator >
+            {/* <Stack.Screen options={{headerShown: false}} name="DetailPlanDecimalDayWrite" component={DetailPlanDecimalDayWrite} /> */}
             <Stack.Screen options={({ route, navigation }) => ({
                 ...defaultHeaderStyle,
                 title: '',
@@ -58,10 +58,7 @@ const DetailPlanWriteNavigation = () => {
                             }}
                             source={
                                 require('../../../../../asset/button/check_button.png')}
-                            onPress={route.params ? () => {
-                                route.params.saveDetailPlans();
-                                navigation.navigate('PurposeWriteBoard');
-                            } : null}
+                            onPress={route.params ? route.params.saveDetailPlans : null}
                         />
                     
                     </View>

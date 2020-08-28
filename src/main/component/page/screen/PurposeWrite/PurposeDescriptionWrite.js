@@ -4,10 +4,10 @@ import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput'
 
-export default function PurposeDescriptionWrite({next}) {
+export default function PurposeDescriptionWrite() {
 
     const {purposeWriteStore} = useStores();
-    const [purposeDescription, setPurposeDescription] = useState("");
+    const [purposeDescription, setPurposeDescription] = useState(purposeWriteStore.purpose.description);
 
     return (
         <View style={purposeStyles.container}>
@@ -33,12 +33,12 @@ export default function PurposeDescriptionWrite({next}) {
                     multiLines={true}
                     placeHolder={'정한 목표에 대한 설명이나 시작하게 된 동기를 적어주세요.'}
                     blueOnSumbit={true}
-                    onSubmitEditing={
-                        event => {
-                            if(purposeWriteStore.isPermitNextScene)
-                            next();
-                        }
-                    }
+                    // onSubmitEditing={
+                    //     event => {
+                    //         if(purposeWriteStore.isPermitNextScene)
+                    //         next();
+                    //     }
+                    // }
                     onChangeText={text => {
                         setPurposeDescription(text);
                         purposeWriteStore.purpose.description = text;

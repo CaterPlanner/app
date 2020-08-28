@@ -5,36 +5,49 @@ import { inject, observer } from 'mobx-react'
 import Carousel from 'react-native-snap-carousel';
 import PurposeNameWrite from './PurposeNameWrite';
 import PurposeDescriptionWrite from './PurposeDescriptionWrite';
-import PurposeThumbnailWrite from './PurposeThumbnailWrite';
-import PurposeDecimalDayWrite from './PurposeDecimalDayWrite';
+import PurposePhotoWrite from './PurposePhotoWrite';
 import PurposeDetailPlansWrite from './PurposeDetailPlansWrite';
-import PurposeOtherWrite from './PurposeOtherWrite';
 import PurposeWriteDone from './PurposeWriteDone';
 
 import ImageButton from '../../../atom/button/ImageButton'
 import PageStateText from '../../../atom/text/PageStateText'
+import Loader from '../../Loader';
 
+import PurposeService from '../../../../rest/service/PurposeService';
+import Request from '../../../../util/Request';
+import { PurposeWriteType } from '../../../../mobX/store/PurposeWriteStore';
+import GlobalConfig from '../../../../GlobalConfig';
 
 const fullWidth = Dimensions.get('window').width;
 
-@inject(['purposeWriteStore'])
+@inject(stores => ({
+    purposeWriteStore : stores.purposeWriteStore,
+    authStore : stores.authStore,
+    appStore : stores.appStore
+}))
 @observer
 export default class PurposeWriteBoard extends Component {
 
     constructor(props) {
         super(props)
 
+        this.state = {
+            isUploading: false
+        }
+
 
         this.views = [
-            <PurposeNameWrite next={this._next} />,
-            <PurposeDescriptionWrite next={this._next} />,
-            <PurposeThumbnailWrite navigation={this.props.navigation} />,
-            <PurposeDecimalDayWrite />,
-            <PurposeDetailPlansWrite navigation={this.props.navigation} />,
+            <PurposeNameWrite />,
+            <PurposeDescriptionWrite />,
+            <PurposePhotoWrite />,
+            <PurposeDetailPlansWrite />,
         ]
-
         this.purposeWriteStore = this.props.purposeWriteStore
-        this.purposeWriteStore.start(this.views.length);
+        this.appStore = this.props.appStore;
+        this.authStore = this.props.authStore;
+
+
+        this.purposeWriteStore.start(this.views.length, this.props.route.params ? this.props.route.params.purpose : null);
     }
 
     _renderItem = ({ item, index }) => {
@@ -43,16 +56,77 @@ export default class PurposeWriteBoard extends Component {
         );
     }
 
-    _next = () => {
+    _uploadData = async () => {
+        const result = this.purposeWriteStore.purpose;
+        let response = null;
+        try {
 
-        if (this.purposeWriteStore.hasNext) {
-            this.purposeWriteStore.next(this.carousel);
-        }
-    }
+            switch (this.purposeWriteStore.writeType) {
+                case PurposeWriteType.CREATE:
 
-    _previous = () => {
-        if (this.purposeWriteStore.hasPrevious) {
-            this.purposeWriteStore.previous(this.carousel);
+                    response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose`, this.purposeWriteStore.resultFormData, {
+                        'Content-Type': 'multipart/form-data'
+                    })
+                        .auth(authStore.userToken.token)
+                        .submit();
+
+                    await PurposeService.getInstance().create(
+                        new Purpose(response.data.id, result.name, result.description, response.data.photoUrl, result.disclosureScope, result.startDate, result.endDate, result.stat),
+                        result.detailPlans ?
+                            result.detailPlans.forEach((goal) => {
+                                goal.purposeId = response.data.id;
+                                goal.briefingCount = 0;
+                            }) : null
+                    );
+
+
+                    break;
+
+                case PurposeWriteType.MODIFY:
+
+                    response = await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
+                        'Content-Type': 'multipart/form-data'
+                    })
+                        .auth(this.authStore.userToken.token)
+                        .submit();
+
+                    result.photoUrl = response.photoUrl;
+
+                    await PurposeService.getInstance().modify(result.id, result);
+
+                    break;
+
+                case PurposeWriteType.GROUND_MODIFY:
+
+                    response = await Request.put(GlobalConfig.CATEPLANNER_REST_SERVER.ip + '/purpose/' + purposeWriteStore.purpose.id, purposeWriteStore.resultFormData, {
+                        'Content-Type': 'multipart/form-data'
+                    })
+                        .auth(this.authStore.userToken.token)
+                        .submit();
+
+                    result.photoUrl = response.photoUrl;
+
+                    await PurposeService.getInstance().groundModify(result.id, result);
+
+                    break;
+            }
+
+            if (result.stat == 0)
+                this.appStore.onScheduler();
+
+            this.backHandler.remove();
+
+            if(this.purposeWriteStore.writeType == PurposeWriteType.CREATE){
+                this.props.navigation.navigate('PurposeWriteDone')
+            }else{
+                this.props.navigation.goBack();
+            }
+
+        } catch (e) {
+            console.log(e);
+            this.setState({
+                isUploading : false
+            })
         }
     }
 
@@ -68,12 +142,10 @@ export default class PurposeWriteBoard extends Component {
     }
 
     render() {
-        if(this.purposeWriteStore.isFinish)
-            this.backHandler.remove();
 
         return (
             <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
-                {this.purposeWriteStore.isFinish ? <PurposeWriteDone navigation={this.props.navigation} /> : (
+                {this.state.isUploading ? <Loader /> : (
                     <View style={{ flex: 1 }}>
                         <View style={styles.topContainer}>
                             {/* <PageStateText activeIndex={this.state.activeIndex + 1} endIndex={this.state.endIndex}/> */}
@@ -85,7 +157,7 @@ export default class PurposeWriteBoard extends Component {
 
                                     backgroundStyle={{ width: 40, height: 40 }}
                                     imageStyle={{ width: 25, height: 22 }}
-                                    onPress={this._previous}
+                                    onPress={() => { this.purposeWriteStore.previous(this.carousel); }}
                                 />
                                 :
                                 <ImageButton
@@ -111,10 +183,10 @@ export default class PurposeWriteBoard extends Component {
                             <ImageButton
                                 backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#25B046' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
                                 imageStyle={[
-                                    (!this.purposeWriteStore.isLast ? 
-                                    {width: 18, height: 28, marginLeft: 5} :
-                                    {width: 40, height: 40}),
-                                    {tintColor: this.purposeWriteStore.isPermitNextScene ? undefined : '#888888'}
+                                    (!this.purposeWriteStore.isLast ?
+                                        { width: 18, height: 28, marginLeft: 5 } :
+                                        { width: 40, height: 40 }),
+                                    { tintColor: this.purposeWriteStore.isPermitNextScene ? undefined : '#888888' }
                                 ]}
                                 source={
                                     !this.purposeWriteStore.isLast ?
@@ -122,7 +194,15 @@ export default class PurposeWriteBoard extends Component {
                                         require('../../../../../../asset/button/check_button.png')
                                 }
                                 disabled={!this.purposeWriteStore.isPermitNextScene}
-                                onPress={this._next}
+                                onPress={() => { 
+                                    if(this.purposeWriteStore.isLast){
+                                        this.setState({
+                                            isUploading : true
+                                        });
+                                        this._uploadData();
+                                    }else{
+                                        this.purposeWriteStore.next(this.carousel);
+                                    }}}
                             />
                         </View>
                         {/* <View style={{ position: 'absolute', bottom: 45, width: '100%', alignItmes: 'flex-end' }}>
@@ -130,7 +210,8 @@ export default class PurposeWriteBoard extends Component {
                                 <PageStateText activeIndex={this.purposeWriteStore.activeIndex + 1} endIndex={this.purposeWriteStore.endIndex} />
                             </View>
                         </View> */}
-                    </View>)}
+                    </View>
+                )}
             </View>
         );
     }

@@ -1,12 +1,16 @@
 import React, { Component } from "react";
-import { View, FlatList, ScrollView, Text, Dimensions} from 'react-native'
+import { View, FlatList, ToastAndroid, Text, Dimensions} from 'react-native'
 import ImageButton from '../../../atom/button/ImageButton'
 import DetailPlanPaper from '../../../atom/button/DatePlanPaper'
 import { inject, observer } from 'mobx-react'
+import EasyDate from "../../../../util/EasyDate";
 
+import {PurposeWriteType} from '../../../../mobX/store/PurposeWriteStore';
 
-
-@inject(['detailPlanWriteStore'])
+@inject(stores => ({
+    detailPlanWriteStore : stores.detailPlanWriteStore,
+    purposeWriteStore: stores.purposeWriteStore
+}))
 @observer
 export default class DetailPlanWriteBoard extends Component {
 
@@ -25,7 +29,10 @@ export default class DetailPlanWriteBoard extends Component {
         });
 
         this.detailPlanWriteStore = this.props.detailPlanWriteStore;
-        this.detailPlanWriteStore.init(this.props.route.params.startDate, this.props.route.params.endDate, this.props.route.params.goals);
+        this.purposeWriteStore = this.props.purposeWriteStore;
+
+
+        this.detailPlanWriteStore.init(EasyDate.now(), EasyDate.now().plusDays(1), this.props.route.params.detailPlans);
     }
 
     _changeShow = () => {
@@ -38,7 +45,20 @@ export default class DetailPlanWriteBoard extends Component {
     }
 
     _saveDetailPlans = () => {
-        this.props.route.params.setPurposeDetailPlans(this.detailPlanWriteStore.goals);
+        try{
+            this.detailPlanWriteStore.valid();
+
+            this.purposeWriteStore.purpose.detailPlans = this.detailPlanWriteStore.goals;
+            this.purposeWriteStore.purpose.startDate = this.detailPlanWriteStore.entryStartDate;
+            this.purposeWriteStore.purpose.endDate = this.detailPlanWriteStore.entryEndDate;
+
+            this.purposeWriteStore.writeType = PurposeWriteType.GROUND_MODIFY;
+
+            this.props.navigation.navigate('PurposeWriteBoard');
+
+        }catch(e){
+            ToastAndroid.showWithGravity(e, ToastAndroid.SHORT, ToastAndroid.CENTER);
+        }
     }
 
     render() {

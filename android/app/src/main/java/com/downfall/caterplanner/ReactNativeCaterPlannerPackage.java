@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 
+import com.downfall.caterplanner.scheduler.CaterPlannerSchedulerMoudle;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -14,6 +15,7 @@ public class ReactNativeCaterPlannerPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         return Arrays.asList(
+                new CaterPlannerSchedulerMoudle(reactContext)
                );
     }
 

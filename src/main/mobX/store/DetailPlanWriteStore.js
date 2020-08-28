@@ -29,7 +29,10 @@ export default class DetailPlanWriteStore{
         }
 
         this.goals = this.goals.slice();
-
+        
+        if(goal.endDate.isAfter(this.entryEndDate)){
+            this.entryEndDate = goal.endDate;
+        }
     }
 
     @action
@@ -46,12 +49,14 @@ export default class DetailPlanWriteStore{
     }
 
     //경고 메시지 주어야함... endDate가 entryEnddate와 일치하지 않는 문재
-    _valid(){
+    valid(){
+        if(this.goals.length == 0)
+            throw '최소 하나 이상의 목표를 가지고 있어야 합니다.'
+
         if(this.goals[0].id != 0)
             throw '시스템 오류';
 
-        let minStartDate = this.entryEndDate;
-        let maxEndDate = this.entryStartDate;
+        let minStartDate = this.goals[0].startDate;
 
         for(let i = 1; i < this.goals.length; i++){
             if(!this.goals[i]){
@@ -66,15 +71,10 @@ export default class DetailPlanWriteStore{
                 minStartDate = this.goals[i].startDate;
             }
 
-            if(this.goals[i].endDate.isBefore(maxEndDate)){
-                maxEndDate = this.goals[i].endDate;
-            }
         }
 
         if(!minStartDate.equalsDate(this.entryStartDate))
             throw '최소 하나 이상의 목표 시작날짜는 목적의 시작날짜와 같아야 합니다.'
-        if(!maxEndDate.equalsDate(this.entryEndDate))
-            throw '최소 하나 이상의 목표 종료날짜는 목적의 종료날짜와 같아야 합니다.'
     }
 
     get graphData(){
@@ -97,8 +97,6 @@ export default class DetailPlanWriteStore{
                 name : goal.name
             });
         })
-
-        console.log(data);
 
         return data;
     }

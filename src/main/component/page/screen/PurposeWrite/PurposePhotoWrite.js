@@ -3,18 +3,23 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import purposeStyles from './style/PurposeStyle';
 import useStores from '../../../../mobX/helper/useStores'
 import ImageButton from '../../../atom/button/ImageButton';
+import { useNavigation } from '@react-navigation/native';
 
 
 
-export default function PurposeThumbnailWrite({navigation}) {
+export default function PurposePhotoWrite() {
 
     const { purposeWriteStore } = useStores();
 
-    const [purposeTumbnailUri, setPurposeTumbnailUri] = useState(null);
+    const [purposePhoto, setPurposePhoto] = useState(purposeWriteStore.purpose.photoUrl);
 
-    const setThumbnail = (image) => {
-        setPurposeTumbnailUri(image);
+    const navigation = useNavigation();
+
+    const setPhoto = (photo) => {
+        setPurposePhoto(photo);
         purposeWriteStore.changePermit(true);
+        purposeWriteStore.purpose.photo = photo;
+        purposeWriteStore.isChangePhoto = true;
     } 
 
     return (
@@ -38,14 +43,14 @@ export default function PurposeThumbnailWrite({navigation}) {
                     <ImageButton
                     backgroundStyle={{ flex:1}}
                     imageStyle={
-                        purposeTumbnailUri ?  {flex : 1, width : '100%' , height : undefined} : { width: 100, height: 100, marginLeft: 5 }
+                        purposePhoto ?  {flex : 1, width : '100%' , height : undefined} : { width: 100, height: 100, marginLeft: 5 }
                     }
                     source={
-                        purposeTumbnailUri ? {uri : purposeTumbnailUri} : require('../../../../../../asset/button/select_thumbnail_button.png')
+                        purposePhoto ? {uri : purposeWriteStore.isChangePhoto ? purposePhoto.uri : purposePhoto} : require('../../../../../../asset/button/select_thumbnail_button.png')
                     }
                     onPress={() => {
                         navigation.navigate('SelectAlbum' , {
-                            setPurposeTumbnailUri : setThumbnail
+                            setPurposePhoto : setPhoto
                         })
                     }}
                     />           

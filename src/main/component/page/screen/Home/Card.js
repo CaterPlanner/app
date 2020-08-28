@@ -7,7 +7,7 @@ export default function Card({ id,  image, title, date, onPress }) {
     return (
         <TouchableOpacity style={{
             height: '100%', justifyContent: 'center'
-        }} activeOpacity={1}>
+        }} activeOpacity={1} onPress={onPress}>
             <View style={{
                 borderTopRightRadius: 45,
                 borderTopLeftRadius: 45,

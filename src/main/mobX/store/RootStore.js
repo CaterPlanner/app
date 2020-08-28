@@ -13,7 +13,6 @@ export default class RootStore {
         this.appStore = new AppStore(this);
 
 
-        this.purposeService = new PurposeService();
 
     }
 }

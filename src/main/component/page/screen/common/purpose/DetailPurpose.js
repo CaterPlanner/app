@@ -1,12 +1,103 @@
 import React, { useState } from 'react';
-import { View, Image, Text, StyleSheet, Dimensions } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback } from 'react-native'
 import InfoBox from '../../../../molecule/InfoBox';
-import DetailPlanPaper from '../../../../atom/button/DatePlanPaper'
-import EasyDate from '../../../../../util/EasyDate';
 import ImageButton from '../../../../atom/button/ImageButton';
 import DecimalDayWidget from '../../../../atom/icon/DecimalDayWidget';
+import DetailPlanPaper from '../../../../atom/button/DatePlanPaper'
+
+import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import useStores from '../../../../../mobX/helper/useStores';
+import { useNavigation } from '@react-navigation/native';
+import EasyDate from '../../../../../util/EasyDate';
+
+
+
+function ActinFloatingButton() {
+
+    let animation = new Animated.Value(1); //각 애니메이션에 대한 초기값
+    let isOpen = false;
+
+    const toggleMenu = () => {
+
+        const toValue = isOpen ? 0 : 1;
+        
+        Animated.spring(animation, { //바운스 효과
+            toValue ,
+            friction: 7  //바운스 가중치
+        }).start();
+
+        isOpen = !isOpen;
+    }
+
+
+    const elementAnimation = (translateY) => ({
+        transform: [
+            { scale: animation },
+            {
+                translateY: animation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, translateY] //inputRange 가 0일땐 0, 1일땐 translateY
+                })
+            }
+        ]
+    })
+
+
+    return (
+        <View style={{alignItems : 'center'}}>
+            <TouchableWithoutFeedback>
+                <Animated.View style={[floatingButtonStyles.elementButtonStyle, elementAnimation(-40), {backgroundColor: '#F2994A'}]}>
+                    <View style={{borderRadius: 5, position: 'absolute', right : 70, backgroundColor:'white', width: 80, height: 25, alignItems:'center', justifyContent:'center', elevation : 5 }}>
+                        <Text style={floatingButtonStyles.elementFontStyle}>
+                            VLOG
+                        </Text>
+                    </View>
+                </Animated.View>
+            </TouchableWithoutFeedback>
+
+            <TouchableWithoutFeedback >
+                <Animated.View style={[floatingButtonStyles.elementButtonStyle, elementAnimation(-20), {backgroundColor:'#F2C94C'}]}>
+                    <View style={{borderRadius: 5, position: 'absolute', right : 70, backgroundColor:'white', width: 80, height: 25, alignItems:'center', justifyContent:'center', elevation : 5 }}>
+                        <Text style={floatingButtonStyles.elementFontStyle}>
+                            도움요청
+                        </Text>
+                    </View>
+                </Animated.View>
+            </TouchableWithoutFeedback>
+
+            <TouchableWithoutFeedback onPress={toggleMenu}>
+                <Animated.View style={[floatingButtonStyles.buttonStyle]}>
+                    <Text >heldlo</Text>
+                </Animated.View>
+            </TouchableWithoutFeedback>
+        </View>
+    )
+}
+
+const floatingButtonStyles = StyleSheet.create({
+    buttonStyle: {
+        backgroundColor: '#25B046',
+        width: 60,
+        height: 60,
+        borderRadius: 60,
+        elevation: 5,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    elementButtonStyle: {
+        width: 55,
+        height: 55,
+        borderRadius: 55,
+        elevation: 5,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    elementFontStyle:{
+        textAlign:'center'
+    }
+})
 
 function StoryBox({ type, text }) {
     return (
@@ -29,7 +120,7 @@ function StoryTag({ date }) {
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5 }}>
             <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, width: 30, height: 1, marginRight: 8 }} />
-            <Text>{date.toStringDateByView()}</Text>
+            <Text>{date.toString()}</Text>
         </View>
     )
 }
@@ -45,8 +136,7 @@ function StoryTimeLine({ stories }) {
                 {
                     stories.map((story) => {
                         let dateChange = false;
-                        if (beforeDate != null)
-                            console.log(beforeDate.toStringDateByView() + '   ' + story.createDate.toStringDateByView() + "  " + beforeDate.equalsDate(story.createDate));
+                        story.createDate = new EasyDate(story.createDate);
                         if (beforeDate === null || !beforeDate.equalsDate(story.createDate)) {
                             beforeDate = story.createDate;
                             dateChange = true;
@@ -68,214 +158,163 @@ export default function DetailPurpose({ data }) {
 
     const [changeHeaderVisibility, setChangeHeaderVisibility] = useState(true);
 
+    const purpose = data.purpose;
+    const isOwner = data.isOwner;
 
-    data = {
-        name: '해상 라이프가드 되기',
-        description: '바다의 구조자가 되기 위한 노력을 할것입니다. 왜냐하면 동해물과 백두산이 마르고 닳도록',
-        storiesHeader: [
-            {
-                id: 0,
-                title: '역시 수업듣는게 제일 싫닼ㅋㅋㅋ',
-                type: 0,
-                createDate: new EasyDate('2020-08-12')
-            },
-            {
-                id: 1,
-                title: '아 달리기 완전 숨차 버리죠 ㅋㅋㅋ',
-                type: 0,
-                createDate: new EasyDate('2020-08-12')
-            },
-            {
-                id: 2,
-                title: '히히히',
-                type: 0,
-                createDate: new EasyDate('2020-08-11')
-            },
-            {
-                id: 3,
-                title: '히히히',
-                type: 0,
-                createDate: new EasyDate('2020-08-10')
-            }
-        ]
-    }
+    const navigation = useNavigation();
 
-    const header = () => {
-        return (
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 12 }}>
-                <ImageButton
-                    backgroundStyle={{
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                    imageStyle={{
-                        width: 22,
-                        height: 20
-                    }}
-                    source={require('../../../../../../../asset/button/arrow_button.png')}
-                />
-                <ImageButton
-                    backgroundStyle={{
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                    imageStyle={{
-                        width: 23,
-                        height: 25
-                    }}
-                    source={require('../../../../../../../asset/button/plan_write_button.png')}
-                />
-            </View>
-        );
-    }
-
-
+    let _purposeContolMenuRef = null;
 
     return (
-        <ParallaxScrollView
-            backgroundColor={'rgb(0,0,0,0)'}
-            fadeOutForeground={true}
-            backgroundScrollSpeed={20}
-            onChangeHeaderVisibility={(a) => {
-                setChangeHeaderVisibility(a);
-            }}
-            renderFixedHeader={() => {
-                return (
-                    <View>
-                        {!changeHeaderVisibility &&
-                            <View style={{ overflow: 'visible', backgroundColor: 'white', height: 48, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
-                                <ImageButton
-                                    backgroundStyle={{
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}
-                                    imageStyle={{
-                                        width: 22,
-                                        height: 20
-                                    }}
-                                    source={require('../../../../../../../asset/button/arrow_button.png')}
-                                />
-                                <ImageButton
-                                    backgroundStyle={{
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}
-                                    imageStyle={{
-                                        width: 23,
-                                        height: 25
-                                    }}
-                                    source={require('../../../../../../../asset/button/plan_write_button.png')}
-                                />
-                            </View>
-
-                        }
-                    </View>
-                )
-            }}
-            stickyHeaderHeight={50}
-            parallaxHeaderHeight={Dimensions.get('window').height * 0.33}
-            backgroundSpeed={10}
-            renderBackground={() => {
-                return (
-                    <View style={detailPurposeStyles.thumbnailImageContainer}>
-                        <Image
-                            source={{ uri: 'https://t1.daumcdn.net/thumb/R720x0/?fname=http://t1.daumcdn.net/brunch/service/user/5xq2/image/0lp8RLaJ2IgctTWVl2nEa-JRCSc.jpg' }}
-                            resizeMode="stretch"
-                            style={{ flex: 1, width: "100%", height: undefined }}
-                        />
-                    </View>
-                )
-            }}
-        >
-            <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
-                <View style={detailPurposeStyles.purposeInfoContainer}>
-                    <Text style={detailPurposeStyles.purposeNameFont}>
-                        {data.name}
-                    </Text>
-                    <View style={{alignSelf: 'flex-start', marginBottom : 20}}>
-                        <DecimalDayWidget stat={0} decimalDay={'22'} />
-
-                    </View>
-                    <Text style={detailPurposeStyles.purposeDescriptionFont}>
-                        {data.description}
-                    </Text>
-                    <View style={detailPurposeStyles.purposeProfileContainer}>
+        <View style={{ flex: 1 }}>
+            <View style={{ alignSelf: 'flex-end' }}>
+                <Menu
+                    ref={ref => { _purposeContolMenuRef = ref }}>
+                    <MenuItem onPress={() => {
+                        _purposeContolMenuRef.hide();
+                        navigation.navigate('CreateNavigation', {
+                            screen: 'PurposeWriteBoard',
+                            params: {
+                                purpose: purpose
+                            }
+                        })
+                    }}>수정</MenuItem>
+                    <MenuDivider />
+                    <MenuItem onPress={() => {
+                        _purposeContolMenuRef.hide();
+                        console.log('hello')
+                    }}>삭제</MenuItem>
+                </Menu>
+            </View>
+            <ParallaxScrollView
+                backgroundColor={'rgb(0,0,0,0)'}
+                fadeOutForeground={true}
+                backgroundScrollSpeed={20}
+                onChangeHeaderVisibility={(a) => {
+                    setChangeHeaderVisibility(a);
+                }}
+                renderFixedHeader={() => {
+                    return (
                         <View>
+                            {!changeHeaderVisibility &&
+                                <View style={{ overflow: 'visible', backgroundColor: 'white', height: 48, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
+                                    <ImageButton
+                                        backgroundStyle={{
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        imageStyle={{
+                                            width: 22,
+                                            height: 20
+                                        }}
+                                        onPress={navigation.goBack}
+                                        source={require('../../../../../../../asset/button/arrow_button.png')}
+                                    />
+                                    {isOwner &&
+                                        <ImageButton
+                                            backgroundStyle={{
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                            imageStyle={{
+                                                width: 23,
+                                                height: 25
+                                            }}
+                                            onPress={() => {
+                                                _purposeContolMenuRef.show();
+                                            }}
+                                            source={require('../../../../../../../asset/button/plan_write_button.png')}
+                                        />}
+                                </View>
+
+                            }
+                        </View>
+                    )
+                }}
+                stickyHeaderHeight={50}
+                parallaxHeaderHeight={Dimensions.get('window').height * 0.33}
+                backgroundSpeed={10}
+                renderBackground={() => {
+                    return (
+                        <View style={detailPurposeStyles.thumbnailImageContainer}>
                             <Image
-                                style={{height: 40, width: 40, borderRadius: 40}}
-                                source={{uri : 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg'}}
+                                source={{ uri: purpose.photoUrl }}
+                                resizeMode="stretch"
+                                style={{ flex: 1, width: "100%", height: undefined }}
                             />
                         </View>
-                        <Text style={detailPurposeStyles.purposeAuthorNameFont}>
-                            사용자
+                    )
+                }}
+            >
+                <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
+                    <View style={detailPurposeStyles.purposeInfoContainer}>
+                        <Text style={detailPurposeStyles.purposeNameFont}>
+                            {purpose.name}
                         </Text>
+                        <View style={{ alignSelf: 'flex-start', marginBottom: 20 }}>
+                            <DecimalDayWidget stat={purpose.stat} decimalDay={purpose.leftDay} />
+
+                        </View>
+                        <Text style={detailPurposeStyles.purposeDescriptionFont}>
+                            {purpose.description}
+                        </Text>
+                        <View style={detailPurposeStyles.purposeProfileContainer}>
+                            <View>
+                                <Image
+                                    style={{ height: 40, width: 40, borderRadius: 40 }}
+                                    source={{ uri: 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg' }}
+                                />
+                            </View>
+                            <Text style={detailPurposeStyles.purposeAuthorNameFont}>
+                                사용자
+                        </Text>
+                        </View>
+                    </View>
+                    <View style={{ marginTop: 5 }}>
+                        <InfoBox
+                            title={'진행 중인 목표'}
+                            detailButtonPress={() => {
+                                navigation.navigate('DetailPlanList', {
+                                    data: data
+                                })
+                            }}
+                            detailButtonHint={'더보기'}
+                            child={(
+                                <View style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
+                                    {
+                                        data.detailPlans.map((goal) => (
+                                            <View style={detailPurposeStyles.paperContainer}>
+                                                <DetailPlanPaper
+                                                    color={goal.color}
+                                                    name={goal.name}
+                                                    value={goal.achieve}
+                                                    disabled={true}
+                                                />
+                                            </View>
+                                        ))
+                                    }
+                                </View>
+                            )}
+                        />
+                    </View>
+                    <View style={{ marginTop: 5 }}>
+                        <InfoBox
+                            title={'스토리 타임라인'}
+                            detailButtonPress={() => {
+                                navigation.navigate('PurposeStories', {
+                                    purpose : purpose
+                                })
+                            }}
+                            detailButtonHint={'자세히보기'}
+                            child={(<StoryTimeLine stories={data.storyTags} />)}
+                        />
                     </View>
                 </View>
-                <View style={{ marginTop: 5 }}>
-                    <InfoBox
-                        title={'진행 중인 목표'}
-                        detailButtonPress={() => {
-                            console.log('go to 진행 중인 목표 더보기')
-                        }}
-                        detailButtonHint={'더보기'}
-                        child={(
-                            <View style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 5 }}>
-                                <View style={detailPurposeStyles.paperContainer}>
-                                    <DetailPlanPaper
-                                        color={'#F8C2C2'}
-                                        name={'라이프가드 자격증 공부'}
-                                        value={90}
-                                        disabled={true}
-                                    />
-                                </View>
-                                <View style={detailPurposeStyles.paperContainer}>
-                                    <DetailPlanPaper
-                                        color={'#F8C2C2'}
-                                        name={'라이프가드 자격증 공부'}
-                                        value={90}
-                                        disabled={true}
-                                    />
-                                </View>
-                            </View>
-                        )}
-                    />
-                </View>
-                <View style={{ marginTop: 5 }}>
-                    <InfoBox
-                        title={'스토리 타임라인'}
-                        detailButtonPress={() => {
-                            console.log('go to 진행 중인 목표 더보기')
-                        }}
-                        detailButtonHint={'자세히보기'}
-                        child={(<StoryTimeLine stories={data.storiesHeader} />)}
-                    />
-                </View>
+            </ParallaxScrollView>
+            <View style={{ position: 'absolute', bottom: 40, right: 22 }}>
+                <ActinFloatingButton/>
             </View>
-        </ParallaxScrollView>
-
-        // <>
-        //     <ReactNativeParallaxHeader
-        //         statusBarColor={'#94EB3E'}
-        //         headerMinHeight={48}
-        //         headerMaxHeight={220}
-        //         extraScrollHeight={20}
-        //         navbarColor={'white'}
-        //         backgroundImage={{ uri: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/01/Sans_undertale.jpg/220px-Sans_undertale.jpg' }}
-        //         backgroundImageScale={1.5}
-        //         renderNavBar={header}
-        //         renderContent={renderView}
-        //         scrollViewProps={{
-        //             ref: (ref) => {this.scrollView = ref;},
-        //             // onScroll : ({nativeEvent}) => {
-        //             //     console.log(nativeEvent.contentOffset.y)
-        //             // },
-        //             onScrollToTop: () => console.log('h'),
-        //             onScrollBeginDrag: () => console.log('onScrollBeginDrag'),
-        //             onScrollEndDrag: () => console.log('onScrollEndDrag'),
-        //           }}
-        //     />
-
-        // </>
+        </View>
     )
 }
 
@@ -297,17 +336,18 @@ const detailPurposeStyles = StyleSheet.create({
         marginBottom: 15
     },
     purposeDescriptionFont: {
+        height: 60
     },
     purposeProfileContainer: {
-        flexDirection: 'row', 
-        alignItems:'center',
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'flex-start',
         paddingVertical: 15
     },
     paperContainer: {
         marginBottom: 5
     },
-    purposeAuthorNameFont:{
+    purposeAuthorNameFont: {
         fontSize: 13,
         marginLeft: 8
     }

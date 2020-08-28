@@ -7,15 +7,17 @@ import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput';
 
 
 
-export default function PurposeNameWrite({ next }) {
+export default function PurposeNameWrite() {
 
     const { purposeWriteStore } = useStores();
-    const [purposeName, setPurposeName] = useState("");
-    const [purposeDisclosureScope, setDisclosureScope] = useState(0); //0 전체공개 1 비공개
+
+    const [purposeName, setPurposeName] = useState(purposeWriteStore.purpose.name);
+    const [purposeDisclosureScope, setDisclosureScope] = useState(purposeWriteStore.purpose.disclosureScope); //0 전체공개 1 비공개
 
     const [isScopeSelecting, setIsScopeSelecting] = useState(false);
 
     const scopeNames = ['전체공개', '비공개']
+
 
     return (
         <View style={purposeStyles.container}>
@@ -63,10 +65,10 @@ export default function PurposeNameWrite({ next }) {
                     numberOfLines={1}
                     maxLength={32}
                     placeHolder={"목적 이름을 적어주세요!"}
-                    onSubmitEditing={event => {
-                        if (purposeWriteStore.isPermitNextScene)
-                            next();
-                    }}
+                    // onSubmitEditing={event => {
+                    //     if (purposeWriteStore.isPermitNextScene)
+                    //         next();
+                    // }}
                     onChangeText={text => {
                         setPurposeName(text);
                         purposeWriteStore.purpose.name = text;

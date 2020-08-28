@@ -1,8 +1,8 @@
 import React, {Component } from 'react';
 import { View, Image, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import CameraRoll from "@react-native-community/cameraroll";
-import defaultHeaderStyle from '../../../organism/header/defaultHeaderStyle';
 
+//https://stackoverflow.com/questions/43824261/react-native-fetch-file-upload-error
 
 export default class SelectPhoto extends Component{
 
@@ -38,15 +38,17 @@ export default class SelectPhoto extends Component{
         const photos = (await CameraRoll.getPhotos({
             first: this.props.route.params.photoCount,
             groupName: this.props.route.params.albumName,
-            assertType: 'Photos'
+            assertType: 'Photos',
+            include: ['filename']
         })).edges.map((photo) => {
             return {
                 isEmpty : false,
-                uri : photo.node.image.uri
+                uri : photo.node.image.uri,
+                name: photo.node.image.filename,
+                type: photo.node.type
             };
         })
 
-        console.log(photos);
 
         this.setState({
             isLoading : true,
@@ -70,7 +72,11 @@ export default class SelectPhoto extends Component{
                             <View style={styles.item} >
                                 {!item.isEmpty && (
                                 <TouchableOpacity style={{flex: 1}} onPress={() => {
-                                    this.props.route.params.setPurposeTumbnailUri(item.uri);
+                                    this.props.route.params.setPurposePhoto({
+                                        uri : item.uri,
+                                        name : item.name,
+                                        type: item.type
+                                    });
                                     this.props.navigation.navigate('PurposeWriteBoard');
                                 }}>
                                     <Image

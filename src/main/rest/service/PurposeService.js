@@ -4,47 +4,95 @@ import GoalRepository from '../repository/GoalRepository';
 import BriefingRepository from '../repository/BriefingRepository';
 import EasyDate from '../../util/EasyDate';
 import SQLiteManager from '../../util/SQLiteManager';
+import Goal from '../model/Goal';
+import Purpose from '../model/Purpose';
 
+export default class PurposeService {
 
-export default class PurposeService{
-    
- 
-    constructor(){
+    static instance = null;
+
+    static getInstance = () => {
+        if (!this.instance)
+            this.instance = new PurposeService();
+        return this.instance;
+    }
+
+    constructor() {
         this.db = SQLiteManager.getConnection()
     }
 
     create = (purpose, detailPlans) => {
         return new Promise((resolve, reject) => {
             this.db.transaction(
-                async (txn) => {
-                    purpose.stat = State.WAIT;
-                    let id = await PurposeRepository.insert(txn, purpose);
-                    if(detailPlans){
-                        for(goal of detailPlans){
-                            goal.purposeId = id;
-                            await GoalRepository.insert(txn, goal);
-                        }
-                    }
-                    resolve(id);
+                async (txn) => {     
+                    PurposeRepository.insert(txn, purpose, 
+                        async (txn, res) => {
+                            if(detailPlans){
+                                if(purpose.stat == 1)
+                                    throw '대기 중인 목적은 세부목적을 지정할 수 없습니다'
+
+                                for(goal of detailPlans){
+                                    await (new Promise( (resolve) => {
+                                        GoalRepository.insert(txn, goal, 
+                                            () => resolve())
+                                    }));
+                                }
+                            }
+                        })
+
+                    resolve();
                 }
                 , reject)
         });
     }
 
+    initAll = (responsePurposes) => {
+        return new Promise((resolve, reject) => {
+            this.db.transaction(
+                async (txn) => {
+                    PurposeRepository.deleteAll(txn,
+                        async (txn, res) => {
+
+                            for (purpose of responsePurposes) {
+                                await (new Promise((resolve) => {
+
+                                    PurposeRepository.insert(txn, new Purpose(purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat),
+                                        async (txn, res) => {
+
+                                            if (purpose.detailPlans) {
+                                                if (purpose.stat == 1)
+                                                    throw '대기 중인 목적은 세부목적을 지정할 수 없습니다'
+                                                for (goal of purpose.detailPlans) {
+                                                    await (new Promise((resolve) => {
+
+                                                        GoalRepository.insert(txn, new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate, goal.stat),
+                                                            () => { resolve(); },
+                                                            reject);
+                                                    }))
+                                                }
+                                            }
+                                            resolve();
+                                        }, reject)
+                                }))
+                            }
+
+
+                            resolve();
+                        });
+                },
+                reject)
+        })
+    }
+
     read = (id) => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                const purpose = await PurposeRepository.selectById(this.db, id);
-                const goals = GoalRepository.selectByPurposeId(this.db, id);
-                const briefings = await BriefingRepository.selectByPurposeId(this.db, id);
-
-                briefings.forEach((briefing) => {
-                    briefing.purposeId = purpose.id;
-                    goals[briefing.goalId].briefings.push(briefing);
+                PurposeRepository.selectById(this.db, id, (purpose) => {
+                    GoalRepository.selectByPurposeId(this.db, id, (goals) => {
+                        purpose.setDetailPlans(goals);
+                        resolve(purpose);
+                    })
                 })
-
-                purpose.setDetailPlans(goals);
-                resolve(purpose);
             } catch (e) {
                 reject(e);
             }
@@ -52,74 +100,82 @@ export default class PurposeService{
     }
 
     findPurposeForBrifingList = () => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                let purposes = await PurposeRepository.selectByStatIsActive(this.db);
-
-                let result = [];
-
-                for(purpose of purposes){
-
-                    const goals = (await GoalRepository.selectByPurposeId(this.db, purpose.id)).filter(
-                        g => g.isNowBriefing()
-                    );
-
-                    if(goals.length == 0)
-                        continue;
-
-                    const briefings = await BriefingRepository.selectByPurposeId(this.db, purpose.id);
-        
-                    briefings.forEach((briefing) => {
-                        briefing.purposeId = purpose.id;
-                        goals[briefing.goalId].briefings.push(briefing);
-                    })
+                PurposeRepository.selectByStatIsActive(this.db, async (purposes) => {
                     
-                    purpose.setDetailPlans(goals);
-                    result.push(purpose);
-                }
+                    const activePurposeIdList = purposes.map((purpose) => purpose.id);
 
-                resolve(result);
+
+                    const goalList = await (new Promise((resolve) => {
+                        GoalRepository.selectByStatIsActiveInPurposeId(this.db, activePurposeIdList, (res) => resolve(res));
+                    }));
+
+                    purposes.forEach((purpose) => {
+                        purpose.detailPlans = goalList.filter(g => g.purposeId == purpose.id && g.isNowBriefing);
+                    })
                 
+                    resolve(purposes);
+                    
+                });
             } catch (e) {
+                console.log('hello');
                 reject(e);
             }
         })
     }
 
     findPurposesForCard = () => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                resolve(await PurposeRepository.selectByStatIsActive(this.db))
-                
+                PurposeRepository.selectByStatIsActive(this.db, (res) => {
+                    resolve(res);
+                })
+
             } catch (e) {
                 reject(e);
             }
         })
     }
 
-    update = (id, purpose, detailPlans) => {
+    modify = (id, purpose) => {
         return new Promise(async (resolve, reject) => {
             this.db.transaction(
                 async (txn) => {
-                    await PurposeRepository.updatePurposeDate(txn, purpose);
+                    
+                }
+            )
+        });
+    }
 
-                    if (detailPlans) {
-                        await GoalRepository.deleteByPurposeId(txn, id);
-
-                        for(goal of detailPlans){
-                            goal.purposeId = id;
-                            await GoalRepository.insert(txn, goal);
+    groundModify = (id, purpose) => {
+        return new Promise(async (resolve, reject) => {
+            this.db.transaction(
+                async (txn) => {
+                    PurposeRepository.updatePurposeDate(txn, purpose, () => {
+                        if(purpose.detailPlnas){
+                            GoalRepository.deleteByPurposeId(txn, id, async () => {
+                                for(goal of detailPlans){
+                                    await (new Promise((resolve) => {
+                                        goal.purposeId = id;
+                                        GoalRepository.insert(txn, goal, () => resolve())
+                                    }));
+                                }
+                                resolve();
+                            })
                         }
-                    }
+                    });
                 }
                 , reject)
         })
     }
 
     delete = (id) => {
-        return new Promise(async (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             try {
-                await PurposeRepository.deleteById(this.db, id);
+                PurposeRepository.deleteById(this.db, id, () => {
+                    resolve();
+                });
             } catch (e) {
                 reject(e);
             }
@@ -129,7 +185,7 @@ export default class PurposeService{
     startSchedule = (id) => {
         return new Promise(async (resolve, reject) => {
             try {
-                await PurposeRepository.updateStatById(this.db, id, State.PROCEED);
+                PurposeRepository.updateStatById(this.db, id, State.PROCEED, () => resolve());
             } catch (e) {
                 reject(e);
             }
@@ -139,7 +195,7 @@ export default class PurposeService{
     stopSchedule = (id) => {
         return new Promise(async (resolve, reject) => {
             try {
-                await PurposeRepository.updateStatById(this.db, id, State.PROCEED);
+                PurposeRepository.updateStatById(this.db, id, State.PROCEED, () => resolve());
             } catch (e) {
                 reject(e);
             }
@@ -147,79 +203,81 @@ export default class PurposeService{
     }
 
     refresh = () => {
-        return new Promise(async (resolve, reject) => {
-            this.db.transaction(async (txn) => {
-                purposes = await PurposeRepository.selectByStatIsActive(txn);
-                today = EasyDate.now();
+        return new Promise((resolve, reject) => {
+            this.db.transaction((txn) => {
+                const today = EasyDate.now();
+                PurposeRepository.selectByStatIsActive(txn, async (purposes) => {
 
-                for (purpose of purposes) {
+                    for(purpose of purposes){
+                        await (new Promise((resolve) => {
+                            GoalRepository.selectByPurposeId(txn, purposes.id, async (goals) => {
+                                for(goal of goals){
+                                    if (State.isPass(goal.stat))
+                                        continue;
+        
+                                    if (today.isAfter(goal.endDate)) {
+                                        goal.stat = goal.achieve >= 80 ? State.SUCCEES : State.FAIL;
+                                    } else if (goal.stat == State.WAIT && goal.isActive) {
+                                        goal.stat = State.PROCEED;
+                                    }
 
-                    const goals = GoalRepository.selectByPurposeId(this.db, purpose.id);
-                    const briefings = await BriefingRepository.selectByPurposeId(this.db, purpose.id);
-    
+                                    await (new Promise((resolve) => {
+                                        GoalRepository.updateStatByKey(txn, purpose.id, goal.id, goal.stat, () => resolve() )
+                                    }))
 
-                    briefings.forEach((briefing) => {
-                        briefing.purposeId = purpose.id;
-                        goals[briefing.goalId].briefings.push(briefing);
-                    })
+                                }
+                                resolve();
+                            })
+                        }))
 
-                    for (goal of goals) {
-                        if (State.isPass(goal.stat))
-                            continue;
-
-                        if (today.isAfter(goal.endDate)) {
-                            goal.stat = goal.achieve >= 80 ? State.SUCCEES : State.FAIL;
-                        } else if (goal.stat == State.WAIT && goal.isActive) {
-                            goal.stat = State.PROCEED;
+                        if (today.isAfter(purpose.endDate)) {
+                            purpose.stat = detailPlans.achieve >= 80 ? State.SUCCEES : State.FAIL;
+                            await (new Promise((resolve) => {
+                                PurposeRepository.updateStatById(purpose.id, purpose.stat, () => resolve());
+                            }))
                         }
 
-                        await GoalRepository.updateStatByKey(txn, purpose.id, goal.id, goal.stat);
+                        
                     }
 
-                    if (today.isAfter(purpose.endDate)) {
-                        purpose.stat = detailPlans.achieve >= 80 ? State.SUCCEES : State.FAIL;
-                        await PurposeRepository.updateStatById(purpose.id, purpose.stat);
-                    }
-                }
+                    resolve();
 
+                });
             }, reject);
         })
     }
 
-    addBriefing = (id, goalId, performId) => {
-        return new Promise(async (resolve, reject) => {
-            
-            this.db.transaction(async (txn) => {
-                const purpose = await PurposeRepository.selectById(txn, id);
+    //수정 필요
+    addBriefing = (id, goalId) => {
+        return new Promise((resolve, reject) => {
+            this.db.transaction((txn) => {
+                PurposeRepository.selectById(txn, id, (purpose) => {
+                    BriefingRepository.insert(txn, purpose.id, goalId, () => {
+                        GoalRepository.selectByPurposeId(txn, purpose.id, async (goals) => {
 
-                await BriefingRepository.insert(txn, purposes.id, performId);
+                            purpose.setDetailPlans(goals);
+                            const goal = purpose.detailPlans[goalId];
 
-                const goals = GoalRepository.selectByPurposeId(this.db, purpose.id);
-                const briefings = await BriefingRepository.selectByPurposeId(this.db, purpose.id);
+                            if (goal.achieve == 100 && goal.stat == State.PROCEED) {
+                                goal.stat = State.SUCCEES;
+                                await (new Promise((resolve) => {
+                                    GoalRepository.updateStatByKey(txn, purposes.id, goal.id, State.SUCCEES, () => resolve());
+                                }));
+                            }
+                            if (purposes.achieve == 100 && purposes.stat == State.PROCEED) {
+                                purposes.stat = State.SUCCEES;
+                                await (new Promise((resolve) => {
+                                    PurposeRepository.updateStatByKey(txn, purposes.id, purposes.stat, () => resolve());
+                                }));
+                            }
 
-                briefings.forEach((briefing) => {
-                    briefing.purposeId = purpose.id;
-                    goals[briefing.goalId].briefings.push(briefing);
+                        })
+                    });
                 })
-
-
-                purpose.setDetailPlans(goals);
-                
-                const goal = purpose.detailPlans[goalId];
-
-                if(goal.achieve == 100 && goal.stat == State.PROCEED){
-                    goal.stat = State.SUCCEES;
-                    await GoalRepository.updateStatByKey(txn, purposes.id, goal.id, State.SUCCEES);
-                }
-                if(purposes.achieve == 100 && purposes.stat == State.PROCEED){
-                    purposes.stat = State.SUCCEES;
-                    await PurposeRepository.updateStatByKey(txn, purposes.id, purposes.stat);
-                }
-
+                resolve();
             }, reject);
         })
     }
-
 
 }
 
