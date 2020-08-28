@@ -5,7 +5,9 @@ const connection = SQLite.openDatabase({
     name: 'CaterPlanner.db',
     createFromLocation : 1 
 },
-    () => {console.log('DB Connected!')},
+    (db) => {
+        db.executeSql("PRAGMA foreign_keys = ON");
+        console.log('DB Connected!')},
     error => { console.log(error); }
 )
 

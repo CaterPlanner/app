@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions, BackHandler } from 'react-native';
+import { View, Text, Image, Dimensions, BackHandler, StatusBar } from 'react-native';
 import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
@@ -75,6 +75,7 @@ export default class Begin extends Component{
     render(){
         return (
             <LinearGradient colors={['#B0DF5C', '#5EDF8C']} style={{ flex: 1, paddingVertical: 80, paddingHorizontal: 40 }}>
+                <StatusBar hidden />
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Carousel
                         style={{ flex: 1 }}

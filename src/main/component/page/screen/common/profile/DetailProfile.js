@@ -3,27 +3,24 @@ import { ScrollView, View, Text, Image, Dimensions, StyleSheet, TouchableOpacity
 import RoundButton from '../../../../atom/button/RoundButton';
 import MyProgressBar from '../../../../atom/progressBar/MyProgressBar'
 import InfoLebel from '../../../../atom/text/InfoLabel';
-import InfoBox from '../../../../molecule/InfoBox';
 import ImageButton from '../../../../atom/button/ImageButton';
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
 
 
-export default function UserProfile({ navigation, user }) {
+export default function UserProfile({ navigation, data }) {
 
-    userProfile = 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg';
+    const succeesCount = 0;
 
-    user = {
-        name: '사용자',
-        pictureUrl: 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg',
-        backgroundImage: 'https://png.pngtree.com/thumb_back/fw800/background/20200310/pngtree-clear-creative-texture-dark-blue-sea-background-image_331088.jpg',
-        userPurposeAcheiveAvg: 65,
-        completePurposeCount: 21,
-        helpCount: 195,
-        catePoint: 13450,
-        catePointPercentile: 30,
-    }
+    data.purposeList.forEach((purpose) => {
+        if(purpose.stat == 2)
+            succeesCount++;
+    })
+
+    const succeesPer = Math.round((succeesCount / data.purposeList.length) * 100);
+
+    
 
     return (
         <ParallaxScrollView
@@ -34,7 +31,7 @@ export default function UserProfile({ navigation, user }) {
                     <Image
                         resizeMode="stretch"
                         style={{ flex: 1, width: "100%", height: undefined }}
-                        source={{ uri: user.backgroundImage }} />
+                        source={{ uri: data.backImageUrl }} />
                 </View>)
             }}
         >
@@ -46,21 +43,21 @@ export default function UserProfile({ navigation, user }) {
                         alignItems: 'center'
                     }}>
                     <View style={{ position: 'absolute', top: -50, alignSelf: 'center' }}>
-                        <Image source={{ uri: user.pictureUrl }} style={userProfileStyles.profileImage} />
+                        <Image source={{ uri: data.profileUrl }} style={userProfileStyles.profileImage} />
                     </View>
                     <View style={userProfileStyles.infoContainer}>
                         <Text style={userProfileStyles.userNameFont}>
-                            {user.name}
+                            {data.name}
                         </Text>
                         <View style={userProfileStyles.statLabelContainer}>
                             <View style={{ flex: 1, alignItems: 'flex-start' }}>
-                                <InfoLebel title={'목적 성공률'} value={user.userPurposeAcheiveAvg} />
+                                <InfoLebel title={'목적 성공률'} value={succeesPer} />
                             </View>
                             <View style={{ flex: 1, alignItems: 'center' }}>
-                                <InfoLebel title={'성공한 목적'} value={user.completePurposeCount} />
+                                <InfoLebel title={'성공한 목적'} value={succeesCount} />
                             </View>
                             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                                <InfoLebel title={'도움 횟수'} value={user.helpCount} />
+                                <InfoLebel title={'도움 횟수'} value={'준비중'} />
                             </View>
                         </View>
                         <View style={userProfileStyles.editProfileButtonContainer}>
@@ -88,10 +85,10 @@ export default function UserProfile({ navigation, user }) {
                     <View style={{ width: '100%', paddingHorizontal: 12, paddingVertical: 10, backgroundColor: 'white' }}>
                         <View style={{ marginBottom: 7, flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'flex-end' }}>
                             <Text style={userProfileStyles.caterpointBox_rankFont}>
-                                상위 {user.catePointPercentile}%
+                                상위 {data.catePointPercentile}%
                                 </Text>
                             <Text style={userProfileStyles.caterpointBox_pointFont}>
-                                {user.catePoint} pts
+                                {data.catePoint} pts
                                 </Text>
                         </View>
                         <MyProgressBar
@@ -102,7 +99,7 @@ export default function UserProfile({ navigation, user }) {
                 <View style={userProfileStyles.userBoxContainer}>
                     <View style={{ paddingHorizontal: 12, paddingVertical: 15, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                         <Text style={{ fontSize: 17 }}>
-                            목적 34개 보기
+                            목적 {data.purposeList.length}개 보기
                     </Text>
                         <ImageButton
                             imageStyle={{

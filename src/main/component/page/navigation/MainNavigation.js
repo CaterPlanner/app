@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeNavigation from './HomeNavigation'
 import SearchNavigation from './SearchNavigation'
 import StoryNavigation from './StoryNavigation'
-import MyProfile from '../screen/main/MyProfile'
 import Make from '../screen/main/Make'
 import PublicNavigation from './PublicNavigation'
 

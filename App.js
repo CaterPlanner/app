@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import 'mobx-react-lite/batchingForReactNative'
 import React, {useEffect} from 'react'
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer} from '@react-navigation/native';
 import RootStore from './src/main/mobX/store/RootStore';
 import {Provider} from 'mobx-react'
 import SplashScreen from 'react-native-splash-screen';
@@ -16,6 +16,7 @@ const App = () => {
 
   SQLite.DEBUG(true);
   SQLite.enablePromise(false);
+
 
   useEffect(() => {
     setTimeout(() => {

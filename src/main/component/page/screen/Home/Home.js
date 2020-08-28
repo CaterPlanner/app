@@ -4,7 +4,7 @@ import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
 import Card from './Card'
 
-import { inject } from 'mobx-react';
+import PurposeService from '../../../../rest/service/PurposeService';
 
 YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
 YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
@@ -12,14 +12,11 @@ YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
 const fullWidth = Dimensions.get('window').width;
 const progresValue = 30;
 
-@inject(['purposeService'])
 export default class Home extends Component {
 
 
     constructor(props) {
         super(props)
-
-        this.purposeService = this.props.purposeService;
 
 
         this.state = {
@@ -30,20 +27,25 @@ export default class Home extends Component {
     _renderItem = ({ item, index }) => {
         console.log(item.leftDay);
         return (
-            <Card id={item.id} image={item.imageUrl} title={item.name} date={item.leftDay}
-                onPress={() => {this.props.navigation.navigate('DetailPurpose')}}
-            />
+            <Card id={item.id} image={item.photoUrl} title={item.name} date={item.leftDay}
+                onPress={() => {this.props.navigation.navigate('PublicNavigation' , {
+                    screen: 'LoadMyPurpose',
+                    params : {
+                        id: item.id
+                    }
+                })}}/>
         )
     }
 
 
     componentDidMount() {
-        this.purposeService.findPurposesForCard()
+        PurposeService.getInstance().findPurposesForCard()
         .then((data) => {
             this.setState({
                 endIndex : data.length,
                 data : data
             })
+            console.log(data);
         })
         .catch(e => {
             console.log(e);

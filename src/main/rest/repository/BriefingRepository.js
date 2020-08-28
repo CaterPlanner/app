@@ -24,19 +24,14 @@ const BriefingRepository = {
         })
     },
 
-    insert : (txn, purposeId, goalId) => {
-        return new Promise((resolve, reject) => {
-            txn.executeSql(
-                'insert into briefing(purpose_id, goal_id, create_at, score) values(?, ?, datetime(\'now\'), 0',
-                [purposeId, goalId],
-                (tx, res) => {
-                    resolve();
-                },
-                (error) => {
-                    reject(error);
-                }
-            )
-        })
+    insert : (txn, purposeId, goalId, callback) => {
+        txn.executeSql(
+            'insert into briefing(purpose_id, goal_id, create_at, score) values(?, ?, datetime(\'now\'), 0',
+            [purposeId, goalId],
+            (tx, res) => {
+                callback(res);
+            }
+        )
     }
 
 }

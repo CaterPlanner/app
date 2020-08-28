@@ -202,7 +202,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation "com.google.firebase:firebase-messaging:20.2.3"
     implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
-
+implementation project(':react-native-push-notification')
 
     compileOnly "org.projectlombok:lombok:1.16.18"
     annotationProcessor "org.projectlombok:lombok:1.16.18"

@@ -2,11 +2,11 @@ import EasyDate from "../../util/EasyDate";
 
 export default class Purpose {
 
-    constructor(id, name, description, imageUrl, disclosureScope, startDate, endDate, stat){
+    constructor(id, name, description, photoUrl, disclosureScope, startDate, endDate, stat){
         this.id = id;
         this.name = name;
         this.description = description;
-        this.imageUrl = imageUrl;
+        this.photoUrl = photoUrl;
         this.disclosureScope = disclosureScope;
         this.startDate = new EasyDate(startDate);
         this.endDate = new EasyDate(endDate);

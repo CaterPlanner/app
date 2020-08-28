@@ -40,11 +40,11 @@ export default class Request{
                 fetch(this.url, {
                     method : this.method,
                     headers : {
-                        ...this.options,
                         Accept: 'application/json',
                         'Content-Type' : 'application/json; charset=utf-8',
+                        ...this.options,
                     },
-                    body: JSON.stringify(this.body),
+                    body: this.body,
                 })
                 .then((response) => {
                     isOk = response.ok;

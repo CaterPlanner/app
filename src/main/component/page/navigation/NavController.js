@@ -22,6 +22,9 @@ export default class NavController extends Component {
 
         this.authStore = this.props.authStore;
         this.appStore = this.props.appStore;
+        this.appStore.onScheduler();
+
+;
     }
 
     async componentDidMount() {
@@ -35,16 +38,16 @@ export default class NavController extends Component {
 
     render() {
 
-        console.log(this.appStore.isBegin)
-
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar
                     barStyle="white-content"
                     backgroundColor="#94EB3E"
-                />
+             />
+                {/* <AppNavigation />     */}
                 {this.appStore.isBegin ?
-                    <BeginNavigation /> : <AppNavigation />
+                    <BeginNavigation /> :  
+                        this.authStore.isLogin || this.appStore.offlineMode ?  <AppNavigation /> : <SignIn/>
                 }
             </View>
         );

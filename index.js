@@ -8,4 +8,6 @@ import {name as appName} from './app.json';
 
 
 AppRegistry.registerComponent(appName, () => App);
-AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => bgMessaging);
+// AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => bgMessaging);
+
+AppRegistry.registerHeadlessTask('CallBriefingAlarmer', () => require('./src/main/native/BriefingAlarmer'))

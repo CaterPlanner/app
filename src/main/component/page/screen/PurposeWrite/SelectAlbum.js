@@ -78,7 +78,7 @@ export default function SelectAlbum({ navigation }) {
                                     navigation.navigate('SelectPhoto', {
                                         albumName : item.title,
                                         photoCount: item.count,
-                                        setPurposeTumbnailUri : route.params.setPurposeTumbnailUri
+                                        setPurposePhoto : route.params.setPurposePhoto
                                     });
                                 }}
                             />

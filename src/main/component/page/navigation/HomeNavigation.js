@@ -10,6 +10,7 @@ import PublicNavigation from './PublicNavigation'
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 import BriefingGoalList from '../screen/home/BriefingGoalList';
 
+import WriteStory from '../screen/common/purpose/WriteStory';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,32 @@ const Stack = createStackNavigator();
 const HomeNavigation = () => {
     return (
         <Stack.Navigator>
+            {/* <Stack.Screen options={({navigation}) => (
+                {
+                    ...defaultHeaderStyle,
+                    titie: ''
+                }
+            )} name={"WriteStory"} component={WriteStory}/> */}
+            {/* <Stack.Screen options={({navigation}) => (
+                {
+                    ...defaultHeaderStyle,
+                title: '',
+                headerLeft: () => (
+                    <ImageButton
+                        backgroundStyle={{
+                            marginVertical: 5,
+                            marginLeft: 12
+                        }}
+                        imageStyle={{
+                            width: 24,
+                            height: 20
+                        }}
+                        source={require('../../../../../asset/button/arrow_button.png')}
+                        onPress={() => { navigation.goBack(); }}
+                    />
+                )
+                }
+            )} name="DetailGoal" component={DetailGoal}/> */}
             <Stack.Screen options={({ navigation }) => (
                 {
                     ...defaultHeaderStyle,
@@ -65,20 +92,20 @@ const HomeNavigation = () => {
             })} name="BriefingPurposeList" component={BriefingPurposeList} />
             <Stack.Screen options={({ navigation, route }) => ({
                 ...defaultHeaderStyle,
-                headerTitle: route.params.purposeName,
+                headerTitle: route.params.purpose.name,
                 headerTitleAlign: 'center',
                 animationEnabled: false,
-                headerRight: () => {
-                    return(
-                        <View style={{marginRight: 5}}>
-                            <ImageButton
-                                source={require('../../../../../asset/button/check_button.png')}
-                                backgroundStyle={{ width: 40, height: 40}}
-                                imageStyle={{ width: 35, height: 32 }}
-                            />
-                        </View>
-                    )
-                }
+                // headerRight: () => {
+                //     return(
+                //         <View style={{marginRight: 5}}>
+                //             <ImageButton
+                //                 source={require('../../../../../asset/button/check_button.png')}
+                //                 backgroundStyle={{ width: 40, height: 40}}
+                //                 imageStyle={{ width: 35, height: 32 }}
+                //             />
+                //         </View>
+                //     )
+                // }
             })} name='BriefingGoalList' component={BriefingGoalList} />
         </Stack.Navigator>
     )

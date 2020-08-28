@@ -41,22 +41,19 @@ export function getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams
 
 export default class Goal {
 
-    constructor(id, purposeId, name, description, startDate, endDate, color, cycle, stat) {
+    constructor(id, purposeId, name, description, startDate, endDate, color, cycle, briefingCount, lastBriefingDate, stat) {
         this.id = id;
         this.purposeId = purposeId;
         this.name = name;
         this.description = description;
-        this.startDate = startDate.constructor == EasyDate ? startDate : new EasyDate(startDate);
-        this.endDate = endDate.constructor == EasyDate ? endDate : new EasyDate(endDate);
+        this.startDate = startDate ? (startDate.constructor == EasyDate ? startDate : new EasyDate(startDate)) : null;
+        this.endDate = endDate ? (endDate.constructor == EasyDate ? endDate : new EasyDate(endDate)) : null;
         this.color = color;
         this.cycle = cycle;
+        this.briefingCount = briefingCount;
+        this.lastBriefingDate = lastBriefingDate ? (lastBriefingDate.constructor == EasyDate ? lastBriefingDate : new EasyDate(lastBriefingDate)) : null;
         this.stat = stat;
         
-        this.briefings = [];
-    }
-
-    setBriefings = (briefings) => {
-        this.briefings = briefings;
     }
 
     modify = (copy) => {
@@ -86,21 +83,14 @@ export default class Goal {
     }
 
     get currentBriefingCount(){
-        return stat == State.SUCCEES ? this.maxTime : this.briefings.length;
+        return this.stat == State.SUCCEES ? this.maxTime : this.briefingCount;
     }
 
     get achieve(){
-        if(!this.briefings)
-            return null;
-
         return this.stat == State.SUCCEES ? 100 : Math.round((this.currentBriefingCount / this.maxTime) * 100);
     }
 
     get progress(){
-        if(!this.briefings)
-            return null;
-
-
         return Math.round((this.currentPerfectTime / this.maxTime) * 100);
     }
 
@@ -144,7 +134,7 @@ export default class Goal {
         let today = EasyDate.now();
         let cycleParams = this.cycleParams;
 
-        if(!lastBriefingDay.equalsDate(today)){
+        if(!this.lastBriefingDate || !this.lastBriefingDate.equalsDate(today)){
             switch(this.cycleType){
                 case 'A':
                     return true;
@@ -161,9 +151,6 @@ export default class Goal {
         }
     }
 
-    get lastBriefingDay(){
-        return this.briefings[this.briefings.length - 1].createDate;
-    }
 
 
 }

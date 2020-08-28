@@ -1,8 +1,11 @@
 export default class EasyDate extends Date{
 
-
-
+    static YEAR_TIME = (1000 * 3600 * 24 * 365);
+    static MONTH_TIME = (1000 * 3600 * 24 * 7 * 4);
+    static WEEK_TIME = (1000 * 3600 * 24 * 7)
     static DAY_TIME =  (1000 * 3600 * 24);
+    static HOUR_TIME = (1000 * 3600);
+    static MiNUTE_TIME = (1000 * 60);
 
     static now = () =>{
         return new EasyDate(Date.now());
@@ -45,8 +48,7 @@ export default class EasyDate extends Date{
         return this.getFullYear() == days.getFullYear() && this.getMonth() == days.getMonth() && this.getDate() == days.getDate();
     }
 
-
-    toStringDateByData = () => {
+    toString = () => {
         let text = this.getFullYear() + "-"
         text += (this.getMonth() + 1 < 10 ? '0' : '') + (this.getMonth() + 1) + "-";
         text += (this.getDate() < 10 ? '0' : '') + this.getDate();
