@@ -40,7 +40,7 @@ export default class PurposeWriteStore{
         this.writeType = purpose ? PurposeWriteType.MODIFY : PurposeWriteType.CREATE;
 
         //date awlays true
-        this.permitCache = purpose ? [true, true, true, true] : [false, false, false, true];
+        this.permitCache = purpose ? [true, true, true, true] : [false, false, false, false];
         this.isSelectPhoto = false;
         this.isFinish = false;
         this.isLast = false;
@@ -116,6 +116,16 @@ export default class PurposeWriteStore{
         formData.append('endDate', this.purpose.endDate.toString());
         formData.append('stat', this.purpose.stat);
 
+        console.log( JSON.stringify(
+            this.purpose.detailPlans.map((goal) => {
+                return {
+                    ...goal,
+                    startDate: goal.startDate.toString(),
+                    endDate: goal.endDate.toString()
+                }
+            })
+        ))
+
         if(this.writeType != PurposeWriteType.MODIFY && this.purpose.detailPlans){
             formData.append('detailPlans', 
                 JSON.stringify(
@@ -128,6 +138,7 @@ export default class PurposeWriteStore{
                     })
                 )
             );
+ 
         }
 
         return formData;

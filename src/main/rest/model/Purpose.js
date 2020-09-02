@@ -24,11 +24,27 @@ export default class Purpose {
     }
 
     get progress() {
-        return detailPlans.progress;
+        let entryMaxTime = 0;
+        let entryCurrentPerfectTime = 0;
+
+        this.detailPlans.forEach((goal) =>{
+            entryMaxTime += goal.maxTime;
+            entryCurrentPerfectTime += goal.currentPerfectTime;
+        })
+
+        return Math.round((entryCurrentPerfectTime / entryMaxTime) * 100);
     }
 
     get achieve() {
-        return detailPlans.achieve;
+        let entryMaxTime = 0;
+        let entryCrrentBriefingCount = 0;
+
+        this.detailPlans.forEach((goal) =>{
+            entryMaxTime += goal.maxTime;
+            entryCrrentBriefingCount += goal.currentBriefingCount;
+        })
+
+        return Math.round((entryCrrentBriefingCount / entryMaxTime) * 100);
     }
 
 

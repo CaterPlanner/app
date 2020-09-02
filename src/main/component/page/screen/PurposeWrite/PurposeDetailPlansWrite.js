@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TouchableOpacity, Button } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import purposeStyles from './style/PurposeStyle';
 import useStores from '../../../../mobX/helper/useStores'
 import ImageButton from '../../../atom/button/ImageButton';
 import EasyDate from '../../../../util/EasyDate';
 import { useNavigation } from '@react-navigation/native';
 import RoundButton from '../../../atom/button/RoundButton';
+import PurposeWriteBoard from './PurposeWriteBoard';
+import { PurposeWriteType } from '../../../../mobX/store/PurposeWriteStore';
 
 export default function PurposeDetailPlansWrite() {
 
@@ -14,11 +16,16 @@ export default function PurposeDetailPlansWrite() {
     const [purposeStat, setPurposeStat] = useState(purposeWriteStore.purpose.stat);
     const [purposeDeatilPlans, setPurposeDetailPlans] = useState(purposeWriteStore.purpose.detailPlans);
 
+
     const navigation = useNavigation();
 
     useEffect(() => {
-        console.log('purposDetailPlans Change!')
-    }, [purposeDeatilPlans])
+        if(purposeStat == 0){
+            purposeWriteStore.changePermit(purposeDeatilPlans.length != 0)
+        }else{
+            purposeWriteStore.changePermit(true);
+        }
+    }, [purposeDeatilPlans, purposeStat])
 
     return (
         <View style={purposeStyles.container}>
@@ -55,7 +62,7 @@ export default function PurposeDetailPlansWrite() {
                                 textAlign: 'center'
                             }}
                             elevation={5}
-                            color={purposeStat == 0 ? '#F2F2F2' : 'white'}
+                            color={purposeStat == 0 ? 'white' : '#F2F2F2'}
                             width={75}
                             height={30}
                             onPress={() => {
@@ -68,7 +75,7 @@ export default function PurposeDetailPlansWrite() {
                                 textAlign: 'center'
                             }}
                             elevation={5}
-                            color={purposeStat == 1 ? '#F2F2F2' : 'white'}
+                            color={purposeStat == 1 ? 'white' : '#F2F2F2'}
                             width={75}
                             height={30}
                             onPress={() => {
@@ -82,9 +89,39 @@ export default function PurposeDetailPlansWrite() {
                     imageStyle={{ width: 100, height: 110 }}
                     source={require('../../../../../../asset/button/plan_insert_button.png')}
                     onPress={() => {
-                        navigation.navigate('DetailPlanWriteNavigation', {
-                            screen: 'DetailPlanWriteBoard'
-                        });
+                        if(purposeWriteStore.writeType != PurposeWriteType.CREATE){
+                            Alert.alert(
+                                '세부 목표를 수정하시겠습니까?',
+                                '수정시 지금까지의 기록은 사라지고 새롭게 시작하게 됩니다.',
+                                [
+                                    {
+                                        text : '취소',
+                                        style: 'cancel'
+                                    },
+                                    {   
+                                        text: '확인',
+                                        onPress : () => {
+                                            navigation.navigate('DetailPlanWriteNavigation', {
+                                                screen: 'DetailPlanWriteBoard',
+                                                params : {
+                                                    detailPlans : purposeDeatilPlans
+                                                }
+                                            });
+                                        }
+                                    }
+                                ],
+                                { cancelable: false }
+                                
+                            )
+                        }else{
+                            navigation.navigate('DetailPlanWriteNavigation', {
+                                screen: 'DetailPlanWriteBoard',
+                                params : {
+                                    detailPlans : purposeDeatilPlans,
+                                    setPurposeDetailPlans : setPurposeDetailPlans
+                                }
+                            });
+                        }
                     }}
                 />
             </View>

@@ -52,11 +52,10 @@ export default class PurposeService {
                 async (txn) => {
                     PurposeRepository.deleteAll(txn,
                         async (txn, res) => {
-
                             for (purpose of responsePurposes) {
                                 await (new Promise((resolve) => {
-
-                                    PurposeRepository.insert(txn, new Purpose(purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat),
+                                    this.db.transaction(async (txn) => {
+                                        PurposeRepository.insert(txn, new Purpose(purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat),
                                         async (txn, res) => {
 
                                             if (purpose.detailPlans) {
@@ -66,13 +65,15 @@ export default class PurposeService {
                                                     await (new Promise((resolve) => {
 
                                                         GoalRepository.insert(txn, new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate, goal.stat),
-                                                            () => { resolve(); },
-                                                            reject);
+                                                            () => { console.log('sdf'); resolve(); }
+                                                        );
                                                     }))
                                                 }
                                             }
                                             resolve();
                                         }, reject)
+                                    })
+            
                                 }))
                             }
 
@@ -250,31 +251,40 @@ export default class PurposeService {
     //수정 필요
     addBriefing = (id, goalId) => {
         return new Promise((resolve, reject) => {
+
             this.db.transaction((txn) => {
+
                 PurposeRepository.selectById(txn, id, (purpose) => {
                     BriefingRepository.insert(txn, purpose.id, goalId, () => {
                         GoalRepository.selectByPurposeId(txn, purpose.id, async (goals) => {
-
+                    
                             purpose.setDetailPlans(goals);
                             const goal = purpose.detailPlans[goalId];
 
+                            goal.lastBriefingDate = EasyDate.now();
+                            goal.briefingCount = goal.briefingCount + 1;
+
                             if (goal.achieve == 100 && goal.stat == State.PROCEED) {
                                 goal.stat = State.SUCCEES;
+                            }
+
+                            await (new Promise((resolve) => {
+                                GoalRepository.updateByKey(txn, purpose.id, goal.id, goal, () => resolve());
+                            }));
+
+                            if (purpose.achieve == 100 && purpose.stat == State.PROCEED) {
+                                purpose.stat = State.SUCCEES;
                                 await (new Promise((resolve) => {
-                                    GoalRepository.updateStatByKey(txn, purposes.id, goal.id, State.SUCCEES, () => resolve());
+                                    PurposeRepository.updateStatByKey(txn, purpose.id, purpose.stat, () => resolve());
                                 }));
                             }
-                            if (purposes.achieve == 100 && purposes.stat == State.PROCEED) {
-                                purposes.stat = State.SUCCEES;
-                                await (new Promise((resolve) => {
-                                    PurposeRepository.updateStatByKey(txn, purposes.id, purposes.stat, () => resolve());
-                                }));
-                            }
+
+
+                            resolve();
 
                         })
                     });
                 })
-                resolve();
             }, reject);
         })
     }

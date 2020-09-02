@@ -17,6 +17,7 @@ import PurposeService from '../../../../rest/service/PurposeService';
 import Request from '../../../../util/Request';
 import { PurposeWriteType } from '../../../../mobX/store/PurposeWriteStore';
 import GlobalConfig from '../../../../GlobalConfig';
+import Purpose from '../../../../rest/model/Purpose';
 
 const fullWidth = Dimensions.get('window').width;
 
@@ -67,7 +68,7 @@ export default class PurposeWriteBoard extends Component {
                     response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })
-                        .auth(authStore.userToken.token)
+                        .auth(this.authStore.userToken.token)
                         .submit();
 
                     await PurposeService.getInstance().create(
@@ -98,7 +99,7 @@ export default class PurposeWriteBoard extends Component {
 
                 case PurposeWriteType.GROUND_MODIFY:
 
-                    response = await Request.put(GlobalConfig.CATEPLANNER_REST_SERVER.ip + '/purpose/' + purposeWriteStore.purpose.id, purposeWriteStore.resultFormData, {
+                    response = await Request.put(GlobalConfig.CATEPLANNER_REST_SERVER.ip + '/purpose/' + this.purposeWriteStore.purpose.id, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })
                         .auth(this.authStore.userToken.token)
@@ -117,7 +118,9 @@ export default class PurposeWriteBoard extends Component {
             this.backHandler.remove();
 
             if(this.purposeWriteStore.writeType == PurposeWriteType.CREATE){
-                this.props.navigation.navigate('PurposeWriteDone')
+                this.props.navigation.navigate('PurposeWriteDone', {
+                    id : response.data.id
+                })
             }else{
                 this.props.navigation.goBack();
             }
@@ -133,7 +136,7 @@ export default class PurposeWriteBoard extends Component {
     componentWillMount() {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.purposeWriteStore.activeIndex != 0) {
-                this._previous();
+                this.purposeWriteStore.previous(this.carousel);
             } else {
                 return false;
             }

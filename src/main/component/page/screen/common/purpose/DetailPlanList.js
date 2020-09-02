@@ -3,6 +3,7 @@ import { FlatList, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
 import DetailPlanPaper from '../../../../atom/button/DatePlanPaper';
+import Goal from '../../../../../rest/model/Goal';
 
 export default function DetailPlanList({ navigation }) {
 
@@ -10,8 +11,9 @@ export default function DetailPlanList({ navigation }) {
 
     const data = route.params.data
 
-    const detailPlans = data.detailPlans;
+    const detailPlans = data.purpose.detailPlans;
     const isOwner = data.isOwner;
+
 
     return (
         <FlatList
@@ -22,6 +24,7 @@ export default function DetailPlanList({ navigation }) {
                     <DetailPlanPaper
                         color={item.color}
                         name={item.name}
+                        value={item.achieve}
                         onPress={() => {
                             navigation.navigate('DetailGoal', {
                                 goal: item

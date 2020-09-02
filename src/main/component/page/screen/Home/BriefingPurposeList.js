@@ -5,16 +5,20 @@ import Loader from '../../Loader';
 import PurposeService from '../../../../rest/service/PurposeService';
 
 import BriefingNotificationManager from '../../../../util/BriefingNotificationManager';
+import GlobalConfig from '../../../../GlobalConfig';
+import Request from '../../../../util/Request';
+import { inject } from 'mobx-react';
 
 
-export default class BriefingPurposeList extends Component{
+@inject(['authStore'])
+export default class BriefingPurposeList extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            isLoading : true,
-            data : null
+            isLoading: true,
+            data: null
         }
     }
 
@@ -22,8 +26,8 @@ export default class BriefingPurposeList extends Component{
         try {
             const purposes = await PurposeService.getInstance().findPurposeForBrifingList();
             this.setState({
-                data : purposes,
-                isLoading : false
+                data: purposes,
+                isLoading: false
             })
         } catch (e) {
             console.log(e);
@@ -31,55 +35,100 @@ export default class BriefingPurposeList extends Component{
         }
     }
 
-    _acceptData = async (index, unCheckedDetailPlans) => {
-        this.state.data[index].detailPlans = unCheckedDetailPlans;
+    _acceptData = async (index, unCheckedDetailPlans, checkedDetailPlanIdList) => {
 
-        this.state.data.forEach((purpose, index) => {
-            if(purpose.detailPlans.length == 0)
-                this.state.data.splice(index, 1);
-        })
+        try {
+            console.log(checkedDetailPlanIdList)
+            if (checkedDetailPlanIdList.length == 0)
+                return;
 
-        this.setState();
+            const purpose = await PurposeService.getInstance().read(this.state.data[index].id);
+            console.log(purpose);
+            const checkedGoals = purpose.detailPlans.filter(g => checkedDetailPlanIdList.includes(g.id));
+
+            console.log(purpose.achieve);
+
+
+            console.log(
+                Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.state.data[index].id}/update`, {
+                    achieve: purpose.achieve,
+                    stat: purpose.stat,
+                    modifiedGoalAchieve: checkedGoals.map((goal) => ({
+                        id: goal.id,
+                        briefingCount: goal.briefingCount,
+                        lastBriefingDate: goal.lastBriefingDate.toString(),
+                        stat: goal.stat
+                    }))
+                }).body
+            );
+
+            const response = await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.state.data[index].id}/update`, JSON.stringify({
+                achieve: purpose.achieve,
+                stat: purpose.stat,
+                modifiedGoalAchieve: checkedGoals.map((goal) => ({
+                    id: goal.id,
+                    briefingCount: goal.briefingCount,
+                    lastBriefingDate: goal.lastBriefingDate.toString(),
+                    stat: goal.stat
+                }))
+            })).auth(this.props.authStore.userToken.token).submit();
+
+            console.log(response)
+
+            this.state.data[index].detailPlans = unCheckedDetailPlans;
+
+            this.state.data.forEach((purpose, index) => {
+                if (purpose.detailPlans.length == 0)
+                    this.state.data.splice(index, 1);
+            })
+
+            this.setState({
+                data: this.state.data
+            });
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this._getData();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         BriefingNotificationManager.show(this.state.data);
     }
 
-    render(){
+    render() {
         return (
             <View style={{ flex: 1 }}>
                 {this.state.isLoading ? <Loader /> : (
                     <FlatList
                         style={{ flex: 1 }}
-                        contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 10}}
+                        contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 10 }}
                         data={this.state.data}
-                        renderItem={({ item : purpose, index }) => {
-    
-                            if(purpose.detailPlans.length == 0)
+                        renderItem={({ item: purpose, index }) => {
+
+                            if (purpose.detailPlans.length == 0)
                                 return;
-    
+
                             return (
-                            <View style={{ marginTop: 8 }}>
-                                <PurposePaper
-                                    imageUri={purpose.photoUrl}
-                                    name={purpose.name}
-                                    count={purpose.detailPlans.length}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('BriefingGoalList', {
-                                            purpose: purpose,
-                                            goals: purpose.detailPlans,
-                                            acceptData : (unCheckedDetailPlans) => {
-                                                this._acceptData(index, unCheckedDetailPlans)
-                                            }
-                                        })
-                                    }}
-                                />
-                            </View>)
+                                <View style={{ marginTop: 8 }}>
+                                    <PurposePaper
+                                        imageUri={purpose.photoUrl}
+                                        name={purpose.name}
+                                        count={purpose.detailPlans.length}
+                                        onPress={() => {
+                                            this.props.navigation.navigate('BriefingGoalList', {
+                                                purpose: purpose,
+                                                goals: purpose.detailPlans,
+                                                acceptData: (unCheckedDetailPlans, checkedDetailPlans) => {
+                                                    this._acceptData(index, unCheckedDetailPlans, checkedDetailPlans)
+                                                }
+                                            })
+                                        }}
+                                    />
+                                </View>)
                         }}
                     />
                 )
@@ -87,74 +136,5 @@ export default class BriefingPurposeList extends Component{
             </View>
         );
     }
-} 
+}
 
-// export default function BriefingPurposeList({ navigation }) {
-
-//     const [isLoading, setIsLoading] = useState(true);
-//     const [data, setData] = useState(null);
-
-//     const getDate = async () => {
-
-//         try {
-//             const purposes = await PurposeService.getInstance().findPurposeForBrifingList();
-//             console.log(purposes);
-//             console.log(purposes.detailPlans)
-//             setData(purposes);
-//             setIsLoading(false);
-
-//         } catch (e) {
-//             console.log(e);
-//         }
-//     }
-
-//     const acceptData = (index, unCheckedDetailPlans) => {
-//         data[index].detailPlans = unCheckedDetailPlans;
-//         data.forEach((purpose, index) => {
-//             if(purpose.detailPlans.length == 0)
-//                 data.splice(index, 1);
-//         })
-
-//         setData(data.slice())
-//     }
-
-//     useEffect(() => {
-//         getDate();
-//     }, [])
-
-//     return (
-//         <View style={{ flex: 1 }}>
-//             {isLoading ? <Loader /> : (
-//                 <FlatList
-//                     style={{ flex: 1 }}
-//                     contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 10}}
-//                     data={data}
-//                     renderItem={({ item : purpose, index }) => {
-
-//                         if(purpose.detailPlans.length == 0)
-//                             return;
-
-//                         return (
-//                         <View style={{ marginTop: 8 }}>
-//                             <PurposePaper
-//                                 imageUri={purpose.photoUrl}
-//                                 name={purpose.name}
-//                                 count={purpose.detailPlans.length}
-//                                 onPress={() => {
-//                                     navigation.navigate('BriefingGoalList', {
-//                                         purposeName: purpose.name,
-//                                         goals: purpose.detailPlans,
-//                                         acceptData : (unCheckedDetailPlans) => {
-//                                             acceptData(index, unCheckedDetailPlans)
-//                                         }
-//                                     })
-//                                 }}
-//                             />
-//                         </View>)
-//                     }}
-//                 />
-//             )
-//             }
-//         </View>
-//     );
-// }

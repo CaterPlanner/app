@@ -23,8 +23,7 @@ export default function DetailPlanPaper({color, name, onPress, value, disabled=f
                             backgroundColor={'#F2F2F2'}
                         />
                     </View>
-                </View>
-                
+                </View>        
             </View>
         </TouchableOpacity>
     )

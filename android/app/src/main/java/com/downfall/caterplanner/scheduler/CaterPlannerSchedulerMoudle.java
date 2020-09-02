@@ -23,58 +23,11 @@ public class CaterPlannerSchedulerMoudle extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void onScheduler(){
-        System.out.println("시작");
-        System.out.println("==============================================");
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
-        System.out.println("===============================================");
-
         AlarmSchedulerManager.start(applicationContext);
     }
 
     @ReactMethod
     public void offScheduler(){
-        AlarmSchedulerManager.start(applicationContext);
+        AlarmSchedulerManager.stop(applicationContext);
     }
 }

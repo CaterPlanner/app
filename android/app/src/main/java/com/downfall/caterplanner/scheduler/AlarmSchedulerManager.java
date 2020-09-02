@@ -25,17 +25,17 @@ public class AlarmSchedulerManager {
 
 
         Calendar statisticsTime = Calendar.getInstance();
-//        statisticsTime.setTimeInMillis(System.currentTimeMillis());
-//        statisticsTime.set(Calendar.HOUR_OF_DAY, 0);
+        statisticsTime.setTimeInMillis(System.currentTimeMillis());
+        statisticsTime.set(Calendar.HOUR_OF_DAY, 0);
 
 
-//        alarmManager.setInexactRepeating(
-//                AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
-//                statisticsPendingIntent);
+        alarmManager.setInexactRepeating(
+               AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+               statisticsPendingIntent);
 
-                alarmManager.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), 1000 * 10,
-                statisticsPendingIntent);
+                // alarmManager.setInexactRepeating(
+                // AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), 1000 * 10,
+                // statisticsPendingIntent);
 
     }
 

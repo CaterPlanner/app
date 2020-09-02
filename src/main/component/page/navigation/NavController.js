@@ -22,7 +22,7 @@ export default class NavController extends Component {
 
         this.authStore = this.props.authStore;
         this.appStore = this.props.appStore;
-        this.appStore.onScheduler();
+        // this.appStore.onScheduler();
 
 ;
     }

@@ -100,7 +100,6 @@ export default class AuthStore {
             expired: json.data.expired
         }
 
-
         const currentUser = {
             name : user.name,
             email : user.email,
@@ -111,6 +110,8 @@ export default class AuthStore {
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/myPurposes`)
             .auth(this.userToken.token)
             .submit();
+
+            console.log(response.data)
 
             await PurposeService.getInstance().initAll(response.data);
             this.user = currentUser;
@@ -134,6 +135,8 @@ export default class AuthStore {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
 
+            console.log(userInfo);
+
             await AsyncStorage.setItem("USER_SOCIAL", 'GOOGLE');
             
             await this.login(userInfo.idToken, userInfo.user);
@@ -142,6 +145,7 @@ export default class AuthStore {
         }catch(error){
             // this.clearUser();
             // throw error;
+            console.log(error)
         }
     }
 

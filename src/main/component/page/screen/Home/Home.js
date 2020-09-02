@@ -1,16 +1,105 @@
 import React, { Component } from 'react'
-import { View, Dimensions, YellowBox} from 'react-native'
+import { View, Dimensions, Text, Image, StyleSheet, TouchableOpacity} from 'react-native'
 import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
-import Card from './Card'
 
 import PurposeService from '../../../../rest/service/PurposeService';
+import DecimalDayWidget from '../../../atom/icon/DecimalDayWidget';
 
-YellowBox.ignoreWarnings(['Animated: `useNativeDriver` was not specified']);
-YellowBox.ignoreWarnings(['Warnig: componentWillReceive']);
+
+
 
 const fullWidth = Dimensions.get('window').width;
 const progresValue = 30;
+
+
+function EmptyCard({onPress}){
+    return(
+        <TouchableOpacity style={{
+            height: '100%', justifyContent: 'center'
+        }} onPress={onPress}>
+            <View style={[cardStyles.container, {justifyContent:'center', alignItems:'center', backgroundColor:'rgba(255,255,255,0.8)' , elevation: 0}]}>
+                <View style={{width: 100, height: 110, justifyContent: 'center', alignItems:'center'}}>
+                    <Image
+                        resizeMode="stretch"
+                        style={{flex:1, height:undefined, width:'100%'}}
+                        source={require('../../../../../../asset/button/plan_insert_button.png')}
+                    />
+                </View>
+                <Text style={{fontSize: 20, fontWeight: 'bold', marginTop : 40}}>
+                    새로운 목적을 추가해봐요
+                </Text>
+            </View>
+        </TouchableOpacity>
+    )
+}
+
+function ActiveCard({ id,  image, title, date, onPress }) {
+    return (
+        <TouchableOpacity style={{
+            height: '100%', justifyContent: 'center'
+        }} activeOpacity={1} onPress={onPress}>
+            <View style={cardStyles.container}
+            >
+                <View style={{
+                    flex: 2,
+                    borderWidth: 5,
+                    borderColor: 'white',
+                    borderTopRightRadius: 45,
+                    borderTopLeftRadius: 45,
+                }}>
+                    <Image
+                        source={{ uri: image }}
+                        style={{
+                            flex: 1, width: "100%", height: undefined, borderTopRightRadius: 40,
+                            borderTopLeftRadius: 40,
+                        }}
+                    />
+                    <View style={{ position: 'absolute', top: -40, width: '100%', alignItems:'center'}}>
+                        <Image
+                            resizeMode="stretch"
+                            style={{ width: '90%', height: 80, tintColor: '#585858' }}
+                            source={require('../../../../../../asset/image/card_header.png')}
+                        />
+                    </View>
+                </View>
+                <View style={{
+                    flex: 1
+                }}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <Text
+                            adjustsFontSizeToFit
+                            numberOfLines={1}
+                            style={{
+                                alignSelf: 'center',
+                                fontSize: 20
+                            }}>
+                            {title}
+                        </Text>
+                    </View>
+                    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+                        <DecimalDayWidget stat={0} decimalDay={date}/>
+                    </View>
+                </View>
+            </View>
+        </TouchableOpacity>
+    )
+}
+
+
+const cardStyles = StyleSheet.create({
+    container : {
+        borderTopRightRadius: 45,
+        borderTopLeftRadius: 45,
+        borderBottomStartRadius: 40,
+        borderBottomEndRadius: 40,
+        backgroundColor: '#ffffff',
+        elevation: 3,
+        height: 380,
+        margin: 3,
+    }
+})
+
 
 export default class Home extends Component {
 
@@ -27,29 +116,34 @@ export default class Home extends Component {
     _renderItem = ({ item, index }) => {
         console.log(item.leftDay);
         return (
-            <Card id={item.id} image={item.photoUrl} title={item.name} date={item.leftDay}
+            <ActiveCard id={item.id} image={item.photoUrl} title={item.name} date={item.leftDay}
                 onPress={() => {this.props.navigation.navigate('PublicNavigation' , {
                     screen: 'LoadMyPurpose',
                     params : {
-                        id: item.id
+                        id: item.id,
+                        refreshHome: this._loadData
                     }
                 })}}/>
+            // <EmptyCard/>
         )
+    }
+
+    _loadData = async () => {
+        try{
+            const data = await PurposeService.getInstance().findPurposesForCard();
+            this.setState({
+                activeIndex : 0,
+                endIndex : data.length,
+                data : data
+            });
+        }catch(e){
+            console.log(e);
+        }
     }
 
 
     componentDidMount() {
-        PurposeService.getInstance().findPurposesForCard()
-        .then((data) => {
-            this.setState({
-                endIndex : data.length,
-                data : data
-            })
-            console.log(data);
-        })
-        .catch(e => {
-            console.log(e);
-        })
+        this._loadData();
     }
 
     render() {
