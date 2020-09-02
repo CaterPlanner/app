@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, FlatList, ToastAndroid, Text, Dimensions} from 'react-native'
+import { View, FlatList, ToastAndroid, Text, Dimensions, Button} from 'react-native'
 import ImageButton from '../../../atom/button/ImageButton'
 import DetailPlanPaper from '../../../atom/button/DatePlanPaper'
 import { inject, observer } from 'mobx-react'
@@ -17,14 +17,11 @@ export default class DetailPlanWriteBoard extends Component {
     constructor(props) {
         super(props)
 
-        this.state = {
-            isGraph: false
-        }
 
         //init
         this.props.navigation.setParams({
-            isGraph: this.state.isGraph,
-            changeShow: this._changeShow,
+            // isGraph: this.state.isGraph,
+            // changeShow: this._changeShow,
             saveDetailPlans: this._saveDetailPlans
         });
 
@@ -32,17 +29,12 @@ export default class DetailPlanWriteBoard extends Component {
         this.purposeWriteStore = this.props.purposeWriteStore;
 
 
-        this.detailPlanWriteStore.init(EasyDate.now(), EasyDate.now().plusDays(1), this.props.route.params.detailPlans);
+        console.log('route')
+        console.log(this.props.route.params);
+
+        this.detailPlanWriteStore.init(EasyDate.now(), EasyDate.now().plusDays(1), this.props.route.params ? this.props.route.params.detailPlans : null);
     }
 
-    _changeShow = () => {
-        this.props.navigation.setParams({
-            isGraph: !this.state.isGraph
-        })
-        this.setState({
-            isGraph: !this.state.isGraph
-        })
-    }
 
     _saveDetailPlans = () => {
         try{
@@ -53,6 +45,8 @@ export default class DetailPlanWriteBoard extends Component {
             this.purposeWriteStore.purpose.endDate = this.detailPlanWriteStore.entryEndDate;
 
             this.purposeWriteStore.writeType = PurposeWriteType.GROUND_MODIFY;
+
+            this.props.route.params.setPurposeDetailPlans(this.purposeWriteStore.purpose.detailPlans);
 
             this.props.navigation.navigate('PurposeWriteBoard');
 
@@ -68,31 +62,21 @@ export default class DetailPlanWriteBoard extends Component {
         const bottomMargin = 5;
 
 
+        console.log(this.detailPlanWriteStore.goals);
+
         return (
             <View style={{ flex: 1 }}>
-                {this.state.isGraph ?
-                    (
-                        <View style={{flexDirection : 'column',padding: 10, flex: 1}}>
-                            {
-                                this.detailPlanWriteStore.graphData.map((element) => {
-                                    return (<View
-                                        style={{
-                                            marginLeft: entryWidth * element.leftMarginRatio, width: entryWidth * element.iconWidthRatio < 10 ? 10 : entryWidth * element.iconWidthRatio,
-                                            height: iconHeight, marginBottom: bottomMargin, backgroundColor: element.color, justifyContent: 'center'
-                                        }}
-                                    >
-                                        <Text numberOfLines={1} style={{ fontSize: 40, textAlign: 'left', paddingLeft: 10 }}>{element.name}</Text>
-                                    </View>)
-                                })
-                            }
-                        </View>)
-                    :
-                    (
-                        <FlatList
+                <FlatList
                             style={{ flex: 1 }}
                             data={this.detailPlanWriteStore.goals}
                             renderItem={({ item }) => (
                                 <View style={{ marginHorizontal: 10, marginVertical: 3 }}>
+                                    <View style={{position: 'absolute', top : 0, right: 0}}>
+                                        <Button
+                                            title="삭제"
+                                            onPress={() => {this.detailPlanWriteStore.delete(item.id)}}
+                                        />
+                                    </View>
                                     <DetailPlanPaper
                                         color={item.color}
                                         name={item.name}
@@ -105,8 +89,6 @@ export default class DetailPlanWriteBoard extends Component {
                                 </View>
                             )}
                         />
-                    )
-                }
                 <View style={{ position: 'absolute', bottom: 30, right: 22 }}>
                     <ImageButton
                         backgroundStyle={{ backgroundColor: '#25B046', width: 60, height: 60, borderRadius: 60, elevation: 5 }}

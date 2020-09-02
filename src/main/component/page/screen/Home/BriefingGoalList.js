@@ -9,13 +9,14 @@ export default class BriefingGoalList extends Component{
         super(props);
         
         this.state = {
-            goals : this.props.route.params.goals 
+            goals : this.props.route.params.goals,
         }
 
+        this.clearGoalIdList = [];
     }
 
     _saveCheck(){
-        this.props.route.params.acceptData(this.state.goals);
+        this.props.route.params.acceptData(this.state.goals, this.clearGoalIdList);
     }
 
     componentDidUpdate(){
@@ -42,8 +43,9 @@ export default class BriefingGoalList extends Component{
                             acheive={item.acheive}
                             onChange={() => {
 
-                                PurposeService.addBriefing(this.props.purpose.id, item.id)
+                                PurposeService.getInstance().addBriefing(this.props.route.params.purpose.id, item.id)
                                 .then(() => {
+                                    this.clearGoalIdList.push(item.id);
                                     this.setState({
                                         goals : [
                                         ...this.state.goals.slice(0, index),

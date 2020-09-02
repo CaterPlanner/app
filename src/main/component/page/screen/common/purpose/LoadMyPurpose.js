@@ -33,15 +33,18 @@ export default function LoadMyPurpose({ navigation }) {
 
                 const purpose = new Purpose(response.data.id, response.data.name, response.data.description, response.data.photoUrl, response.data.disclosureScope,
                     response.data.startDate, response.data.endDate, response.data.stat);
+                    
                 purpose.setDetailPlans(
                     response.data.detailPlans.map((goal) =>(
-                        new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.stat)
+                        new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate, goal.stat)
                     ))
                 );
 
                 setData({
                     ...response.data,
-                    purpose: purpose
+                    purpose: purpose,
+                    refreshHome : route.params.refreshHome,
+                    refreshPurpose : getData
                 });
 
             }else{

@@ -26,11 +26,9 @@ const BriefingRepository = {
 
     insert : (txn, purposeId, goalId, callback) => {
         txn.executeSql(
-            'insert into briefing(purpose_id, goal_id, create_at, score) values(?, ?, datetime(\'now\'), 0',
+            'insert into briefing(purpose_id, goal_id, create_date, score) values(?, ?, datetime(\'now\'), 0)',
             [purposeId, goalId],
-            (tx, res) => {
-                callback(res);
-            }
+            callback
         )
     }
 

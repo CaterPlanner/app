@@ -33,7 +33,7 @@ const DetailPlanWriteNavigation = () => {
                 ),
                 headerRight: () => (
                     <View style={{flexDirection : 'row', justifyContent: 'center'}}>
-                         <ImageButton
+                         {/* <ImageButton
                             backgroundStyle={{
                                 marginVertical: 5,
                                 marginRight: 15
@@ -46,7 +46,7 @@ const DetailPlanWriteNavigation = () => {
                                 route.params == undefined || !route.params.isGraph ?
                                     require('../../../../../asset/button/show_goalGraph_button.png') : require('../../../../../asset/button/show_goalList_button.png')}
                             onPress={route.params ? route.params.changeShow : null}
-                        />
+                        /> */}
                         <ImageButton
                             backgroundStyle={{
                                 marginVertical: 5,

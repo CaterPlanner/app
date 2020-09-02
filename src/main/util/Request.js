@@ -1,4 +1,7 @@
 
+
+const DEFAULT_TIMEOUT = 12000
+
 export default class Request{
 
     constructor(url, method, body, options, timeout){
@@ -9,19 +12,19 @@ export default class Request{
         this.timeout = timeout;
     }
 
-    static get = (url, body, options, timeout = 5000) => {
+    static get = (url, body, options, timeout = DEFAULT_TIMEOUT) => {
         return new Request(url, 'GET', body, options, timeout);
     }
-    static post = (url, body, options, timeout = 5000) => {
+    static post = (url, body, options, timeout = DEFAULT_TIMEOUT) => {
         return new Request(url, 'POST', body, options, timeout);
     }
-    static delete = (url, body, options, timeout = 5000) => {
+    static delete = (url, body, options, timeout = DEFAULT_TIMEOUT) => {
         return new Request(url, 'DELETE', body, options, timeout);
     }
-    static put = (url, body, options, timeout = 5000) => {
+    static put = (url, body, options, timeout = DEFAULT_TIMEOUT) => {
         return new Request(url, 'PUT', body, options, timeout);
     }
-    static patch = (url, body, options, timeout = 5000) => {
+    static patch = (url, body, options, timeout = DEFAULT_TIMEOUT) => {
         return new Request(url, 'PATCH', body, options, timeout);
     }
 

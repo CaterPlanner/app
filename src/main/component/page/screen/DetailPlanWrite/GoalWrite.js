@@ -32,13 +32,14 @@ export default class GoalWrite extends Component {
             goalId: this.baseGoal ? this.baseGoal.id : null,
             goalPurposeId: this.baseGoal ? this.baseGoal.purposeId : null,
             goalName: this.baseGoal ? this.baseGoal.name : null,
+            goalDescription : this.baseGoal ? this.baseGoal.description : null,
             goalStartDate: this.baseGoal ? this.baseGoal.startDate : this.detailPlanWriteStore.entryStartDate,
-            goalEndDate: this.baseGoal ? this.baseGoal.endDate : detailPlanWriteStore.entryEndDate,
+            goalEndDate: this.baseGoal ? this.baseGoal.endDate : this.detailPlanWriteStore.entryEndDate,
             goalColor: this.baseGoal ? this.baseGoal.color : colorList[0],
-            goalCycleType: this.baseGoal ? (baseGoal.cycleType == 'A' ? 0 : 1) : 0,
+            goalCycleType: this.baseGoal ? (this.baseGoal.cycleType == 'A' ? 0 : 1) : 0,
             goalCycleParamByDays: (() => {
                 const init = [false, false, false, false, false, false, false]
-                const cycleParams = baseGoal ? baseGoal.cycleParams : [];
+                const cycleParams = this.baseGoal ? this.baseGoal.cycleParams : [];
 
                 cycleParams.forEach((value) => {
                     init[value] = true;
@@ -70,7 +71,7 @@ export default class GoalWrite extends Component {
         } else if (this.state.goalDescription == '') {
             ToastAndroid.showWithGravity('목표 설명을 입력해주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
             return false;
-        } else if (goalStartDate.isBefore(this.state.goalEndDate)) {
+        } else if (this.state.goalStartDate.isBefore(this.state.goalEndDate)) {
             ToastAndroid.showWithGravity('종료날짜는 시작날짜의 이후여야 합니다.', ToastAndroid.SHORT, ToastAndroid.CENTER)
             return false;
         } else if (getBetweenMaxBriefing(this.state.goalStartDate, this.state.goalEndDate, cycleType, cycleParams).day == 0) {
@@ -82,7 +83,7 @@ export default class GoalWrite extends Component {
     }
 
     _updateGoal = () => {
-        if (!this._valid())
+        if (!this._vaild())
             return;
 
         let formatCycle = this.state.goalCycleType == 0 ? 'A' : 'W';

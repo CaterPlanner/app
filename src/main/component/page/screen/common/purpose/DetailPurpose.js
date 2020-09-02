@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Button } from 'react-native'
 import InfoBox from '../../../../molecule/InfoBox';
 import ImageButton from '../../../../atom/button/ImageButton';
 import DecimalDayWidget from '../../../../atom/icon/DecimalDayWidget';
@@ -7,11 +7,96 @@ import DetailPlanPaper from '../../../../atom/button/DatePlanPaper'
 
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 
+import Request from '../../../../../util/Request'
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import useStores from '../../../../../mobX/helper/useStores';
 import { useNavigation } from '@react-navigation/native';
 import EasyDate from '../../../../../util/EasyDate';
+import {Model} from '../../../../../AppEnum';
+import GlobalConfig from '../../../../../GlobalConfig';
+import useStores from '../../../../../mobX/helper/useStores';
+import PurposeService from '../../../../../rest/service/PurposeService';
 
+
+
+function BottomBar({data}){
+
+    const navigation = useNavigation();
+    const [isCheer, setIsCheer] = useState(!data.canCheer);
+
+    const {authStore} = useStores();
+
+    //data.purpose.id
+
+    return(
+        <View style={bottomBarStyles.bar}>
+            <ImageButton
+                backgroundStyle=
+                {[bottomBarStyles.leftSideElement, {
+                    width:29,
+                    height:26
+                }]}
+                imageStyle={{
+                    width:29,
+                    height:26
+                }}
+                source={require('../../../../../../../asset/button/comment_button.png')}
+                onPress={() => {
+                    navigation.navigate('CommentView', {
+                        entity : Model.PURPOSE,
+                        id : data.purpose.id
+                    });
+                }}
+            />
+            <ImageButton
+                backgroundStyle=
+                {[bottomBarStyles.leftSideElement, {
+                    width:29,
+                    height:26
+                }]}
+                imageStyle={{
+                    width:29,
+                    height:26
+                }}
+                source={require('../../../../../../../asset/button/comment_button.png')}
+                onPress={() => {
+                    Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${data.purpose.id}/${isCheer ? 'negative' : 'positive'}`)
+                    .auth(authStore.userToken.token).submit()
+                    .then(() => {
+                        setIsCheer(!isCheer);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    }) 
+                }}
+            />
+            <Button
+                title="스토리 쓰기"
+                onPress={() => {
+                    navigation.navigate('WriteStory', {
+                        purpose : data.purpose,
+                        refreshPurpose : data.refreshPurpose
+                    })
+                }}
+            />
+        </View>
+    )
+}
+
+
+
+const bottomBarStyles = StyleSheet.create({
+    bar: {
+        backgroundColor: 'white',
+        height: 48,
+        flexDirection: 'row',
+        alignItems:'center',
+        elevation: 5
+
+    },
+    leftSideElement:{
+        marginLeft: 15
+    }
+})
 
 
 function ActinFloatingButton() {
@@ -161,9 +246,12 @@ export default function DetailPurpose({ data }) {
     const purpose = data.purpose;
     const isOwner = data.isOwner;
 
+    const {authStore} = useStores();
+
     const navigation = useNavigation();
 
     let _purposeContolMenuRef = null;
+
 
     return (
         <View style={{ flex: 1 }}>
@@ -175,14 +263,33 @@ export default function DetailPurpose({ data }) {
                         navigation.navigate('CreateNavigation', {
                             screen: 'PurposeWriteBoard',
                             params: {
-                                purpose: purpose
+                                purpose: purpose 
                             }
                         })
                     }}>수정</MenuItem>
                     <MenuDivider />
                     <MenuItem onPress={() => {
                         _purposeContolMenuRef.hide();
-                        console.log('hello')
+
+                        Request.delete(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}`)
+                        .auth(authStore.userToken.token)
+                        .submit()
+                        .then((response) => {
+                            PurposeService.getInstance().delete(purpose.id)
+                            .then(() => {
+                                data.refreshHome();
+                                navigation.goBack();
+                            })
+                            .catch(e => {
+                                console.log(e);
+                            })
+                        
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        })
+
+
                     }}>삭제</MenuItem>
                 </Menu>
             </View>
@@ -282,7 +389,7 @@ export default function DetailPurpose({ data }) {
                             child={(
                                 <View style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
                                     {
-                                        data.detailPlans.map((goal) => (
+                                        data.purpose.detailPlans.map((goal) => (
                                             <View style={detailPurposeStyles.paperContainer}>
                                                 <DetailPlanPaper
                                                     color={goal.color}
@@ -314,6 +421,7 @@ export default function DetailPurpose({ data }) {
             <View style={{ position: 'absolute', bottom: 40, right: 22 }}>
                 <ActinFloatingButton/>
             </View>
+            <BottomBar data={data}/>
         </View>
     )
 }

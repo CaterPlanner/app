@@ -1,18 +1,17 @@
 import React from 'react';
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
-import Goal from '../../../../../rest/model/Goal';
-import Briefing from '../../../../../rest/model/Briefing';
-import DecimalDayWidget from '../../../../atom/icon/DecimalDayWidget';
 
 import MyPrgoressBar from '../../../../atom/progressBar/MyProgressBar';
-import InfoBox from '../../../../molecule/InfoBox';
+import { useRoute } from '@react-navigation/native';
 
 
 const DAYS = ['월', '화', '수', '목', '금', '토', '일']
 
-export default function DetailGoal({ goal }) {
+export default function DetailGoal() {
 
-    const cylceParams = goal.cycleParams;
+    const goal = useRoute().params.goal;
+    console.log(goal.achieve);
+    console.log(goal.cycleParams)
 
     return (
         <View
@@ -74,7 +73,7 @@ export default function DetailGoal({ goal }) {
                                         width: 40, height: 40, borderRadius: 40,
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        backgroundColor: cylceParams.includes(index.toString()) || goal.cycleType == 'A' ? goal.color : '#C4C4C4'
+                                        backgroundColor: goal.cycleParams.includes(index.toString()) || goal.cycleType == 'A' ? goal.color : '#C4C4C4'
                                     }}>
                                         <Text>{dayName}</Text>
                                     </View>

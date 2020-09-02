@@ -16,6 +16,7 @@ export default function PurposePhotoWrite() {
     const navigation = useNavigation();
 
     const setPhoto = (photo) => {
+        console.log(photo);
         setPurposePhoto(photo);
         purposeWriteStore.changePermit(true);
         purposeWriteStore.purpose.photo = photo;
