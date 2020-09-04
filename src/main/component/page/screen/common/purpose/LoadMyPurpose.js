@@ -1,35 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
 import DetailPurpose from './DetailPurpose';
 
-import useStores from '../../../../../mobX/helper/useStores';
 import Request from '../../../../../util/Request';
 import Loader from '../../../Loader';
-import { useRoute } from '@react-navigation/native';
 import Purpose from '../../../../../rest/model/Purpose';
 import Goal from '../../../../../rest/model/Goal';
 import PurposeService from '../../../../../rest/service/PurposeService';
 import GlobalConfig from '../../../../../GlobalConfig';
+import { inject } from 'mobx-react';
 
+@inject(['authStore'])
+export default class LoadMyPurpose extends Component{
 
-export default function LoadMyPurpose({ navigation }) {
+    constructor(props){
+        super(props);
 
-    const route = useRoute();
+        this.state = {
+            isLoading : true,
+            data : null
+        }
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState(null);
+        this.authStore = this.props.authStore;
 
-    const { authStore } = useStores();
+    }
 
+    _getData = async () => {
 
-    const getData = async () => {
-
-        const id = route.params.id;
+        const id = this.props.route.params.id;
 
         try {
-            if(!authStore.offlineMode){
+            if(!this.authStore.offlineMode){
+
+
                 const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${id}`)
-                .auth(authStore.userToken.token).submit();
+                .auth(this.authStore.userToken.token).submit();
 
                 const purpose = new Purpose(response.data.id, response.data.name, response.data.description, response.data.photoUrl, response.data.disclosureScope,
                     response.data.startDate, response.data.endDate, response.data.stat);
@@ -40,42 +45,47 @@ export default function LoadMyPurpose({ navigation }) {
                     ))
                 );
 
-                setData({
-                    ...response.data,
-                    purpose: purpose,
-                    refreshHome : route.params.refreshHome,
-                    refreshPurpose : getData
-                });
+                this.setState({
+                    isLoading : false,
+                    data : {
+                        ...response.data,
+                        purpose: purpose,
+                        refreshHome : this.props.route.params.refreshHome,
+                        refreshPurpose : this._getData
+                    }
+                })
 
             }else{
-                const offlineUser = authStore.user;
+                const offlineUser = this.authStore.user;
 
-                setData({
-                    purpose : await PurposeService.getInstance().read(id),
-                    author : {
-                        name : offlineUser.name,
-                        profileUrl : offlineUser.profileUrl
+                this.setState({
+                    isLoading : false,
+                    data : {
+                        purpose : await PurposeService.getInstance().read(id),
+                        author : {
+                            name : offlineUser.name,
+                            profileUrl : offlineUser.profileUrl
+                        }
                     }
-                });
+                })
             }
-
-            setIsLoading(false);
 
         } catch (e) {
             console.log(e);
-            navigation.goBack();
+            this.props.navigation.goBack();
         }
-
     }
 
-    useEffect(() => {
-        getData();
-    }, []);
+    componentDidMount(){
+        this._getData();
+    }
 
-
-    return (
-        <View style={{ flex: 1 }}>
-            {isLoading ? <Loader /> : <DetailPurpose data={data} />}
-        </View>
-    );
+    render(){
+        return (
+            <View style={{ flex: 1 }}>
+                {this.state.isLoading ? <Loader /> : <DetailPurpose data={this.state.data} />}
+            </View>
+        );
+    }
 }
+

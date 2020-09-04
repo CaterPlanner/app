@@ -18,6 +18,7 @@ export default class Story extends Component{
         this.state = {
             data : [],
             isLoading : false,
+            isRefreshing : false,
             page: 0,
             type: 0
         }
@@ -29,8 +30,29 @@ export default class Story extends Component{
         this.isFinish = false;
     }
 
+    _refreshing = () => {
+
+        if(this.state.isLoading || this.state.isRefreshing)
+            return;
+
+        console.log('refreshing')
+
+        this.setState({
+            page : 0,
+            isRefreshing : true
+        })
+
+        this._loadData()
+    }
+
     _loadData = async () => {
+
+        // if(this.isFinish || this.state.isLoading)
+        //     return;
+
         try{
+
+            console.log('Load More')
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story?page=${this.state.page + (this.state.type ? `&type=${this.state.type}` : '')}`, null, null, 8000)
             .auth(this.authStore.userToken.token)
             .submit();
@@ -38,20 +60,23 @@ export default class Story extends Component{
             this.isFinish = response.data.final;
 
             this.setState({
-                data : this.state.data.concat(response.data.elements),
-                isLoading : false
+                data : this.state.isRefreshing ? response.data.elements : this.state.data.concat(response.data.elements),
+                isLoading : false,
+                isRefreshing : false
             })
         }catch(e){
             console.log(e);
 
             this.setState({
-                isLoading : false
+                isLoading : false,
+                isRefreshing : false
+
             })
         }
     }
     
     _handleLoadMore = () => {
-        if(this.isFinish || this.state.isLoading)
+        if(this.isFinish || this.state.isLoading || this.state.refreshing)
             return;
 
         this.setState({
@@ -83,12 +108,22 @@ export default class Story extends Component{
                 data={this.state.data}
                 renderItem={({item}) => {
                     item.createDate = new EasyDate(item.createDate);
-                    return <StoryBlock data={item}/>
+                    return (<View style={{marginBottom : 15}}>
+                        <StoryBlock data={item}
+                            onPress={() => {this.props.navigation.navigate('PublicNavigation', {
+                                screen : 'DetailStory',
+                                params : {
+                                    id : item.id
+                                }
+                            })}}
+                        /></View>)
                 }}
                 keyExtractor={(item) => item.id}
                 onEndReached={this._handleLoadMore}
                 onEndReachedThreshold={0.4}
                 ListFooterComponent={this._renderFooter}
+                onRefresh={this._refreshing}
+                refreshing={this.state.isRefreshing}
             />
         </View>  
         )

@@ -5,32 +5,40 @@ import GlobalConfig from '../../GlobalConfig';
 import TimeAgo from '../atom/text/TimeAgo';
 import ProfileWidget from './ProfileWidget';
 import EasyDate from '../../util/EasyDate';
+import Request from '../../util/Request'
+import useStores from '../../mobX/helper/useStores';
+import { useNavigation } from '@react-navigation/native';
+import { Model } from '../../AppEnum';
 
 export default function StoryBlock({data, onPress}){
 
-    data = {
-        id: 0,
-        title: '달리기하는데 숨차 죽을뻔 함;;',
-        content: 
-        '솔직히 한번에 8km 속도로 10km 달리기 하는거 \n시간은 얼마나 걸릴지 몰라도 죽을 거 같잖어 안그래?\nㅇㄴㄹㄴㅇㄹㄴㅇㄹ',
-        type: 0,
-        commentCount : 5,
-        likesCount : 3,
-        canLikes: false,
-        createDate: EasyDate.now().minusDays(17),
-        author : {
-            id: 1,
-            name: '사용자',
-            profileUrl: 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg'
-        }
+    // data = {
+    //     id: 0,
+    //     title: '달리기하는데 숨차 죽을뻔 함;;',
+    //     content: 
+    //     '솔직히 한번에 8km 속도로 10km 달리기 하는거 \n시간은 얼마나 걸릴지 몰라도 죽을 거 같잖어 안그래?\nㅇㄴㄹㄴㅇㄹㄴㅇㄹ',
+    //     type: 0,
+    //     commentCount : 5,
+    //     likesCount : 3,
+    //     canLikes: false,
+    //     createDate: EasyDate.now().minusDays(17),
+    //     author : {
+    //         id: 1,
+    //         name: '사용자',
+    //         profileUrl: 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg'
+    //     }
         
-    }
-
+    // }
+    const naviagation = useNavigation();
+    const {authStore} = useStores();
     const [isLikes , setIsLikes] = useState(!data.canLikes)
 
     const toggleLikes = async () => {
         try{
-            await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/${data.id}/likes/${isLikes ? 'negative' : 'positive'}`)
+            const response = await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${data.id}/likes/${isLikes ? 'negative' : 'positive'}`)
+            .auth(authStore.userToken.token)
+            .submit();
+            console.log(response)
             setIsLikes(!isLikes);
         }catch(e){
             console.log(e);
@@ -39,7 +47,7 @@ export default function StoryBlock({data, onPress}){
 
 
     return(
-        <TouchableOpacity style={{paddingHorizontal: 15, elevation: 5, backgroundColor: 'white', paddingVertical: 12, width:'100%'}}
+        <TouchableOpacity style={{paddingHorizontal: 15, backgroundColor: 'white', paddingVertical: 12, width:'100%'}}
         activeOpacity={1} onPress={onPress}>
             <View style={{flexDirection: 'row', alignItems: 'center', paddingBottom: 5}}>
                 <ProfileWidget profileUrl={data.author.profileUrl} name={data.author.name}/>
@@ -68,6 +76,15 @@ export default function StoryBlock({data, onPress}){
                     <ImageButton
                         imageStyle={{width: 27, height: 25}}
                         source={require('../../../../asset/button/comment_button.png')}
+                        onPress={() => {
+                            naviagation.navigate('PublicNavigation', {
+                                screen : 'CommnetView',
+                                params : {
+                                    entity : Model.STORY,
+                                    id : data.id
+                                }
+                            })
+                        }}
                     />
                     {/* <Text style={styles.scoreText}>
                         {data.commentCount}

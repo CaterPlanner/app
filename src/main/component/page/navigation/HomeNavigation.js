@@ -118,17 +118,18 @@ const HomeNavigation = () => {
                 headerTitle: route.params.purpose.name,
                 headerTitleAlign: 'center',
                 animationEnabled: false,
-                // headerRight: () => {
-                //     return(
-                //         <View style={{marginRight: 5}}>
-                //             <ImageButton
-                //                 source={require('../../../../../asset/button/check_button.png')}
-                //                 backgroundStyle={{ width: 40, height: 40}}
-                //                 imageStyle={{ width: 35, height: 32 }}
-                //             />
-                //         </View>
-                //     )
-                // }
+                headerRight: () => {
+                    return(
+                        <View style={{marginRight: 5}}>
+                            <ImageButton
+                                source={require('../../../../../asset/button/check_button.png')}
+                                backgroundStyle={{ width: 40, height: 40}}
+                                imageStyle={{ width: 35, height: 32 }}
+                                onPress={route.params ? route.params.save : null}
+                            />
+                        </View>
+                    )
+                }
             })} name='BriefingGoalList' component={BriefingGoalList} />
         </Stack.Navigator>
     )

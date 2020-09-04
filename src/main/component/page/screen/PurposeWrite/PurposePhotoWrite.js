@@ -19,6 +19,7 @@ export default function PurposePhotoWrite() {
         console.log(photo);
         setPurposePhoto(photo);
         purposeWriteStore.changePermit(true);
+        
         purposeWriteStore.purpose.photo = photo;
         purposeWriteStore.isChangePhoto = true;
     } 

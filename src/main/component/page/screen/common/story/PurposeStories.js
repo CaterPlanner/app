@@ -27,7 +27,7 @@ export default class PurposeStories extends Component{
 
     _loadData = async () => {
         try{
-            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}/stories?page=${this.state.page}`, null, null, 8000)
+            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.props.route.params.purpose.id}/stories?page=${this.state.page}`, null, null, 8000)
             .auth(this.authStore.userToken.token)
             .submit();
 

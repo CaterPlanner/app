@@ -34,7 +34,7 @@ function EmptyCard({onPress}){
     )
 }
 
-function ActiveCard({ id,  image, title, date, onPress }) {
+function ActiveCard({ purpose, onPress }) {
     return (
         <TouchableOpacity style={{
             height: '100%', justifyContent: 'center'
@@ -49,7 +49,7 @@ function ActiveCard({ id,  image, title, date, onPress }) {
                     borderTopLeftRadius: 45,
                 }}>
                     <Image
-                        source={{ uri: image }}
+                        source={{ uri: purpose.photoUrl }}
                         style={{
                             flex: 1, width: "100%", height: undefined, borderTopRightRadius: 40,
                             borderTopLeftRadius: 40,
@@ -74,11 +74,11 @@ function ActiveCard({ id,  image, title, date, onPress }) {
                                 alignSelf: 'center',
                                 fontSize: 20
                             }}>
-                            {title}
+                            {purpose.name}
                         </Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                        <DecimalDayWidget stat={0} decimalDay={date}/>
+                        <DecimalDayWidget stat={purpose.stat} decimalDay={purpose.leftDay}/>
                     </View>
                 </View>
             </View>
@@ -114,9 +114,8 @@ export default class Home extends Component {
     }
     //
     _renderItem = ({ item, index }) => {
-        console.log(item.leftDay);
         return (
-            <ActiveCard id={item.id} image={item.photoUrl} title={item.name} date={item.leftDay}
+            <ActiveCard purpose={item} id={item.id} image={item.photoUrl} title={item.name} date={item.leftDay}
                 onPress={() => {this.props.navigation.navigate('PublicNavigation' , {
                     screen: 'LoadMyPurpose',
                     params : {
@@ -147,6 +146,7 @@ export default class Home extends Component {
     }
 
     render() {
+        console.log('hello')
         return (
             <View style={{ flex: 1}}>
                 <View style={{flex: 1}}>

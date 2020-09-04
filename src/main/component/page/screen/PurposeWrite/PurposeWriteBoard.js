@@ -60,10 +60,12 @@ export default class PurposeWriteBoard extends Component {
     _uploadData = async () => {
         const result = this.purposeWriteStore.purpose;
         let response = null;
+
         try {
 
             switch (this.purposeWriteStore.writeType) {
                 case PurposeWriteType.CREATE:
+           
 
                     response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
@@ -79,35 +81,53 @@ export default class PurposeWriteBoard extends Component {
                                 goal.briefingCount = 0;
                             }) : null
                     );
-
+                    
+                    this.props.navigation.navigate('PurposeWriteDone', {
+                        id : response.id
+                    })
 
                     break;
 
                 case PurposeWriteType.MODIFY:
-
+      
                     response = await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })
                         .auth(this.authStore.userToken.token)
                         .submit();
 
-                    result.photoUrl = response.photoUrl;
+                    result.photoUrl = response.data.photoUrl;
 
                     await PurposeService.getInstance().modify(result.id, result);
+
+                    this.props.navigation.navigate('PublicNavigation', {
+                        screen : 'LoadMyPurpose',
+                        params : {
+                            id : result.id
+                        }
+                    });
 
                     break;
 
                 case PurposeWriteType.GROUND_MODIFY:
-
-                    response = await Request.put(GlobalConfig.CATEPLANNER_REST_SERVER.ip + '/purpose/' + this.purposeWriteStore.purpose.id, this.purposeWriteStore.resultFormData, {
+           
+                    response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })
                         .auth(this.authStore.userToken.token)
                         .submit();
 
-                    result.photoUrl = response.photoUrl;
+                    console.log(response);
+                    result.photoUrl = response.data.photoUrl;
 
-                    await PurposeService.getInstance().groundModify(result.id, result);
+                    await PurposeService.getInstance().groundModify(result.id, result)
+
+                    this.props.navigation.navigate('PublicNavigation', {
+                        screen : 'LoadMyPurpose',
+                        params : {
+                            id : result.id
+                        }
+                    });
 
                     break;
             }
@@ -117,13 +137,6 @@ export default class PurposeWriteBoard extends Component {
 
             this.backHandler.remove();
 
-            if(this.purposeWriteStore.writeType == PurposeWriteType.CREATE){
-                this.props.navigation.navigate('PurposeWriteDone', {
-                    id : response.data.id
-                })
-            }else{
-                this.props.navigation.goBack();
-            }
 
         } catch (e) {
             console.log(e);

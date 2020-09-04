@@ -29,8 +29,6 @@ export default class DetailPlanWriteBoard extends Component {
         this.purposeWriteStore = this.props.purposeWriteStore;
 
 
-        console.log('route')
-        console.log(this.props.route.params);
 
         this.detailPlanWriteStore.init(EasyDate.now(), EasyDate.now().plusDays(1), this.props.route.params ? this.props.route.params.detailPlans : null);
     }
@@ -44,13 +42,15 @@ export default class DetailPlanWriteBoard extends Component {
             this.purposeWriteStore.purpose.startDate = this.detailPlanWriteStore.entryStartDate;
             this.purposeWriteStore.purpose.endDate = this.detailPlanWriteStore.entryEndDate;
 
-            this.purposeWriteStore.writeType = PurposeWriteType.GROUND_MODIFY;
+            if(this.purposeWriteStore.writeType == PurposeWriteType.MODIFY)
+             this.purposeWriteStore.writeType = PurposeWriteType.GROUND_MODIFY;
 
             this.props.route.params.setPurposeDetailPlans(this.purposeWriteStore.purpose.detailPlans);
 
             this.props.navigation.navigate('PurposeWriteBoard');
 
         }catch(e){
+            console.log(e);
             ToastAndroid.showWithGravity(e, ToastAndroid.SHORT, ToastAndroid.CENTER);
         }
     }

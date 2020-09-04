@@ -35,7 +35,6 @@ const PublicNavigation = () => {
             })} name="DetailGoal" component={DetailGoal}/>
             <Stack.Screen options={{ headerShown: false }} name="LoadProfile" component={LoadProfile}/>
             <Stack.Screen options={{ headerShown: false }} name="LoadUserPurpose" component={LoadUserPurpose}/>
-            <Stack.Screen options={{ headerShown: false }} name="WriteStory" component={WriteStory}/>
             <Stack.Screen options={({ route, navigation }) => ({
                 ...defaultHeaderStyle,
                 title: '스토리라인',
@@ -56,23 +55,29 @@ const PublicNavigation = () => {
                     />
                     )
                 }
+            })} name="WriteStory" component={WriteStory}/>
+            <Stack.Screen options={({ route, navigation }) => ({
+                ...defaultHeaderStyle,
+                title: '스토리라인',
+                headerTitleAlign: 'center',
+               
             })} name="PurposeStories" component={PurposeStories}/>
             <Stack.Screen  options={({ route, navigation }) => ({
                 ...defaultHeaderStyle,
-                title: '스토리라인',
+                title: '',
                 headerRight: () => {
                     return(
                         <ImageButton
                         backgroundStyle={{
                             marginVertical: 5,
-                            marginRight: 10
+                            marginRight: 15
                         }}
                         imageStyle={{
-                            width: 35,
-                            height: 35
+                            width: 6,
+                            height: 25
                         }}
                         source={
-                            require('../../../../../asset/button/check_button.png')}
+                            require('../../../../../asset/button/more_button.png')}
                         onPress={route.params ? route.params.showStoryMenu : null}
                     />
                     )

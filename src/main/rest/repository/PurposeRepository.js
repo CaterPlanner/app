@@ -21,6 +21,23 @@ const PurposeRepository = {
             }
         )
     },
+
+    selectAll : (txn, callback) => {
+        txn.executeSql(
+            "select id, name, description, photo_url, disclosure_scope, start_date, end_date, stat from purpose",
+            [],
+            (tx, res) => {
+                if(!res)
+                    res = tx;
+                let data = [];
+                for(let i = 0; i < res.rows.length; i++){
+                    const row = res.rows.item(i);
+                    data.push(new Purpose( row.id, row.name, row.description, row.photo_url, row.disclosure_scope, row.start_date, row.end_date, row.stat))
+                }
+                callback(data);
+            }
+        );
+    },
     
     selectByStatIsActive : (txn, callback) => {
         txn.executeSql(
@@ -40,9 +57,10 @@ const PurposeRepository = {
     },
 
     updatePurposeDate : (txn, id, purpose, callback) => {
+        console.log(purpose);
         txn.executeSql(
             'update purpose set name = ?, description = ?, photo_url = ?, disclosure_scope = ?, start_date = ?, end_date = ?, stat = ? where id = ?',
-            [purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat, id],
+            [purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate.toString(), purpose.endDate.toString(), purpose.stat, id],
             (tx, res) => {
                 if(!res)
                 res = tx;

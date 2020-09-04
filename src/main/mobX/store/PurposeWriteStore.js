@@ -109,8 +109,10 @@ export default class PurposeWriteStore{
         
         formData.append('name', this.purpose.name);
         formData.append('description', this.purpose.description);
-        if(this.isChangePhoto)
+        if(this.isChangePhoto){
+            // this.purpose.photo.uri = this.purpose.photo.uri.replace('file://', '');
             formData.append('photo', this.purpose.photo);
+        }
         formData.append('disclosureScope', this.purpose.disclosureScope);
         formData.append('startDate', this.purpose.startDate.toString());
         formData.append('endDate', this.purpose.endDate.toString());

@@ -6,7 +6,8 @@ import ImageButton from '../../../atom/button/ImageButton';
 import { inject } from 'mobx-react';
 import { Model } from '../../../../AppEnum';
 import GlobalConfig from '../../../../GlobalConfig';
-
+import Loader from '../../../page/Loader';
+import Request from '../../../../util/Request'
 
 //https://stackoverflow.com/questions/31475187/making-a-multiline-expanding-textinput-with-react-native
 @inject(['authStore'])
@@ -18,6 +19,7 @@ export default class CommentView extends Component{
         this.state = {
             data : [],
             isLoading : false,
+            isLordMore : true,
             page: 0,
             commentText : null
         }
@@ -25,14 +27,14 @@ export default class CommentView extends Component{
         this.authStore = this.props.authStore;
         this.isFinish = false;
 
-
+        console.log(this.props.route.params)
         switch(this.props.route.params.entity){
             case Model.PURPOSE:
                 this.entityName = 'purpose';
                 this.entityCommentName = 'purposeComment'
                 break;
             case Model.STORY:
-                this.entryName = 'story';
+                this.entityName = 'story';
                 this.entityCommentName = 'storyComment';
                 break;
         }
@@ -42,33 +44,49 @@ export default class CommentView extends Component{
 
     _loadData = async () => {
         try{
+
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/${this.entityName}/${this.id}/comments?page=${this.state.page}`, null, null, 8000)
             .auth(this.authStore.userToken.token)
             .submit();
 
+
             this.isFinish = response.data.final;
 
+            console.log(this.state.data.slice(0, (this.state.isLordMore ? this.state.page : this.state.page - 1) * 15))
+
             this.setState({
-                data : this.state.data.concat(response.data.elements),
-                isLoading : false
+                data : this.state.data.slice(0, (this.state.isLordMore ? this.state.page : this.state.page - 1) * 15).concat(response.data.elements),
+                isLoading : false,
+                isLoadMore : false
             })
+
+            this.flatList.scrollToEnd();
+
+
         }catch(e){
             console.log(e);
 
             this.setState({
-                isLoading : false
+                isLoading : false,
+                isLoadMore : false
             })
         }
     }
     
-    _loadMore = () => {
+    _refresh = () => {
+        console.log(this.isFinish);
+
         if(this.isFinish || this.state.isLoading)
             return;
 
+        console.log('hello');
+
         this.setState({
             page : this.state.page + 1,
-            isLoading : true
-        }, this._loadData)
+            isLoading : true,
+            isLoadMore : true
+        }, this._loadData);
+
     }
 
     _renderFooter = () => {
@@ -81,17 +99,49 @@ export default class CommentView extends Component{
     }
 
     _postComment = async () => {
-
         try{
-            await  Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/${this.entityCommentName}`)
+            //page 이용
+
+            const commentText = this.state.commentText;
+
+            let isLoadMore = this.state.data.length % 15 == 0 && this.state.data.length != 0
+
+            this.setState({
+                commentText : null,
+                isLoading : true,
+                isLordMore : isLoadMore,
+                page : isLoadMore ? this.state.page + 1 : this.state.page
+            })
+
+            const resource = {
+                content : commentText
+            }
+
+            switch(this.props.route.params.entity){
+                case Model.PURPOSE:
+                    resource.purposeId = this.id;
+                    break;
+                case Model.STORY:
+                    resource.storyId = this.id;
+                    break;
+            }
+
+
+            await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/${this.entityCommentName}`, JSON.stringify(resource))
             .auth(this.authStore.userToken.token)
             .submit();
 
-            this.isFinish = false;
-            this._loadMore();
+
+
+            this._loadData();
 
         }catch(e){
             console.log(e);
+
+            this.setState({
+                isLordMore : false,
+                isLoading : false
+            })
         }
 
     }
@@ -103,9 +153,12 @@ export default class CommentView extends Component{
     }
 
     render(){
+        console.log(this.state.page)
+
         return(
             <View style={{flex:1}}>
                 <FlatList
+                    ref={(ref) => {this.flatList = ref;}}
                     style={{flex: 1}}
                     data={this.state.data}
                     renderItem={({item : comment}) => (
@@ -116,11 +169,10 @@ export default class CommentView extends Component{
                         />
                     )}
                     keyExtractor={(item) => item.id}
-                    onEndReached={this._loadMore}
+                    onEndReached={this._refresh}
                     onEndReachedThreshold={0}
                     ListFooterComponent={this._renderFooter}
                 />
-                <View style={{flex:1}}/>
                 <View style={{width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems:'center', justifyContent: 'space-between', padding: 10, elevation: 5}}> 
                     <TextInput
                             numberOfLines={1}
@@ -135,10 +187,11 @@ export default class CommentView extends Component{
                                 borderRadius: 18,
                                 width: '85%',
                             }}
-                            onChangeText={text => setState({commentText : text})}
+                            onChangeText={text => this.setState({commentText : text})}
                             value={this.state.commentText}
                     />
                     <ImageButton
+                        disabled={this.state.commentText == ''}
                         backgroundStyle={{
                             backgroundColor:'#25B046',
                             width:48,
@@ -150,11 +203,7 @@ export default class CommentView extends Component{
                             height:23
                         }}
                         source={require('../../../../../../asset/button/send_button.png')}
-                        onPress={() => {
-                            this.state({
-                                commentText : null
-                            }, this._postComment);
-                        }}
+                        onPress={this._postComment}
                     />
                 </View>
             </View>
