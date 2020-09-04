@@ -13,11 +13,13 @@ export default function DecimalDayWidget({ stat, decimalDay }) {
             color = "#ff0000"
             break;
         case 1:
-            text = '완료'
-            color = 'blue'
+            text = '대기'
+            color = 'gray'
             break;
         case 2:
 
+            break;
+        case 3:
             break;
     }
 

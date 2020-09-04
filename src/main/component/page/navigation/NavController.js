@@ -42,7 +42,7 @@ export default class NavController extends Component {
             <View style={{ flex: 1 }}>
                 <StatusBar
                     barStyle="white-content"
-                    backgroundColor="#94EB3E"
+                    backgroundColor="#000000"
              />
                 {/* <AppNavigation />     */}
                 {this.appStore.isBegin ?

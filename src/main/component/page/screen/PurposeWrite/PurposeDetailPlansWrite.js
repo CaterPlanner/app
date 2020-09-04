@@ -25,6 +25,7 @@ export default function PurposeDetailPlansWrite() {
         }else{
             purposeWriteStore.changePermit(true);
         }
+
     }, [purposeDeatilPlans, purposeStat])
 
     return (
@@ -67,6 +68,7 @@ export default function PurposeDetailPlansWrite() {
                             height={30}
                             onPress={() => {
                                 setPurposeStat(0);
+                                purposeWriteStore.purpose.stat = 0;
                             }}
                         />
                         <RoundButton
@@ -80,6 +82,7 @@ export default function PurposeDetailPlansWrite() {
                             height={30}
                             onPress={() => {
                                 setPurposeStat(1);
+                                purposeWriteStore.purpose.stat = 1;
                             }}
                         />
                     </View>
@@ -104,6 +107,7 @@ export default function PurposeDetailPlansWrite() {
                                             navigation.navigate('DetailPlanWriteNavigation', {
                                                 screen: 'DetailPlanWriteBoard',
                                                 params : {
+                                                    setPurposeDetailPlans : setPurposeDetailPlans,
                                                     detailPlans : purposeDeatilPlans
                                                 }
                                             });
@@ -117,8 +121,8 @@ export default function PurposeDetailPlansWrite() {
                             navigation.navigate('DetailPlanWriteNavigation', {
                                 screen: 'DetailPlanWriteBoard',
                                 params : {
-                                    detailPlans : purposeDeatilPlans,
-                                    setPurposeDetailPlans : setPurposeDetailPlans
+                                    setPurposeDetailPlans : setPurposeDetailPlans,
+                                    detailPlans : purposeDeatilPlans
                                 }
                             });
                         }

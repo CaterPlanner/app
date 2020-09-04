@@ -97,7 +97,7 @@ export default class GoalWrite extends Component {
 
         this.detailPlanWriteStore.update(
             new Goal(this.state.goalId, this.state.goalPurposeId, this.state.goalName, this.state.goalDescription
-                , this.state.goalStartDate, this.state.goalEndDate, this.state.goalColor, formatCycle, this.state.goalStat)
+                , this.state.goalStartDate, this.state.goalEndDate, this.state.goalColor, formatCycle, 0, null, this.state.goalStat)
         )
 
         this.props.navigation.goBack();

@@ -1,6 +1,6 @@
 
 
-const DEFAULT_TIMEOUT = 12000
+const DEFAULT_TIMEOUT = 15000
 
 export default class Request{
 
@@ -54,6 +54,7 @@ export default class Request{
                     return response.json();
                 })
                 .then((data) => {
+                    console.log(data);
                     return new Promise((resolve, reject) => {
                         if(isOk){
                             resolve(data)

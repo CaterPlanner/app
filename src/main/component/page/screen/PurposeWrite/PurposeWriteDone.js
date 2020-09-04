@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, Image } from 'react-native';
 import purposeStyles from './style/PurposeStyle';
 import RoundButton from '../../../atom/button/RoundButton';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 
 
@@ -42,12 +42,7 @@ export default function PurposeWriteDone() {
                 width={280}
                 onPress={
                     () => {
-                        navigation.navigate('PublicNavigation', {
-                            screen : 'LoadMyPurpose',
-                            params : {
-                                id : route.params.id
-                            }
-                        });
+                        navigation.navigate('HomeNavigation');
                     }
                 }
             />

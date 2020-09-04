@@ -8,7 +8,9 @@ import GlobalConfig from '../../../../../GlobalConfig';
 import ImageButton from '../../../../atom/button/ImageButton';
 import { inject } from 'mobx-react';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
-
+import Request from '../../../../../util/Request';
+import Comment from '../../../../molecule/Comment';
+import { Model } from '../../../../../AppEnum';
 
 
 @inject(['authStore'])
@@ -18,61 +20,82 @@ export default class DetailStory extends Component {
         super(props);
 
         this.state = {
-            isLoading: false,
-            data: {
-                id: 0,
-                title: '달리기하는데 숨차 죽을뻔 함;;',
-                content:
-                    '솔직히 한번에 8km 속도로 10km 달리기 하는거 \n시간은 얼마나 걸릴지 몰라도 죽을 거 같잖어 안그래?\nㅇㄴㄹㄴㅇㄹㄴㅇㄹ',
-                type: 0,
-                commentCount: 5,
-                likesCount: 3,
-                canLikes: false,
-                createDate: EasyDate.now().minusDays(17),
-                author: {
-                    id: 1,
-                    name: '사용자',
-                    profileUrl: 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg'
-                }
-            },
-            isLikes: false
+            isLoading: true,
+            data: null
         };
 
 
         this.authStore = this.props.authStore;
     }
 
+    _toggleLikes = async () => {
+        try{
+            await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}/likes/${this.state.isLikes ? 'negative' : 'positive'}`)
+            .auth(this.authStore.userToken.token)
+            .submit();
+
+            this.setState({
+                isLikes : !this.state.isLikes
+            })
+
+        }catch(e){
+            console.log(e);
+        }
+    }
+
+    _loadData = async () => {
+
+        try{
+            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.props.route.params.id}`).auth(this.props.authStore.userToken.token).submit();
+
+            console.log(response);
+
+            this.setState({
+                isLoading : false,
+                data: response.data,
+                isLikes : !response.data.canLikes
+            });
+
+        }catch(e){
+            console.log(e);
+            this.props.navigation.goBack();
+        }
+
+    }
 
     componentDidMount() {
 
-        // Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.props.route.params.id}`)
-        //     .then(response => {
-        //         this.setState({
-        //             isLoading: true,
-        //             data: response.data
-        //         })
-        //     })
-        //     .catch(e => {
-        //         console.log(e);
-        //         this.props.navigation.goBack();
-        //     })
-
-        // this.navigation.setParams({
-        //     showStoryMenu: this._storyControlMenuRef.show
-        // })
-        this._storyControlMenuRef.show();
+        this._loadData();
+        this.props.navigation.setParams({
+            showStoryMenu: this._storyControlMenuRef.show
+        })
 
     }
 
     render() {
+        console.log(this.state.isLikes);
+
         return (
             <View style={{ flex: 1 }}>
                 <View style={{ alignSelf: 'flex-end' }}>
                     <Menu
                         ref={ref => { this._storyControlMenuRef = ref }}>
                         <MenuItem onPress={() => {
+                            this._storyControlMenuRef.hide();
 
                         }}>신고하기</MenuItem>
+                        <MenuDivider/>
+                        {!this.state.isLoading && this.state.data.isOwner && 
+                        <MenuItem onPress={() => {
+                            this._storyControlMenuRef.hide();
+                            this.props.navigation.navigate('WriteStory', {
+                                purposeId : this.state.data.purpose.id,
+                                story : this.state.data
+                            });
+                        }}>
+                            수정하기
+                        </MenuItem>
+                        }
                     </Menu>
                 </View>
                 {this.state.isLoading ? <Loader /> : (
@@ -103,10 +126,16 @@ export default class DetailStory extends Component {
                                     <Text style={styles.contentFont}>
                                         {this.state.data.content}
                                     </Text>
-                                    <TouchableOpacity style={{ marginTop: 30, marginBottom: 20, flexDirection: 'row', elevation: 5, height: 90, width: '100%', backgroundColor: 'white', marginVertical: 10 }}>
+                                    <TouchableOpacity style={{ marginTop: 30, marginBottom: 20, flexDirection: 'row', elevation: 5, height: 90, width: '100%', backgroundColor: 'white', marginVertical: 10 }}
+                                        onPress={() => {
+                                            this.props.navigation.navigate('LoadUserPurpose', {
+                                                id : this.state.data.purpose.id
+                                            })
+                                        }}
+                                    >
                                         <Image
                                             resizeMode="stretch"
-                                            source={{ uri: 'https://i.pinimg.com/originals/cd/e8/cd/cde8cde6d49317fc58d01e783e5fbdef.png' }}
+                                            source={{ uri: this.state.data.purpose.photoUrl }}
                                             style={{
                                                 height: '100%',
                                                 width: 90,
@@ -115,57 +144,58 @@ export default class DetailStory extends Component {
                                         <View style={{ flex: 1 }}>
                                             <Text
                                                 numberOfLines={1}
-                                                style={styles.purposeNameFont}>매일 한 시간씩 스토리 탤링하기</Text>
+                                        style={styles.purposeNameFont}>{this.state.data.purpose.name}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
                             </View>
+                            <View style={{borderBottomWidth: 0.3, borderTopWidth: 0.3,  paddingHorizontal: 10, paddingVertical: 10, backgroundColor:'white', width: '100%', flexDirection : 'row', justifyContent: 'space-between', alignItems:'center'}}>
+                                <Text style={styles.scoreFont}>
+                                    좋아요 {this.state.data.likesCount}
+                                </Text>
+                                <Text style={styles.scoreFont}>
+                                    댓글 {this.state.data.commentCount}  
+                                </Text>
+                            </View>
+                            {
+                                this.state.data.comments.map((comment) => (
+                                    <View style={{marginVertical: 10}}>
+                                        <Comment
+                                        user={comment.user}
+                                        createDate={new EasyDate(comment.createDate)}
+                                        content={comment.content}
+                                        />
+                                    </View>
+                                ))
+                            }
 
-                            {/* <Button
-                            title={"댓글"}
-                            onPress={() => {
-                                this.props.navigation.navigate('CommentView', {
-                                    entity: Model.STORY,
-                                    id: this.state.data.id
-                                })
-                            }}
-                        />
-                        <Button
-                            title={"좋아요"}
-                            onPress={() => {
-                                Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}/${this.state.isLikes ? 'negative' : 'positive'}`)
-                                    .auth(this.authStore.userToken.token)
-                                    .then(() => {
-                                        this.setState({
-                                            isLikes: !isLikes
-                                        })
-                                    })
-                                    .catch(e => {
-                                        console.log(e);
-                                    })
-                            }}
-                        /> */}
                         </ScrollView >
-                        <View style={{ height: 40, backgroundColor: 'red' }}>
-                            <View style={{ flexDirection: 'row', justfiyContent: 'center' }}>
-                                <ImageButton
-                                    imageStyle={{ width: 27, height: 25, tintColor: this.state.data.canLikes ? 'blue' : undefined }}
+                        <View style={{ backgroundColor:'white', paddingVertical: 15, flexDirection: 'row', justifyContent:'flex-start', alignItems:'center'}}>
+                        <ImageButton
+                                    backgroundStyle={{
+                                        marginLeft: 20
+                                    }}
+                                    imageStyle={{ width: 27, height: 25, tintColor: this.state.isLikes ? 'blue' : undefined }}
                                     source={require('../../../../../../../asset/icon/likes_icon.png')}
-                                    onPress={() => {console.log('df')}}
+                                    onPress={this._toggleLikes}
                                 />
-                                {/* <Text style={styles.scoreText}>
-                    {data.likesCount}
-                    </Text> */}
-                            </View>
-                            <View style={{ flexDirection: 'row', justfiyContent: 'center', marginLeft: 20 }}>
-                                <ImageButton
-                                    imageStyle={{ width: 27, height: 25 }}
-                                    source={require('../../../../../../../asset/button/comment_button.png')}
-                                />
-                                {/* <Text style={styles.scoreText}>
-                        {data.commentCount}
-                    </Text> */}
-                            </View>
+        
+                        <ImageButton
+                                backgroundStyle={{
+                                    marginLeft : 20
+                                }}
+                                imageStyle={{ width: 27, height: 25 }}
+                                source={require('../../../../../../../asset/button/comment_button.png')}
+                                onPress={() => {
+                                    this.props.navigation.navigate('PublicNavigation', {
+                                        screen : 'CommnetView',
+                                        params : {
+                                            entity : Model.STORY,
+                                            id : this.state.data.id
+                                        }
+                                    })
+                                }}
+                            />
                         </View>
                     </View>
                 )}
@@ -192,5 +222,9 @@ const styles = StyleSheet.create({
         fontSize: 17,
         marginHorizontal: 20,
         marginVertical: 15
+    },
+    scoreFont: {
+        fontSize: 15,
+        fontWeight: 'bold'
     }
 })

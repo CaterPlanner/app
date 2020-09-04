@@ -8,6 +8,7 @@ import BriefingNotificationManager from '../../../../util/BriefingNotificationMa
 import GlobalConfig from '../../../../GlobalConfig';
 import Request from '../../../../util/Request';
 import { inject } from 'mobx-react';
+import EasyDate from '../../../../util/EasyDate';
 
 
 @inject(['authStore'])
@@ -18,15 +19,18 @@ export default class BriefingPurposeList extends Component {
 
         this.state = {
             isLoading: true,
-            data: null
+            purposes: null
         }
     }
 
     _getData = async () => {
         try {
-            const purposes = await PurposeService.getInstance().findPurposeForBrifingList();
+            const purposes = await PurposeService.getInstance().findActivePurposes();
+
+
+            console.log(purposes);
             this.setState({
-                data: purposes,
+                purposes: purposes,
                 isLoading: false
             })
         } catch (e) {
@@ -35,60 +39,12 @@ export default class BriefingPurposeList extends Component {
         }
     }
 
-    _acceptData = async (index, unCheckedDetailPlans, checkedDetailPlanIdList) => {
-
-        try {
-            console.log(checkedDetailPlanIdList)
-            if (checkedDetailPlanIdList.length == 0)
-                return;
-
-            const purpose = await PurposeService.getInstance().read(this.state.data[index].id);
-            console.log(purpose);
-            const checkedGoals = purpose.detailPlans.filter(g => checkedDetailPlanIdList.includes(g.id));
-
-            console.log(purpose.achieve);
-
-
-            console.log(
-                Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.state.data[index].id}/update`, {
-                    achieve: purpose.achieve,
-                    stat: purpose.stat,
-                    modifiedGoalAchieve: checkedGoals.map((goal) => ({
-                        id: goal.id,
-                        briefingCount: goal.briefingCount,
-                        lastBriefingDate: goal.lastBriefingDate.toString(),
-                        stat: goal.stat
-                    }))
-                }).body
-            );
-
-            const response = await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.state.data[index].id}/update`, JSON.stringify({
-                achieve: purpose.achieve,
-                stat: purpose.stat,
-                modifiedGoalAchieve: checkedGoals.map((goal) => ({
-                    id: goal.id,
-                    briefingCount: goal.briefingCount,
-                    lastBriefingDate: goal.lastBriefingDate.toString(),
-                    stat: goal.stat
-                }))
-            })).auth(this.props.authStore.userToken.token).submit();
-
-            console.log(response)
-
-            this.state.data[index].detailPlans = unCheckedDetailPlans;
-
-            this.state.data.forEach((purpose, index) => {
-                if (purpose.detailPlans.length == 0)
-                    this.state.data.splice(index, 1);
-            })
-
-            this.setState({
-                data: this.state.data
-            });
-
-        } catch (e) {
-            console.log(e);
-        }
+    _acceptPurpose = async (index, updatePurpose) => {
+        const newPurposes = this.state.purposes.slice();
+        newPurposes[index] = updatePurpose;
+        this.setState({
+            purposes : newPurposes
+        })
     }
 
     componentDidMount() {
@@ -122,8 +78,8 @@ export default class BriefingPurposeList extends Component {
                                             this.props.navigation.navigate('BriefingGoalList', {
                                                 purpose: purpose,
                                                 goals: purpose.detailPlans,
-                                                acceptData: (unCheckedDetailPlans, checkedDetailPlans) => {
-                                                    this._acceptData(index, unCheckedDetailPlans, checkedDetailPlans)
+                                                acceptData: (updatePurpose) => {
+                                                    this._acceptData(index, updatePurpose)
                                                 }
                                             })
                                         }}

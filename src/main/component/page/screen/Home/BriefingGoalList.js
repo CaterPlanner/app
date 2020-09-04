@@ -13,10 +13,46 @@ export default class BriefingGoalList extends Component{
         }
 
         this.clearGoalIdList = [];
+
+        this.props.navigation.setParams({
+            save : this.save
+        })
     }
 
-    _saveCheck(){
-        this.props.route.params.acceptData(this.state.goals, this.clearGoalIdList);
+    save = async () => {
+
+        try{
+            const purpose = this.route.params.purpose;
+            let checkedGoals = [];
+
+            for(id of this.clearGoalIdList){
+                try{
+                    await PurposeService.getInstance().addBriefing(id, purpose); //참조 이용
+                    checkedGoals.push(purpose.detailPlans[id]);
+                }catch(e){
+                    console.log(e);
+                }
+            }
+
+            const updatedPurpose = PurposeService.read(purpose.id);
+    
+            await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${updatedPurpose.id}/update`, JSON.stringify({
+                achieve: updatedPurpose.achieve,
+                stat: updatedPurpose.stat,
+                modifiedGoalAchieve: checkedGoals.map((goal) => ({
+                    id: goal.id,
+                    briefingCount: goal.briefingCount,
+                    lastBriefingDate: goal.lastBriefingDate.toString(),
+                    stat: goal.stat
+                }))
+            })).auth(this.props.authStore.userToken.token).submit();
+
+
+            this.props.route.params.acceptData(updatedPurpose);
+
+        }catch(e){
+            console.log(e);
+        }
     }
 
     componentDidUpdate(){
@@ -43,18 +79,25 @@ export default class BriefingGoalList extends Component{
                             acheive={item.acheive}
                             onChange={() => {
 
-                                PurposeService.getInstance().addBriefing(this.props.route.params.purpose.id, item.id)
-                                .then(() => {
-                                    this.clearGoalIdList.push(item.id);
-                                    this.setState({
-                                        goals : [
-                                        ...this.state.goals.slice(0, index),
-                                        ...this.state.goals.slice(index + 1)]
-                                    })
-                                })
-                                .catch((e) => {
-                                    console.log(e);
-                                })
+                                this.clearGoalIdList.push(item.id);
+                                // this.setState({
+                                //     goals : [
+                                //     ...this.state.goals.slice(0, index),
+                                //     ...this.state.goals.slice(index + 1)]
+                                // })
+
+                                // PurposeService.getInstance().addBriefing(this.props.route.params.purpose.id, item.id)
+                                // .then(() => {
+                                //     this.clearGoalIdList.push(item.id);
+                                //     this.setState({
+                                //         goals : [
+                                //         ...this.state.goals.slice(0, index),
+                                //         ...this.state.goals.slice(index + 1)]
+                                //     })
+                                // })
+                                // .catch((e) => {
+                                //     console.log(e);
+                                // })
                                 
                             }}
                         />
