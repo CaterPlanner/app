@@ -32,7 +32,7 @@ export default class GoalWrite extends Component {
             goalId: this.baseGoal ? this.baseGoal.id : null,
             goalPurposeId: this.baseGoal ? this.baseGoal.purposeId : null,
             goalName: this.baseGoal ? this.baseGoal.name : null,
-            goalDescription : this.baseGoal ? this.baseGoal.description : null,
+            goalDescription: this.baseGoal ? this.baseGoal.description : null,
             goalStartDate: this.baseGoal ? this.baseGoal.startDate : this.detailPlanWriteStore.entryStartDate,
             goalEndDate: this.baseGoal ? this.baseGoal.endDate : this.detailPlanWriteStore.entryEndDate,
             goalColor: this.baseGoal ? this.baseGoal.color : colorList[0],
@@ -47,7 +47,6 @@ export default class GoalWrite extends Component {
 
                 return init;
             })(),
-            goalStat: this.baseGoal ? this.baseGoal.stat : 0,
             showDatePicker: false,
             changeDate: null,
             selectDate: null
@@ -97,7 +96,7 @@ export default class GoalWrite extends Component {
 
         this.detailPlanWriteStore.update(
             new Goal(this.state.goalId, this.state.goalPurposeId, this.state.goalName, this.state.goalDescription
-                , this.state.goalStartDate, this.state.goalEndDate, this.state.goalColor, formatCycle, 0, null, this.state.goalStat)
+                , this.state.goalStartDate, this.state.goalEndDate, this.state.goalColor, formatCycle, 0, null)
         )
 
         this.props.navigation.goBack();
@@ -108,6 +107,7 @@ export default class GoalWrite extends Component {
     }
 
     render() {
+
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
                 <Modal
@@ -120,13 +120,12 @@ export default class GoalWrite extends Component {
                                 date={this.state.selectDate}
                                 androidVariant={'nativeAndroid'}
                                 minimumDate={this.detailPlanWriteStore.entryStartDate}
-                                maximumDate={this.detailPlanWriteStore.entryEndDate}
                                 mode={'date'}
                                 locale={'ko'}
                                 onDateChange={(date) => {
                                     date = new EasyDate(date);
                                     this.setState({
-                                        selectDate: date.isBefore(this.detailPlanWriteStore.entryStartDate.minusDays(1)) && date.isAfter(this.detailPlanWriteStore.entryEndDate.plusDays(1)) ? date : null
+                                        selectDate: date.isBefore(this.detailPlanWriteStore.entryStartDate.minusDays(1)) ? date : this.state.selectDate
                                     })
                                 }}
                             />
@@ -157,18 +156,19 @@ export default class GoalWrite extends Component {
                                     width={80}
                                     height={25}
                                     onPress={() => {
-                                        this.setState({
-                                            selectDate: null,
-                                            showDatePicker: false
-                                        }, () => {
-                                            if (this.state.selectDate) {
-                                                if (this.state.changeDate == 0) {
-                                                    this.setState({ goalStartDate: selectDate })
-                                                } else {
-                                                    this.setState({ goalEndDate: selectDate })
-                                                }
-                                            }
-                                        });
+                                        if (this.state.changeDate == 0) {
+                                            this.setState({
+                                                goalStartDate: this.state.selectDate, selectDate: null,
+                                                showDatePicker: false
+                                            })
+                                        } else {
+                                            this.setState({
+                                                goalEndDate: this.state.selectDate, selectDate: null,
+                                                showDatePicker: false
+                                            })
+                                        }
+
+
                                     }}
                                 />
                             </View>
@@ -211,7 +211,7 @@ export default class GoalWrite extends Component {
                             }}
                             onChangeText={text => {
                                 this.setState({
-                                    goalName : text
+                                    goalName: text
                                 })
                             }}
                             value={this.state.goalName}
@@ -229,7 +229,7 @@ export default class GoalWrite extends Component {
                             }}
                             onChangeText={text => {
                                 this.setState({
-                                    goalDescription : text
+                                    goalDescription: text
                                 })
                             }}
                             value={this.state.goalDescription}
@@ -252,9 +252,9 @@ export default class GoalWrite extends Component {
                             height={33}
                             onPress={() => {
                                 this.setState({
-                                    changeDate : 0,
-                                    selectDate : this.state.goalStartDate,
-                                    showDatePicker : true
+                                    changeDate: 0,
+                                    selectDate: this.state.goalStartDate,
+                                    showDatePicker: true
                                 })
                             }}
                         />
@@ -274,9 +274,9 @@ export default class GoalWrite extends Component {
                             height={33}
                             onPress={() => {
                                 this.setState({
-                                    changeDate : 1,
-                                    selectDate : this.state.goalEndDate,
-                                    showDatePicker : true
+                                    changeDate: 1,
+                                    selectDate: this.state.goalEndDate,
+                                    showDatePicker: true
                                 })
                             }}
                         />
@@ -295,7 +295,7 @@ export default class GoalWrite extends Component {
                                             style={{ marginHorizontal: 5, width: circleWidth, height: circleWidth, backgroundColor: color, borderRadius: circleWidth }}
                                             onPress={() => {
                                                 this.setState({
-                                                    goalColor : colorList[index]
+                                                    goalColor: colorList[index]
                                                 })
                                             }}
                                         />
@@ -320,7 +320,7 @@ export default class GoalWrite extends Component {
                                 height={33}
                                 onPress={() => {
                                     this.setState({
-                                        goalCycleType : 0
+                                        goalCycleType: 0
                                     })
                                 }}
                             />
@@ -335,7 +335,7 @@ export default class GoalWrite extends Component {
                                 height={33}
                                 onPress={() => {
                                     this.setState({
-                                        goalCycleType : 1
+                                        goalCycleType: 1
                                     })
                                 }}
                             />
@@ -364,8 +364,8 @@ export default class GoalWrite extends Component {
                                                 });
 
                                                 this.setState({
-                                                    goalCycleType : isFull ? 0 : this.state.goalCycleType,
-                                                    goalCycleParamByDays : isFull ? [false, false, false, false, false, false, false] : this.state.goalCycleParamByDays
+                                                    goalCycleType: isFull ? 0 : this.state.goalCycleType,
+                                                    goalCycleParamByDays: isFull ? [false, false, false, false, false, false, false] : this.state.goalCycleParamByDays
                                                 })
 
                                             }}

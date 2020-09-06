@@ -1,6 +1,18 @@
 import EasyDate from "../../util/EasyDate";
+import Goal from "./Goal";
+import { State } from "../../AppEnum";
 
 export default class Purpose {
+
+    static clone = (purpose) => {
+        const detailPlans = purpose.detailPlans.map((goal) => {
+            return Goal.clone(goal);
+        })
+
+        purpose = new Purpose(purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat);
+        purpose.setDetailPlans(detailPlans);
+        return purpose;
+    }
 
     constructor(id, name, description, photoUrl, disclosureScope, startDate, endDate, stat){
         this.id = id;
@@ -17,6 +29,22 @@ export default class Purpose {
 
     setDetailPlans = (detailPlans) => {
         this.detailPlans = detailPlans;
+    }
+
+    get isFinish(){
+        return this.stat == State.SUCCEES || this.stat == State.FAIL || this.isProcceedEnd
+    }
+
+    get isProcceedEnd(){
+        return this.stat == State.PROCEED && (this.achieve == 100 || this.endDate.isAfter(EasyDate.now()));
+    }
+
+    get isSucceeseProceed(){
+        return this.isProcceedEnd && this.achieve >= 80
+    }
+
+    get isFailProceed(){
+        return this.isProcceedEnd && this.achieve < 80
     }
 
     get leftDay(){

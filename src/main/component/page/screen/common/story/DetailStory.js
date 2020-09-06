@@ -29,38 +29,49 @@ export default class DetailStory extends Component {
     }
 
     _toggleLikes = async () => {
-        try{
+        try {
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}/likes/${this.state.isLikes ? 'negative' : 'positive'}`)
-            .auth(this.authStore.userToken.token)
-            .submit();
+                .auth(this.authStore.userToken.token)
+                .submit();
 
             this.setState({
-                isLikes : !this.state.isLikes
+                isLikes: !this.state.isLikes
             })
 
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
     }
 
     _loadData = async () => {
 
-        try{
+        try {
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.props.route.params.id}`).auth(this.props.authStore.userToken.token).submit();
 
             console.log(response);
 
             this.setState({
-                isLoading : false,
+                isLoading: false,
                 data: response.data,
-                isLikes : !response.data.canLikes
+                isLikes: !response.data.canLikes
             });
 
-        }catch(e){
+        } catch (e) {
             console.log(e);
             this.props.navigation.goBack();
         }
 
+    }
+
+    _storyDelete = async () => {
+        try{
+            await Request.delete(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}`)
+            .auth(this.props.authStore.userToken.token).submit();
+    
+            this.props.navigation.goBack();
+        }catch(e){
+            console.log(e);
+        }
     }
 
     componentDidMount() {
@@ -73,29 +84,34 @@ export default class DetailStory extends Component {
     }
 
     render() {
-        console.log(this.state.isLikes);
-
         return (
             <View style={{ flex: 1 }}>
                 <View style={{ alignSelf: 'flex-end' }}>
                     <Menu
                         ref={ref => { this._storyControlMenuRef = ref }}>
+                        {!this.state.isLoading && this.state.data.isOwner && (
+                            <View>
+                                <MenuItem onPress={() => {
+                                    this._storyControlMenuRef.hide();
+
+                                    this.props.navigation.navigate('WriteStory', {
+                                        purposeId: this.state.data.purpose.id,
+                                        story: this.state.data
+                                    });
+
+
+                                }}>수정하기</MenuItem>
+                                <MenuDivider />
+                                <MenuItem onPress={() => {
+                                    this._storyControlMenuRef.hide();
+                                    this._storyDelete();
+                                }}>삭제하기</MenuItem>
+                                <MenuDivider /></View>)
+                        }
                         <MenuItem onPress={() => {
                             this._storyControlMenuRef.hide();
 
                         }}>신고하기</MenuItem>
-                        <MenuDivider/>
-                        {!this.state.isLoading && this.state.data.isOwner && 
-                        <MenuItem onPress={() => {
-                            this._storyControlMenuRef.hide();
-                            this.props.navigation.navigate('WriteStory', {
-                                purposeId : this.state.data.purpose.id,
-                                story : this.state.data
-                            });
-                        }}>
-                            수정하기
-                        </MenuItem>
-                        }
                     </Menu>
                 </View>
                 {this.state.isLoading ? <Loader /> : (
@@ -129,7 +145,7 @@ export default class DetailStory extends Component {
                                     <TouchableOpacity style={{ marginTop: 30, marginBottom: 20, flexDirection: 'row', elevation: 5, height: 90, width: '100%', backgroundColor: 'white', marginVertical: 10 }}
                                         onPress={() => {
                                             this.props.navigation.navigate('LoadUserPurpose', {
-                                                id : this.state.data.purpose.id
+                                                id: this.state.data.purpose.id
                                             })
                                         }}
                                     >
@@ -144,54 +160,54 @@ export default class DetailStory extends Component {
                                         <View style={{ flex: 1 }}>
                                             <Text
                                                 numberOfLines={1}
-                                        style={styles.purposeNameFont}>{this.state.data.purpose.name}</Text>
+                                                style={styles.purposeNameFont}>{this.state.data.purpose.name}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <View style={{borderBottomWidth: 0.3, borderTopWidth: 0.3,  paddingHorizontal: 10, paddingVertical: 10, backgroundColor:'white', width: '100%', flexDirection : 'row', justifyContent: 'space-between', alignItems:'center'}}>
+                            <View style={{ borderBottomWidth: 0.3, borderTopWidth: 0.3, paddingHorizontal: 10, paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text style={styles.scoreFont}>
                                     좋아요 {this.state.data.likesCount}
                                 </Text>
                                 <Text style={styles.scoreFont}>
-                                    댓글 {this.state.data.commentCount}  
+                                    댓글 {this.state.data.commentCount}
                                 </Text>
                             </View>
                             {
                                 this.state.data.comments.map((comment) => (
-                                    <View style={{marginVertical: 10}}>
+                                    <View style={{ marginVertical: 10 }}>
                                         <Comment
-                                        user={comment.user}
-                                        createDate={new EasyDate(comment.createDate)}
-                                        content={comment.content}
+                                            user={comment.user}
+                                            createDate={new EasyDate(comment.createDate)}
+                                            content={comment.content}
                                         />
                                     </View>
                                 ))
                             }
 
                         </ScrollView >
-                        <View style={{ backgroundColor:'white', paddingVertical: 15, flexDirection: 'row', justifyContent:'flex-start', alignItems:'center'}}>
-                        <ImageButton
-                                    backgroundStyle={{
-                                        marginLeft: 20
-                                    }}
-                                    imageStyle={{ width: 27, height: 25, tintColor: this.state.isLikes ? 'blue' : undefined }}
-                                    source={require('../../../../../../../asset/icon/likes_icon.png')}
-                                    onPress={this._toggleLikes}
-                                />
-        
-                        <ImageButton
+                        <View style={{ backgroundColor: 'white', paddingVertical: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <ImageButton
                                 backgroundStyle={{
-                                    marginLeft : 20
+                                    marginLeft: 20
+                                }}
+                                imageStyle={{ width: 27, height: 25, tintColor: this.state.isLikes ? 'blue' : undefined }}
+                                source={require('../../../../../../../asset/icon/likes_icon.png')}
+                                onPress={this._toggleLikes}
+                            />
+
+                            <ImageButton
+                                backgroundStyle={{
+                                    marginLeft: 20
                                 }}
                                 imageStyle={{ width: 27, height: 25 }}
                                 source={require('../../../../../../../asset/button/comment_button.png')}
                                 onPress={() => {
                                     this.props.navigation.navigate('PublicNavigation', {
-                                        screen : 'CommnetView',
-                                        params : {
-                                            entity : Model.STORY,
-                                            id : this.state.data.id
+                                        screen: 'CommnetView',
+                                        params: {
+                                            entity: Model.STORY,
+                                            id: this.state.data.id
                                         }
                                     })
                                 }}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, PermissionsAndroid } from 'react-native';
 import purposeStyles from './style/PurposeStyle';
 import useStores from '../../../../mobX/helper/useStores'
 import ImageButton from '../../../atom/button/ImageButton';
@@ -16,7 +16,6 @@ export default function PurposePhotoWrite() {
     const navigation = useNavigation();
 
     const setPhoto = (photo) => {
-        console.log(photo);
         setPurposePhoto(photo);
         purposeWriteStore.changePermit(true);
         
@@ -50,7 +49,16 @@ export default function PurposePhotoWrite() {
                     source={
                         purposePhoto ? {uri : purposeWriteStore.isChangePhoto ? purposePhoto.uri : purposePhoto} : require('../../../../../../asset/button/select_thumbnail_button.png')
                     }
-                    onPress={() => {
+                    onPress={async () => {
+
+                        const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+                        if (!hasPermission) {
+                            const { status } = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+                            if (status != 'granted') {
+                                return;
+                            }
+                        }
+
                         navigation.navigate('SelectAlbum' , {
                             setPurposePhoto : setPhoto
                         })

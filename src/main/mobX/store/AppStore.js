@@ -1,8 +1,7 @@
-import { AsyncStorage } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import { observable, action } from 'mobx';
 import CaterPlannerScheduler from '../../native/CaterPlannerScheduler';
-import BriefingNotificationManager from '../../util/BriefingNotificationManager';
-import PurposeService from '../../rest/service/PurposeService';
+import NotificationManager from '../../util/NotificationManager';
 
 export default class AppStore {
 
@@ -15,28 +14,7 @@ export default class AppStore {
     userOptions;
 
     constructor() {
-        BriefingNotificationManager.configure();
-    
-        // (async () => {
-        //     const purposes = await PurposeService.getInstance().findPurposeForBrifingList();
-        //     const goalCount = 0;
-
-        //     let title;
-        //     let message;
-
-        //     purposes.forEach((purpose, index) => {
-        //         goalCount += purpose.detailPlans.length;
-        //         message += `${purpose.name} - ${purpose.detailPlans.length}개` + (index != purposes.length - 1 ? '\n' : '');
-        //     })
-
-        //     title = `오늘 수행해야할 목표가 ${goalCount}개 있습니다.`
-
-        //     BriefingNotificationManager.show(title, message);
-        //     PushNotification.setApplicationIconBadgeNumber(0);
-        // })();
-
-
-        // BriefingNotificationManager.show('title', 'content')
+        NotificationManager.configure();
     }
 
     boot = async () => {
@@ -53,6 +31,8 @@ export default class AppStore {
         }
 
         this.userOptions = await AsyncStorage.getItem('USER_OPTIONS');
+        // console.log('start SCHEDULEERR~!!!!!!!!!!!!!!')
+        // this.onScheduler();
     }
 
     @action

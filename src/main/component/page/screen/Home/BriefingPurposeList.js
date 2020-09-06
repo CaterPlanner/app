@@ -4,7 +4,7 @@ import PurposePaper from '../../../atom/button/PurposePaper';
 import Loader from '../../Loader';
 import PurposeService from '../../../../rest/service/PurposeService';
 
-import BriefingNotificationManager from '../../../../util/BriefingNotificationManager';
+import NotificationManager from '../../../../util/NotificationManager';
 import GlobalConfig from '../../../../GlobalConfig';
 import Request from '../../../../util/Request';
 import { inject } from 'mobx-react';
@@ -28,7 +28,6 @@ export default class BriefingPurposeList extends Component {
             const purposes = await PurposeService.getInstance().findActivePurposes();
 
 
-            console.log(purposes);
             this.setState({
                 purposes: purposes,
                 isLoading: false
@@ -40,6 +39,7 @@ export default class BriefingPurposeList extends Component {
     }
 
     _acceptPurpose = async (index, updatePurpose) => {
+        console.log(updatePurpose);
         const newPurposes = this.state.purposes.slice();
         newPurposes[index] = updatePurpose;
         this.setState({
@@ -52,7 +52,7 @@ export default class BriefingPurposeList extends Component {
     }
 
     componentWillUnmount() {
-        BriefingNotificationManager.show(this.state.data);
+        NotificationManager.briefingAlarmShow(this.state.purposes);
     }
 
     render() {
@@ -62,10 +62,12 @@ export default class BriefingPurposeList extends Component {
                     <FlatList
                         style={{ flex: 1 }}
                         contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 10 }}
-                        data={this.state.data}
+                        data={this.state.purposes}
                         renderItem={({ item: purpose, index }) => {
+                            console.log(purpose.detailPlans)
+                            const goalList = purpose.detailPlans.filter(g => g.isNowBriefing);
 
-                            if (purpose.detailPlans.length == 0)
+                            if (goalList.length == 0)
                                 return;
 
                             return (
@@ -73,13 +75,13 @@ export default class BriefingPurposeList extends Component {
                                     <PurposePaper
                                         imageUri={purpose.photoUrl}
                                         name={purpose.name}
-                                        count={purpose.detailPlans.length}
+                                        count={goalList.length}
                                         onPress={() => {
                                             this.props.navigation.navigate('BriefingGoalList', {
                                                 purpose: purpose,
-                                                goals: purpose.detailPlans,
+                                                goals: goalList,
                                                 acceptData: (updatePurpose) => {
-                                                    this._acceptData(index, updatePurpose)
+                                                    this._acceptPurpose(index, updatePurpose)
                                                 }
                                             })
                                         }}

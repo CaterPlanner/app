@@ -1,4 +1,3 @@
-import State from '../State';
 import PurposeRepository from '../repository/PurposeRepository';
 import GoalRepository from '../repository/GoalRepository';
 import BriefingRepository from '../repository/BriefingRepository';
@@ -7,6 +6,8 @@ import SQLiteManager from '../../util/SQLiteManager';
 import Goal from '../model/Goal';
 import Purpose from '../model/Purpose';
 import PurposeWriteBoard from '../../component/page/screen/purposeWrite/PurposeWriteBoard';
+import GlobalConfig from '../../GlobalConfig';
+import Request from '../../util/Request';
 
 export default class PurposeService {
 
@@ -22,87 +23,71 @@ export default class PurposeService {
         this.db = SQLiteManager.getConnection()
     }
 
+
     create = (purpose, detailPlans) => {
         return new Promise((resolve, reject) => {
-            this.db.transaction(
-                async (txn) => {     
-                    PurposeRepository.insert(txn, purpose, 
-                        async (txn, res) => {
-                            if(detailPlans){
-                                if(purpose.stat == 1)
-                                    throw '대기 중인 목적은 세부목적을 지정할 수 없습니다'
+            SQLiteManager.transaction(this.db, async (finish) => {
+                await PurposeRepository.insert(this.db, purpose);
+                
+                if(detailPlans){
+                    if(purpose.stat == 1)
+                        throw '대기 중인 목적은 세부목적을 지정할 수 없습니다'
 
-                                for(goal of detailPlans){
-                                    await (new Promise( (resolve) => {
-                                        GoalRepository.insert(txn, goal, 
-                                            () => resolve())
-                                    }));
-                                }
-                            }
-                        })
-
-                    resolve();
+                    for(goal of detailPlans){
+                        await GoalRepository.insert(txn, goal);
+                    }
                 }
-                , reject)
+
+                finish();
+                console.log('login end');
+            })
+            .then((data) => resolve(data))
+            .catch(e => reject(e));
         });
     }
 
     initAll = (responsePurposes) => {
         return new Promise((resolve, reject) => {
-            this.db.transaction(
-                async (txn) => {
-                    PurposeRepository.deleteAll(txn,
-                        async (txn, res) => {
-                            for (purpose of responsePurposes) {
-                            
-                                await (new Promise((resolve) => {
-                                    this.db.transaction(async (txn) => {
-                                        console.log(1);
-                                        PurposeRepository.insert(txn, new Purpose(purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat),
-                                        async (txn, res) => {
-                                            console.log(2);
-
-                                            if (purpose.detailPlans.length != 0) {
-                                                if (purpose.stat == 1)
-                                                    throw '대기 중인 목적은 세부목적을 지정할 수 없습니다'
-                                                GoalRepository.insertAll(txn, 
-                                                    purpose.detailPlans.map((goal) => (
-                                                        new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate, goal.stat)
-                                                    ))
-                                                    ,() => {resolve();})
-                                                // for (goal of purpose.detailPlans) {
-                                                //     await (new Promise((resolve) => {
-
-                                                //         GoalRepository.insert(txn, new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate, goal.stat),
-                                                //             () => { console.log('sdf'); resolve(); }
-                                                //         );
-                                                //     }))
-                                                // }
-                                            }
-                                            resolve();
-                                        }, reject)
-                                    })
-            
-                                }))
-                            }
-
-
-                            resolve();
-                        });
-                },
-                reject)
+            SQLiteManager.transaction(this.db, async (resolve, reject) => {   
+                try{
+                    await PurposeRepository.deleteAll(this.db);
+                    console.log('ehllo');
+                    for(purpose of responsePurposes){
+                        await PurposeRepository.insert(this.db, new Purpose(purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat))
+                    
+                        if(purpose.detailPlans.length != 0){
+                            if (purpose.stat == 1)
+                                throw '대기 중인 목적은 세부목적을 지정할 수 없습니다'
+                        }
+    
+                        if(purpose.detailPlans.length == 0)
+                            continue;
+    
+                       await GoalRepository.insertAll(this.db, purpose.detailPlans.map((goal) => (
+                            new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate)
+                        )));
+    
+                    }
+                }catch(e){
+                    reject(e);
+                }
+                resolve();
+            })
+            .then(data => resolve(data))
+            .catch(e => reject(e))
         })
     }
 
+    
+
     read = (id) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
-                PurposeRepository.selectById(this.db, id, (purpose) => {
-                    GoalRepository.selectByPurposeId(this.db, id, (goals) => {
-                        purpose.setDetailPlans(goals);
-                        resolve(purpose);
-                    })
-                })
+                const purpose = await PurposeRepository.selectById(this.db, id);
+                const goals = await GoalRepository.selectByPurposeId(this.db, id);
+
+                purpose.setDetailPlans(goals);
+                resolve(purpose);
             } catch (e) {
                 reject(e);
             }
@@ -110,38 +95,47 @@ export default class PurposeService {
     }
 
     findActivePurposes = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
-                PurposeRepository.selectByStatIsActive(this.db, async (purposes) => {
-                    
-                    const activePurposeIdList = purposes.map((purpose) => purpose.id);
+                let purposes = await PurposeRepository.selectByStatIsActive(this.db);
+
+                if(purposes.length == 0){
+                    resolve();
+                    return;
+                }
+
+                let activePurposes = purposes.filter(p => !p.isProcceedEnd);
+
+                if(activePurposes.length == 0){
+                    resolve();
+                    return;
+                }
+
+                purposes = purposes.filter(p => !p.isProcceedEnd);
+
+                const activePurposeIdList = purposes.map((purpose) => purpose.id);
+
+                const goalList = await GoalRepository.selectInPurposeId(this.db, activePurposeIdList);
 
 
-                    const goalList = await (new Promise((resolve) => {
-                        GoalRepository.selectByStatIsActiveInPurposeId(this.db, activePurposeIdList, (res) => resolve(res));
-                    }));
-
-                    purposes.forEach((purpose) => {
-                        purpose.detailPlans = goalList.filter(g => g.purposeId == purpose.id);
-                    })
-                
-                    resolve(purposes);
-                    
-                });
+                purposes.forEach((purpose) => {
+                    purpose.detailPlans = goalList.filter(g => g.purposeId == purpose.id);
+                })
+            
+                resolve(purposes);
             } catch (e) {
-                console.log('hello');
+                console.log(e);
                 reject(e);
             }
         })
     }
 
     findPurposesForCard = () => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
-                PurposeRepository.selectAll(this.db, (res) => {
-                    resolve(res);
-                })
-
+                resolve(
+                    await PurposeRepository.selectAll(this.db)
+                );
             } catch (e) {
                 reject(e);
             }
@@ -150,35 +144,37 @@ export default class PurposeService {
 
     modify = (id, purpose) => {
         return new Promise(async (resolve, reject) => {
-            this.db.transaction(
-                async (txn) => {
-                    PurposeRepository.updatePurposeDate(txn, id, purpose, () => resolve());
-                }
-            , reject);
+            try{
+                await PurposeRepository.updatePurposeDate(this.db, id, purpose);
+                resolve();
+            }catch(e){
+                reject(e);
+            }
         });
     }
 
     groundModify = (id, purpose) => {
         return new Promise(async (resolve, reject) => {
-            this.db.transaction(
-                async (txn) => {
-                    PurposeRepository.updatePurposeDate(txn, id,  purpose, () => {
-                        GoalRepository.deleteByPurposeId(txn, id, () => {
-                            GoalRepository.insertAll(txn, purpose.detailPlans, () => { console.log('dbTY'); resolve();});
-                        
-                        })
-                    });
+            SQLiteManager.transaction(this.db, async (resolve, reject) => {
+                try{
+                    await PurposeRepository.updatePurposeDate(this.db, id, purpose);
+                    await GoalRepository.deleteByPurposeId(this.db, id);
+                    await GoalRepository.insertAll(this.db, purpose.detailPlans);
+                    resolve();
+                }catch(e){
+                    reject(e);
                 }
-                , reject)
+            })
+            .then(() => resolve())
+            .catch(e => reject(e))
         })
     }
 
     delete = (id) => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             try {
-                PurposeRepository.deleteById(this.db, id, () => {
-                    resolve();
-                });
+                await PurposeRepository.deleteById(this.db, id);
+                resolve();
             } catch (e) {
                 reject(e);
             }
@@ -188,7 +184,8 @@ export default class PurposeService {
     startSchedule = (id) => {
         return new Promise(async (resolve, reject) => {
             try {
-                PurposeRepository.updateStatById(this.db, id, State.PROCEED, () => resolve());
+                await PurposeRepository.updateStatById(this.db, id, State.PROCEED);
+                resolve();
             } catch (e) {
                 reject(e);
             }
@@ -198,7 +195,9 @@ export default class PurposeService {
     stopSchedule = (id) => {
         return new Promise(async (resolve, reject) => {
             try {
-                PurposeRepository.updateStatById(this.db, id, State.PROCEED, () => resolve());
+                await PurposeRepository.updateStatById(this.db, id, State.PROCEED);
+                resolve();
+
             } catch (e) {
                 reject(e);
             }
@@ -207,119 +206,101 @@ export default class PurposeService {
 
     refresh = () => {
         return new Promise((resolve, reject) => {
-            this.db.transaction((txn) => {
-                const today = EasyDate.now();
-                PurposeRepository.selectByStatIsActive(txn, async (purposes) => {
-
+            SQLiteManager.transaction(this.db, async (resolve, reject) => {
+                try{
+                    const today = EasyDate.now();
+                    const purposes = await PurposeRepository.selectByStatIsActive(this.db);
+    
                     for(purpose of purposes){
-                        await (new Promise((resolve) => {
-                            GoalRepository.selectByPurposeId(txn, purposes.id, async (goals) => {
-                                for(goal of goals){
-                                    if (State.isPass(goal.stat))
-                                        continue;
-        
-                                    if (today.isAfter(goal.endDate)) {
-                                        goal.stat = goal.achieve >= 80 ? State.SUCCEES : State.FAIL;
-                                    } else if (goal.stat == State.WAIT && goal.isActive) {
-                                        goal.stat = State.PROCEED;
-                                    }
+                        if(purposes.isProcceedEnd)
+                            continue;
 
-                                    await (new Promise((resolve) => {
-                                        GoalRepository.updateStatByKey(txn, purpose.id, goal.id, goal.stat, () => resolve() )
-                                    }))
+                        const goals = await GoalRepository.selectByPurposeId(this.db, purpose.id);
+                        // for(goal of goals){
 
-                                }
-                                resolve();
-                            })
-                        }))
 
-                        if (today.isAfter(purpose.endDate)) {
-                            purpose.stat = detailPlans.achieve >= 80 ? State.SUCCEES : State.FAIL;
-                            await (new Promise((resolve) => {
-                                PurposeRepository.updateStatById(purpose.id, purpose.stat, () => resolve());
-                            }))
-                        }
+                        //     if (State.isPass(goal.stat))
+                        //         continue;
+                        //     if (today.isBefore(goal.endDate)) {
+                        //         goal.stat = goal.achieve >= 80 ? State.SUCCEES : State.FAIL;
+                        //     } else if (goal.stat == State.WAIT && goal.isActive) {
+                        //         goal.stat = State.PROCEED;
+                        //     }
 
-                        
+                        //     await GoalRepository.updateByKey(this.db, purpose.id, goal.id, goal);
+                        // }
+
+                        purpose.setDetailPlans(goals);
+
+                        // if (today.isBefore(purpose.endDate)) {
+                        //     purpose.stat = State.END;
+                        //     await PurposeRepository.updateStatById(this.db, purpose.id, purpose.stat);
+                        // }
                     }
 
-                    resolve();
+                    resolve(purposes);
 
-                });
-            }, reject);
+                }catch(e){
+                    console.log(e);
+                    reject(e);
+                }
+            })
+            .then((purposes) => resolve(purposes))
+            .catch(e => reject(e))
         })
     }
-
-    addBriefing = (id, purpose) => {
+    addBriefing = (purpose, clearGoalIdList, token) => {
         return new Promise((resolve, reject) => {
+            SQLiteManager.transaction(this.db, async (resolve, reject) => {
+                try{
+                    let checkedGoals = [];
+                    for(goalId of clearGoalIdList){
 
-            this.db.transaction((txn) => {
 
-                const goal = purpose.detailPlans[id];
+                        const goal = purpose.detailPlans[goalId];
+                        await BriefingRepository.insert(this.db, purpose.id, goal.id);
+                        
 
-                BriefingRepository.insert(txn, purpose.id, goal.id, () => {
-                    goal.lastBriefingDate = EasyDate.now();
-                    goal.briefingCount = goal.briefingCount + 1;
+                        goal.lastBriefingDate = EasyDate.now();
+                        goal.briefingCount = goal.briefingCount + 1;
+    
+                        // if (goal.achieve == 100 && goal.stat == State.PROCEED) {
+                        //     goal.stat = State.SUCCEES;
+                        // }
+    
+                        // await GoalRepository.updateByKey(this.db, purpose.id, goal.id, goal);
+    
+                        // if (purpose.achieve == 100 && purpose.stat == State.PROCEED) {
+                        //     purpose.stat = State.END;
+                        //     await PurposeRepository.updateStatById(this.db, purpose.id, purpose.stat);
+                        // }
 
-                    if (goal.achieve == 100 && goal.stat == State.PROCEED) {
-                        goal.stat = State.SUCCEES;
+                        checkedGoals.push(purpose.detailPlans[goalId])
                     }
 
-                    GoalRepository.updateByKey(txn, purpose.id, goal.id, goal, () => {
-                        if (purpose.achieve == 100 && purpose.stat == State.PROCEED) {
-                            purpose.stat = State.SUCCEES;
-                            PurposeRepository.updateStatByKey(txn, purpose.id, purpose.stat, () => resolve());
-                        }else{
-                            resolve();
-                        }
-                    });
+                    await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}/update`, JSON.stringify({
+                        achieve: purpose.achieve,
+                        stat : purpose.stat,
+                        modifiedGoalAchieve: checkedGoals.map((goal) => ({
+                            id: goal.id,
+                            briefingCount: goal.briefingCount,
+                            lastBriefingDate: goal.lastBriefingDate.toString(),
+                            stat: goal.stat
+                        }))
+                    })).auth(token).submit();
 
-                })
+                    resolve(purpose);    
 
-            }, reject);
+                }catch(e){
+                    reject(e);
+                }
+
+            })
+            .then((data) => resolve(data))
+            .catch(e => reject(e));
         })
     }
 
-    //수정 필요
-    // addBriefing = (id, goalId) => {
-    //     return new Promise((resolve, reject) => {
-
-    //         this.db.transaction((txn) => {
-
-    //             PurposeRepository.selectById(txn, id, (purpose) => {
-    //                 BriefingRepository.insert(txn, purpose.id, goalId, () => {
-    //                     GoalRepository.selectByPurposeId(txn, purpose.id, async (goals) => {
-                    
-    //                         purpose.setDetailPlans(goals);
-    //                         const goal = purpose.detailPlans[goalId];
-
-    //                         goal.lastBriefingDate = EasyDate.now();
-    //                         goal.briefingCount = goal.briefingCount + 1;
-
-    //                         if (goal.achieve == 100 && goal.stat == State.PROCEED) {
-    //                             goal.stat = State.SUCCEES;
-    //                         }
-
-    //                         await (new Promise((resolve) => {
-    //                             GoalRepository.updateByKey(txn, purpose.id, goal.id, goal, () => resolve());
-    //                         }));
-
-    //                         if (purpose.achieve == 100 && purpose.stat == State.PROCEED) {
-    //                             purpose.stat = State.SUCCEES;
-    //                             await (new Promise((resolve) => {
-    //                                 PurposeRepository.updateStatByKey(txn, purpose.id, purpose.stat, () => resolve());
-    //                             }));
-    //                         }
-
-
-    //                         resolve();
-
-    //                     })
-    //                 });
-    //             })
-    //         }, reject);
-    //     })
-    // }
 
 }
 

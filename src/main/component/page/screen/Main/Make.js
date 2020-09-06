@@ -6,7 +6,9 @@ import { View } from 'react-native';
 
 export default function Make({ navigation }) {
 
-    navigation.navigate('CreateNavigation');
+    // navigation.navigate('CreateNavigation', {
+    //     type : PurposeWriteType.CREATE
+    //   });
 
     return (
         <View>

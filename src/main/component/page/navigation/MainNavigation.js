@@ -6,9 +6,24 @@ import SearchNavigation from './SearchNavigation'
 import StoryNavigation from './StoryNavigation'
 import Make from '../screen/main/Make'
 import PublicNavigation from './PublicNavigation'
-
+import { TabActions } from '@react-navigation/native';
+import { cos } from 'react-native-reanimated';
+import { PurposeWriteType } from '../../../AppEnum';
 
 const Tab = createBottomTabNavigator();
+
+const moveTab = (navigation, name) => {
+
+  // if(navigation.canGoBack())
+  //   navigation.popToTop();
+
+  const jumptoAction = TabActions.jumpTo(name);
+  navigation.dispatch(jumptoAction);
+}
+
+
+
+
 const MainNavigation = () => {
 
   return (
@@ -23,7 +38,7 @@ const MainNavigation = () => {
               iconSource = require('../../../../../asset/icon/tab_icon_home.png');
               break;
             case "SearchNavigation":
-              iconSource =  require('../../../../../asset/icon/tab_icon_search.png');
+              iconSource = require('../../../../../asset/icon/tab_icon_search.png');
               break;
             case "Make":
               iconSource = require('../../../../../asset/icon/tab_icon_make.png');
@@ -36,7 +51,7 @@ const MainNavigation = () => {
               break;
           }
 
-          return <Image source={iconSource} resizeMode="stretch"  style={{tintColor : focused ? '#25B046' : undefined , width: '90%', height: '100%'}} />
+          return <Image source={iconSource} resizeMode="stretch" style={{ tintColor: focused ? '#25B046' : undefined, width: '90%', height: '100%' }} />
         },
       })}
       tabBarOptions={{
@@ -52,16 +67,50 @@ const MainNavigation = () => {
         style: { backgroundColor: 'white', height: 50 },
       }}
     >
-      <Tab.Screen name="HomeNavigation" component={HomeNavigation} />
-      <Tab.Screen name="SearchNavigation" component={SearchNavigation} />
-      <Tab.Screen name="Make" component={Make} listeners={({navigation}) => ({
-        tabPress : e => {
-          navigation.navigate('CreateNavigation');
-          e.preventDefault();
-        },
-      })} />
-      <Tab.Screen name="StoryNavigation" component={StoryNavigation} />
-      <Tab.Screen name="PublicNavigation" component={PublicNavigation} />
+      <Tab.Screen name="HomeNavigation" component={HomeNavigation}
+        listeners={({ navigation }) => ({
+          tabPress : e => {
+            e.preventDefault();
+            moveTab(navigation, "HomeNavigation");
+          }
+        })}
+      />
+      <Tab.Screen name="SearchNavigation" component={SearchNavigation}
+        listeners={({ navigation }) => ({
+          tabPress : e => {
+            e.preventDefault();
+            moveTab(navigation, "SearchNavigation");
+          }
+        })}
+      />
+      <Tab.Screen name="Make" component={Make}
+        listeners={({ navigation }) => ({
+          tabPress: e => {
+            navigation.navigate('CreateNavigation', {
+              screen: 'PurposeWriteBoard',
+              params: {
+                  type : PurposeWriteType.CREATE
+              }
+          })
+            e.preventDefault();
+          },
+        })} />
+      <Tab.Screen name="StoryNavigation" component={StoryNavigation}
+        listeners={({ navigation }) => ({
+          tabPress : e => {
+            e.preventDefault();
+            moveTab(navigation, "StoryNavigation");
+          }
+        })}
+      />
+      <Tab.Screen name="PublicNavigation" component={PublicNavigation}
+        listeners={({ navigation }) => ({
+          tabPress : e => {
+            e.preventDefault();
+            moveTab(navigation, "PublicNavigation");
+          }
+        })}
+      />
     </Tab.Navigator>
   );
 }

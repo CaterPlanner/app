@@ -29,11 +29,15 @@ export default class EasyDate extends Date{
     }
 
     isAfter = (date) => {
-        return this.getTime() < date.getTime();
+        const a = EasyDate.trim(this);
+        const b = EasyDate.trim(date);
+        return a.getTime() < b.getTime();
     }
 
     isBefore = (date) => {
-        return this.getTime() > date.getTime();
+        const a = EasyDate.trim(this);
+        const b = EasyDate.trim(date);
+        return a.getTime() > b.getTime();
     }
 
     minusDays = (days) => {

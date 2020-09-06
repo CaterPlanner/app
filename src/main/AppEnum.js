@@ -10,6 +10,14 @@ State.isPass = (stat) => {
 }
 
 
+export const PurposeWriteType = {
+    CREATE : 0,
+    MODIFY: 1,
+    GROUND_MODIFY : 2,
+    FOLLOW : 3,
+    RETRY: 4
+}
+
 export const Model = {
     PURPOSE : 0,
     STORY: 1

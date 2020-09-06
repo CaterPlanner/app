@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {View, FlatList} from 'react-native';
 import DetailPlanCheckBox from '../../../atom/checkbox/DetailPlanCheckbox';
 import PurposeService from '../../../../rest/service/PurposeService';
+import { inject } from 'mobx-react';
 
+@inject(['authStore'])
 export default class BriefingGoalList extends Component{
 
     constructor(props){
@@ -12,7 +14,7 @@ export default class BriefingGoalList extends Component{
             goals : this.props.route.params.goals,
         }
 
-        this.clearGoalIdList = [];
+        this.clearGoalIdStat = new Array(this.state.goals.length);
 
         this.props.navigation.setParams({
             save : this.save
@@ -22,33 +24,15 @@ export default class BriefingGoalList extends Component{
     save = async () => {
 
         try{
-            const purpose = this.route.params.purpose;
-            let checkedGoals = [];
-
-            for(id of this.clearGoalIdList){
-                try{
-                    await PurposeService.getInstance().addBriefing(id, purpose); //참조 이용
-                    checkedGoals.push(purpose.detailPlans[id]);
-                }catch(e){
-                    console.log(e);
-                }
-            }
-
-            const updatedPurpose = PurposeService.read(purpose.id);
-    
-            await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${updatedPurpose.id}/update`, JSON.stringify({
-                achieve: updatedPurpose.achieve,
-                stat: updatedPurpose.stat,
-                modifiedGoalAchieve: checkedGoals.map((goal) => ({
-                    id: goal.id,
-                    briefingCount: goal.briefingCount,
-                    lastBriefingDate: goal.lastBriefingDate.toString(),
-                    stat: goal.stat
-                }))
-            })).auth(this.props.authStore.userToken.token).submit();
-
+            const updatedPurpose = await PurposeService.getInstance().addBriefing(this.props.route.params.purpose, 
+                this.clearGoalIdStat.map((r, index) => {
+                    if(r)
+                        return index;
+                }), this.props.authStore.userToken.token);
 
             this.props.route.params.acceptData(updatedPurpose);
+
+            this.props.navigation.goBack();
 
         }catch(e){
             console.log(e);
@@ -59,10 +43,6 @@ export default class BriefingGoalList extends Component{
         if(this.state.goals.length == 0){
             this.props.navigation.goBack();
         }
-    }
-
-    componentWillUnmount(){
-        this._saveCheck();
     }
 
     render(){
@@ -78,27 +58,7 @@ export default class BriefingGoalList extends Component{
                             name={item.name}
                             acheive={item.acheive}
                             onChange={() => {
-
-                                this.clearGoalIdList.push(item.id);
-                                // this.setState({
-                                //     goals : [
-                                //     ...this.state.goals.slice(0, index),
-                                //     ...this.state.goals.slice(index + 1)]
-                                // })
-
-                                // PurposeService.getInstance().addBriefing(this.props.route.params.purpose.id, item.id)
-                                // .then(() => {
-                                //     this.clearGoalIdList.push(item.id);
-                                //     this.setState({
-                                //         goals : [
-                                //         ...this.state.goals.slice(0, index),
-                                //         ...this.state.goals.slice(index + 1)]
-                                //     })
-                                // })
-                                // .catch((e) => {
-                                //     console.log(e);
-                                // })
-                                
+                                this.clearGoalIdStat[index] = !this.clearGoalIdStat[index];  
                             }}
                         />
                     </View>

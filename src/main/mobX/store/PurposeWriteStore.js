@@ -1,13 +1,8 @@
 import { observable, action } from "mobx";
 import Purpose from "../../rest/model/Purpose";
 import EasyDate from '../../util/EasyDate';
+import { PurposeWriteType, State } from "../../AppEnum";
 
-
-export const PurposeWriteType = {
-    CREATE : 0,
-    MODIFY: 1,
-    GROUND_MODIFY : 2,
-}
 
 export default class PurposeWriteStore{
 
@@ -32,15 +27,83 @@ export default class PurposeWriteStore{
     isChangePhoto;
 
 
-    start = (endIndex, purpose) => {
+    start = (endIndex, purpose, type) => {
         this.activeIndex = 0;
         this.endIndex = endIndex;
+        this.purpose = new Purpose(null, "", "", null, 0,  EasyDate.now(), new EasyDate().plusDays(1), 0 );
+        this.writeType = type;
+        this.permitCache = [false, false, false, false];
 
-        this.purpose = purpose ? purpose : new Purpose(null, "", "", null, 0,  EasyDate.now(), new EasyDate().plusDays(1), 0 );
-        this.writeType = purpose ? PurposeWriteType.MODIFY : PurposeWriteType.CREATE;
+        let diffDay;
+        console.log(purpose);
+
+        switch(this.writeType){
+            case PurposeWriteType.CREATE:
+                break;
+            case PurposeWriteType.MODIFY:
+                this.purpose = purpose;
+                this.permitCache = [true, true, true, true]
+
+                // const diffDay = EasyDate.between(EasyDate.now(), purpose.startDate).day;
+
+                // this.purpose.startDate = EasyDate.now();
+
+                // this.purpose.detailPlans.forEach((goal) => {
+                //     goal.startDate = goal.startDate.plusDays(diffDay);
+                //     goal.endDate = goal.endDate.plusDays(diffDay);
+
+                //     if(goal.endDate.isBefore(this.purpose.endDate)){
+                //         this.purpose.endDate = goal.endDate;
+                //     }
+                // })
+
+                break;
+            case PurposeWriteType.FOLLOW:
+                this.purpose.detailPlans = purpose.detailPlans;
+                this.permitCache =  [false, false, false, true]
+                
+                diffDay = EasyDate.between(EasyDate.now(), purpose.startDate).day;
+
+                this.purpose.startDate = EasyDate.now();
+
+                this.purpose.detailPlans.forEach((goal) => {
+                    goal.startDate = goal.startDate.plusDays(diffDay);
+                    goal.endDate = goal.endDate.plusDays(diffDay);
+
+                    if(goal.endDate.isBefore(this.purpose.endDate)){
+                        this.purpose.endDate = goal.endDate;
+                    }
+                })
+
+                break;
+            case PurposeWriteType.RETRY:
+                this.purpose = purpose;
+                this.permitCache = [true, true, true, true];
+
+                this.purpose.stat = State.PROCEED;
+
+                diffDay = EasyDate.between(EasyDate.now(), this.purpose.startDate).day;
+
+                this.purpose.startDate = EasyDate.now();
+
+                this.purpose.detailPlans.forEach((goal) => {
+               
+                    goal.startDate = goal.startDate.plusDays(diffDay);
+                    goal.endDate = goal.endDate.plusDays(diffDay);
+
+                    if(goal.endDate.isBefore(this.purpose.endDate)){
+                        this.purpose.endDate = goal.endDate;
+                    }
+                })
+                break;
+        }
+
+
+        // this.purpose = purpose ? purpose : new Purpose(null, "", "", null, 0,  EasyDate.now(), new EasyDate().plusDays(1), 0 );
 
         //date awlays true
-        this.permitCache = purpose ? [true, true, true, true] : [false, false, false, false];
+        // this.permitCache = purpose ? [true, true, true, true] : [false, false, false, false];
+
         this.isSelectPhoto = false;
         this.isFinish = false;
         this.isLast = false;
@@ -117,16 +180,6 @@ export default class PurposeWriteStore{
         formData.append('startDate', this.purpose.startDate.toString());
         formData.append('endDate', this.purpose.endDate.toString());
         formData.append('stat', this.purpose.stat);
-
-        console.log( JSON.stringify(
-            this.purpose.detailPlans.map((goal) => {
-                return {
-                    ...goal,
-                    startDate: goal.startDate.toString(),
-                    endDate: goal.endDate.toString()
-                }
-            })
-        ))
 
         if(this.writeType != PurposeWriteType.MODIFY && this.purpose.detailPlans){
             formData.append('detailPlans', 

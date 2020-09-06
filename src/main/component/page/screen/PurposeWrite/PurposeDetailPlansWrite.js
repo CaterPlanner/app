@@ -7,7 +7,7 @@ import EasyDate from '../../../../util/EasyDate';
 import { useNavigation } from '@react-navigation/native';
 import RoundButton from '../../../atom/button/RoundButton';
 import PurposeWriteBoard from './PurposeWriteBoard';
-import { PurposeWriteType } from '../../../../mobX/store/PurposeWriteStore';
+import { PurposeWriteType } from '../../../../AppEnum';
 
 export default function PurposeDetailPlansWrite() {
 
@@ -92,10 +92,10 @@ export default function PurposeDetailPlansWrite() {
                     imageStyle={{ width: 100, height: 110 }}
                     source={require('../../../../../../asset/button/plan_insert_button.png')}
                     onPress={() => {
-                        if(purposeWriteStore.writeType != PurposeWriteType.CREATE){
+                        if(purposeWriteStore.writeType == PurposeWriteType.MODIFY){
                             Alert.alert(
-                                '세부 목표를 수정하시겠습니까?',
-                                '수정시 지금까지의 기록은 사라지고 새롭게 시작하게 됩니다.',
+                                null,
+                                '진행중인 목적에 세부 목표 수정시 지금까지의 기록은 사라지고 새롭게 시작하게 됩니다.',
                                 [
                                     {
                                         text : '취소',

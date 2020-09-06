@@ -1,5 +1,4 @@
 import PushNotification from 'react-native-push-notification'
-import PurposeService from '../rest/service/PurposeService'
 
 export default {
   configure: () => {
@@ -35,21 +34,34 @@ export default {
       requestPermissions: true,
     });
   },
-  show: async (purposes) => {
+  briefingAlarmShow: (purposes) => {
+
+    // if(!purposes)
+    //   purposes = await PurposeService.getInstance().findActivePurposes();
+    
+    console.log('yess!')
+    console.log(purposes);
 
     if(!purposes)
-      purposes = await PurposeService.getInstance().findPurposeForBrifingList();
-    
-      let goalCount = 0;
+      return;
+
+    let goalCount = 0;
 
     let title;
-    let message;
+    let message = '';
 
     purposes.forEach((purpose, index) => {
-      goalCount += purpose.detailPlans.length;
-      message += `${purpose.name} - ${purpose.detailPlans.length}개` + (index != purposes.length - 1 ? '\n' : '');
+      const briefingList = purpose.detailPlans.filter(g => g.isNowBriefing)
+
+      if(briefingList.length == 0)
+        return;
+        
+      goalCount += briefingList.length;
+      message += `${purpose.name} - ${briefingList.length}개` + (index != purposes.length - 1 || true ? '\n' : '');
     })
     
+    console.log(goalCount);
+
     if(goalCount == 0)
         return;
 
@@ -59,7 +71,6 @@ export default {
       id: 0,
       visibility: 'public', //잠금화면도 보임
       importance: 'hight',
-      showWhen: false,
       playSound: false,
       title: title,
       message: message,

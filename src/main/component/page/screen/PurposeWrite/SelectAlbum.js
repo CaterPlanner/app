@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, PermissionsAndroid, Image, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { View, Image, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import CameraRoll from "@react-native-community/cameraroll";
 import { useRoute } from "@react-navigation/native";
 
@@ -51,13 +51,6 @@ export default function SelectAlbum({ navigation }) {
     }
 
     const askPermission = async () => {
-        const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
-        if (!hasPermission) {
-            const { status } = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
-            if (status != 'granted') {
-                navigation.goBack();
-            }
-        }
         getAlbums()
         .then(() => {
             setLoading(true);

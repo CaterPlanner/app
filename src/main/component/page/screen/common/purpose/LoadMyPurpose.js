@@ -41,7 +41,7 @@ export default class LoadMyPurpose extends Component{
                     
                 purpose.setDetailPlans(
                     response.data.detailPlans.map((goal) =>(
-                        new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate, goal.stat)
+                        new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate)
                     ))
                 );
 

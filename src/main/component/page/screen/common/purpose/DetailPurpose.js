@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react';
-import { View, Image, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Button } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Alert } from 'react-native'
 import InfoBox from '../../../../molecule/InfoBox';
 import ImageButton from '../../../../atom/button/ImageButton';
 import DecimalDayWidget from '../../../../atom/icon/DecimalDayWidget';
@@ -11,12 +11,13 @@ import Request from '../../../../../util/Request'
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 import EasyDate from '../../../../../util/EasyDate';
-import { Model } from '../../../../../AppEnum';
+import { Model, State } from '../../../../../AppEnum';
 import GlobalConfig from '../../../../../GlobalConfig';
 import useStores from '../../../../../mobX/helper/useStores';
 import PurposeService from '../../../../../rest/service/PurposeService';
 import ProfileWidget from '../../../../molecule/ProfileWidget';
-import { inject } from 'mobx-react';
+import { PurposeWriteType } from '../../../../../AppEnum';
+import Purpose from '../../../../../rest/model/Purpose';
 
 
 
@@ -125,7 +126,15 @@ class ActionFloatingButton extends Component {
             {
                 name: '따라하기',
                 color: '#3CAE14',
-                action: () => { console.log('따라하기') }
+                action: () => {
+                    this.props.navigation.navigate('CreateNavigation', {
+                        screen: 'PurposeWriteBoard',
+                        params: {
+                            purpose: Purpose.clone(this.props.data.purpose),
+                            type: PurposeWriteType.FOLLOW
+                        }
+                    })
+                }
             }
         ]
 
@@ -275,133 +284,210 @@ function StoryTimeLine({ stories }) {
     )
 }
 
-export default function DetailPurpose({data}){
+export default function DetailPurpose({ data }) {
 
-        const [headerVisible, setHeaderVisible] = useState(false);
-        const navigation = useNavigation();
+    const [headerVisible, setHeaderVisible] = useState(false);
+    const navigation = useNavigation();
 
-        const purpose = data.purpose;
-        const isOwner = data.isOwner;
+    const purpose = data.purpose;
+    const isOwner = data.isOwner;
 
-        let _purposeContolMenuRef = null;
+    let _purposeContolMenuRef = null;
 
-        const {authStore} = useStores();
+    const { authStore } = useStores();
 
-        return (
-            <View style={{ flex: 1 }}>
-                <View style={{ alignSelf: 'flex-end' }}>
-                    <Menu
-                        ref={ref => { _purposeContolMenuRef = ref }}>
-                        <MenuItem onPress={() => {
-                            _purposeContolMenuRef.hide();
-                            navigation.navigate('CreateNavigation', {
-                                screen: 'PurposeWriteBoard',
-                                params: {
-                                    purpose: purpose
+
+    const modifyPurpose = async () => {
+        navigation.navigate('CreateNavigation', {
+            screen: 'PurposeWriteBoard',
+            params: {
+                purpose: Purpose.clone(purpose),
+                type: PurposeWriteType.MODIFY
+            }
+        })
+    }
+
+    const retryPurpose = async () => {
+        console.log(Purpose.clone(purpose));
+        navigation.navigate('CreateNavigation', {
+            screen: 'PurposeWriteBoard',
+            params: {
+                purpose: Purpose.clone(purpose),
+                type: PurposeWriteType.RETRY
+            }
+        })
+    }
+
+    const deletePurpose = async () => {
+        try {
+            await Request.delete(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}`)
+                .auth(authStore.userToken.token)
+                .submit();
+
+            await PurposeService.getInstance().delete(purpose.id);
+            navigation.goBack();
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const giveUpPurpose = async () => {
+        try {
+            await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}/update`, JSON.stringify({
+                stat: State.FAIL
+            }))
+                .auth(authStore.userToken.token)
+                .submit();
+
+            await PurposeService.getInstance().delete(purpose.id);
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    console.log(purpose);
+
+    return (
+        <View style={{ flex: 1 }}>
+            <View style={{ alignSelf: 'flex-end' }}>
+                <Menu
+                    ref={ref => { _purposeContolMenuRef = ref }}>
+                    {!purpose.isFinish && 
+                    <MenuItem onPress={() => {
+                        _purposeContolMenuRef.hide();
+                        modifyPurpose();
+                    }}>수정</MenuItem>}
+                    {purpose.stat == State.PROCEED && !purpose.isSucceeseProceed && 
+                        <View>
+                            <MenuDivider />
+                            <MenuItem onPress={() => {
+                                _purposeContolMenuRef.hide();
+                                Alert.alert(
+                                    '',
+                                    '정말로 포기하시겠습니까?',
+                                    [
+                                        {
+                                            text: '취소',
+                                            style: 'cancel'
+                                        },
+                                        {
+                                            text: '확인',
+                                            onPress: giveUpPurpose
+                                        }
+                                    ]
+                                );
+                            }} >포기하기</MenuItem>
+                        </View>
+                    }
+                    {purpose.stat == State.FAIL &&
+                        <View>
+                            <MenuDivider />
+                            <MenuItem onPress={() => {
+                                _purposeContolMenuRef.hide();
+                                retryPurpose();
+                            }} >다시하기</MenuItem>
+                        </View>
+                    }
+                    <MenuDivider />
+                    <MenuItem onPress={() => {
+                        _purposeContolMenuRef.hide();
+                        Alert.alert(
+                            '',
+                            '목적을 정말 삭제하시겠습니까?',
+                            [
+                                {
+                                    text: '취소',
+                                    style: 'cancel'
+                                },
+                                {
+                                    text: '확인',
+                                    onPress: deletePurpose
                                 }
-                            })
-                        }}>수정</MenuItem>
-                        <MenuDivider />
-                        <MenuItem onPress={() => {
-                            _purposeContolMenuRef.hide();
-
-                            Request.delete(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purpose.id}`)
-                                .auth(authStore.userToken.token)
-                                .submit()
-                                .then((response) => {
-                                    PurposeService.getInstance().delete(purpose.id)
-                                        .then(() => {
-                                            data.refreshHome();
-                                            navigation.goBack();
-                                        })
-                                        .catch(e => {
-                                            console.log(e);
-                                        })
-
-                                })
-                                .catch(e => {
-                                    console.log(e);
-                                })
+                            ]
+                        );
 
 
-                        }}>삭제</MenuItem>
-                    </Menu>
-                </View>
-                <ParallaxScrollView
-                    backgroundColor={'rgb(0,0,0,0)'}
-                    fadeOutForeground={true}
-                    backgroundScrollSpeed={20}
-                    onChangeHeaderVisibility={(a) => {
-                        setHeaderVisible(a);
-                    }}
-                    renderFixedHeader={() => {
-                        return (
-                            <View>
-                                {!headerVisible &&
-                                    <View style={{ overflow: 'visible', backgroundColor: 'white', height: 48, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
+
+
+                    }}>삭제</MenuItem>
+                </Menu>
+            </View>
+            <ParallaxScrollView
+                backgroundColor={'rgb(0,0,0,0)'}
+                fadeOutForeground={true}
+                backgroundScrollSpeed={20}
+                onChangeHeaderVisibility={(a) => {
+                    setHeaderVisible(a);
+                }}
+                renderFixedHeader={() => {
+                    return (
+                        <View>
+                            {!headerVisible &&
+                                <View style={{ overflow: 'visible', backgroundColor: 'white', height: 48, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
+                                    <ImageButton
+                                        backgroundStyle={{
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                        imageStyle={{
+                                            width: 22,
+                                            height: 20
+                                        }}
+                                        onPress={navigation.goBack}
+                                        source={require('../../../../../../../asset/button/arrow_button.png')}
+                                    />
+                                    {isOwner &&
                                         <ImageButton
                                             backgroundStyle={{
                                                 alignItems: 'center',
-                                                justifyContent: 'center'
+                                                justifyContent: 'center',
+                                                marginRight: 5
                                             }}
                                             imageStyle={{
-                                                width: 22,
-                                                height: 20
+                                                width: 6,
+                                                height: 25
                                             }}
-                                            onPress={navigation.goBack}
-                                            source={require('../../../../../../../asset/button/arrow_button.png')}
-                                        />
-                                        {isOwner &&
-                                            <ImageButton
-                                                backgroundStyle={{
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    marginRight: 5
-                                                }}
-                                                imageStyle={{
-                                                    width: 6,
-                                                    height: 25
-                                                }}
-                                                onPress={() => {
-                                                   _purposeContolMenuRef.show();
-                                                }}
-                                                source={require('../../../../../../../asset/button/more_button.png')}
-                                            />}
-                                    </View>
+                                            onPress={() => {
+                                                _purposeContolMenuRef.show();
+                                            }}
+                                            source={require('../../../../../../../asset/button/more_button.png')}
+                                        />}
+                                </View>
 
-                                }
-                            </View>
-                        )
-                    }}
-                    stickyHeaderHeight={50}
-                    parallaxHeaderHeight={Dimensions.get('window').height * 0.33}
-                    backgroundSpeed={10}
-                    renderBackground={() => {
-                        return (
-                            <View style={detailPurposeStyles.thumbnailImageContainer}>
-                                <Image
-                                    source={{ uri: purpose.photoUrl }}
-                                    resizeMode="stretch"
-                                    style={{ flex: 1, width: "100%", height: undefined }}
-                                />
-                            </View>
-                        )
-                    }}
-                >
-                    <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
-                        <View style={detailPurposeStyles.purposeInfoContainer}>
-                            <Text style={detailPurposeStyles.purposeNameFont}>
-                                {purpose.name}
-                            </Text>
-                            <View style={{ alignSelf: 'flex-start', marginBottom: 20 }}>
-                                <DecimalDayWidget stat={purpose.stat} decimalDay={purpose.leftDay} />
+                            }
+                        </View>
+                    )
+                }}
+                stickyHeaderHeight={50}
+                parallaxHeaderHeight={Dimensions.get('window').height * 0.33}
+                backgroundSpeed={10}
+                renderBackground={() => {
+                    return (
+                        <View style={detailPurposeStyles.thumbnailImageContainer}>
+                            <Image
+                                source={{ uri: purpose.photoUrl }}
+                                resizeMode="stretch"
+                                style={{ flex: 1, width: "100%", height: undefined }}
+                            />
+                        </View>
+                    )
+                }}
+            >
+                <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
+                    <View style={detailPurposeStyles.purposeInfoContainer}>
+                        <Text style={detailPurposeStyles.purposeNameFont}>
+                            {purpose.name}
+                        </Text>
+                        <View style={{ alignSelf: 'flex-start', marginBottom: 20 }}>
+                            <DecimalDayWidget purpose={purpose}/>
 
-                            </View>
-                            <Text style={detailPurposeStyles.purposeDescriptionFont}>
-                                {purpose.description}
-                            </Text>
-                            <View style={detailPurposeStyles.purposeProfileContainer}>
-                                {/* <View>
+                        </View>
+                        <Text style={detailPurposeStyles.purposeDescriptionFont}>
+                            {purpose.description}
+                        </Text>
+                        <View style={detailPurposeStyles.purposeProfileContainer}>
+                            {/* <View>
                                     <Image
                                         style={{ height: 40, width: 40, borderRadius: 40 }}
                                         source={{ uri: 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg' }}
@@ -410,60 +496,60 @@ export default function DetailPurpose({data}){
                                 <Text style={detailPurposeStyles.purposeAuthorNameFont}>
                                     사용자
                                 </Text> */}
-                                <ProfileWidget
-                                    profileUrl={data.author.profileUrl}
-                                    name={data.author.name}
-                                    fontStyle={{ alignSelf: 'flex-end', marginBottom: 5 }}
-                                />
-                            </View>
-                        </View>
-                        <View style={{ marginTop: 5 }}>
-                            <InfoBox
-                                title={'진행 중인 목표'}
-                                detailButtonPress={() => {
-                                    navigation.navigate('DetailPlanList', {
-                                        data: data
-                                    })
-                                }}
-                                detailButtonHint={'더보기'}
-                                child={(
-                                    <View style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
-                                        {
-                                            purpose.detailPlans.map((goal) => (
-                                                <View style={detailPurposeStyles.paperContainer}>
-                                                    <DetailPlanPaper
-                                                        color={goal.color}
-                                                        name={goal.name}
-                                                        value={goal.achieve}
-                                                        disabled={true}
-                                                    />
-                                                </View>
-                                            ))
-                                        }
-                                    </View>
-                                )}
-                            />
-                        </View>
-                        <View style={{ marginTop: 5 }}>
-                            <InfoBox
-                                title={'스토리 타임라인'}
-                                detailButtonPress={() => {
-                                    navigation.navigate('PurposeStories', {
-                                        purpose: purpose
-                                    })
-                                }}
-                                detailButtonHint={'자세히보기'}
-                                child={(<StoryTimeLine stories={data.storyTags} />)}
+                            <ProfileWidget
+                                profileUrl={data.author.profileUrl}
+                                name={data.author.name}
+                                fontStyle={{ alignSelf: 'flex-end', marginBottom: 5 }}
                             />
                         </View>
                     </View>
-                </ParallaxScrollView>
-                <BottomBar data={data} />
-                <View style={{ elevation : 5, position: 'absolute', bottom: 15, right: 20 }}>
-                    <ActionFloatingButton data={data} navigation={navigation} />
+                    <View style={{ marginTop: 5 }}>
+                        <InfoBox
+                            title={'진행 중인 목표'}
+                            detailButtonPress={() => {
+                                navigation.navigate('DetailPlanList', {
+                                    data: data
+                                })
+                            }}
+                            detailButtonHint={'더보기'}
+                            child={(
+                                <View style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
+                                    {
+                                        purpose.detailPlans.map((goal) => (
+                                            <View style={detailPurposeStyles.paperContainer}>
+                                                <DetailPlanPaper
+                                                    color={goal.color}
+                                                    name={goal.name}
+                                                    value={goal.achieve}
+                                                    disabled={true}
+                                                />
+                                            </View>
+                                        ))
+                                    }
+                                </View>
+                            )}
+                        />
+                    </View>
+                    <View style={{ marginTop: 5 }}>
+                        <InfoBox
+                            title={'스토리 타임라인'}
+                            detailButtonPress={() => {
+                                navigation.navigate('PurposeStories', {
+                                    purpose: purpose
+                                })
+                            }}
+                            detailButtonHint={'자세히보기'}
+                            child={(<StoryTimeLine stories={data.storyTags} />)}
+                        />
+                    </View>
                 </View>
+            </ParallaxScrollView>
+            <BottomBar data={data} />
+            <View style={{ elevation: 5, position: 'absolute', bottom: 15, right: 20 }}>
+                <ActionFloatingButton data={data} navigation={navigation} />
             </View>
-        )
+        </View>
+    )
 }
 
 // export default function DetailPurpose({ data }) {
