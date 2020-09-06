@@ -74,13 +74,16 @@ export default class PurposeWriteBoard extends Component {
                         .auth(this.authStore.userToken.token)
                         .submit();
 
+                    if(result.detailPlans.length != 0){
+                        result.detailPlans.forEach((goal) => {
+                            goal.purposeId = response.data.id;
+                            goal.briefingCount = 0;
+                        })
+                    }
+
                     await PurposeService.getInstance().create(
                         new Purpose(response.data.id, result.name, result.description, response.data.photoUrl, result.disclosureScope, result.startDate, result.endDate, result.stat),
-                        result.detailPlans ?
-                            result.detailPlans.forEach((goal) => {
-                                goal.purposeId = response.data.id;
-                                goal.briefingCount = 0;
-                            }) : null
+                        result.detailPlans.length != 0 ? result.detailPlans : null
                     );
                     
                     this.props.navigation.navigate('PurposeWriteDone', {
@@ -101,10 +104,13 @@ export default class PurposeWriteBoard extends Component {
 
                     await PurposeService.getInstance().modify(result.id, result);
 
-                    this.props.navigation.navigate('PublicNavigation', {
-                        screen : 'LoadMyPurpose',
+                    this.props.navigation.navigate('HomeNavigation', {
+                        screen : 'PublicNavigation',
                         params : {
-                            id : result.id
+                            screen : 'LoadMyPurpose',
+                            params : {
+                                id : result.id
+                            }
                         }
                     });
 
@@ -124,15 +130,17 @@ export default class PurposeWriteBoard extends Component {
                         .auth(this.authStore.userToken.token)
                         .submit();
 
-                    console.log(response);
                     result.photoUrl = response.data.photoUrl;
 
                     await PurposeService.getInstance().groundModify(result.id, result)
 
-                    this.props.navigation.navigate('PublicNavigation', {
-                        screen : 'LoadMyPurpose',
+                    this.props.navigation.navigate('HomeNavigation', {
+                        screen : 'PublicNavigation',
                         params : {
-                            id : result.id
+                            screen : 'LoadMyPurpose',
+                            params : {
+                                id : result.id
+                            }
                         }
                     });
 
