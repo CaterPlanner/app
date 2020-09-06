@@ -21,12 +21,12 @@ public class CaterPlannerSchedulerMoudle extends ReactContextBaseJavaModule {
         return "CaterPlannerScheduler";
     }
 
-    @ReactMethod
+    @ReactMethod(isBlockingSynchronousMethod = true)
     public void onScheduler(){
         AlarmSchedulerManager.start(applicationContext);
     }
 
-    @ReactMethod
+    @ReactMethod(isBlockingSynchronousMethod = true)
     public void offScheduler(){
         AlarmSchedulerManager.stop(applicationContext);
     }

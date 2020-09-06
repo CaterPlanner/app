@@ -30,6 +30,8 @@ export default class BriefingPurposeList extends Component {
             const purposes = await PurposeService.getInstance().findActivePurposes();
 
 
+
+
             this.setState({
                 purposes: purposes,
                 isLoading: false
@@ -68,6 +70,7 @@ export default class BriefingPurposeList extends Component {
                         renderItem={({ item: purpose, index }) => {
                             console.log(purpose.detailPlans)
                             const goalList = purpose.detailPlans.filter(g => g.isNowBriefing);
+
 
                             if (goalList.length == 0)
                                 return;

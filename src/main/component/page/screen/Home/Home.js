@@ -136,7 +136,7 @@ function ActiveCard({ purpose, onPress, loadData }) {
                                 navigation.navigate('CreateNavigation', {
                                     screen: 'PurposeWriteBoard',
                                     params: {
-                                        purpose: Purpose.clone(await PurposeService.getInstance().read(purpose.id)),
+                                        purpose: Purpose.clone(purpose),
                                         type: PurposeWriteType.RETRY
                                     }
                                 })
@@ -246,6 +246,7 @@ export default class Home extends Component {
             await PurposeService.getInstance().refresh();
 
             const data = await PurposeService.getInstance().findPurposesForCard();
+
 
             let hasSuccees = false;
             let hasFailed = false;

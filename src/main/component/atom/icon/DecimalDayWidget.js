@@ -13,7 +13,7 @@ export default function DecimalDayWidget({ purpose }) {
     switch (purpose.stat) {
         case 0:
             if(!purpose.isProcceedEnd){
-                text = 'D - ' + (decimalDay == 0 ? 'Day' : decimalDay);
+                text = (decimalDay == 0 ? 'FinalDay' : 'D - ' + decimalDay);
             }else{
                 text = purpose.isSucceeseProceed ? '수행완료' : '수행실패'
             }

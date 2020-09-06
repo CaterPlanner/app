@@ -22,6 +22,8 @@ public class AlarmSchedulerManager {
         PendingIntent sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingAlaramIntent, PendingIntent.FLAG_NO_CREATE);
 
         if(sender == null) {
+
+            System.out.println("실행!!!!!!!!!!!!!!!!!!!!");
              sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
 
             Calendar statisticsTime = Calendar.getInstance();
@@ -42,8 +44,13 @@ public class AlarmSchedulerManager {
     public static void stop(Context context){
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent briefingRequestNoticeIntent = new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class);
-        PendingIntent briefingRequestNoticePendingIntent = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingRequestNoticeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.cancel(briefingRequestNoticePendingIntent);
+        PendingIntent sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingRequestNoticeIntent, PendingIntent.FLAG_NO_CREATE);
+        
+        if(sender != null){
+        alarmManager.cancel(sender);
+        sender.cancel();
+                    System.out.println("종료!!!!!!!!!!!!!!!!!!!!");
+        }
     }
 
 }
