@@ -30,7 +30,7 @@ export default function LoadUserPurpose({ navigation }) {
 
             purpose.setDetailPlans(
                 response.data.detailPlans.map((goal) => (
-                    new Goal(goal.id, purpose.id, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.stat)
+                    new Goal(goal.id, purpose.id, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate)
                 ))
             );
 

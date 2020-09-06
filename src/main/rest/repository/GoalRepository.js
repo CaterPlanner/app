@@ -2,102 +2,115 @@ import Goal from '../model/Goal'
 
 const GoalRepository = {
 
-    insertAll : (txn, goals, callback) => {
-        let query = 'insert into goal(id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date, stat) values';
+
+    insertAll : (txn, goals) => {
+        let query = 'insert into goal(id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date) values';
         goals.forEach((goal, index) => {
-            query += `(${goal.id} , ${goal.purposeId}, '${goal.name}', '${goal.description}', '${goal.startDate.toString()}', '${goal.endDate.toString()}', '${goal.color}', '${goal.cycle}', ${goal.briefingCount}, '${goal.lastBriefingDate ? goal.lastBriefingDate.toString() : null}', ${goal.stat}  )`
+            query += `(${goal.id} , ${goal.purposeId}, '${goal.name}', '${goal.description}', '${goal.startDate.toString()}', '${goal.endDate.toString()}', '${goal.color}', '${goal.cycle}', ${goal.briefingCount}, ${goal.lastBriefingDate ? '\''+goal.lastBriefingDate.toString()+'\'' : null} )`
             query += index + 1 != goals.length ? ', ' : '';
         });
-        console.log(query);
 
-        txn.executeSql(
-            query,
-            [],
-            callback
-        );
+   
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                query,
+                [],
+                resolve,
+                reject
+            );
+        })
 
     },
 
-    insert : (txn, goal, callback) => {
-        console.log(goal.lastBriefingDate ? goal.lastBriefingDate.toString() : null)
-        txn.executeSql(
-            'insert into goal(id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date, stat) values(?,?,?,?,?,?,?,?,?,?,?)',
-            [goal.id, goal.purposeId, goal.name, goal.description, goal.startDate.toString(), goal.endDate.toString(), goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate ? goal.lastBriefingDate.toString() : null, goal.stat],
-            callback,
-            (e) => {console.log(e)}
-        );
+    insert : (txn, goal) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'insert into goal(id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date) values(?,?,?,?,?,?,?,?,?,?)',
+                [goal.id, goal.purposeId, goal.name, goal.description, goal.startDate.toString(), goal.endDate.toString(), goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate ? goal.lastBriefingDate.toString() : null],
+                resolve,
+                reject
+            );
+        })
     },
     
-    selectByHeaderIdAndStat : (txn, purposeId, stat, callback) => {
-        txn.executeSql(
-            'select id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date, stat from goal where purpose_id = ? and stat = ?',
-            [purposeId, stat],
-            (tx, res) => {
-                let data = [];
-                for(let i =0; i < res.rows.length; i++){
-                    const row = res.rows.item(i);
-                    data.push(new Goal(row.id, row.purpose_id, row.name, row.description, row.start_date, row.end_date, row.color, row.cycle, row.briefing_count, row.last_briefing_date, row.stat))
-                }
-                callback(data);
-            })
+    selectByHeaderIdAndStat : (txn, purposeId, stat) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'select id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date from goal where purpose_id = ?',
+                [purposeId, stat],
+                (res) => {
+                    let data = [];
+                    for(let i =0; i < res.rows.length; i++){
+                        const row = res.rows.item(i);
+                        data.push(new Goal(row.id, row.purpose_id, row.name, row.description, row.start_date, row.end_date, row.color, row.cycle, row.briefing_count, row.last_briefing_date))
+                    }
+                    resolve(data);
+                },
+                reject)
+        })
     },
 
-    selectByPurposeId : (txn, purposeId, callback) => {
-        txn.executeSql(
-            'select id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date, stat from goal where purpose_id = ?',
-            [purposeId],
-            (tx, res) => {
-                if(!res)
-                res = tx;
-                let data = [];
-                for(let i =0; i < res.rows.length; i++){
-                    const row = res.rows.item(i);
-                    data.push(new Goal(row.id, row.purpose_id, row.name, row.description, row.start_date, row.end_date, row.color, row.cycle, row.briefing_count, row.last_briefing_date, row.stat))
-                }
-                callback(data);
-            }
-        );
+    selectByPurposeId : (txn, purposeId) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'select id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date from goal where purpose_id = ?',
+                [purposeId],
+                (res) => {
+                    let data = [];
+                    for(let i =0; i < res.rows.length; i++){
+                        const row = res.rows.item(i);
+                        data.push(new Goal(row.id, row.purpose_id, row.name, row.description, row.start_date, row.end_date, row.color, row.cycle, row.briefing_count, row.last_briefing_date))
+                    }
+                    resolve(data);
+                },
+                reject
+            );
+        })
     },
 
-    selectByStatIsActiveInPurposeId : (txn, purposeIdList, callback) => {
+    selectInPurposeId : (txn, purposeIdList) => {
         let ext = purposeIdList[0];
         for(let i = 1; i< purposeIdList.length; i++){
             ext += "," + purposeIdList[i];
         }
-        console.log(ext);
-        txn.executeSql(
-            `select id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date, stat from goal where purpose_id in (${ext}) and stat = 0`,
-            [],
-            (tx, res) => {
-                console.log(tx);
-                console.log(res);
-                if(!res)
-                res = tx;
-                let data = [];
-                for(let i =0; i < res.rows.length; i++){
-                    const row = res.rows.item(i);
-                    data.push(new Goal(row.id, row.purpose_id, row.name, row.description, row.start_date, row.end_date, row.color, row.cycle, row.briefing_count, row.last_briefing_date, row.stat))
-                }
-                callback(data);
-            }
-        );
-        
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                `select id, purpose_id, name, description, start_date, end_date, color, cycle, briefing_count, last_briefing_date from goal where purpose_id in (${ext})`,
+                [],
+                (res) => {
+                    let data = [];
+                    for(let i =0; i < res.rows.length; i++){
+                        const row = res.rows.item(i);
+                        data.push(new Goal(row.id, row.purpose_id, row.name, row.description, row.start_date, row.end_date, row.color, row.cycle, row.briefing_count, row.last_briefing_date))
+                    }
+                    resolve(data);
+                },
+                reject
+            );
+        })   
     },
 
-    deleteByPurposeId : (txn, purposeId, callback) => {
-        txn.executeSql(
-            'delete from goal where purpose_id = ?',
-            [purposeId],
-            callback
-        )
+    deleteByPurposeId : (txn, purposeId) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'delete from goal where purpose_id = ?',
+                [purposeId],
+                resolve,
+                reject
+            )
+        })
     },
 
-    updateByKey : (txn, purposeId, id, goal, callback) => {
-        txn.executeSql(
-            'update goal set stat = ?, briefing_count = ?, last_briefing_date = ? where purpose_id = ? and id = ?',
-            [goal.stat, goal.briefingCount, goal.lastBriefingDate.toString(), purposeId, id],
-            callback
-        );
+    updateByKey : (txn, purposeId, id, goal) => {
+        console.log(goal);
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'update goal set stat = ?, briefing_count = ?, last_briefing_date = ? where purpose_id = ? and id = ?',
+                [goal.stat, goal.briefingCount, goal.lastBriefingDate ? goal.lastBriefingDate.toString() : null, purposeId, id],
+                resolve,
+                reject
+            );
+        })
     }
 
 }

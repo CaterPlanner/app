@@ -47,9 +47,9 @@ export default function StoryBlock({data, onPress}){
 
 
     return(
-        <TouchableOpacity style={{paddingHorizontal: 15, backgroundColor: 'white', paddingVertical: 12, width:'100%'}}
+        <TouchableOpacity style={{height: 270, borderRadius: 10, paddingHorizontal: 15, backgroundColor: 'white', paddingVertical: 12, width:'100%'}}
         activeOpacity={1} onPress={onPress}>
-            <View style={{flexDirection: 'row', alignItems: 'center', paddingBottom: 5}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', paddingBottom: 10}}>
                 <ProfileWidget profileUrl={data.author.profileUrl} name={data.author.name}/>
                 <TimeAgo time={data.createDate}/>
             </View>
@@ -58,13 +58,14 @@ export default function StoryBlock({data, onPress}){
                     {data.title}
                 </Text>
             </View>
-            <Text  numberOfLines={2} style={styles.contentFont}>
+            <Text  numberOfLines={5} style={styles.contentFont}>
                 {data.content}
             </Text>
-            <View style={{marginTop : 25, flexDirection:'row'}}>
+            <View style={{flex:1}}/>
+            <View style={{marginTop : 10, flexDirection:'row'}}>
                 <View style={{flexDirection: 'row', justfiyContent:'center'}}>
                     <ImageButton
-                        imageStyle={{width: 27, height: 25, tintColor : isLikes ? 'blue' : undefined}}
+                        imageStyle={{width: 22, height: 20, tintColor : isLikes ? 'blue' : undefined}}
                         source={require('../../../../asset/icon/likes_icon.png')}
                         onPress={toggleLikes}
                     />
@@ -74,7 +75,7 @@ export default function StoryBlock({data, onPress}){
                 </View>
                 <View style={{flexDirection: 'row', justfiyContent:'center', marginLeft: 20}}>
                     <ImageButton
-                        imageStyle={{width: 27, height: 25}}
+                        imageStyle={{width: 22, height: 20}}
                         source={require('../../../../asset/button/comment_button.png')}
                         onPress={() => {
                             naviagation.navigate('PublicNavigation', {
@@ -117,7 +118,8 @@ const styles = StyleSheet.create({
     contentFont:{
         color: '#323232',
         fontSize: 14,
-        marginTop : 30
+        marginTop : 30,
+        lineHeight: 20
     },
     scoreText: {
         fontSize: 15,

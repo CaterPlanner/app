@@ -23,7 +23,14 @@ const Stack = createStackNavigator();
 const PublicNavigation = () => {
     return(
           <Stack.Navigator>
-            <Stack.Screen options={{ headerShown: false }} name="MyProfile" component={MyProfile}/>
+            <Stack.Screen options={({ navigation }) => ({
+                ...defaultHeaderStyle,
+                title: '프로필',
+                headerTitleAlign:'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
+            })} name="MyProfile" component={MyProfile}/>
             <Stack.Screen options={{ headerShown: false }} name="LoadMyPurpose" component={LoadMyPurpose} />
             <Stack.Screen  options={({ navigation }) => ({
                 ...defaultHeaderStyle,
@@ -35,27 +42,6 @@ const PublicNavigation = () => {
             })} name="DetailGoal" component={DetailGoal}/>
             <Stack.Screen options={{ headerShown: false }} name="LoadProfile" component={LoadProfile}/>
             <Stack.Screen options={{ headerShown: false }} name="LoadUserPurpose" component={LoadUserPurpose}/>
-            <Stack.Screen options={({ route, navigation }) => ({
-                ...defaultHeaderStyle,
-                title: '스토리라인',
-                headerRight: () => {
-                    return(
-                        <ImageButton
-                        backgroundStyle={{
-                            marginVertical: 5,
-                            marginRight: 10
-                        }}
-                        imageStyle={{
-                            width: 35,
-                            height: 35
-                        }}
-                        source={
-                            require('../../../../../asset/button/check_button.png')}
-                        onPress={route.params ? route.params.save : null}
-                    />
-                    )
-                }
-            })} name="WriteStory" component={WriteStory}/>
             <Stack.Screen options={({ route, navigation }) => ({
                 ...defaultHeaderStyle,
                 title: '스토리라인',
@@ -83,8 +69,18 @@ const PublicNavigation = () => {
                     )
                 }
             })} name="DetailStory" component={DetailStory}/>
-            <Stack.Screen options={{ headerShown: false }} name="UserPurposeList" component={UserPurposeList}/>
-            <Stack.Screen options={{headerShown : false}} name="CommnetView" component={CommnetView}/>
+            <Stack.Screen options={({route, navigation}) => ({
+                ...defaultHeaderStyle,
+                title: '목적 리스트',
+                headerTitleAlign:'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
+            })} name="UserPurposeList" component={UserPurposeList}/>
+            <Stack.Screen options={({route, navigation}) => ({
+                ...defaultHeaderStyle,
+                title: ''
+            })} name="CommnetView" component={CommnetView}/>
         </Stack.Navigator>
     )
 }

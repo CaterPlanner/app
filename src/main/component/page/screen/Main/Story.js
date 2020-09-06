@@ -19,6 +19,7 @@ export default class Story extends Component{
             data : [],
             isLoading : false,
             isRefreshing : false,
+            isFinish : false,
             page: 0,
             type: 0
         }
@@ -35,14 +36,12 @@ export default class Story extends Component{
         if(this.state.isLoading || this.state.isRefreshing)
             return;
 
-        console.log('refreshing')
 
         this.setState({
             page : 0,
             isRefreshing : true
-        })
+        },this._loadData)
 
-        this._loadData()
     }
 
     _loadData = async () => {
@@ -52,7 +51,7 @@ export default class Story extends Component{
 
         try{
 
-            console.log('Load More')
+            console.log('Load More' + this.state.page);
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story?page=${this.state.page + (this.state.type ? `&type=${this.state.type}` : '')}`, null, null, 8000)
             .auth(this.authStore.userToken.token)
             .submit();
@@ -62,7 +61,8 @@ export default class Story extends Component{
             this.setState({
                 data : this.state.isRefreshing ? response.data.elements : this.state.data.concat(response.data.elements),
                 isLoading : false,
-                isRefreshing : false
+                isRefreshing : false,
+                isFinish : response.data.final
             })
         }catch(e){
             console.log(e);
@@ -76,7 +76,7 @@ export default class Story extends Component{
     }
     
     _handleLoadMore = () => {
-        if(this.isFinish || this.state.isLoading || this.state.refreshing)
+        if(this.state.isFinish || this.state.isLoading || this.state.isRefreshing)
             return;
 
         this.setState({
@@ -108,7 +108,7 @@ export default class Story extends Component{
                 data={this.state.data}
                 renderItem={({item}) => {
                     item.createDate = new EasyDate(item.createDate);
-                    return (<View style={{marginBottom : 15}}>
+                    return (<View style={{marginBottom : 10, marginHorizontal: 10 }}>
                         <StoryBlock data={item}
                             onPress={() => {this.props.navigation.navigate('PublicNavigation', {
                                 screen : 'DetailStory',

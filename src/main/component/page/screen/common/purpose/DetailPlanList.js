@@ -15,6 +15,8 @@ export default function DetailPlanList({ navigation }) {
     const isOwner = data.isOwner;
 
 
+    console.log(detailPlans[0].achieve)
+
     return (
         <FlatList
             style={{ flex: 1, paddingTop : 10}}

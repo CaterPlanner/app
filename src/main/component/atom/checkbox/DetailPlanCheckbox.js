@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text, TouchableOpacity, CheckBox } from 'react-native';
 import MyProgressBar from '../progressBar/MyProgressBar';
 
 export default function DetailPlanCheckBox({ color, name, acheive, onChange}) {
+    
+    const [isSelected, setIsSelected] = useState(false);
+
     return (
         <View style={{flexDirection: 'row', justifyContent: 'flex-end', alignItmes: 'center', width: '100%', height: 65, backgroundColor: 'white', elevation: 5 }}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -26,8 +29,12 @@ export default function DetailPlanCheckBox({ color, name, acheive, onChange}) {
                 </View>
                 <View style={{justifyContent: 'center', paddingHorizontal : 10}}>
                     <CheckBox
+                        value={isSelected}
                         style={{ alignSelf: 'center' }}
-                        onChange={onChange}
+                        onChange={() => {
+                            onChange(!isSelected)
+                            setIsSelected(!isSelected);
+                        }}
                     />
                 </View>
             </View>

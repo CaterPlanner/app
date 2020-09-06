@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, Text } from 'react-native';
 import ImageButton from '../../atom/button/ImageButton';
 
-export default function PurposePaper({ imageUri, name, count, onPress }) {
+export default function PurposePaper({ imageUri, name, count, onPress, checkedBriefing=true }) {
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItmes: 'center', width: '100%', height: 65 }}>
             <View style={{ width: '90%', backgroundColor: 'white', justifyContent: 'center', elevation: 5, height: '100%' }}>
@@ -17,6 +17,7 @@ export default function PurposePaper({ imageUri, name, count, onPress }) {
                         <Text>
                             {name}
                         </Text>
+                        {checkedBriefing &&
                         <View style={{flexDirection : 'row'}}>
                             <Text style={{color :'red', marginRight : 5}}>
                                 {count}
@@ -24,7 +25,7 @@ export default function PurposePaper({ imageUri, name, count, onPress }) {
                             <Text>
                                 개의 목표 브리핑
                             </Text>
-                        </View>
+                        </View>}
                     </View>
                     <View style={{marginRight : 20, justifyContent:'center'}}>
                         <ImageButton

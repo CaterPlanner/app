@@ -2,91 +2,106 @@ import Purpose from "../model/Purpose";
 
 const PurposeRepository = {
 
-    insert : (txn, purpose, callback) => {
-        txn.executeSql(
-            'insert into purpose(id, name, description, photo_url, disclosure_scope, start_date, end_date, stat) values(?,?,?,?,?,?,?,?)',
-            [purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate.toString(), purpose.endDate.toString(), purpose.stat],
-            callback);
+   
+    insert : (txn, purpose) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'insert into purpose(id, name, description, photo_url, disclosure_scope, start_date, end_date, stat) values(?,?,?,?,?,?,?,?)',
+                [purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate.toString(), purpose.endDate.toString(), purpose.stat],
+                resolve,
+                reject);
+        })
     },
 
-    selectById : (txn, id, callback) => {
-        txn.executeSql(
-            'select id, name, description, photo_url, disclosure_scope, start_date, end_date, stat from purpose where id = ?',
-            [id],
-            (tx, res) => {
-                if(!res)
-                    res = tx;
-               const row = res.rows.item(0);
-               callback(new Purpose( row.id, row.name, row.description, row.photo_url, row.disclosure_scope, row.start_date, row.end_date, row.stat));
-            }
-        )
+    selectById : (txn, id) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'select id, name, description, photo_url, disclosure_scope, start_date, end_date, stat from purpose where id = ?',
+                [id],
+                (res) => {
+                   const row = res.rows.item(0);
+                   resolve(new Purpose( row.id, row.name, row.description, row.photo_url, row.disclosure_scope, row.start_date, row.end_date, row.stat));
+                },
+                reject
+            )
+        })
     },
 
-    selectAll : (txn, callback) => {
-        txn.executeSql(
-            "select id, name, description, photo_url, disclosure_scope, start_date, end_date, stat from purpose",
-            [],
-            (tx, res) => {
-                if(!res)
-                    res = tx;
-                let data = [];
-                for(let i = 0; i < res.rows.length; i++){
-                    const row = res.rows.item(i);
-                    data.push(new Purpose( row.id, row.name, row.description, row.photo_url, row.disclosure_scope, row.start_date, row.end_date, row.stat))
-                }
-                callback(data);
-            }
-        );
+    selectAll : (txn) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                "select id, name, description, photo_url, disclosure_scope, start_date, end_date, stat from purpose",
+                [],
+                (res) => {
+                    let data = [];
+                    for(let i = 0; i < res.rows.length; i++){
+                        const row = res.rows.item(i);
+                        data.push(new Purpose( row.id, row.name, row.description, row.photo_url, row.disclosure_scope, row.start_date, row.end_date, row.stat))
+                    }
+                    resolve(data);
+                },
+                reject
+            );
+        })
     },
     
-    selectByStatIsActive : (txn, callback) => {
-        txn.executeSql(
-            "select id, name, description, photo_url, disclosure_scope, start_date, end_date, stat from purpose where stat = 0",
-            [],
-            (tx, res) => {
-                if(!res)
-                    res = tx;
-                let data = [];
-                for(let i = 0; i < res.rows.length; i++){
-                    const row = res.rows.item(i);
-                    data.push(new Purpose( row.id, row.name, row.description, row.photo_url, row.disclosure_scope, row.start_date, row.end_date, row.stat))
-                }
-                callback(data);
-            }
-        )
+    selectByStatIsActive : (txn) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                "select id, name, description, photo_url, disclosure_scope, start_date, end_date, stat from purpose where stat = 0",
+                [],
+                (res) => {
+                    let data = [];
+                    for(let i = 0; i < res.rows.length; i++){
+                        const row = res.rows.item(i);
+                        data.push(new Purpose( row.id, row.name, row.description, row.photo_url, row.disclosure_scope, row.start_date, row.end_date, row.stat))
+                    }
+                    resolve(data);
+                },
+                reject
+            )
+        })
     },
 
-    updatePurposeDate : (txn, id, purpose, callback) => {
-        console.log(purpose);
-        txn.executeSql(
-            'update purpose set name = ?, description = ?, photo_url = ?, disclosure_scope = ?, start_date = ?, end_date = ?, stat = ? where id = ?',
-            [purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate.toString(), purpose.endDate.toString(), purpose.stat, id],
-            (tx, res) => {
-                if(!res)
-                res = tx;
-                callback(res);
-            }
-        )
+    updatePurposeDate : (txn, id, purpose) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'update purpose set name = ?, description = ?, photo_url = ?, disclosure_scope = ?, start_date = ?, end_date = ?, stat = ? where id = ?',
+                [purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate.toString(), purpose.endDate.toString(), purpose.stat, id],
+                (res) => {
+                    resolve(res);
+                },
+                reject
+            )
+        })
     },
 
-    updateStatById : (txn, id, stat, callback) => {
-        txn.executeSql(
-            'update purpose set stat = ? where id = ?',
-            [stat, id],
-            callback
-        )
+    updateStatById : (txn, id, stat) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'update purpose set stat = ? where id = ?',
+                [stat, id],
+                resolve,
+                reject
+            )
+        })
     },
 
-    deleteById : (txn, id, callback) => {
-        txn.executeSql(
-            'delete from purpose where id = ?',
-            [id],
-            callback
-        )
+    deleteById : (txn, id) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql(
+                'delete from purpose where id = ?',
+                [id],
+                resolve,
+                reject
+            )
+        })
     },
 
-    deleteAll : (txn, callback) => {
-        txn.executeSql('delete from purpose', [] , callback);
+    deleteAll : (txn) => {
+        return new Promise((resolve, reject) => {
+            txn.executeSql('delete from purpose', [] , resolve, reject);
+        })
     }
 }
 

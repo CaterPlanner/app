@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
 import MyProgressBar from '../progressBar/MyProgressBar';
 
 export default function DetailPlanPaper({color, name, onPress, value, disabled=false}){
@@ -17,7 +17,7 @@ export default function DetailPlanPaper({color, name, onPress, value, disabled=f
                         <MyProgressBar
                             value={value}
                             height={6}
-                            width={200}
+                            width={Dimensions.get('window').width - 70}
                             animated={true}
                             barColor={color}
                             backgroundColor={'#F2F2F2'}

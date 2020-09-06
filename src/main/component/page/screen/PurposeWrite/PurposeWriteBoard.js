@@ -10,12 +10,11 @@ import PurposeDetailPlansWrite from './PurposeDetailPlansWrite';
 import PurposeWriteDone from './PurposeWriteDone';
 
 import ImageButton from '../../../atom/button/ImageButton'
-import PageStateText from '../../../atom/text/PageStateText'
 import Loader from '../../Loader';
 
 import PurposeService from '../../../../rest/service/PurposeService';
 import Request from '../../../../util/Request';
-import { PurposeWriteType } from '../../../../mobX/store/PurposeWriteStore';
+import { PurposeWriteType } from '../../../../AppEnum';
 import GlobalConfig from '../../../../GlobalConfig';
 import Purpose from '../../../../rest/model/Purpose';
 
@@ -47,8 +46,8 @@ export default class PurposeWriteBoard extends Component {
         this.appStore = this.props.appStore;
         this.authStore = this.props.authStore;
 
-
-        this.purposeWriteStore.start(this.views.length, this.props.route.params ? this.props.route.params.purpose : null);
+        
+        this.purposeWriteStore.start(this.views.length, this.props.route.params ? this.props.route.params.purpose : null, this.props.route.params.type);
     }
 
     _renderItem = ({ item, index }) => {
@@ -61,11 +60,13 @@ export default class PurposeWriteBoard extends Component {
         const result = this.purposeWriteStore.purpose;
         let response = null;
 
+
         try {
 
             switch (this.purposeWriteStore.writeType) {
                 case PurposeWriteType.CREATE:
-           
+                case PurposeWriteType.FOLLOW:
+
 
                     response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
@@ -110,7 +111,13 @@ export default class PurposeWriteBoard extends Component {
                     break;
 
                 case PurposeWriteType.GROUND_MODIFY:
+                case PurposeWriteType.RETRY:
            
+                    result.detailPlans.forEach((goal) => {
+                        goal.briefingCount = 0;
+                        goal.lastBriefingDate = null;     
+                    })
+
                     response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })

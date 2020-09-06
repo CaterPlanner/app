@@ -44,6 +44,7 @@ export default class CommentView extends Component{
 
     _loadData = async () => {
         try{
+            console.log(this.state.page);
 
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/${this.entityName}/${this.id}/comments?page=${this.state.page}`, null, null, 8000)
             .auth(this.authStore.userToken.token)
@@ -51,17 +52,16 @@ export default class CommentView extends Component{
 
 
             this.isFinish = response.data.final;
-
-            console.log(this.state.data.slice(0, (this.state.isLordMore ? this.state.page : this.state.page - 1) * 15))
+            console.log(this.state.isLoadMore);
+            console.log(this.state.data.slice(0, this.state.page * 15));
 
             this.setState({
-                data : this.state.data.slice(0, (this.state.isLordMore ? this.state.page : this.state.page - 1) * 15).concat(response.data.elements),
+                data : this.state.isLoadMore ? this.state.data.slice(0, this.state.page * 15).concat(response.data.elements) : response.data.elements,
                 isLoading : false,
                 isLoadMore : false
             })
 
-            this.flatList.scrollToEnd();
-
+    
 
         }catch(e){
             console.log(e);
@@ -73,13 +73,12 @@ export default class CommentView extends Component{
         }
     }
     
-    _refresh = () => {
-        console.log(this.isFinish);
+    _loadMore = () => {
 
         if(this.isFinish || this.state.isLoading)
             return;
 
-        console.log('hello');
+        console.log('ISLOADMORE')
 
         this.setState({
             page : this.state.page + 1,
@@ -101,17 +100,9 @@ export default class CommentView extends Component{
     _postComment = async () => {
         try{
             //page 이용
+            this.flatList.scrollToOffset({ animated: true, offset: 0 });
 
             const commentText = this.state.commentText;
-
-            let isLoadMore = this.state.data.length % 15 == 0 && this.state.data.length != 0
-
-            this.setState({
-                commentText : null,
-                isLoading : true,
-                isLordMore : isLoadMore,
-                page : isLoadMore ? this.state.page + 1 : this.state.page
-            })
 
             const resource = {
                 content : commentText
@@ -131,9 +122,14 @@ export default class CommentView extends Component{
             .auth(this.authStore.userToken.token)
             .submit();
 
+            this.setState({
+                commentText : null,
+                isLoading : true,
+                isLordMore : false,
+                page : 0,
+                isFinish : false
+            }, this._loadData)
 
-
-            this._loadData();
 
         }catch(e){
             console.log(e);
@@ -153,13 +149,13 @@ export default class CommentView extends Component{
     }
 
     render(){
-        console.log(this.state.page)
-
+        console.log("Dsfsdft :" + this.state.isLoadMore)
         return(
-            <View style={{flex:1}}>
+            <View style={{flex:1, backgroundColor: 'white'}}>
                 <FlatList
                     ref={(ref) => {this.flatList = ref;}}
                     style={{flex: 1}}
+                    inverted={true}
                     data={this.state.data}
                     renderItem={({item : comment}) => (
                         <Comment
@@ -169,11 +165,11 @@ export default class CommentView extends Component{
                         />
                     )}
                     keyExtractor={(item) => item.id}
-                    onEndReached={this._refresh}
-                    onEndReachedThreshold={0}
+                    onEndReached={this._loadMore}
+                    onEndReachedThreshold={0.01}
                     ListFooterComponent={this._renderFooter}
                 />
-                <View style={{width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems:'center', justifyContent: 'space-between', padding: 10, elevation: 5}}> 
+                <View style={{width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems:'center', justifyContent: 'space-between', padding: 10, elevation: 15}}> 
                     <TextInput
                             numberOfLines={1}
                             placeholder={'댓글 입력하기'}

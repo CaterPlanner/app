@@ -1,4 +1,3 @@
-import State from '../State';
 import EasyDate from "../../util/EasyDate";
 
 
@@ -9,7 +8,7 @@ export function getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams
 
     switch (cycleType) {
         case "A":
-            maxTime = diffDay;
+            maxTime = diffDay + 1;
             break;
         case "W":
             const getDayBriefingCountInTerm = (startDate, endDate, piece) => {
@@ -41,18 +40,22 @@ export function getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams
 
 export default class Goal {
 
-    constructor(id, purposeId, name, description, startDate, endDate, color, cycle, briefingCount, lastBriefingDate, stat) {
+    static clone = (goal) => {
+        return new Goal(goal.id, goal.purposeId, goal.name, goal.description, goal.startDate, goal.endDate, goal.color, goal.cycle, goal.briefingCount, goal.lastBriefingDate);
+    }
+
+    constructor(id, purposeId, name, description, startDate, endDate, color, cycle, briefingCount, lastBriefingDate) {
         this.id = id;
         this.purposeId = purposeId;
         this.name = name;
         this.description = description;
-        this.startDate = startDate ? (startDate.constructor == EasyDate ? startDate : new EasyDate(startDate)) : null;
-        this.endDate = endDate ? (endDate.constructor == EasyDate ? endDate : new EasyDate(endDate)) : null;
+        this.startDate = startDate  ? (startDate.constructor == EasyDate ? startDate : new EasyDate(startDate)) : null;
+        this.endDate = endDate  ? (endDate.constructor == EasyDate ? endDate : new EasyDate(endDate)) : null;
         this.color = color;
         this.cycle = cycle;
         this.briefingCount = briefingCount;
-        this.lastBriefingDate = lastBriefingDate ? (lastBriefingDate.constructor == EasyDate ? lastBriefingDate : new EasyDate(lastBriefingDate)) : null;
-        this.stat = stat;
+        this.lastBriefingDate = lastBriefingDate != null ? (lastBriefingDate.constructor == EasyDate ? lastBriefingDate : new EasyDate(lastBriefingDate)) : null;
+        // this.stat = stat;
         
     }
 
@@ -62,7 +65,6 @@ export default class Goal {
         this.endDate = copy.endDate;
         this.color = copy.color;
         this.cycle = copy.cycle;
-        this.stat = copy.stat;
     } 
 
     get cycleType(){
@@ -83,11 +85,11 @@ export default class Goal {
     }
 
     get currentBriefingCount(){
-        return this.stat == State.SUCCEES ? this.maxTime : this.briefingCount;
+        return this.briefingCount;
     }
 
     get achieve(){
-        return this.stat == State.SUCCEES ? 100 : Math.round((this.currentBriefingCount / this.maxTime) * 100);
+        return Math.round((this.currentBriefingCount / this.maxTime) * 100);
     }
 
     get progress(){

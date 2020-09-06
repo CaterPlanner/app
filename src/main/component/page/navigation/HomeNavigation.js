@@ -80,7 +80,7 @@ const HomeNavigation = () => {
                         </View>
                     ),
                     headerRight: () => (
-                        <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flexDirection: 'row', alignItems:'center' }}>
                             <View style={{ marginRight: 25 }}>
                                 <ImageButton
                                     imageStyle={{ width: 22, height: 22 }}
@@ -94,11 +94,11 @@ const HomeNavigation = () => {
                             </View>
                             <View style={{ marginRight: 12 }}>
                                 <ImageButton
-                                    imageStyle={{ width: 22, height: 22 }}
-                                    source={require('../../../../../asset/button/notification_button.png')}
+                                    imageStyle={{ width: 25, height: 25 }}
+                                    source={require('../../../../../asset/button/setting_button.png')}
                                     onPress={
                                         () => {
-                                            navigation.navigate('ServerNotification');
+                                            navigation.navigate('Setting');
                                         }
                                     }
                                 />

@@ -5,13 +5,11 @@ import MyPrgoressBar from '../../../../atom/progressBar/MyProgressBar';
 import { useRoute } from '@react-navigation/native';
 
 
-const DAYS = ['월', '화', '수', '목', '금', '토', '일']
+const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 
 export default function DetailGoal() {
 
     const goal = useRoute().params.goal;
-    console.log(goal.achieve);
-    console.log(goal.cycleParams)
 
     return (
         <View

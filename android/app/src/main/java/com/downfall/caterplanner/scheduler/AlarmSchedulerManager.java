@@ -19,23 +19,23 @@ public class AlarmSchedulerManager {
 
         Intent briefingAlaramIntent = new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class);
 
-        PendingIntent statisticsPendingIntent = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingAlaramIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingAlaramIntent, PendingIntent.FLAG_NO_CREATE);
 
-        alarmManager.cancel(statisticsPendingIntent);
+        if(sender == null) {
+             sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
+
+            Calendar statisticsTime = Calendar.getInstance();
+            statisticsTime.set(Calendar.HOUR_OF_DAY, 0);
+            statisticsTime.set(Calendar.MINUTE, 0);
+            statisticsTime.set(Calendar.SECOND, 0);
+            statisticsTime.set(Calendar.MILLISECOND, 0);
 
 
-        Calendar statisticsTime = Calendar.getInstance();
-        statisticsTime.setTimeInMillis(System.currentTimeMillis());
-        statisticsTime.set(Calendar.HOUR_OF_DAY, 0);
+            alarmManager.setInexactRepeating(
+                AlarmManager.RTC, statisticsTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+                    sender);
+        }
 
-
-        alarmManager.setInexactRepeating(
-               AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
-               statisticsPendingIntent);
-
-                // alarmManager.setInexactRepeating(
-                // AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), 1000 * 10,
-                // statisticsPendingIntent);
 
     }
 

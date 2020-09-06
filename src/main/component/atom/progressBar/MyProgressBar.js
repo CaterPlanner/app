@@ -7,7 +7,7 @@ export default function MyProgressBar({value, height = 7, width, animated, barCo
         <View style={{backgroundColor : backgroundColor}}> 
             <ProgressBarAnimated
                 {...styles}
-                value={value} height={height} width={width} animated={animated} backgroundColor={barColor} borderRadius={0} borderWidth={0}
+                maxValue={100} value={value} height={height} width={width}  animated={animated} backgroundColor={barColor} borderRadius={0} borderWidth={0}
             />
         </View>
     )
