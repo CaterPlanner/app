@@ -15,7 +15,9 @@ import useStores from '../../../../mobX/helper/useStores';
 import EasyDate from '../../../../util/EasyDate';
 import Request from '../../../../util/Request';
 
-
+import {
+    useFocusEffect,
+  } from '@react-navigation/native';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -193,6 +195,17 @@ const cardStyles = StyleSheet.create({
     },
 })
 
+function DummyUseFocus({loadData}){
+    useFocusEffect(
+        React.useCallback(() => {
+            loadData();
+            return;
+        }, [])
+    );
+
+    return null;
+}
+
 @inject(['appStore'])
 export default class Home extends Component {
 
@@ -268,12 +281,15 @@ export default class Home extends Component {
 
     componentDidMount() {
         this._loadData();
+
+      
     }
 
     render() {
         console.log(fullWidth - 95);
         return (
             <View style={{ flex: 1 }}>
+                <DummyUseFocus loadData={this._loadData} />
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 11, justifyContent: 'center' }}>
                         <View style={{ alignItems: 'center' }}>
