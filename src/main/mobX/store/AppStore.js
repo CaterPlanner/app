@@ -51,6 +51,7 @@ export default class AppStore {
 
     onScheduler = async () => {
         if (!this.options.allowScheduling){
+            console.log('on');
             CaterPlannerScheduler.onScheduler();
             await AsyncStorage.setItem("IS_SCHEDULING", "true")
             this.options.allowScheduling = true;
@@ -59,6 +60,7 @@ export default class AppStore {
 
     offScheduler = async () => {
         if (this.options.allowScheduling){
+            console.log('off');
             CaterPlannerScheduler.offScheduler();
             await AsyncStorage.setItem("IS_SCHEDULING", "false");
             this.options.allowScheduling = false;

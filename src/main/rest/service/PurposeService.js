@@ -98,7 +98,6 @@ export default class PurposeService {
             try {
                 let purposes = await PurposeRepository.selectByStatIsActive(this.db);
 
-                console.log(purposes);
 
                 if(purposes.length == 0){
                     resolve();
@@ -134,9 +133,21 @@ export default class PurposeService {
     findPurposesForCard = () => {
         return new Promise(async (resolve, reject) => {
             try {
-                resolve(
-                    await PurposeRepository.selectAll(this.db)
-                );
+                const purposes = await PurposeRepository.selectAll(this.db);
+
+                if(purposes.length == 0){
+                    resolve();
+                    return;
+                }
+               
+                const activePurposeIdList = purposes.map((purpose) => purpose.id);
+                const goalList = await GoalRepository.selectInPurposeId(this.db, activePurposeIdList);
+
+                purposes.forEach((purpose) => {
+                    purpose.detailPlans = goalList.filter(g => g.purposeId == purpose.id);
+                })
+
+                resolve(purposes);
             } catch (e) {
                 reject(e);
             }
@@ -269,7 +280,7 @@ export default class PurposeService {
                         //     goal.stat = State.SUCCEES;
                         // }
     
-                        // await GoalRepository.updateByKey(this.db, purpose.id, goal.id, goal);
+                        await GoalRepository.updateByKey(this.db, purpose.id, goal.id, goal);
     
                         // if (purpose.achieve == 100 && purpose.stat == State.PROCEED) {
                         //     purpose.stat = State.END;

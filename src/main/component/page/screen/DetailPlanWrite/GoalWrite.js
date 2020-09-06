@@ -261,7 +261,7 @@ export default class GoalWrite extends Component {
                     </View>
                     <View style={[styles.editContainer, styles.choiceContainer]}>
                         <Text>
-                            종료일
+                            마지막일
                          </Text>
                         <RoundButton
                             text={this.state.goalEndDate.toStringDateByView()}
