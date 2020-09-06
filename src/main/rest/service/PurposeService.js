@@ -262,6 +262,9 @@ export default class PurposeService {
         })
     }
     addBriefing = (purpose, clearGoalIdList, token) => {
+
+        console.log(clearGoalIdList);
+
         return new Promise((resolve, reject) => {
             SQLiteManager.transaction(this.db, async (resolve, reject) => {
                 try{

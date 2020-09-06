@@ -17,7 +17,7 @@ import Request from '../../../../util/Request';
 
 import {
     useFocusEffect,
-  } from '@react-navigation/native';
+} from '@react-navigation/native';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -47,23 +47,23 @@ function EmptyCard({ onPress }) {
 function ActiveCard({ purpose, onPress, loadData }) {
 
     const navigation = useNavigation();
-    const {authStore} = useStores();
+    const { authStore } = useStores();
 
 
     const sendResult = async (stat) => {
-        try{
+        try {
 
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}/update`, JSON.stringify({
-                stat : stat
+                stat: stat
             }))
-            .auth(await authStore.getToken())
-            .submit();
+                .auth(await authStore.getToken())
+                .submit();
 
             await PurposeService.getInstance().delete(purpose.id);
-            
+
             loadData();
 
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
     }
@@ -106,7 +106,7 @@ function ActiveCard({ purpose, onPress, loadData }) {
                         </Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                        <DecimalDayWidget purpose={purpose}/>
+                        <DecimalDayWidget purpose={purpose} />
                     </View>
                 </View>
 
@@ -155,25 +155,25 @@ function ActiveCard({ purpose, onPress, loadData }) {
                             source={require('../../../../../../asset/button/start_button.png')}
                             onPress={() => {
 
-                                Alert.alert(null, '목적 수행이 완료되었습니다', 
-                                [
-                                    {
-                                        text: '다음에 결정',
-                                        style: 'cancel',
-                                    },
-                                    {
-                                        text: "실패",
-                                        onPress: () => {
-                                            sendResult(State.FAIL)
+                                Alert.alert(null, '목적 수행이 완료되었습니다',
+                                    [
+                                        {
+                                            text: '다음에 결정',
+                                            style: 'cancel',
+                                        },
+                                        {
+                                            text: "실패",
+                                            onPress: () => {
+                                                sendResult(State.FAIL)
+                                            }
+                                        },
+                                        {
+                                            text: "성공",
+                                            onPress: () => {
+                                                sendResult(State.SUCCEES)
+                                            }
                                         }
-                                    },
-                                    {
-                                        text: "성공",
-                                        onPress: () => {
-                                            sendResult(State.SUCCEES)
-                                        }
-                                    }
-                                ])
+                                    ])
                             }}
                         />
                     </View>
@@ -197,7 +197,7 @@ const cardStyles = StyleSheet.create({
     },
 })
 
-function DummyUseFocus({loadData}){
+function DummyUseFocus({ loadData }) {
     useFocusEffect(
         React.useCallback(() => {
             loadData();
@@ -251,33 +251,34 @@ export default class Home extends Component {
             let hasSuccees = false;
             let hasFailed = false;
 
-            data.forEach((purpose) => {
-                if (purpose.isFailProceed)
-                    hasFailed = true;
-                if (purpose.isSucceeseProceed)
-                    hasSuccees = true;
-            });
+            if (data) {
+                data.forEach((purpose) => {
+                    if (purpose.isFailProceed)
+                        hasFailed = true;
+                    if (purpose.isSucceeseProceed)
+                        hasSuccees = true;
+                });
 
-            if (hasSuccees)
-                Alert.alert(null, '수행을 완료한 목적이 있습니다.')
-            if (hasFailed)
-                Alert.alert(null, '수행을 실패한 목적이 있습니다.');
+                if (hasSuccees)
+                    Alert.alert(null, '수행을 완료한 목적이 있습니다.')
+                if (hasFailed)
+                    Alert.alert(null, '수행을 실패한 목적이 있습니다.');
 
 
-            this.setState({
-                activeIndex: 0,
-                endIndex: data.length,
-                data: data
-            });
 
-            for (purpose of data) {
-                if (purpose.stat == 0) {
-                    console.log('start SCHEDULEERR~!!!!!!!!!!!!!!');
-                    this.appStore.onScheduler();
-                    break;
+                for (purpose of data) {
+                    if (purpose.stat == 0) {
+                        this.appStore.onScheduler();
+                        break;
+                    }
                 }
             }
 
+            this.setState({
+                activeIndex: 0,
+                endIndex: data ? data.length : 0,
+                data: data
+            });
         } catch (e) {
             console.log(e);
         }
@@ -287,7 +288,7 @@ export default class Home extends Component {
     componentDidMount() {
         this._loadData();
 
-      
+
     }
 
     render() {

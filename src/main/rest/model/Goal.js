@@ -136,21 +136,24 @@ export default class Goal {
         let today = EasyDate.now();
         let cycleParams = this.cycleParams;
 
+        let result = false;
+
+
         if(!this.lastBriefingDate || !this.lastBriefingDate.equalsDate(today)){
             switch(this.cycleType){
                 case 'A':
-                    return true;
+                    result = true;
+                    break;
                 case 'W':
-                    for(param in cycleParams){
+                    cycleParams.forEach((param) => {
                         if(param == today.getDay()){
-                            return true;
+                            result = true;
                         }
-                    }
-                    return false;
+                    })
+                    break;
             }
-        }else{
-            return false;
         }
+        return result;
     }
 
 
