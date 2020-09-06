@@ -24,11 +24,15 @@ export default class BriefingGoalList extends Component{
     save = async () => {
 
         try{
+
+            let clearGoalIdList = [];
+            this.clearGoalIdStat.map((r, index) => {
+                if(r)
+                    clearGoalIdList.push(index);
+            });
+
             const updatedPurpose = await PurposeService.getInstance().addBriefing(this.props.route.params.purpose, 
-                this.clearGoalIdStat.map((r, index) => {
-                    if(r)
-                        return index;
-                }), this.props.authStore.userToken.token);
+                clearGoalIdList , this.props.authStore.userToken.token);
 
             this.props.route.params.acceptData(updatedPurpose);
 
