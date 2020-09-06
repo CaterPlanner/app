@@ -13,6 +13,8 @@ export default class AppStore {
 
     userOptions;
 
+    options;
+
     constructor() {
         NotificationManager.configure();
     }
@@ -20,17 +22,23 @@ export default class AppStore {
     boot = async () => {
         this.isBegin = await AsyncStorage.getItem('IS_BEGIN');
 
+
         if (this.isBegin == null) {
             //초기 세팅
-            AsyncStorage.setItem('IS_BEGIN', 'false');
-            AsyncStorage.setItem('USER_OPTIONS', JSON.parse(
+            await AsyncStorage.setItem('IS_BEGIN', 'false');
+            await AsyncStorage.setItem('USER_OPTIONS', JSON.parse(
                 { init: 5 } //default 값
             ));
+            await AsyncStorage.setItem('IS_SCHEDULING', "true");
 
             this.isBegin = false;
         }
 
-        this.userOptions = await AsyncStorage.getItem('USER_OPTIONS');
+        this.options = {
+            allowScheduling : Boolean(await AsyncStorage.getItem("IS_SCHEDULING")) == true
+        }
+
+        // this.userOptions = await AsyncStorage.getItem('USER_OPTIONS');
         // console.log('start SCHEDULEERR~!!!!!!!!!!!!!!')
         // this.onScheduler();
     }
@@ -42,21 +50,23 @@ export default class AppStore {
     }
 
     onScheduler = async () => {
-        const isScheduling = await AsyncStorage.getItem("IS_SCHEDULING");
-
-        if (!isScheduling){
+        if (!this.options.allowScheduling){
             CaterPlannerScheduler.onScheduler();
+            await AsyncStorage.setItem("IS_SCHEDULING", "true")
+            this.options.allowScheduling = true;
         }
     }
 
     offScheduler = async () => {
-        const isScheduling = await AsyncStorage.getItem("IS_SCHEDULING");
-
-        if (isScheduling)
+        if (this.options.allowScheduling){
             CaterPlannerScheduler.offScheduler();
-
+            await AsyncStorage.setItem("IS_SCHEDULING", "false");
+            this.options.allowScheduling = false;
+        }
     }
 
+    get isScheduling(){
 
+    }
 
 }

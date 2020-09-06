@@ -13,12 +13,16 @@ import { PurposeWriteType } from '../../../AppEnum';
 const Tab = createBottomTabNavigator();
 
 const moveTab = (navigation, name) => {
+     
+  console.log(navigation);
 
-  // if(navigation.canGoBack())
-  //   navigation.popToTop();
+  if(navigation.canGoBack()){
+    navigation.popToTop();
+   }
+  //   navigation.navigate(name)
 
-  const jumptoAction = TabActions.jumpTo(name);
-  navigation.dispatch(jumptoAction);
+
+    console.log('ddd');
 }
 
 
@@ -30,9 +34,9 @@ const MainNavigation = () => {
 
     <Tab.Navigator
       screenOptions={({ route, navigation }) => ({
+        unmountOnBlur: true,
         tabBarIcon: ({ focused }) => {
           let iconSource;
-
           switch (route.name) {
             case "HomeNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_home.png');
@@ -68,20 +72,10 @@ const MainNavigation = () => {
       }}
     >
       <Tab.Screen name="HomeNavigation" component={HomeNavigation}
-        listeners={({ navigation }) => ({
-          tabPress : e => {
-            e.preventDefault();
-            moveTab(navigation, "HomeNavigation");
-          }
-        })}
+        
       />
       <Tab.Screen name="SearchNavigation" component={SearchNavigation}
-        listeners={({ navigation }) => ({
-          tabPress : e => {
-            e.preventDefault();
-            moveTab(navigation, "SearchNavigation");
-          }
-        })}
+       
       />
       <Tab.Screen name="Make" component={Make}
         listeners={({ navigation }) => ({
@@ -96,20 +90,10 @@ const MainNavigation = () => {
           },
         })} />
       <Tab.Screen name="StoryNavigation" component={StoryNavigation}
-        listeners={({ navigation }) => ({
-          tabPress : e => {
-            e.preventDefault();
-            moveTab(navigation, "StoryNavigation");
-          }
-        })}
+        
       />
       <Tab.Screen name="PublicNavigation" component={PublicNavigation}
-        listeners={({ navigation }) => ({
-          tabPress : e => {
-            e.preventDefault();
-            moveTab(navigation, "PublicNavigation");
-          }
-        })}
+        
       />
     </Tab.Navigator>
   );

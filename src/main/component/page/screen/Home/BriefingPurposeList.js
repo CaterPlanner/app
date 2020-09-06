@@ -11,7 +11,7 @@ import { inject } from 'mobx-react';
 import EasyDate from '../../../../util/EasyDate';
 
 
-@inject(['authStore'])
+@inject(['appStore'])
 export default class BriefingPurposeList extends Component {
 
     constructor(props) {
@@ -21,6 +21,8 @@ export default class BriefingPurposeList extends Component {
             isLoading: true,
             purposes: null
         }
+
+        this.appStore = this.props.appStore;
     }
 
     _getData = async () => {
@@ -39,7 +41,6 @@ export default class BriefingPurposeList extends Component {
     }
 
     _acceptPurpose = async (index, updatePurpose) => {
-        console.log(updatePurpose);
         const newPurposes = this.state.purposes.slice();
         newPurposes[index] = updatePurpose;
         this.setState({
@@ -52,6 +53,7 @@ export default class BriefingPurposeList extends Component {
     }
 
     componentWillUnmount() {
+        if(this.appStore.options.allowScheduling)
         NotificationManager.briefingAlarmShow(this.state.purposes);
     }
 
