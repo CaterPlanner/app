@@ -26,20 +26,23 @@ export default class PurposeService {
 
     create = (purpose, detailPlans) => {
         return new Promise((resolve, reject) => {
-            SQLiteManager.transaction(this.db, async (finish) => {
-                await PurposeRepository.insert(this.db, purpose);
+            SQLiteManager.transaction(this.db, async (resolve, reject) => {
+                try{
+                    await PurposeRepository.insert(this.db, purpose);
                 
-                if(detailPlans){
-                    if(purpose.stat == 1)
-                        throw '대기 중인 목적은 세부목적을 지정할 수 없습니다'
-
-                    for(goal of detailPlans){
-                        await GoalRepository.insert(txn, goal);
+                    if(detailPlans){
+    
+                        for(goal of detailPlans){
+                            await GoalRepository.insert(this.db, goal);
+                        }
                     }
+    
+                    resolve();
+                }catch(e){
+                    console.log(e);
+                    reject(e);
                 }
 
-                finish();
-                console.log('login end');
             })
             .then((data) => resolve(data))
             .catch(e => reject(e));
@@ -54,11 +57,7 @@ export default class PurposeService {
                     console.log('ehllo');
                     for(purpose of responsePurposes){
                         await PurposeRepository.insert(this.db, new Purpose(purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat))
-                    
-                        if(purpose.detailPlans.length != 0){
-                            if (purpose.stat == 1)
-                                throw '대기 중인 목적은 세부목적을 지정할 수 없습니다'
-                        }
+
     
                         if(purpose.detailPlans.length == 0)
                             continue;
@@ -98,6 +97,8 @@ export default class PurposeService {
         return new Promise(async (resolve, reject) => {
             try {
                 let purposes = await PurposeRepository.selectByStatIsActive(this.db);
+
+                console.log(purposes);
 
                 if(purposes.length == 0){
                     resolve();

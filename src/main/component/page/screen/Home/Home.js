@@ -44,7 +44,7 @@ function EmptyCard({ onPress }) {
     )
 }
 
-function ActiveCard({ purpose, onPress }) {
+function ActiveCard({ purpose, onPress, loadData }) {
 
     const navigation = useNavigation();
     const {authStore} = useStores();
@@ -59,8 +59,9 @@ function ActiveCard({ purpose, onPress }) {
             .auth(await authStore.getToken())
             .submit();
 
-
             await PurposeService.getInstance().delete(purpose.id);
+            
+            loadData();
 
         }catch(e){
             console.log(e);
@@ -130,11 +131,12 @@ function ActiveCard({ purpose, onPress }) {
                                 height: 100
                             }}
                             source={require('../../../../../../asset/button/start_button.png')}
-                            onPress={() => {
+                            onPress={async () => {
+
                                 navigation.navigate('CreateNavigation', {
                                     screen: 'PurposeWriteBoard',
                                     params: {
-                                        purpose: Purpose.clone(purpose),
+                                        purpose: Purpose.clone(await PurposeService.getInstance().read(purpose.id)),
                                         type: PurposeWriteType.RETRY
                                     }
                                 })
@@ -223,7 +225,7 @@ export default class Home extends Component {
     //
     _renderItem = ({ item, index }) => {
         return (
-            <ActiveCard purpose={item} id={item.id} image={item.photoUrl} title={item.name} date={item.leftDay}
+            <ActiveCard purpose={item} loadData={this._loadData}
                 onPress={() => {
                     this.props.navigation.navigate('PublicNavigation', {
                         screen: 'LoadMyPurpose',
@@ -241,7 +243,9 @@ export default class Home extends Component {
     _loadData = async () => {
         try {
 
-            const data = await PurposeService.getInstance().refresh();
+            await PurposeService.getInstance().refresh();
+
+            const data = await PurposeService.getInstance().findPurposesForCard();
 
             let hasSuccees = false;
             let hasFailed = false;
