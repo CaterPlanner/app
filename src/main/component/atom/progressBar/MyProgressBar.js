@@ -6,7 +6,7 @@ export default function MyProgressBar({value, height = 7, width=null, animated, 
     return(
         <Progress.Bar
                 {...styles}
-               progress={value /100} height={height} width={width}  animated={animated} unfilledColor={backgroundColor} color={barColor} borderRadius={0} borderWidth={0}
+               progress={!value || value == 0 ? 0 : value /100} height={height} width={width}  animated={animated} unfilledColor={backgroundColor} color={barColor} borderRadius={0} borderWidth={0}
             />
     )
 }

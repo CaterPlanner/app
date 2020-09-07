@@ -212,7 +212,8 @@ export default class Home extends Component {
         super(props)
 
         this.state = {
-            activeIndex: 0
+            activeIndex: 0,
+            isLoading : true
         }
 
         this.appStore = this.props.appStore;
@@ -273,7 +274,8 @@ export default class Home extends Component {
             this.setState({
                 activeIndex: 0,
                 endIndex: data ? data.length : 0,
-                data: data
+                data: data,
+                isLoading : false
             });
         } catch (e) {
             console.log(e);
@@ -284,7 +286,9 @@ export default class Home extends Component {
     componentDidMount() {
         this._loadData();
         this.props.navigation.addListener('focus', () => {
-            this._loadData();
+            this.setState({
+                isLoading : true
+            }, this._loadData);
         })
     }
 
@@ -296,6 +300,7 @@ export default class Home extends Component {
         console.log(fullWidth - 95);
         return (
             <View style={{ flex: 1 }}>
+                {!this.state.isLoading &&
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 11, justifyContent: 'center' }}>
                         <View style={{ alignItems: 'center' }}>
@@ -332,7 +337,7 @@ export default class Home extends Component {
                             />
                         }
                     </View>
-                </View>
+                </View>}
             </View>
 
 
