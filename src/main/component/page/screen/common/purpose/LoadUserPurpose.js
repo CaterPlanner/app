@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useFocusEffect } from '@react-navigation/native';
 import useStores from '../../../../../mobX/helper/useStores';
 import Loader from '../../../Loader';
 import GlobalConfig from '../../../../../GlobalConfig';
@@ -23,7 +23,7 @@ export default function LoadUserPurpose({ navigation }) {
     const getData = async () => {
         try {
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${route.params.id}`)
-                .auth(authStore.userToken.token).submit();
+                .auth(await authStore.getToken()).submit();
 
             const purpose = new Purpose(response.data.id, response.data.name, response.data.description, response.data.photoUrl, response.data.disclosureScope,
                 response.data.startDate, response.data.endDate, response.data.stat);
@@ -48,8 +48,17 @@ export default function LoadUserPurpose({ navigation }) {
     }
 
     useEffect(() => {
+        setIsLoading(true);
         getData();
     }, []);
+
+    useFocusEffect(
+        React.useCallback(() => {
+        
+        getData();
+          return () => {return null;};
+        }, [])
+      );
 
     return (
         <View style={{ flex: 1 }}>

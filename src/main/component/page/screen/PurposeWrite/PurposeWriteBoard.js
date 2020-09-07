@@ -71,7 +71,7 @@ export default class PurposeWriteBoard extends Component {
                     response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })
-                        .auth(this.authStore.userToken.token)
+                        .auth(await this.authStore.getToken())
                         .submit();
 
                     if(result.detailPlans.length != 0){
@@ -97,7 +97,7 @@ export default class PurposeWriteBoard extends Component {
                     response = await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })
-                        .auth(this.authStore.userToken.token)
+                        .auth(await this.authStore.getToken())
                         .submit();
 
                     result.photoUrl = response.data.photoUrl;
@@ -127,7 +127,7 @@ export default class PurposeWriteBoard extends Component {
                     response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })
-                        .auth(this.authStore.userToken.token)
+                        .auth(await this.authStore.getToken())
                         .submit();
 
                     result.photoUrl = response.data.photoUrl;

@@ -34,7 +34,7 @@ function BottomBar({ data }) {
         try {
             
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${data.purpose.id}/cheer/${isCheer ? 'negative' : 'positive'}`)
-                .auth(authStore.userToken.token)
+                .auth(await authStore.getToken())
                 .submit();
 
     
@@ -330,7 +330,7 @@ export default function DetailPurpose({ data }) {
     const deletePurpose = async () => {
         try {
             await Request.delete(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}`)
-                .auth(authStore.userToken.token)
+                .auth(await authStore.getToken())
                 .submit();
 
             await PurposeService.getInstance().delete(purpose.id);
@@ -345,7 +345,7 @@ export default function DetailPurpose({ data }) {
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}/update`, JSON.stringify({
                 stat: State.FAIL
             }))
-                .auth(authStore.userToken.token)
+                .auth(await authStore.getToken())
                 .submit();
 
             await PurposeService.getInstance().delete(purpose.id);
@@ -355,7 +355,7 @@ export default function DetailPurpose({ data }) {
         }
     }
 
-    console.log(data);
+
 
     return (
         <View style={{ flex: 1 }}>
@@ -496,7 +496,8 @@ export default function DetailPurpose({ data }) {
                             {purpose.description}
                         </Text>
                                         <View style={{ paddingVertical: 10 }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+                    >
                         <Text style={{fontSize: 14,
         textAlign: 'right',
         paddingVertical: 8}}>
@@ -508,13 +509,15 @@ export default function DetailPurpose({ data }) {
                             {purpose.achieve}%
                         </Text>
                         </View>
-                            <MyPrgoressBar
-                                width={Dimensions.get('window').width - 18}
+                        <View style={{alignItems:'center'}}>
+                        <MyPrgoressBar
+                                width={Dimensions.get('window').width - 40}
                                 height={7}
                                 animated={true}
                                 barColor={'red'}
                                 value={purpose.achieve}
                             />
+                        </View>
                         </View>
                         <View style={detailPurposeStyles.purposeProfileContainer}>
                             {/* <View>

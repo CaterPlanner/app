@@ -65,13 +65,13 @@ export default class WriteStory extends Component {
 
             if (!this.isModify) {
                 const response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story`, JSON.stringify(resource))
-                    .auth(this.authStore.userToken.token)
+                    .auth(await this.authStore.getToken())
                     .submit();
 
                 id = response.data.id;
             } else {
                 await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${id}`, JSON.stringify(resource))
-                    .auth(this.authStore.userToken.token)
+                    .auth(await this.authStore.getToken())
                     .submit();
             }
 

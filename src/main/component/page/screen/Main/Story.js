@@ -24,8 +24,6 @@ export default class Story extends Component{
             type: 0
         }
 
-        this.page = 0;
-        this.type = null;
 
         this.authStore = this.props.authStore;
         this.isFinish = false;
@@ -53,7 +51,7 @@ export default class Story extends Component{
 
             console.log('Load More' + this.state.page);
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story?page=${this.state.page + (this.state.type ? `&type=${this.state.type}` : '')}`, null, null, 8000)
-            .auth(this.authStore.userToken.token)
+            .auth(await this.authStore.getToken())
             .submit();
 
             this.isFinish = response.data.final;

@@ -36,7 +36,7 @@ export default function StoryBlock({data, onPress}){
     const toggleLikes = async () => {
         try{
             const response = await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${data.id}/likes/${isLikes ? 'negative' : 'positive'}`)
-            .auth(authStore.userToken.token)
+            .auth(await authStore.getToken())
             .submit();
             console.log(response)
             setIsLikes(!isLikes);
