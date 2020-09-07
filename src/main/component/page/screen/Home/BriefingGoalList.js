@@ -11,6 +11,7 @@ export default class BriefingGoalList extends Component{
         super(props);
         
         this.state = {
+            isLoading : false,
             goals : this.props.route.params.goals,
         }
 
@@ -21,10 +22,9 @@ export default class BriefingGoalList extends Component{
         })
     }
 
-    save = async () => {
-
+    _briefing = async () => {
+        
         try{
-
             let clearGoalIdList = [];
             this.clearGoalIdStat.map((r, index) => {
                 if(r)
@@ -38,9 +38,22 @@ export default class BriefingGoalList extends Component{
 
             this.props.navigation.goBack();
 
+
         }catch(e){
             console.log(e);
+            this.setState({
+                isLoading : false
+            })
         }
+    }
+
+    save = () => {
+        if(this.state.isLoading)
+            return;
+
+        this.setState({
+            isLoading : true
+        }, this._briefing);
     }
 
     componentDidUpdate(){

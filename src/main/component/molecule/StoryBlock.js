@@ -50,7 +50,7 @@ export default function StoryBlock({data, onPress}){
         <TouchableOpacity style={{height: 270, borderRadius: 10, paddingHorizontal: 15, backgroundColor: 'white', paddingVertical: 12, width:'100%'}}
         activeOpacity={1} onPress={onPress}>
             <View style={{flexDirection: 'row', alignItems: 'center', paddingBottom: 10}}>
-                <ProfileWidget profileUrl={data.author.profileUrl} name={data.author.name}/>
+                <ProfileWidget user={data.author} />
                 <TimeAgo time={data.createDate}/>
             </View>
             <View style={{alignItems: 'center'}}>

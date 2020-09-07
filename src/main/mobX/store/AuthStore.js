@@ -33,23 +33,28 @@ export default class AuthStore {
     }
 
     @action
-    load = async () => {
-        try {
+    load = () => {
+        return new Promise(async (resolve, reject) => {
+            try {
 
-            const userToken = JSON.parse(await AsyncStorage.getItem('USER_TOKEN'));
-            this.user = JSON.parse(await AsyncStorage.getItem('USER_DATA'));
+                const userToken = JSON.parse(await AsyncStorage.getItem('USER_TOKEN'));
+                this.user = JSON.parse(await AsyncStorage.getItem('USER_DATA'));
+    
+    
+                if (userToken && this.validate(userToken)) {
+                    this.userToken = userToken;
+    
+                } else if (userToken) {
+                    await reissuanceToken(userToken);
+                }
 
-
-            if (userToken && validate(userToken)) {
-                this.userToken = userToken;
-
-            } else if (userToken) {
-                await reissuanceToken(userToken);
+                resolve();
+    
+            } catch (e) {
+                this.clearUser();
+                reject(e);
             }
-
-        } catch (e) {
-            this.clearUser();
-        }
+        })
     }
 
     @action

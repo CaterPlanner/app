@@ -14,6 +14,12 @@ public class AlarmSchedulerManager {
     private static final int BRIEFING_ALARM_CODE = 100;
 
 
+    public static boolean isScheduling(Context context){
+        Intent briefingAlaramIntent = new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingAlaramIntent, PendingIntent.FLAG_NO_CREATE);
+        return sender != null;
+    }
+
     public static void start(Context context){
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 

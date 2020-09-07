@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react'
 import SignIn from '../screen/auth/SignIn';
 import AppNavigation from './AppNavigation';
 import BeginNavigation from './BeginNavigation'
-import App from '../../../../../App';
+import SplashScreen from 'react-native-splash-screen';
 
 
 @inject(stores => {
@@ -22,32 +22,50 @@ export default class NavController extends Component {
 
         this.authStore = this.props.authStore;
         this.appStore = this.props.appStore;
+
+        this.state = {
+            isSetting: false
+        }
+
         // this.appStore.onScheduler();
 
-;
+
+        // useEffect(() => {
+        //     setTimeout(() => {
+        //       SplashScreen.hide();
+        //     }, 1000);
+        //   },[]);
+
     }
 
     async componentDidMount() {
         try {
             await this.appStore.boot();
             await this.authStore.load();
+
+            if (this.appStore.isBegin || !this.appStore.isLogin) {
+                setTimeout(() => {
+                    SplashScreen.hide();
+                }, 500);
+            }
+
         } catch (e) {
             console.log(e);
         }
     }
 
     render() {
-
+        console.log(this.appStore.isBegin)
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar
                     barStyle="white-content"
                     backgroundColor="#000000"
-             />
+                />
                 {/* <AppNavigation />     */}
                 {this.appStore.isBegin ?
-                    <BeginNavigation /> :  
-                        this.authStore.isLogin || this.appStore.offlineMode ?  <AppNavigation /> : <SignIn/>
+                    <BeginNavigation /> :
+                    this.authStore.isLogin || this.appStore.offlineMode ? <AppNavigation /> : <SignIn />
                 }
             </View>
         );
