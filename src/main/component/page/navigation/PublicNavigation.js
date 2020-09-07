@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import MyProfile from '../screen/common/profile/LoadProfile';
+import MyProfile from '../screen/common/profile/MyProfile';
 import LoadMyPurpose from '../screen/common/purpose/LoadMyPurpose';
 import DetailGoal from '../screen/common/purpose/DetailGoal';
 import LoadProfile from '../screen/common/profile/LoadProfile';
@@ -40,7 +40,14 @@ const PublicNavigation = () => {
                 ...defaultHeaderStyle,
                 title: ''
             })} name="DetailGoal" component={DetailGoal}/>
-            <Stack.Screen options={{ headerShown: false }} name="LoadProfile" component={LoadProfile}/>
+            <Stack.Screen options={({ navigation }) => ({
+                ...defaultHeaderStyle,
+                title: '프로필',
+                headerTitleAlign:'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
+            })} name="LoadProfile" component={LoadProfile}/>
             <Stack.Screen options={{ headerShown: false }} name="LoadUserPurpose" component={LoadUserPurpose}/>
             <Stack.Screen options={({ route, navigation }) => ({
                 ...defaultHeaderStyle,

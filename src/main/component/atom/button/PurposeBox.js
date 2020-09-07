@@ -26,8 +26,7 @@ export default function PurposeBox({data, onPress}){
             </Text>
             <View style={{alignSelf : 'flex-start'}}>
             <ProfileWidget
-                profileUrl={data.author.profileUrl}
-                name={data.author.name}
+                user={data.author}
                 fontStyle={{ alignSelf: 'flex-end', marginBottom: 5}}
             />
             </View>

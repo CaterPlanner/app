@@ -7,15 +7,13 @@ import Loader from '../../../Loader';
 import Offline from '../../../../organism/Offline';
 import DetailProfile from './DetailProfile';
 import GlobalConfig from '../../../../../GlobalConfig';
-import { useRoute } from '@react-navigation/native';
 
-export default function LoadProfile(){
+export default function MyProfile(){
 
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState(null);
 
     const {authStore} = useStores();
-    const route = useRoute();
 
     const loadProfile = async () => {
 
@@ -23,7 +21,7 @@ export default function LoadProfile(){
             if(!authStore.isLogin){
                 setIsLoading(false);
             }else{
-                const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/${route.params.id}`)
+                const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/myProfile`)
                 .auth(await authStore.getToken())
                 .submit();
 
