@@ -22,7 +22,7 @@ export default function MyProfile(){
                 setIsLoading(false);
             }else{
                 const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/myProfile`)
-                .auth(authStore.userToken.token)
+                .auth(await authStore.getToken())
                 .submit();
 
                 setData(response.data);

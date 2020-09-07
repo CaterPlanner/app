@@ -10,10 +10,6 @@ import PublicNavigation from './PublicNavigation'
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 import BriefingGoalList from '../screen/home/BriefingGoalList';
 
-import CommnetView from '../screen/common/CommnetView';
-import WriteStory from '../screen/common/story/WriteStory'
-import DetailStory from '../screen/common/story/DetailStory';
-import Test from '../screen/Test';
 
 const Stack = createStackNavigator();
 

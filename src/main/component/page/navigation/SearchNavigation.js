@@ -1,26 +1,25 @@
-import React, { Component } from 'react';
-import recommend from '../screen/search/RecommendGoals'
-import newGoals from '../screen/search/NewGoals'
-import popularGaols from '../screen/search/PopularGaols'
-import category from '../screen/search/Category'
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+import PublicNavigation from './PublicNavigation'
+import Search from '../screen/search/Search';
+import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 
-const Tab = createMaterialTopTabNavigator();
+const Stack = createStackNavigator();
 
-const Search = () => {
+const SearchNavigation = () => {
   return(
-    <Tab.Navigator  
-      tabBarOptions={{
-      activeTintColor: 'black',
-      inactiveTintColor: 'gray',
-      tabBarPosition: "right",
-    }}>
-    <Tab.Screen name="추천 목표" component={recommend} />
-    <Tab.Screen name="최신 목표" component={newGoals} />
-    <Tab.Screen name="인기 목표" component={popularGaols} />
-    <Tab.Screen name="카테고리" component={category} />
-  </Tab.Navigator>
+    <Stack.Navigator>
+        <Stack.Screen options={({ navigation }) => ({
+                ...defaultHeaderStyle,
+                title: '목적 검색',
+                headerTitleAlign:'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
+            })} name="Search" component={Search}/>
+        <Stack.Screen options={{ headerShown: false }} name="PublicNavigation" component={PublicNavigation} />
+    </Stack.Navigator>
   );
 }
 
-export default Search;
+export default SearchNavigation;

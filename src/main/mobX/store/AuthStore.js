@@ -83,6 +83,9 @@ export default class AuthStore {
     }
 
     vaildate = (userToken) => {
+        console.log('validate');
+        console.log(new Date(userToken.expired).getTime())
+        console.log(new Date().getTime());
         return new Date(userToken.expired) < new Date();
     }
 
@@ -193,9 +196,9 @@ export default class AuthStore {
     getToken = () => {
         return new Promise(async (resolve, reject) => {
             try {
-                if (!this.vaildate(this.userToken)) {
-                    await this.reissuanceToken(this.userToken);
-                }
+                // if (!this.vaildate(this.userToken)) {
+                //     await this.reissuanceToken(this.userToken);
+                // }
                 resolve(this.userToken.token);
             } catch (e) {
                 console.log(e);

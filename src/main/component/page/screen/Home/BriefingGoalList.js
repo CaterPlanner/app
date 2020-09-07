@@ -32,7 +32,7 @@ export default class BriefingGoalList extends Component{
             });
 
             const updatedPurpose = await PurposeService.getInstance().addBriefing(this.props.route.params.purpose, 
-                clearGoalIdList , this.props.authStore.userToken.token);
+                clearGoalIdList , await this.props.authStore.getToken());
 
             this.props.route.params.acceptData(updatedPurpose);
 

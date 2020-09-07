@@ -9,6 +9,7 @@ import Goal from '../../../../../rest/model/Goal';
 import PurposeService from '../../../../../rest/service/PurposeService';
 import GlobalConfig from '../../../../../GlobalConfig';
 import { inject } from 'mobx-react';
+import { useFocusEffect} from '@react-navigation/native';
 
 @inject(['authStore'])
 export default class LoadMyPurpose extends Component{
@@ -34,7 +35,7 @@ export default class LoadMyPurpose extends Component{
 
 
                 const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${id}`)
-                .auth(this.authStore.userToken.token).submit();
+                .auth(await this.authStore.getToken()).submit();
 
                 const purpose = new Purpose(response.data.id, response.data.name, response.data.description, response.data.photoUrl, response.data.disclosureScope,
                     response.data.startDate, response.data.endDate, response.data.stat);
@@ -78,6 +79,15 @@ export default class LoadMyPurpose extends Component{
 
     componentDidMount(){
         this._getData();
+        this.props.navigation.addListener('focus', () => {
+            this.setState({
+                isLoading : true
+            }, this._getData)
+        })
+    }
+
+    componentWillUnmount(){
+        this.props.navigation.removeListener('focus');
     }
 
     render(){

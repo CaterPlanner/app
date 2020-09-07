@@ -15,10 +15,6 @@ import useStores from '../../../../mobX/helper/useStores';
 import EasyDate from '../../../../util/EasyDate';
 import Request from '../../../../util/Request';
 
-import {
-    useFocusEffect,
-} from '@react-navigation/native';
-
 
 const fullWidth = Dimensions.get('window').width;
 
@@ -287,15 +283,19 @@ export default class Home extends Component {
 
     componentDidMount() {
         this._loadData();
+        this.props.navigation.addListener('focus', () => {
+            this._loadData();
+        })
+    }
 
-
+    componentWillUnmount(){
+        this.props.navigation.removeListener('focus');
     }
 
     render() {
         console.log(fullWidth - 95);
         return (
             <View style={{ flex: 1 }}>
-                <DummyUseFocus loadData={this._loadData} />
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 11, justifyContent: 'center' }}>
                         <View style={{ alignItems: 'center' }}>

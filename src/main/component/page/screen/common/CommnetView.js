@@ -47,7 +47,7 @@ export default class CommentView extends Component{
             console.log(this.state.page);
 
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/${this.entityName}/${this.id}/comments?page=${this.state.page}`, null, null, 8000)
-            .auth(this.authStore.userToken.token)
+            .auth(await this.authStore.getToken())
             .submit();
 
 
@@ -119,7 +119,7 @@ export default class CommentView extends Component{
 
 
             await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/${this.entityCommentName}`, JSON.stringify(resource))
-            .auth(this.authStore.userToken.token)
+            .auth(await this.authStore.getToken())
             .submit();
 
             this.setState({

@@ -12,7 +12,6 @@ import Request from '../../../../../util/Request';
 import Comment from '../../../../molecule/Comment';
 import { Model } from '../../../../../AppEnum';
 
-
 @inject(['authStore'])
 export default class DetailStory extends Component {
 
@@ -31,11 +30,12 @@ export default class DetailStory extends Component {
     _toggleLikes = async () => {
         try {
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}/likes/${this.state.isLikes ? 'negative' : 'positive'}`)
-                .auth(this.authStore.userToken.token)
+                .auth(await this.authStore.getToken())
                 .submit();
 
             this.setState({
-                isLikes: !this.state.isLikes
+                isLikes: !this.state.isLikes,
+                likesCount : !this.state.isLikes ? this.state.likesCount + 1 : this.state.likesCount - 1
             })
 
         } catch (e) {
@@ -46,14 +46,15 @@ export default class DetailStory extends Component {
     _loadData = async () => {
 
         try {
-            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.props.route.params.id}`).auth(this.props.authStore.userToken.token).submit();
+            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.props.route.params.id}`).auth(await this.props.authStore.getToken()).submit();
 
             console.log(response);
 
             this.setState({
                 isLoading: false,
                 data: response.data,
-                isLikes: !response.data.canLikes
+                isLikes: !response.data.canLikes,
+                likesCount : response.data.likesCount
             });
 
         } catch (e) {
@@ -66,7 +67,7 @@ export default class DetailStory extends Component {
     _storyDelete = async () => {
         try{
             await Request.delete(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}`)
-            .auth(this.props.authStore.userToken.token).submit();
+            .auth(await this.props.authStore.getToken()).submit();
     
             this.props.navigation.goBack();
         }catch(e){
@@ -80,7 +81,15 @@ export default class DetailStory extends Component {
         this.props.navigation.setParams({
             showStoryMenu: this._storyControlMenuRef.show
         })
+        this.props.navigation.addListener('focus', () => {
+            this.setState({
+                isLoading : true
+            }, this._loadData)
+        })
+    }
 
+    componentWillUnmount(){
+        this.props.navigation.removeListener('focus');
     }
 
     render() {
@@ -167,7 +176,7 @@ export default class DetailStory extends Component {
                             </View>
                             <View style={{ borderBottomWidth: 0.3, borderTopWidth: 0.3, paddingHorizontal: 10, paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text style={styles.scoreFont}>
-                                    좋아요 {this.state.data.likesCount}
+                                    좋아요 {this.state.likesCount}
                                 </Text>
                                 <Text style={styles.scoreFont}>
                                     댓글 {this.state.data.commentCount}
