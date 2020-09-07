@@ -1,17 +1,13 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import ImageButton from '../atom/button/ImageButton';
+import ProfileIcon from '../atom/icon/ProfileIcon';
 
-export default function ProfileWidget({profileUrl, name, imageBackgroundStyle, imageStyle, fontStyle}){
+export default function ProfileWidget({user, imageBackgroundStyle, imageStyle, fontStyle}){
     return(
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <ImageButton
-                backgroundStyle={[{marginRight: 5}, imageBackgroundStyle]}
-                imageStyle={[{width : 30, height: 30, borderRadius: 30}, imageStyle]}
-                source={{uri : profileUrl}}
-            />
+            <ProfileIcon user={user} imageBackgroundStyle={imageBackgroundStyle} imageStyle={imageStyle} />
             <Text style={[{fontSize : 14, marginHorizontal: 5, alignSelf: 'flex-start', marginTop : 5}, fontStyle]}>
-                {name}
+                {user.name}
             </Text>
         </View>
     )

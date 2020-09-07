@@ -6,16 +6,17 @@ import TimeAgo from '../atom/text/TimeAgo';
 //임ㅅ미
 import EasyDate from '../../util/EasyDate';
 import ImageButton from '../atom/button/ImageButton';
+import ProfileIcon from '../atom/icon/ProfileIcon';
 
 
 export default function Comment({user, createDate, content}){
     return(
         <View style={{marginLeft: 10}}>
             <View style={{flexDirection: 'row', alignItems: 'center', marginVertical : 10}}>
-            <ImageButton
+            <ProfileIcon
+                user={user}
                 backgroundStyle={{marginRight: 5}}
-                imageStyle={{width : 37, height: 37, borderRadius: 35}}
-                source={{uri : user.profileUrl}}/>
+                imageStyle={{width : 37, height: 37, borderRadius: 35}}            />
                 <View>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}> 
                         <Text style={{fontSize : 14, marginHorizontal: 5, alignSelf: 'flex-start'}}>
