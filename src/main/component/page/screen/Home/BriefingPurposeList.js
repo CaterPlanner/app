@@ -53,7 +53,7 @@ export default class BriefingPurposeList extends Component {
     }
 
     componentWillUnmount() {
-        if(this.appStore.options.allowScheduling)
+        if(this.appStore.isScheduling)
         NotificationManager.briefingAlarmShow(this.state.purposes);
     }
 

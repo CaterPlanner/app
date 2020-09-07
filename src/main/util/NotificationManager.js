@@ -39,8 +39,6 @@ export default {
     // if(!purposes)
     //   purposes = await PurposeService.getInstance().findActivePurposes();
     
-    console.log('yess!')
-    console.log(purposes);
 
     if(!purposes)
       return;
@@ -60,8 +58,6 @@ export default {
       message += `${purpose.name} - ${briefingList.length}개` + (index != purposes.length - 1 || true ? '\n' : '');
     })
     
-    console.log(goalCount);
-
     if(goalCount == 0)
         return;
 

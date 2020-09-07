@@ -28,6 +28,8 @@ export default class AppStore {
             if (this.isBegin) {
                 //초기 세팅
                 await AsyncStorage.setItem('IS_BEGIN', 'false');
+                this.onScheduler();
+                console.log('dddd')
             } 
             resolve();
 
@@ -35,9 +37,9 @@ export default class AppStore {
     }
 
     @action
-    setIsBegin = (isBegin) => {
+    setIsBegin = async (isBegin) => {
+        await AsyncStorage.setItem('IS_BEGIN', isBegin.toString());
         this.isBegin = isBegin;
-        AsyncStorage.setItem('IS_BEGIN', isBegin.toString());
     }
 
     onScheduler = async () => {
