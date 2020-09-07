@@ -71,8 +71,7 @@ export default class DetailPlanWriteBoard extends Component {
                     renderItem={({ item }) => (
                         <View style={{ marginHorizontal: 15, marginVertical: 10 }}>
                             <DetailPlanPaper
-                                color={item.color}
-                                name={item.name}
+                                goal={item}
                                 onPress={() => {
                                     this.props.navigation.navigate('GoalWrite', {
                                         goal: this.detailPlanWriteStore.getGoal(item.id)

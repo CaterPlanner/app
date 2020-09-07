@@ -43,6 +43,11 @@ export default class WriteStory extends Component {
 
     _uploadData = async () => {
         try {
+
+            this.props.navigation.setParams({
+                showHeader : false
+            })
+
             this.setState({
                 isUploading: true
             });
@@ -79,6 +84,10 @@ export default class WriteStory extends Component {
             console.log(e);
             this.setState({
                 isUploading: false
+            })
+
+            this.props.navigation.setParams({
+                showHeader : true
             })
         }
     }

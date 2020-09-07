@@ -24,9 +24,7 @@ export default function DetailPlanList({ navigation }) {
             renderItem={({ item }) => (
                 <View style={{ marginHorizontal: 10, marginVertical: 3 }}>
                     <DetailPlanPaper
-                        color={item.color}
-                        name={item.name}
-                        value={item.achieve}
+                        goal={item}
                         onPress={() => {
                             navigation.navigate('DetailGoal', {
                                 goal: item

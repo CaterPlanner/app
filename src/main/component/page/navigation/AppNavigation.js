@@ -37,6 +37,7 @@ const AppNavigation = () => {
             <Stack.Screen options={({ route, navigation }) => ({
                 ...defaultHeaderStyle,
                 title: '스토리쓰기',
+                headerShown : route.params.showHeader == undefined || route.params.showHeader == true ? true : false, 
                 headerTitleAlign: 'center',
                 headerRight: () => {
                     return(

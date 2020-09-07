@@ -18,7 +18,7 @@ import PurposeService from '../../../../../rest/service/PurposeService';
 import ProfileWidget from '../../../../molecule/ProfileWidget';
 import { PurposeWriteType } from '../../../../../AppEnum';
 import Purpose from '../../../../../rest/model/Purpose';
-
+import MyPrgoressBar from '../../../../atom/progressBar/MyProgressBar';
 
 
 function BottomBar({ data }) {
@@ -32,11 +32,16 @@ function BottomBar({ data }) {
 
     const toggleCheer = async () => {
         try {
+            
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${data.purpose.id}/cheer/${isCheer ? 'negative' : 'positive'}`)
                 .auth(authStore.userToken.token)
                 .submit();
 
+    
+                data.setCheersCount(!isCheer ? ++data.cheersCount : --data.cheersCount)
+
             setIsCheer(!isCheer);
+
 
         } catch (e) {
             console.log(e);
@@ -260,7 +265,7 @@ function StoryTimeLine({ stories }) {
     let beforeDate = null;
 
     return (
-        <View style={{ flexDirection: 'row', height: 500, width: '100%', backgroundColor: 'white' }}>
+        <View style={{ flexDirection: 'row', width: '100%', backgroundColor: 'white',   paddingBottom: 30 }}>
             <View style={{ marginLeft: 29, height: '100%', width: 1, backgroundColor: 'black' }} />
             <View style={{ marginTop: 5 }}>
                 {
@@ -287,6 +292,10 @@ function StoryTimeLine({ stories }) {
 export default function DetailPurpose({ data }) {
 
     const [headerVisible, setHeaderVisible] = useState(false);
+    const [cheersCount, setCheersCount] = useState(data.cheersCount);
+
+    data.setCheersCount = setCheersCount;
+
     const navigation = useNavigation();
 
     const purpose = data.purpose;
@@ -346,7 +355,7 @@ export default function DetailPurpose({ data }) {
         }
     }
 
-    console.log(purpose);
+    console.log(data);
 
     return (
         <View style={{ flex: 1 }}>
@@ -486,6 +495,27 @@ export default function DetailPurpose({ data }) {
                         <Text style={detailPurposeStyles.purposeDescriptionFont}>
                             {purpose.description}
                         </Text>
+                                        <View style={{ paddingVertical: 10 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={{fontSize: 14,
+        textAlign: 'right',
+        paddingVertical: 8}}>
+                            달성률
+                        </Text>
+                        <Text style={{fontSize: 14,
+        textAlign: 'right',
+        paddingVertical: 8}}>
+                            {purpose.achieve}%
+                        </Text>
+                        </View>
+                            <MyPrgoressBar
+                                width={Dimensions.get('window').width - 18}
+                                height={7}
+                                animated={true}
+                                barColor={'red'}
+                                value={purpose.achieve}
+                            />
+                        </View>
                         <View style={detailPurposeStyles.purposeProfileContainer}>
                             {/* <View>
                                     <Image
@@ -502,6 +532,16 @@ export default function DetailPurpose({ data }) {
                                 fontStyle={{ alignSelf: 'flex-end', marginBottom: 5 }}
                             />
                         </View>
+                        <View style={{paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                <Text style={{   fontSize: 15,
+        fontWeight: 'bold'}}>
+                                    응원 {cheersCount}
+                                </Text>
+                                <Text style={{   fontSize: 15, marginLeft : 15,
+        fontWeight: 'bold'}}>
+                                    댓글 {data.commentCount}
+                                </Text>
+                            </View>
                     </View>
                     <View style={{ marginTop: 5 }}>
                         <InfoBox
@@ -515,22 +555,23 @@ export default function DetailPurpose({ data }) {
                             child={(
                                 <View style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
                                     {
-                                        purpose.detailPlans.map((goal) => (
-                                            <View style={detailPurposeStyles.paperContainer}>
+                                        purpose.detailPlans.map((goal) => {
+                                            if(goal.isProcceedEnd)
+                                                return;
+
+                                           return( <View style={detailPurposeStyles.paperContainer}>
                                                 <DetailPlanPaper
-                                                    color={goal.color}
-                                                    name={goal.name}
-                                                    value={goal.achieve}
+                                                    goal={goal}
                                                     disabled={true}
                                                 />
-                                            </View>
-                                        ))
+                                            </View>)
+                                        })
                                     }
                                 </View>
                             )}
                         />
                     </View>
-                    <View style={{ marginTop: 5 }}>
+                    <View style={{ marginTop: 5}}>
                         <InfoBox
                             title={'스토리 타임라인'}
                             detailButtonPress={() => {
