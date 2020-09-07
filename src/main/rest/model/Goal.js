@@ -101,6 +101,10 @@ export default class Goal {
         return today.isAfter(this.startDate) && today.isBefore(this.endDate);
     }
 
+    get isProcceedEnd(){
+        return this.achieve == 100 || this.endDate.isAfter(EasyDate.now());
+    }
+
     get nextLeftDayCount(){
         return EasyDate.between(Date.now(), this.nextLeftDay).day;
     }
