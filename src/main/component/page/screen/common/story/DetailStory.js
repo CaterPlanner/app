@@ -137,7 +137,7 @@ export default class DetailStory extends Component {
                                         fontStyle={{
                                             fontSize: 15
                                         }}
-                                        profileUrl={this.state.data.author.profileUrl} name={this.state.data.author.name} />
+                                        user={this.state.data.author}/>
                                     <TimeAgo time={EasyDate.now()} />
                                 </View>
 

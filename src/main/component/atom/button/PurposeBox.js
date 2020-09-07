@@ -8,7 +8,7 @@ export default function PurposeBox({data, onPress}){
     return(
     <TouchableOpacity activeOpacity={1} onPress={onPress}  style={styles.container}>
        <Image
-                source={{uri : purpose.photoUrl}}
+                source={{uri : data.photoUrl}}
                 resizeMode="stretch"
                 style={styles.photoContainer}
         />

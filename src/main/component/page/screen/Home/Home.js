@@ -14,6 +14,7 @@ import GlobalConfig from '../../../../GlobalConfig';
 import useStores from '../../../../mobX/helper/useStores';
 import EasyDate from '../../../../util/EasyDate';
 import Request from '../../../../util/Request';
+import SplashScreen from 'react-native-splash-screen';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -263,12 +264,12 @@ export default class Home extends Component {
 
 
 
-                for (purpose of data) {
-                    if (purpose.stat == 0) {
-                        this.appStore.onScheduler();
-                        break;
-                    }
-                }
+                // for (purpose of data) {
+                //     if (purpose.stat == 0) {
+                //         this.appStore.onScheduler();
+                //         break;
+                //     }
+                // }
             }
 
             this.setState({
@@ -289,7 +290,10 @@ export default class Home extends Component {
             this.setState({
                 isLoading : true
             }, this._loadData);
-        })
+        });
+        setTimeout(() => {
+            SplashScreen.hide();
+        }, 500);
     }
 
     componentWillUnmount(){

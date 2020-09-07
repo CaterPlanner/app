@@ -8,9 +8,7 @@ export default function Setting(){
 
     const {authStore, appStore} = useStores();
 
-    console.log(appStore.options.allowScheduling === true)
-
-    const [allowScheduling, setAllowScheduling] = useState(appStore.options.allowScheduling)
+    const [allowScheduling, setAllowScheduling] = useState(appStore.isScheduling)
 
     return(
         <View style={{flex: 1, backgroundColor: 'white'}}> 
