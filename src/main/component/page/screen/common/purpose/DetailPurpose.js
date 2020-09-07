@@ -506,7 +506,7 @@ export default function DetailPurpose({ data }) {
                         <Text style={{fontSize: 14,
         textAlign: 'right',
         paddingVertical: 8}}>
-                            {purpose.achieve}%
+                            {!purpose.achieve || purpose.achieve == 0 ? 0 : purpose.achieve}%
                         </Text>
                         </View>
                         <View style={{alignItems:'center'}}>
