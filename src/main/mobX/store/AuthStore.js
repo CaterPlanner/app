@@ -41,11 +41,11 @@ export default class AuthStore {
                 this.user = JSON.parse(await AsyncStorage.getItem('USER_DATA'));
     
     
-                if (userToken && this.validate(userToken)) {
+                if (userToken && this.vaildate(userToken)) {
                     this.userToken = userToken;
     
                 } else if (userToken) {
-                    await reissuanceToken(userToken);
+                    await this.reissuanceToken(userToken);
                 }
 
                 resolve();
@@ -88,10 +88,7 @@ export default class AuthStore {
     }
 
     vaildate = (userToken) => {
-        console.log('validate');
-        console.log(new Date(userToken.expired).getTime())
-        console.log(new Date().getTime());
-        return new Date(userToken.expired) < new Date();
+        return new Date(userToken.expired) > new Date();
     }
 
     login = (idToken, user) => {
@@ -201,9 +198,9 @@ export default class AuthStore {
     getToken = () => {
         return new Promise(async (resolve, reject) => {
             try {
-                // if (!this.vaildate(this.userToken)) {
-                //     await this.reissuanceToken(this.userToken);
-                // }
+                if (!this.vaildate(this.userToken)) {
+                    await this.reissuanceToken(this.userToken);
+                }
                 resolve(this.userToken.token);
             } catch (e) {
                 console.log(e);
