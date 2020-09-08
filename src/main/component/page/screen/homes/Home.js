@@ -221,6 +221,7 @@ export default class Home extends Component {
         }
 
         this.appStore = this.props.appStore;
+
     }
     //
     _renderItem = ({ item, index }) => {

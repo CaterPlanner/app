@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text } from 'react-native';
-import purposeStyles from '../purposeWrite/style/PurposeStyle';
+import purposeStyles from '../purposeWrites/style/PurposeStyle';
 import useStores from '../../../../mobX/helper/useStores'
 import DatePicker from 'react-native-date-picker';
 import EasyDate from '../../../../util/EasyDate';

@@ -5,7 +5,7 @@ import EasyDate from '../../util/EasyDate';
 import SQLiteManager from '../../util/SQLiteManager';
 import Goal from '../model/Goal';
 import Purpose from '../model/Purpose';
-import PurposeWriteBoard from '../../component/page/screen/purposeWrite/PurposeWriteBoard';
+import PurposeWriteBoard from '../../component/page/screen/purposeWrites/PurposeWriteBoard';
 import GlobalConfig from '../../GlobalConfig';
 import Request from '../../util/Request';
 

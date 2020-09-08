@@ -1,11 +1,11 @@
 import React from 'react'
 import { Button , View} from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
-import DetailPlanWriteBoard from '../screen/detailPlanWrite/DetailPlanWriteBoard';
+import DetailPlanWriteBoard from '../screen/detailPlanWrites/DetailPlanWriteBoard';
 import ImageButton from '../../atom/button/ImageButton';
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
-import GoalWrite from '../screen/detailPlanWrite/GoalWrite';
-import DetailPlanDecimalDayWrite from '../screen/detailPlanWrite/DetailPlanDecimalDayWrite'
+import GoalWrite from '../screen/detailPlanWrites/GoalWrite';
+import DetailPlanDecimalDayWrite from '../screen/detailPlanWrites/DetailPlanDecimalDayWrite'
 
 const Stack = createStackNavigator();
 

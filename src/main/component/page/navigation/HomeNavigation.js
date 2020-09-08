@@ -1,14 +1,14 @@
 import React from 'react'
 import { View, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from '../screen/home/Home'
-import BriefingPurposeList from '../screen/home/BriefingPurposeList'
+import Home from '../screen/homes/Home'
+import BriefingPurposeList from '../screen/homes/BriefingPurposeList'
 
 import ImageButton from '../../atom/button/ImageButton'
 import PublicNavigation from './PublicNavigation'
 
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
-import BriefingGoalList from '../screen/home/BriefingGoalList';
+import BriefingGoalList from '../screen/homes/BriefingGoalList';
 
 
 const Stack = createStackNavigator();

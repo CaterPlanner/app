@@ -3,12 +3,13 @@ import 'mobx-react-lite/batchingForReactNative'
 import React, {Component} from 'react'
 import {ToastAndroid, BackHandler} from 'react-native';
 import { NavigationContainer} from '@react-navigation/native';
-import RootStore from './src/main/mobX/store/RootStore';
+import RootStore from './src/mains/mobX/store/RootStore';
 import {Provider} from 'mobx-react'
-import NavController from './src/main/component/page/navigation/NavController';
+import NavController from './src/mains/component/page/navigation/NavController';
 
 import SQLite from 'react-native-sqlite-storage';
-import NotificationManager from './src/main/util/NotificationManager';
+import NotificationManager from './src/mains/util/NotificationManager';
+import CaterPlannerScheduler from './src/mains/native/CaterPlannerScheduler';
 
 
 export default class App extends Component{
@@ -23,7 +24,7 @@ export default class App extends Component{
     }
 
     componentWillUnmount(){
-      console.log('df');
+      CaterPlannerScheduler.show();
     }
 
     render(){
