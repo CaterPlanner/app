@@ -143,11 +143,11 @@ export default class PurposeWriteStore{
     }
 
     @action
-    changePermit= (permit) => {
-        if(this.permitCache[this.activeIndex] === permit)
+    changePermit= (permit, index) => {
+        if(this.permitCache[index] === permit)
             return;
             
-        this.permitCache[this.activeIndex] = permit;
+        this.permitCache[index] = permit;
     }
 
     get isModify(){

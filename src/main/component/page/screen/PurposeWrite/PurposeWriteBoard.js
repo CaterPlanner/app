@@ -37,10 +37,10 @@ export default class PurposeWriteBoard extends Component {
 
 
         this.views = [
-            <PurposeNameWrite />,
-            <PurposeDescriptionWrite />,
-            <PurposePhotoWrite />,
-            <PurposeDetailPlansWrite />,
+            <PurposeNameWrite index={0} />,
+            <PurposeDescriptionWrite  index={1}/>,
+            <PurposePhotoWrite index={2} />,
+            <PurposeDetailPlansWrite index={3}/>,
         ]
         this.purposeWriteStore = this.props.purposeWriteStore
         this.appStore = this.props.appStore;
@@ -123,6 +123,8 @@ export default class PurposeWriteBoard extends Component {
                         goal.briefingCount = 0;
                         goal.lastBriefingDate = null;     
                     })
+
+                    console.log(this.purposeWriteStore.resultFormData);
 
                     response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'

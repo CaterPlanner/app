@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-export default function PurposePhotoWrite() {
+export default function PurposePhotoWrite({index}) {
 
     const { purposeWriteStore } = useStores();
 
@@ -17,7 +17,7 @@ export default function PurposePhotoWrite() {
 
     const setPhoto = (photo) => {
         setPurposePhoto(photo);
-        purposeWriteStore.changePermit(true);
+        purposeWriteStore.changePermit(true, index);
         
         purposeWriteStore.purpose.photo = photo;
         purposeWriteStore.isChangePhoto = true;
