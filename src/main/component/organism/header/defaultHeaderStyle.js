@@ -1,5 +1,5 @@
 export default {
    headerStyle:{
-    height : 48
+    height : 50
    }
 };

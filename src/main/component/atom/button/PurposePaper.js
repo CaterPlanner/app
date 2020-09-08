@@ -23,7 +23,7 @@ export default function PurposePaper({ imageUri, name, count, onPress, checkedBr
                                 {count}
                             </Text>
                             <Text>
-                                개의 목표 브리핑
+                                개의 수행 목표
                             </Text>
                         </View>}
                     </View>

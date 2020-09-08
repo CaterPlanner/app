@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.telecom.Call;
 
 import com.downfall.caterplanner.scheduler.receiver.BriefingAlarmReceiver;
 import com.downfall.caterplanner.scheduler.service.BriefingAlarmService;
@@ -19,14 +20,18 @@ public class AlarmSchedulerManager {
     private static final String BRIEFING_ALARAM_CYCLE_KEY = "a";
     private static final int DEFAULT_BRIEFING_ALARM_CYCLE_HOUR_INTERVAL = 5;
 
+    public static Config getConfig(Context context){
+        return new Config(context);
+    }
+
     public static boolean isScheduling(Context context){
         Intent briefingAlaramIntent = new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingAlaramIntent, PendingIntent.FLAG_NO_CREATE);
         return sender != null;
     }
 
-    public static void setAlarmCycle(int intevalHour){
-
+    public static void setAlarmCycle(Context context, int intevalHour){
+       getConfig(context).setBriefingAlarmCycleHour(intevalHour);
     }
 
     public static void show(Context context){
@@ -49,21 +54,24 @@ public class AlarmSchedulerManager {
 
         PendingIntent sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingAlaramIntent, PendingIntent.FLAG_NO_CREATE);
 
-        int intervalHour = context.getSharedPreferences()
+        int intervalHour = getConfig(context).getBriefingAlarmCycleHour();
 
         if(sender == null) {
 
              sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
 
             Calendar statisticsTime = Calendar.getInstance();
-            statisticsTime.set(Calendar.HOUR_OF_DAY, 0);
+            int currentHour = statisticsTime.get(Calendar.HOUR_OF_DAY);
+            int nextHour = currentHour % 6 == 0 ? currentHour + 6 : currentHour + 6 - (currentHour % 6);
+
+            statisticsTime.set(Calendar.HOUR_OF_DAY, nextHour);
             statisticsTime.set(Calendar.MINUTE, 0);
             statisticsTime.set(Calendar.SECOND, 0);
             statisticsTime.set(Calendar.MILLISECOND, 0);
 
 
             alarmManager.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+                AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), 1000 * 60 * 60 * intervalHour,
                     sender);
         }
 
@@ -88,7 +96,7 @@ public class AlarmSchedulerManager {
 
         private final String BRIEFING_ALARAM_CYCLE_KEY = "a";
 
-        private final int DEFAULT_BRIEFING_ALARM_CYCLE_HOUR_INTERVAL = 5;
+        private final int DEFAULT_BRIEFING_ALARM_CYCLE_HOUR_INTERVAL = 6;
 
         private SharedPreferences schedulerConfig;
 
@@ -97,11 +105,11 @@ public class AlarmSchedulerManager {
         }
 
         public int getBriefingAlarmCycleHour(){
-            return schedulerConfig.getInt(BRIEFING_REQUEST_NOTICE_TIME_KEY, DEFAULT_BRIEFING_REQUEST_NOTICE_HOUR_OF_DAY);
+            return schedulerConfig.getInt(BRIEFING_ALARAM_CYCLE_KEY, DEFAULT_BRIEFING_ALARM_CYCLE_HOUR_INTERVAL);
         }
 
-        public void setBriefingAlarmCycleHour(int hourOfDay){
-            schedulerConfig.edit().putInt(BRIEFING_REQUEST_NOTICE_TIME_KEY, hourOfDay);
+        public void setBriefingAlarmCycleHour(int hour){
+            schedulerConfig.edit().putInt(BRIEFING_ALARAM_CYCLE_KEY, hour);
         }
     }
 
