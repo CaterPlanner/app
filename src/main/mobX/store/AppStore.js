@@ -21,30 +21,35 @@ export default class AppStore {
 
     boot = () => {
         return new Promise(async (resolve, reject) => {
+  
+
             const asyncBegin = await AsyncStorage.getItem('IS_BEGIN');
-            this.isBegin = asyncBegin == null || Boolean(asyncBegin) ? true : false
+
+            this.isBegin = asyncBegin == null || asyncBegin == true ? true : false
 
 
             if (this.isBegin) {
                 //초기 세팅
                 await AsyncStorage.setItem('IS_BEGIN', 'false');
                 this.onScheduler();
-                console.log('dddd')
-            } 
+            }
+
             resolve();
 
         })
     }
 
     @action
-    setIsBegin = async (isBegin) => {
-        await AsyncStorage.setItem('IS_BEGIN', isBegin.toString());
-        this.isBegin = isBegin;
+    setIsBegin = (isBegin) => {
+        return new Promise(async (resolve, reject) => {
+            await AsyncStorage.setItem('IS_BEGIN', isBegin.toString());
+            this.isBegin = isBegin;
+            resolve();
+        })
     }
 
     onScheduler = async () => {
         if(!CaterPlannerScheduler.isScheduling()){
-            console.log('on');
             CaterPlannerScheduler.onScheduler();
         }
     }

@@ -240,7 +240,6 @@ export default class Home extends Component {
 
     _loadData = async () => {
         try {
-
             await PurposeService.getInstance().refresh();
 
             const data = await PurposeService.getInstance().findPurposesForCard();
@@ -285,7 +284,7 @@ export default class Home extends Component {
 
 
     componentDidMount() {
-        this._loadData();
+
         this.props.navigation.addListener('focus', () => {
             this.setState({
                 isLoading : true
@@ -301,7 +300,6 @@ export default class Home extends Component {
     }
 
     render() {
-        console.log(fullWidth - 95);
         return (
             <View style={{ flex: 1 }}>
                 {!this.state.isLoading &&

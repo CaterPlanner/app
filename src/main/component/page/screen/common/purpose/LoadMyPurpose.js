@@ -81,7 +81,6 @@ export default class LoadMyPurpose extends Component{
     }
 
     componentDidMount(){
-        this._getData();
         this.props.navigation.addListener('focus', () => {
             this.setState({
                 isLoading : true

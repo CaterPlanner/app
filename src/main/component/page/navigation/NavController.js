@@ -43,7 +43,8 @@ export default class NavController extends Component {
             await this.appStore.boot();
             await this.authStore.load();
 
-            if (this.appStore.isBegin || !this.appStore.isLogin) {
+            if (this.appStore.isBegin || !this.authStore.isLogin) {
+
                 setTimeout(() => {
                     SplashScreen.hide();
                 }, 500);
@@ -55,7 +56,6 @@ export default class NavController extends Component {
     }
 
     render() {
-        console.log(this.appStore.isBegin)
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar
