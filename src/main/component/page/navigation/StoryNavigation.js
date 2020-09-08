@@ -1,6 +1,6 @@
 import React from 'react'
 import {createStackNavigator} from '@react-navigation/stack';
-import Story from '../screen/main/Story';
+import Story from '../screen/mains/Story';
 
 import PublicNavigation from './PublicNavigation'
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';

@@ -2,13 +2,13 @@ import React from 'react'
 import {Button} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import DetailPlanWriteNavigation from './DetailPlanWriteNavigation'
-import PurposeWriteBoard from '../screen/purposeWrite/PurposeWriteBoard'
-import SelectAlbum from '../screen/purposeWrite/SelectAlbum'
-import SelectPhoto from '../screen/purposeWrite/SelectPhoto';
+import PurposeWriteBoard from '../screen/purposeWrites/PurposeWriteBoard'
+import SelectAlbum from '../screen/purposeWrites/SelectAlbum'
+import SelectPhoto from '../screen/purposeWrites/SelectPhoto';
 
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle'
 import useStores from '../../../mobX/helper/useStores';
-import PurposeWriteDone from '../screen/purposeWrite/PurposeWriteDone';
+import PurposeWriteDone from '../screen/purposeWrites/PurposeWriteDone';
 
 
 const Stack = createStackNavigator();

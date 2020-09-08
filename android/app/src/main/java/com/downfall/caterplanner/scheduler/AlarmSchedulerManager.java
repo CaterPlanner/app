@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -15,12 +16,17 @@ import java.util.Calendar;
 public class AlarmSchedulerManager {
 
     private static final int BRIEFING_ALARM_CODE = 100;
-
+    private static final String BRIEFING_ALARAM_CYCLE_KEY = "a";
+    private static final int DEFAULT_BRIEFING_ALARM_CYCLE_HOUR_INTERVAL = 5;
 
     public static boolean isScheduling(Context context){
         Intent briefingAlaramIntent = new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingAlaramIntent, PendingIntent.FLAG_NO_CREATE);
         return sender != null;
+    }
+
+    public static void setAlarmCycle(int intevalHour){
+
     }
 
     public static void show(Context context){
@@ -34,14 +40,6 @@ public class AlarmSchedulerManager {
         } else {
             context.startService(serviceIntent);
         }
-
-        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-
     }
 
     public static void start(Context context){
@@ -51,9 +49,10 @@ public class AlarmSchedulerManager {
 
         PendingIntent sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, briefingAlaramIntent, PendingIntent.FLAG_NO_CREATE);
 
+        int intervalHour = context.getSharedPreferences()
+
         if(sender == null) {
 
-            System.out.println("실행!!!!!!!!!!!!!!!!!!!!");
              sender = PendingIntent.getBroadcast(context, BRIEFING_ALARM_CODE, new Intent(context.getApplicationContext(), BriefingAlarmReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
 
             Calendar statisticsTime = Calendar.getInstance();
@@ -64,7 +63,7 @@ public class AlarmSchedulerManager {
 
 
             alarmManager.setInexactRepeating(
-                AlarmManager.RTC, statisticsTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+                AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
                     sender);
         }
 
@@ -80,6 +79,29 @@ public class AlarmSchedulerManager {
         alarmManager.cancel(sender);
         sender.cancel();
                     System.out.println("종료!!!!!!!!!!!!!!!!!!!!");
+        }
+    }
+
+    private static class Config{
+
+        private final String SHARED_PREFERENCES_NAME = "schedulerConfig";
+
+        private final String BRIEFING_ALARAM_CYCLE_KEY = "a";
+
+        private final int DEFAULT_BRIEFING_ALARM_CYCLE_HOUR_INTERVAL = 5;
+
+        private SharedPreferences schedulerConfig;
+
+        public Config(Context context) {
+            schedulerConfig = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        }
+
+        public int getBriefingAlarmCycleHour(){
+            return schedulerConfig.getInt(BRIEFING_REQUEST_NOTICE_TIME_KEY, DEFAULT_BRIEFING_REQUEST_NOTICE_HOUR_OF_DAY);
+        }
+
+        public void setBriefingAlarmCycleHour(int hourOfDay){
+            schedulerConfig.edit().putInt(BRIEFING_REQUEST_NOTICE_TIME_KEY, hourOfDay);
         }
     }
 
