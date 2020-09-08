@@ -78,6 +78,7 @@ export default class WriteStory extends Component {
                     .submit();
             }
 
+
             this.props.navigation.navigate('DetailStory', {
                 id: id
             })

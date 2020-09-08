@@ -22,7 +22,9 @@ const Stack = createStackNavigator();
 
 const PublicNavigation = () => {
     return(
-          <Stack.Navigator>
+          <Stack.Navigator screenOptions={{
+            unmountOnBlur: true
+          }}>
             <Stack.Screen options={({ navigation }) => ({
                 ...defaultHeaderStyle,
                 title: '프로필',
@@ -30,7 +32,7 @@ const PublicNavigation = () => {
                 headerTitleStyle: {
                     fontWeight: 'bold'
                 }
-            })} name="MyProfile" component={MyProfile}/>
+            })} name="LoadProfile" component={LoadProfile}/>
             <Stack.Screen options={{ headerShown: false }} name="LoadMyPurpose" component={LoadMyPurpose} />
             <Stack.Screen  options={({ navigation }) => ({
                 ...defaultHeaderStyle,
@@ -40,14 +42,6 @@ const PublicNavigation = () => {
                 ...defaultHeaderStyle,
                 title: ''
             })} name="DetailGoal" component={DetailGoal}/>
-            <Stack.Screen options={({ navigation }) => ({
-                ...defaultHeaderStyle,
-                title: '프로필',
-                headerTitleAlign:'center',
-                headerTitleStyle: {
-                    fontWeight: 'bold'
-                }
-            })} name="LoadProfile" component={LoadProfile}/>
             <Stack.Screen options={{ headerShown: false }} name="LoadUserPurpose" component={LoadUserPurpose}/>
             <Stack.Screen options={({ route, navigation }) => ({
                 ...defaultHeaderStyle,

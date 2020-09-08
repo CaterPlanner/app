@@ -34,10 +34,10 @@ export default {
       requestPermissions: true,
     });
   },
-  briefingAlarmShow: (purposes) => {
+  briefingAlarmShow: async (purposes) => {
 
-    // if(!purposes)
-    //   purposes = await PurposeService.getInstance().findActivePurposes();
+    if(!purposes)
+      purposes = await PurposeService.getInstance().findActivePurposes();
     
 
     if(!purposes)
@@ -46,7 +46,7 @@ export default {
     let goalCount = 0;
 
     let title;
-    let message = '';
+    let message = '\n';
 
     purposes.forEach((purpose, index) => {
       const briefingList = purpose.detailPlans.filter(g => g.isNowBriefing)
@@ -61,7 +61,7 @@ export default {
     if(goalCount == 0)
         return;
 
-    title = `오늘 수행해야할 목표가 ${goalCount}개 있습니다.`
+    title = `오늘 수행목표가 ${goalCount}개 있습니다.`
 
     PushNotification.localNotification({
       id: 0,

@@ -98,7 +98,7 @@ export default class PurposeWriteStore{
                 break;
         }
 
-
+        console.log(this.purpose)
         // this.purpose = purpose ? purpose : new Purpose(null, "", "", null, 0,  EasyDate.now(), new EasyDate().plusDays(1), 0 );
 
         //date awlays true
