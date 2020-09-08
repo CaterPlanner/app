@@ -41,10 +41,12 @@ export default class AuthStore {
 
         
                 const userToken = JSON.parse(await AsyncStorage.getItem('USER_TOKEN'));
+                console.log('sdfsd');
+                console.log(userToken);
                 this.user = JSON.parse(await AsyncStorage.getItem('USER_DATA'));
     
     
-                if (userToken && this.vaildate(userToken)) {
+                if (this.vaildate(userToken)) {
                     this.userToken = userToken;
     
                 } else if (userToken) {
@@ -93,44 +95,57 @@ export default class AuthStore {
     }
 
     vaildate = (userToken) => {
+        if(!userToken)
+            return false;
         return new Date(userToken.expired) > new Date();
     }
 
     login = (idToken, user) => {
         return new Promise(async (resolve, reject) => {
-            await firebase.messaging().requestPermission();
+            try{
+                await firebase.messaging().requestPermission();
 
-            const json = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/auth/social/google`, JSON.stringify({
-                idToken: idToken,
-                fcmToken: await this.getToken()
-            }))
-                .submit();
-    
-            this.userToken = {
-                token: json.data.token,
-                refreshToken: json.data.refreshToken,
-                expired: json.data.expired
-            }
-    
-            const currentUser = {
-                name: user.name,
-                email: user.email,
-                profileUrl: user.photo
-            }
-    
-            if (!this.user || this.user.email != currentUser) {
-                const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/myActivePurposes`)
-                    .auth(this.userToken.token)
+                const json = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/auth/social/google`, JSON.stringify({
+                    idToken: idToken,
+                    fcmToken: await firebase.messaging().getToken()
+                }))
                     .submit();
-    
-                await PurposeService.getInstance().initAll(response.data);
-                this.user = currentUser;
+        
+                this.userToken = {
+                    token: json.data.token,
+                    refreshToken: json.data.refreshToken,
+                    expired: json.data.expired
+                }
+        
+                const currentUser = {
+                    name: user.name,
+                    email: user.email,
+                    profileUrl: user.photo
+                }
+        
+                console.log('token init complete')
+
+                if (!this.user || this.user.email != currentUser) {
+                    const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/myActivePurposes`)
+                        .auth(this.userToken.token)
+                        .submit();
+        
+                    await PurposeService.getInstance().initAll(response.data);
+                    this.user = currentUser;
+                }
+        
+                await AsyncStorage.setItem("USER_TOKEN", JSON.stringify(this.userToken));
+                await AsyncStorage.setItem("USER_DATA", JSON.stringify(this.user));
+        
+                this.isLogin = true;
+
+                resolve();
+
+
+            }catch(e){
+                console.log(e);
+                reject(e);
             }
-    
-            await AsyncStorage.setItem("USER_TOKEN", JSON.stringify(this.userToken));
-            await AsyncStorage.setItem("USER_DATA", JSON.stringify(this.user));
-    
-            this.isLogin = true;
         })
     }
 
@@ -141,6 +156,8 @@ export default class AuthStore {
                 await GoogleSignin.hasPlayServices();
                 const userInfo = await GoogleSignin.signIn();
 
+                console.log('google login complete')
+
                 await AsyncStorage.setItem("USER_SOCIAL", 'GOOGLE');
 
                 await this.login(userInfo.idToken, userInfo.user);
@@ -148,7 +165,7 @@ export default class AuthStore {
                 resolve();
 
             } catch (error) {
-                this.clearUser();
+                await this.clearUser();
                 reject(error);
             }})
     }
@@ -180,6 +197,7 @@ export default class AuthStore {
     
             } catch (e) {
                 console.log(e);
+                await this.clearUser();
                 reject(e);
             }
         })
@@ -209,7 +227,7 @@ export default class AuthStore {
                 resolve(this.userToken.token);
             } catch (e) {
                 console.log(e);
-                this.clearUser();
+                await this.clearUser();
                 reject();
             }
         })

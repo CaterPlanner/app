@@ -29,17 +29,23 @@ export default class DetailStory extends Component {
 
     _toggleLikes = async () => {
         try {
-            await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}/likes/${this.state.isLikes ? 'negative' : 'positive'}`)
-                .auth(await this.authStore.getToken())
-                .submit();
-
             this.setState({
                 isLikes: !this.state.isLikes,
                 likesCount : !this.state.isLikes ? this.state.likesCount + 1 : this.state.likesCount - 1
             })
 
+            await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}/likes/${this.state.isLikes ? 'negative' : 'positive'}`)
+                .auth(await this.authStore.getToken())
+                .submit();
+
+
         } catch (e) {
             console.log(e);
+
+            this.setState({
+                isLikes: !this.state.isLikes,
+                likesCount : !this.state.isLikes ? this.state.likesCount + 1 : this.state.likesCount - 1
+            })
         }
     }
 
@@ -47,8 +53,6 @@ export default class DetailStory extends Component {
 
         try {
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.props.route.params.id}`).auth(await this.props.authStore.getToken()).submit();
-
-            console.log(response);
 
             this.setState({
                 isLoading: false,
@@ -104,7 +108,7 @@ export default class DetailStory extends Component {
                                     this._storyControlMenuRef.hide();
 
                                     this.props.navigation.navigate('WriteStory', {
-                                        purposeId: this.state.data.purpose.id,
+                                        purpose: this.state.data.purpose,
                                         story: this.state.data
                                     });
 

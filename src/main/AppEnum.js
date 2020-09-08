@@ -9,6 +9,11 @@ State.isPass = (stat) => {
     return stat > 2;
 }
 
+export const Scope = {
+    PUBLIC : 0,
+    PRIVATE : 1
+}
+
 
 export const PurposeWriteType = {
     CREATE : 0,

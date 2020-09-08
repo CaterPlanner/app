@@ -4,7 +4,7 @@ import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput'
 
-export default function PurposeDescriptionWrite() {
+export default function PurposeDescriptionWrite({index}) {
 
     const {purposeWriteStore} = useStores();
     const [purposeDescription, setPurposeDescription] = useState(purposeWriteStore.purpose.description);
@@ -44,9 +44,9 @@ export default function PurposeDescriptionWrite() {
                         purposeWriteStore.purpose.description = text;
 
                         if(text === ""){
-                            purposeWriteStore.changePermit(false);
+                            purposeWriteStore.changePermit(false, index);
                         }else{
-                            purposeWriteStore.changePermit(true);
+                            purposeWriteStore.changePermit(true, index);
                         }
                     }}
                     value={purposeDescription}

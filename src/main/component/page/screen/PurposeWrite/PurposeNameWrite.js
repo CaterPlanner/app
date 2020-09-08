@@ -7,7 +7,7 @@ import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput';
 
 
 
-export default function PurposeNameWrite() {
+export default function PurposeNameWrite({index}) {
 
     const { purposeWriteStore } = useStores();
 
@@ -17,6 +17,7 @@ export default function PurposeNameWrite() {
     const [isScopeSelecting, setIsScopeSelecting] = useState(false);
 
     const scopeNames = ['전체공개', '비공개']
+
 
 
     return (
@@ -74,9 +75,9 @@ export default function PurposeNameWrite() {
                         purposeWriteStore.purpose.name = text;
 
                         if (text === "") {
-                            purposeWriteStore.changePermit(false);
+                            purposeWriteStore.changePermit(false, index);
                         } else {
-                            purposeWriteStore.changePermit(true);
+                            purposeWriteStore.changePermit(true, index);
                         }
                     }}
                     value={purposeName}

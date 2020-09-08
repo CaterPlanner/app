@@ -9,7 +9,7 @@ import RoundButton from '../../../atom/button/RoundButton';
 import PurposeWriteBoard from './PurposeWriteBoard';
 import { PurposeWriteType } from '../../../../AppEnum';
 
-export default function PurposeDetailPlansWrite() {
+export default function PurposeDetailPlansWrite({index}) {
 
     const { purposeWriteStore } = useStores();
 
@@ -21,9 +21,9 @@ export default function PurposeDetailPlansWrite() {
 
     useEffect(() => {
         if(purposeStat == 0){
-            purposeWriteStore.changePermit(purposeDeatilPlans.length != 0)
+            purposeWriteStore.changePermit(purposeDeatilPlans.length != 0, index)
         }else{
-            purposeWriteStore.changePermit(true);
+            purposeWriteStore.changePermit(true, index);
         }
 
     }, [purposeDeatilPlans, purposeStat])

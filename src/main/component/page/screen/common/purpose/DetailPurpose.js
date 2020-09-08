@@ -32,19 +32,18 @@ function BottomBar({ data }) {
 
     const toggleCheer = async () => {
         try {
+        
+            data.setCheersCount(!isCheer ? ++data.cheersCount : --data.cheersCount)
+            setIsCheer(!isCheer);
             
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${data.purpose.id}/cheer/${isCheer ? 'negative' : 'positive'}`)
                 .auth(await authStore.getToken())
                 .submit();
 
-    
-                data.setCheersCount(!isCheer ? ++data.cheersCount : --data.cheersCount)
-
-            setIsCheer(!isCheer);
-
-
         } catch (e) {
             console.log(e);
+            data.setCheersCount(!isCheer ? ++data.cheersCount : --data.cheersCount)
+            setIsCheer(!isCheer);
         }
     }
 
@@ -149,7 +148,7 @@ class ActionFloatingButton extends Component {
                 color: '#3CAE14',
                 action: () => {
                     this.props.navigation.navigate('WriteStory', {
-                        purposeId: this.props.data.purpose.id
+                        purpose: this.props.data.purpose
                     })
                 }
             }
@@ -291,7 +290,7 @@ function StoryTimeLine({ stories }) {
 
 export default function DetailPurpose({ data }) {
 
-    const [headerVisible, setHeaderVisible] = useState(false);
+    const [headerVisible, setHeaderVisible] = useState(true);
     const [cheersCount, setCheersCount] = useState(data.cheersCount);
 
     data.setCheersCount = setCheersCount;
@@ -426,13 +425,13 @@ export default function DetailPurpose({ data }) {
                 backgroundColor={'rgb(0,0,0,0)'}
                 fadeOutForeground={true}
                 backgroundScrollSpeed={20}
-                onChangeHeaderVisibility={(a) => {
-                    setHeaderVisible(a);
-                }}
+                // onChangeHeaderVisibility={(a) => {
+                //     setHeaderVisible(a);
+                // }}
                 renderFixedHeader={() => {
                     return (
                         <View>
-                            {!headerVisible &&
+                            {headerVisible &&
                                 <View style={{ overflow: 'visible', backgroundColor: 'white', height: 48, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
                                     <ImageButton
                                         backgroundStyle={{

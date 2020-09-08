@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, Modal, Text, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Modal, Text, TouchableOpacity,ToastAndroid } from 'react-native';
 import GlobalConfig from '../../../../../GlobalConfig';
 import Loader from '../../../Loader';
 import { useRoute } from '@react-navigation/native';
 import Request from '../../../../../util/Request';
 import { inject } from 'mobx-react';
+import { Scope } from '../../../../../AppEnum';
 
 const scopeNames = ['전체공개', '비공개']
 
@@ -18,17 +19,19 @@ export default class WriteStory extends Component {
         this.story = props.route.params.story;
         this.isModify = this.story != null;
 
+        this.purpose = this.props.route.params.purpose;
+
+
         this.state = {
             isUploading: false,
             isScopeSelecting: false,
             storyTitle: this.story ? this.story.title : null,
             storyContent: this.story ? this.story.content : null,
             storyType: this.story ? this.story.type : 0,
-            storyDisclosureScope: this.story ? this.story.disclosureScope : 0
+            storyDisclosureScope: this.story ? this.story.disclosureScope : (this.purpose.disclosureScope == Scope.PRIVATE ? Scope.PRIVATE : Scope.PUBLIC)
         }
 
         this.authStore = this.props.authStore;
-
         // console.log(this.props.navigation.dangerouslyGetParent())
         // this.props.navigation.dangerouslyGetParent().setOptions({ tabBarVisible: false })
 
@@ -53,7 +56,7 @@ export default class WriteStory extends Component {
             });
 
             const resource = {
-                purposeId: this.props.route.params.purposeId,
+                purposeId: this.purpose.id,
                 title: this.state.storyTitle,
                 content: this.state.storyContent,
                 type: this.state.storyType,
@@ -163,6 +166,10 @@ export default class WriteStory extends Component {
                         <View style={{ width: '100%', height: 55, backgroundColor: '#888888', justifyContent:'center' }}>
                             <TouchableOpacity style={{alignSelf: 'flex-end', marginRight: 5, borderWidth: 0.5, backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
                                 onPress={() => {
+                                    if(this.purpose.disclosureScope == Scope.PRIVATE){
+                                        ToastAndroid.showWithGravity('비공개된 목적은 변경할 수 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                                        return;
+                                    }
                                     this.setState({
                                         isScopeSelecting: true
                                     })
