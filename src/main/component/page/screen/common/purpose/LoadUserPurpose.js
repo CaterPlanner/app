@@ -60,6 +60,7 @@ export default function LoadUserPurpose({ navigation }) {
         }, [])
       );
 
+
     return (
         <View style={{ flex: 1 }}>
             {isLoading ? <Loader /> : <DetailPurpose data={data} />}

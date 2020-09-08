@@ -17,6 +17,9 @@ import Request from '../../../../util/Request';
 import SplashScreen from 'react-native-splash-screen';
 
 
+import CaterPlannerScheduler from '../../../../native/CaterPlannerScheduler';
+
+
 const fullWidth = Dimensions.get('window').width;
 
 
@@ -218,7 +221,6 @@ export default class Home extends Component {
         }
 
         this.appStore = this.props.appStore;
-
     }
     //
     _renderItem = ({ item, index }) => {

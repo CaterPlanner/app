@@ -17,6 +17,7 @@ import Request from '../../../../util/Request';
 import { PurposeWriteType } from '../../../../AppEnum';
 import GlobalConfig from '../../../../GlobalConfig';
 import Purpose from '../../../../rest/model/Purpose';
+import NotificationManager from '../../../../util/NotificationManager';
 
 const fullWidth = Dimensions.get('window').width;
 
@@ -124,8 +125,6 @@ export default class PurposeWriteBoard extends Component {
                         goal.lastBriefingDate = null;     
                     })
 
-                    console.log(this.purposeWriteStore.resultFormData);
-
                     response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
                     })
@@ -149,10 +148,8 @@ export default class PurposeWriteBoard extends Component {
                     break;
             }
 
-            if (result.stat == 0)
-                this.appStore.onScheduler();
-
             this.backHandler.remove();
+            this._newBriefingAlarm();
 
 
         } catch (e) {
@@ -160,6 +157,15 @@ export default class PurposeWriteBoard extends Component {
             this.setState({
                 isUploading : false
             })
+        }
+    }
+
+    _newBriefingAlarm = async () => {
+        for(goal of this.purposeWriteStore.purpose.detailPlans){
+            if(goal.isNowBriefing){
+                NotificationManager.briefingAlarmShow();
+                return;
+            }
         }
     }
 

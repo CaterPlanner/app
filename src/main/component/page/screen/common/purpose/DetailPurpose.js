@@ -530,6 +530,9 @@ export default function DetailPurpose({ data }) {
                                 </Text> */}
                             <ProfileWidget
                                 user={data.author}
+                                profilePress={isOwner ? () => {
+                                    navigation.navigate('ProfileNavigation');
+                                } : undefined}
                                 fontStyle={{ alignSelf: 'flex-end', marginBottom: 5 }}
                             />
                         </View>

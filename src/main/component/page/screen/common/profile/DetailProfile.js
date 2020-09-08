@@ -70,9 +70,12 @@ export default function UserProfile({ data }) {
                 title={'사용자 목적'}
                 detailButtonHint={'모든 목적보기'}
                 detailButtonPress={() => {
-                    navigation.navigate('UserPurposeList', {
-                        id : data.id
-                    })
+                    navigation.navigate('PublicNavigation', {
+                        screen : 'UserPurposeList',
+                        params : {
+                            id : data.id
+                        }
+                    });
                 }}
                 child={
                     (
@@ -84,9 +87,12 @@ export default function UserProfile({ data }) {
                                         name={purpose.name}
                                         checkedBriefing={false}
                                         onPress={() => {
-                                            navigation.navigate('LoadUserPurpose', {
-                                                id : purpose.id
-                                            })
+                                            navigation.navigate('PublicNavigation', {
+                                                screen : 'LoadUserPurpose',
+                                                params : {
+                                                    id : purpose.id
+                                                }
+                                            });
                                         }}
                                     />
                                 </View>

@@ -1,30 +1,39 @@
 import 'react-native-gesture-handler';
 import 'mobx-react-lite/batchingForReactNative'
-import React, {useEffect} from 'react'
+import React, {Component} from 'react'
+import {ToastAndroid, BackHandler} from 'react-native';
 import { NavigationContainer} from '@react-navigation/native';
 import RootStore from './src/main/mobX/store/RootStore';
 import {Provider} from 'mobx-react'
 import NavController from './src/main/component/page/navigation/NavController';
 
 import SQLite from 'react-native-sqlite-storage';
+import NotificationManager from './src/main/util/NotificationManager';
 
 
-const root = new RootStore();
+export default class App extends Component{
+    constructor(props){
+      super(props);
 
-const App = () => {
+      SQLite.DEBUG(true);
+      SQLite.enablePromise(false);
 
-  SQLite.DEBUG(true);
-  SQLite.enablePromise(false);
+      this.root = new RootStore();
 
+    }
 
-  return(
-    <Provider {...root}>
-      <NavigationContainer>
-        <NavController/>
-      </NavigationContainer>
-    </Provider>
-  );
+    componentWillUnmount(){
+      console.log('df');
+    }
 
+    render(){
+      return(
+        <Provider {...this.root}>
+        <NavigationContainer>
+          <NavController/>
+        </NavigationContainer>
+      </Provider>
+      )
+    }
 }
 
-export default App;

@@ -5,10 +5,8 @@ import HomeNavigation from './HomeNavigation'
 import SearchNavigation from './SearchNavigation'
 import StoryNavigation from './StoryNavigation'
 import Make from '../screen/main/Make'
-import PublicNavigation from './PublicNavigation'
-import { TabActions } from '@react-navigation/native';
-import { cos } from 'react-native-reanimated';
 import { PurposeWriteType } from '../../../AppEnum';
+import ProfileNavigation from './ProfileNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,7 +48,7 @@ const MainNavigation = () => {
             case "StoryNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_story.png');
               break;
-            case "PublicNavigation":
+            case "ProfileNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_profile.png');
               break;
           }
@@ -92,7 +90,7 @@ const MainNavigation = () => {
       <Tab.Screen name="StoryNavigation" component={StoryNavigation}
         
       />
-      <Tab.Screen name="PublicNavigation" component={PublicNavigation}
+      <Tab.Screen name="ProfileNavigation" component={ProfileNavigation}
         
       />
     </Tab.Navigator>
