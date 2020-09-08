@@ -22,6 +22,8 @@ export default class AuthStore {
     constructor() {
         this.isLogin = false;
 
+   
+
         //socialSign
         GoogleSignin.configure({
             scopes: ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"],
@@ -37,6 +39,7 @@ export default class AuthStore {
         return new Promise(async (resolve, reject) => {
             try {
 
+        
                 const userToken = JSON.parse(await AsyncStorage.getItem('USER_TOKEN'));
                 this.user = JSON.parse(await AsyncStorage.getItem('USER_DATA'));
     
@@ -47,6 +50,8 @@ export default class AuthStore {
                 } else if (userToken) {
                     await this.reissuanceToken(userToken);
                 }
+
+                this.isLogin = true
 
                 resolve();
     
@@ -93,9 +98,11 @@ export default class AuthStore {
 
     login = (idToken, user) => {
         return new Promise(async (resolve, reject) => {
+            await firebase.messaging().requestPermission();
+
             const json = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/auth/social/google`, JSON.stringify({
                 idToken: idToken,
-                fcmToken: await this.getFcmToken()
+                fcmToken: await this.getToken()
             }))
                 .submit();
     
@@ -127,57 +134,55 @@ export default class AuthStore {
         })
     }
 
-    getFcmToken = async () => {
-        await firebase.messaging().requestPermission();
-        return firebase.messaging().getToken();
-    }
-
     @action
-    signInByGoogle = async () => {
-        try {
-            await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
+    signInByGoogle = () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await GoogleSignin.hasPlayServices();
+                const userInfo = await GoogleSignin.signIn();
 
-            console.log(userInfo);
+                await AsyncStorage.setItem("USER_SOCIAL", 'GOOGLE');
 
-            await AsyncStorage.setItem("USER_SOCIAL", 'GOOGLE');
+                await this.login(userInfo.idToken, userInfo.user);
+                
+                resolve();
 
-            await this.login(userInfo.idToken, userInfo.user);
-            
-        } catch (error) {
-            this.clearUser();
-            console.log(error)
-        }
+            } catch (error) {
+                this.clearUser();
+                reject(error);
+            }})
     }
 
     @action
     logout = async () => {
-        try {
-            if (!this.isLogin)
-                throw '로그인 상태가 아닙니다.';
-
-            await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/auth/logout`)
-                .auth(this.userToken.token)
-                .submit()
-
-            const socialName = await AsyncStorage.getItem("USER_SOCIAL");
-
-            switch (socialName) {
-                case "GOOGLE":
-                    if (await GoogleSignin.isSignedIn()) {
-                        await GoogleSignin.revokeAccess();
-                        await GoogleSignin.signOut();
-                    }
-                    break;
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!this.isLogin)
+                    throw '로그인 상태가 아닙니다.';
+    
+                await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/auth/logout`)
+                    .auth(this.userToken.token)
+                    .submit()
+    
+                const socialName = await AsyncStorage.getItem("USER_SOCIAL");
+    
+                switch (socialName) {
+                    case "GOOGLE":
+                        if (await GoogleSignin.isSignedIn()) {
+                            await GoogleSignin.revokeAccess();
+                            await GoogleSignin.signOut();
+                        }
+                        break;
+                }
+    
+               await this.clearUser();
+               resolve();
+    
+            } catch (e) {
+                console.log(e);
+                reject(e);
             }
-
-           this.clearUser();
-
-        } catch (e) {
-            console.log(e);
-            throw '로그아웃에 실패하였습니다.'
-        }
-
+        })
     }
 
     clearUser = () => {
