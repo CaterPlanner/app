@@ -106,8 +106,11 @@ const HomeNavigation = () => {
             <Stack.Screen options={{ headerShown: false }} name="PublicNavigation" component={PublicNavigation} />
             <Stack.Screen options={({ navigation }) => ({
                 ...defaultHeaderStyle,
-                headerTitle: '브리핑 리스트',
+                headerTitle: '수행 리스트',
                 headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                }
             })} name="BriefingPurposeList" component={BriefingPurposeList} />
             <Stack.Screen options={({ navigation, route }) => ({
                 ...defaultHeaderStyle,

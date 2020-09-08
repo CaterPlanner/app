@@ -41,8 +41,7 @@ export default class AuthStore {
 
         
                 const userToken = JSON.parse(await AsyncStorage.getItem('USER_TOKEN'));
-                console.log('sdfsd');
-                console.log(userToken);
+
                 this.user = JSON.parse(await AsyncStorage.getItem('USER_DATA'));
     
     
@@ -52,6 +51,10 @@ export default class AuthStore {
                 } else if (userToken) {
                     await this.reissuanceToken(userToken);
                 }
+
+
+                console.log('init !!')
+                console.log(userToken);
 
                 this.isLogin = true
 

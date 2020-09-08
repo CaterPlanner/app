@@ -67,7 +67,7 @@ export default function UserProfile({ data }) {
 
             {/* 사용자 목적, 모든 목적 보기 */}
             <InfoBox
-                title={'사용자 목적'}
+                title={'My 목적'}
                 detailButtonHint={'모든 목적보기'}
                 detailButtonPress={() => {
                     navigation.navigate('PublicNavigation', {
