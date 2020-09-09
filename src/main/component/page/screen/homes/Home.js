@@ -228,12 +228,9 @@ export default class Home extends Component {
         return (
             <ActiveCard purpose={item} loadData={this._loadData}
                 onPress={() => {
-                    this.props.navigation.navigate('PublicNavigation', {
-                        screen: 'LoadMyPurpose',
-                        params: {
-                            id: item.id,
-                            refreshHome: this._loadData
-                        }
+                    this.props.navigation.navigate('LoadMyPurpose', {
+                        id: item.id,
+                        refreshHome: this._loadData
                     })
                 }} />
             // <EmptyCard/>

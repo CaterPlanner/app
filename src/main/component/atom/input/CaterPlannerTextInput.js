@@ -21,7 +21,7 @@ export default class CaterPlannerTextInput extends Component {
         return (
             <View>
                 {this.props.label && (
-                    <Text style={{ marginBottom: 6 }}>{this.props.label}</Text>)
+                    <Text style={[{ marginBottom: 6 }, this.props.labelStyle]}>{this.props.label}</Text>)
                 }
                 <TextInput
                     ref={input => this.textInput = input}
@@ -41,9 +41,24 @@ export default class CaterPlannerTextInput extends Component {
                         borderBottomWidth: 0.7
                     }}
                     onSubmitEditing={this.props.onSubmitEditing}
-                    onChangeText={this.props.onChangeText}
+                    onChange={({nativeEvent}) => {
+                        let text = nativeEvent.text;
+
+                        if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z]/g).test(text)){
+                            text = "";
+                        }
+                        this.props.onChangeText(text);
+                    }}
                     value={this.props.value}
                 />
+                {this.props.maxLength && 
+                <Text style={{
+                    marginTop: 8,
+                    fontSize: 12,
+                    color : '#888888'
+                }}>
+                    {this.props.value.length}/{this.props.maxLength} 글자
+                </Text>}
             </View>
         )
     }

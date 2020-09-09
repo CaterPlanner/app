@@ -5,6 +5,10 @@ const PurposeRepository = {
    
     insert : (txn, purpose) => {
         return new Promise((resolve, reject) => {
+            
+            console.log('@@@@@@@@@@@@@')
+            console.log(purpose);
+
             txn.executeSql(
                 'insert into purpose(id, name, description, photo_url, disclosure_scope, start_date, end_date, stat) values(?,?,?,?,?,?,?,?)',
                 [purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate.toString(), purpose.endDate.toString(), purpose.stat],

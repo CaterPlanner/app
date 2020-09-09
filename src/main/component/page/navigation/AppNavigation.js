@@ -35,10 +35,13 @@ const AppNavigation = () => {
                 }
             })} name="Setting" component={Setting} />
             <Stack.Screen options={({ route, navigation }) => ({
-                ...defaultHeaderStyle,
-                title: '스토리쓰기',
+                ...defaultHeaderStyle(navigation),
+                title: '스토리 작성',
                 headerShown : route.params.showHeader == undefined || route.params.showHeader == true ? true : false, 
                 headerTitleAlign: 'center',
+                headerTitleStyle: {
+                    fontWeight: 'bold'
+                },
                 headerRight: () => {
                     return(
                         <ImageButton

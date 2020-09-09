@@ -38,16 +38,16 @@ export default class PurposeWriteBoard extends Component {
 
 
         this.views = [
-            <PurposeNameWrite index={0} />,
-            <PurposeDescriptionWrite  index={1}/>,
-            <PurposePhotoWrite index={2} />,
-            <PurposeDetailPlansWrite index={3}/>,
+            <PurposeNameWrite key={0} index={0} />,
+            <PurposeDescriptionWrite key={1} index={1}/>,
+            <PurposePhotoWrite key={2} index={2} />,
+            <PurposeDetailPlansWrite key={3} index={3}/>,
         ]
         this.purposeWriteStore = this.props.purposeWriteStore
         this.appStore = this.props.appStore;
         this.authStore = this.props.authStore;
 
-        
+
         this.purposeWriteStore.start(this.views.length, this.props.route.params ? this.props.route.params.purpose : null, this.props.route.params.type);
     }
 
@@ -63,7 +63,6 @@ export default class PurposeWriteBoard extends Component {
 
 
         try {
-
             switch (this.purposeWriteStore.writeType) {
                 case PurposeWriteType.CREATE:
                 case PurposeWriteType.FOLLOW:
@@ -78,7 +77,6 @@ export default class PurposeWriteBoard extends Component {
                     if(result.detailPlans.length != 0){
                         result.detailPlans.forEach((goal) => {
                             goal.purposeId = response.data.id;
-                            goal.briefingCount = 0;
                         })
                     }
 
@@ -106,12 +104,9 @@ export default class PurposeWriteBoard extends Component {
                     await PurposeService.getInstance().modify(result.id, result);
 
                     this.props.navigation.navigate('HomeNavigation', {
-                        screen : 'PublicNavigation',
+                        screen : 'LoadMyPurpose',
                         params : {
-                            screen : 'LoadMyPurpose',
-                            params : {
-                                id : result.id
-                            }
+                            id : result.id
                         }
                     });
 
@@ -122,7 +117,8 @@ export default class PurposeWriteBoard extends Component {
            
                     result.detailPlans.forEach((goal) => {
                         goal.briefingCount = 0;
-                        goal.lastBriefingDate = null;     
+                        goal.lastBriefingDate = null;
+                        goal.purposeId = result.id;
                     })
 
                     response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
@@ -135,15 +131,7 @@ export default class PurposeWriteBoard extends Component {
 
                     await PurposeService.getInstance().groundModify(result.id, result)
 
-                    this.props.navigation.navigate('HomeNavigation', {
-                        screen : 'PublicNavigation',
-                        params : {
-                            screen : 'LoadMyPurpose',
-                            params : {
-                                id : result.id
-                            }
-                        }
-                    });
+                    this.props.navigation.navigate('HomeNavigation');
 
                     break;
             }
@@ -220,7 +208,7 @@ export default class PurposeWriteBoard extends Component {
                         </View>
                         <View style={{ position: 'absolute', bottom: 30, right: 22 }}>
                             <ImageButton
-                                backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#25B046' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
+                                backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#2CBD4F' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
                                 imageStyle={[
                                     (!this.purposeWriteStore.isLast ?
                                         { width: 18, height: 28, marginLeft: 5 } :

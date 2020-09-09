@@ -32,48 +32,24 @@ export default class PurposeWriteStore{
         this.endIndex = endIndex;
         this.purpose = new Purpose(null, "", "", null, 0,  EasyDate.now(), new EasyDate().plusDays(1), 0 );
         this.writeType = type;
-        this.permitCache = [false, false, false, false];
+        
 
         let diffDay;
-        console.log(purpose);
 
         switch(this.writeType){
             case PurposeWriteType.CREATE:
+                this.permitCache = [false, false, false, false];
                 break;
             case PurposeWriteType.MODIFY:
                 this.purpose = purpose;
                 this.permitCache = [true, true, true, true]
-
-                // const diffDay = EasyDate.between(EasyDate.now(), purpose.startDate).day;
-
-                // this.purpose.startDate = EasyDate.now();
-
-                // this.purpose.detailPlans.forEach((goal) => {
-                //     goal.startDate = goal.startDate.plusDays(diffDay);
-                //     goal.endDate = goal.endDate.plusDays(diffDay);
-
-                //     if(goal.endDate.isBefore(this.purpose.endDate)){
-                //         this.purpose.endDate = goal.endDate;
-                //     }
-                // })
 
                 break;
             case PurposeWriteType.FOLLOW:
                 this.purpose.detailPlans = purpose.detailPlans;
                 this.permitCache =  [false, false, false, true]
                 
-                diffDay = EasyDate.between(EasyDate.now(), purpose.startDate).day;
-
-                this.purpose.startDate = EasyDate.now();
-
-                this.purpose.detailPlans.forEach((goal) => {
-                    goal.startDate = goal.startDate.plusDays(diffDay);
-                    goal.endDate = goal.endDate.plusDays(diffDay);
-
-                    if(goal.endDate.isBefore(this.purpose.endDate)){
-                        this.purpose.endDate = goal.endDate;
-                    }
-                })
+                this.resetDetailPlans(this.purpose)
 
                 break;
             case PurposeWriteType.RETRY:
@@ -82,23 +58,13 @@ export default class PurposeWriteStore{
 
                 this.purpose.stat = State.PROCEED;
 
-                diffDay = EasyDate.between(EasyDate.now(), this.purpose.startDate).day;
+                this.resetDetailPlans(this.purpose)
 
-                this.purpose.startDate = EasyDate.now();
-
-                this.purpose.detailPlans.forEach((goal) => {
-               
-                    goal.startDate = goal.startDate.plusDays(diffDay);
-                    goal.endDate = goal.endDate.plusDays(diffDay);
-
-                    if(goal.endDate.isBefore(this.purpose.endDate)){
-                        this.purpose.endDate = goal.endDate;
-                    }
-                })
                 break;
         }
 
-        console.log(this.purpose)
+        console.log(this.purpose);
+
         // this.purpose = purpose ? purpose : new Purpose(null, "", "", null, 0,  EasyDate.now(), new EasyDate().plusDays(1), 0 );
 
         //date awlays true
@@ -113,9 +79,24 @@ export default class PurposeWriteStore{
        
     }
 
-    // set = (carousel) => {
-    //     this.carousel = carousel;
-    // }
+    resetDetailPlans = (purpose) => {
+        const diffDay = EasyDate.between(EasyDate.now(), purpose.startDate).day;
+
+        purpose.startDate = EasyDate.now();
+
+        purpose.detailPlans.forEach((goal) => {
+            
+            goal.briefingCount = 0;
+            goal.lastBriefingDate = null;
+            goal.startDate = goal.startDate.plusDays(diffDay);
+            goal.endDate = goal.endDate.plusDays(diffDay);
+
+            if(goal.endDate.isBefore(purpose.endDate)){
+                purpose.endDate = goal.endDate;
+            }
+            
+        });
+    }
 
     @action
     next = (carousel) => {

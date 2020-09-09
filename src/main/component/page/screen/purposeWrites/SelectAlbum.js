@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Image, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
 import CameraRoll from "@react-native-community/cameraroll";
 import { useRoute } from "@react-navigation/native";
+import Loader from "../../Loader";
 
 function Album({ imageUri, name, count, onPress }) {
     return (
@@ -61,7 +62,7 @@ export default function SelectAlbum({ navigation }) {
     }, []);
 
     return (
-        <View>
+        <View style={{flex : 1}}>
             { isLoading ? (
                     <FlatList
                         data={allAlbum}
@@ -79,7 +80,7 @@ export default function SelectAlbum({ navigation }) {
                     />      
                 ) :
                 (
-                    <Text>isLoading</Text>
+                    <Loader/>
                 )
             }
         </View>

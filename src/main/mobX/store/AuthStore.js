@@ -38,25 +38,19 @@ export default class AuthStore {
     load = () => {
         return new Promise(async (resolve, reject) => {
             try {
-
-        
                 const userToken = JSON.parse(await AsyncStorage.getItem('USER_TOKEN'));
 
                 this.user = JSON.parse(await AsyncStorage.getItem('USER_DATA'));
     
-    
-                if (this.vaildate(userToken)) {
+                if(!userToken){
+                    resolve(); 
+                    return;
+                }else if (this.vaildate(userToken)) {
                     this.userToken = userToken;
-    
+                    this.isLogin = true;
                 } else if (userToken) {
                     await this.reissuanceToken(userToken);
                 }
-
-
-                console.log('init !!')
-                console.log(userToken);
-
-                this.isLogin = true
 
                 resolve();
     
@@ -100,6 +94,9 @@ export default class AuthStore {
     vaildate = (userToken) => {
         if(!userToken)
             return false;
+        console.log(new Date(userToken.expired))
+        console.log(new Date());
+        // return new Date(userToken.expired) < new Date();
         return new Date(userToken.expired) > new Date();
     }
 
@@ -126,8 +123,6 @@ export default class AuthStore {
                     profileUrl: user.photo
                 }
         
-                console.log('token init complete')
-
                 if (!this.user || this.user.email != currentUser) {
                     const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/myActivePurposes`)
                         .auth(this.userToken.token)
@@ -158,8 +153,6 @@ export default class AuthStore {
             try {
                 await GoogleSignin.hasPlayServices();
                 const userInfo = await GoogleSignin.signIn();
-
-                console.log('google login complete')
 
                 await AsyncStorage.setItem("USER_SOCIAL", 'GOOGLE');
 

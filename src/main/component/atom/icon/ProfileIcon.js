@@ -12,11 +12,8 @@ export default function ProfileIcon({user, imageBackgroundStyle, imageStyle, onP
         imageStyle={[{width : 30, height: 30, borderRadius: 30}, imageStyle]}
         source={{uri : user.profileUrl}}
         onPress={!onPress ? () => {
-            navigation.navigate('PublicNavigation', {
-                screen : 'LoadProfile',
-                params : {
-                    id : user.id
-                }
+            navigation.navigate('LoadProfile', {
+                id : user.id
             })
         } : onPress}
     />

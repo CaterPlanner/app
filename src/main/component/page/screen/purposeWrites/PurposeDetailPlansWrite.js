@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, TouchableOpacity, FlatList } from 'react-native';
 import purposeStyles from './style/PurposeStyle';
 import useStores from '../../../../mobX/helper/useStores'
 import ImageButton from '../../../atom/button/ImageButton';
-import EasyDate from '../../../../util/EasyDate';
 import { useNavigation } from '@react-navigation/native';
-import RoundButton from '../../../atom/button/RoundButton';
-import PurposeWriteBoard from './PurposeWriteBoard';
 import { PurposeWriteType } from '../../../../AppEnum';
+import DetailPlanDate from '../../../atom/button/DetailPlanDate';
 
-export default function PurposeDetailPlansWrite({index}) {
+
+export default function PurposeDetailPlansWrite({ index }) {
 
     const { purposeWriteStore } = useStores();
 
@@ -20,9 +19,9 @@ export default function PurposeDetailPlansWrite({index}) {
     const navigation = useNavigation();
 
     useEffect(() => {
-        if(purposeStat == 0){
+        if (purposeStat == 0) {
             purposeWriteStore.changePermit(purposeDeatilPlans.length != 0, index)
-        }else{
+        } else {
             purposeWriteStore.changePermit(true, index);
         }
 
@@ -34,15 +33,15 @@ export default function PurposeDetailPlansWrite({index}) {
             <View style={purposeStyles.headContainer}>
                 <View style={purposeStyles.titleArea}>
                     <Text style={purposeStyles.title}>
-                        목적에 대한                      
+                        목적을 달성하기 위한
                         {"\n"}
-                        세부적인 목표계획을 세워봐요.
+                        수행 목표를 세워봐요.
                 </Text>
                 </View>
-                <View style={[purposeStyles.subtitleArea, {flexDirection: 'row', justifyContent: 'space-between'}]}>
+                <View style={[purposeStyles.subtitleArea, { flexDirection: 'row', justifyContent: 'space-between' }]}>
                     <Text style={purposeStyles.subtitle}>
-                        목적만으로는 당신의 꿈이 이루어 질 수 없어요.{"\n"}
-                        목표를 설정해서 원하는 것을 모두 이루어 봐요.
+                        생성시 현재 시점 부터 수행 목표 관리 시스템이 시작되며 {"\n"}
+                        나중에 수행을 선택하면 입력한 데이터만 저장됩니다.
                     </Text>
                     <ImageButton
                         text="검"
@@ -51,82 +50,79 @@ export default function PurposeDetailPlansWrite({index}) {
                     />
                 </View>
             </View>
-            <View style={[purposeStyles.bottomContainer, {justifyContent: 'center', alignItmes:'center'}]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text>
-                        목표 계획 실천
-                    </Text>
-                    <View style={{ width: 160, flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <RoundButton
-                            text={'지금부터'}
-                            textStyle={{
-                                textAlign: 'center'
-                            }}
-                            elevation={5}
-                            color={purposeStat == 0 ? 'white' : '#F2F2F2'}
-                            width={75}
-                            height={30}
+            <View style={[purposeStyles.bottomContainer, { alignItmes: 'center' }]}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <ImageButton
+                            backgroundStyle={{ paddingLeft: 10, alignSelf: 'flex-start', marginRight: 10, marginBottom: 20 }}
+                            imageStyle={{ width: 65, height: 70 }}
+                            source={require('../../../../../../asset/button/plan_insert_button.png')}
                             onPress={() => {
-                                setPurposeStat(0);
-                                purposeWriteStore.purpose.stat = 0;
+                                if (purposeWriteStore.writeType == PurposeWriteType.MODIFY) {
+                                    Alert.alert(
+                                        null,
+                                        '진행중인 목적에 세부 목표 수정시 지금까지의 기록은 사라지고 새롭게 시작하게 됩니다.',
+                                        [
+                                            {
+                                                text: '취소',
+                                                style: 'cancel'
+                                            },
+                                            {
+                                                text: '확인',
+                                                onPress: () => {
+                                                    navigation.navigate('DetailPlanWriteNavigation', {
+                                                        screen: 'DetailPlanWriteBoard',
+                                                        params: {
+                                                            setPurposeDetailPlans: setPurposeDetailPlans,
+                                                            detailPlans: purposeDeatilPlans
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        ],
+                                        { cancelable: false }
+
+                                    )
+                                } else {
+                                    navigation.navigate('DetailPlanWriteNavigation', {
+                                        screen: 'DetailPlanWriteBoard',
+                                        params: {
+                                            setPurposeDetailPlans: setPurposeDetailPlans,
+                                            detailPlans: purposeDeatilPlans
+                                        }
+                                    });
+                                }
                             }}
                         />
-                        <RoundButton
-                            text={'나중에'}
-                            textStyle={{
-                                textAlign: 'center'
-                            }}
-                            elevation={5}
-                            color={purposeStat == 1 ? 'white' : '#F2F2F2'}
-                            width={75}
-                            height={30}
-                            onPress={() => {
-                                setPurposeStat(1);
-                                purposeWriteStore.purpose.stat = 1;
-                            }}
-                        />
+                    <View style={{ width: 200, flexDirection: 'row',alignSelf: 'flex-start', marginTop : 10, justifyContent: 'space-between', marginRight: 10 }}>
+                        <TouchableOpacity onPress={() => {
+                            setPurposeStat(0);
+                            purposeWriteStore.purpose.stat = 0;
+                        }} >
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', color: purposeStat == 0 ? '#25B046' : '#B2B2B2' }}>
+                                지금부터 수행
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            setPurposeStat(1);
+                            purposeWriteStore.purpose.stat = 1;
+                        }} >
+                            <Text style={{ fontSize: 16, color: purposeStat == 1 ? '#25B046' : '#B2B2B2', fontWeight: 'bold' }}>
+                                나중에 수행
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-                <ImageButton
-                    backgroundStyle={{ flex:1}}
-                    imageStyle={{ width: 100, height: 110 }}
-                    source={require('../../../../../../asset/button/plan_insert_button.png')}
-                    onPress={() => {
-                        if(purposeWriteStore.writeType == PurposeWriteType.MODIFY){
-                            Alert.alert(
-                                null,
-                                '진행중인 목적에 세부 목표 수정시 지금까지의 기록은 사라지고 새롭게 시작하게 됩니다.',
-                                [
-                                    {
-                                        text : '취소',
-                                        style: 'cancel'
-                                    },
-                                    {   
-                                        text: '확인',
-                                        onPress : () => {
-                                            navigation.navigate('DetailPlanWriteNavigation', {
-                                                screen: 'DetailPlanWriteBoard',
-                                                params : {
-                                                    setPurposeDetailPlans : setPurposeDetailPlans,
-                                                    detailPlans : purposeDeatilPlans
-                                                }
-                                            });
-                                        }
-                                    }
-                                ],
-                                { cancelable: false }
-                                
-                            )
-                        }else{
-                            navigation.navigate('DetailPlanWriteNavigation', {
-                                screen: 'DetailPlanWriteBoard',
-                                params : {
-                                    setPurposeDetailPlans : setPurposeDetailPlans,
-                                    detailPlans : purposeDeatilPlans
-                                }
-                            });
-                        }
-                    }}
+                <FlatList
+                    style={{ flex: 1, marginTop: 30 }}
+                    data={purposeDeatilPlans}
+                    renderItem={({ item }) => (
+                        <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
+                            <DetailPlanDate
+                                goal={item}
+                                disabled={true}
+                            />                        
+                        </View>
+                    )}
                 />
             </View>
         </View>

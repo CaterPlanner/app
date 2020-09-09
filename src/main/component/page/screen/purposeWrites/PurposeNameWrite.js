@@ -62,6 +62,7 @@ export default function PurposeNameWrite({index}) {
             </View>
             <View style={purposeStyles.bottomContainer}>
                 <CaterPlannerTextInput
+                    labelStyle={{color : '#25B046'}}
                     label={'목적 이름 설정하기'}
                     numberOfLines={1}
                     maxLength={32}
@@ -84,7 +85,7 @@ export default function PurposeNameWrite({index}) {
                 />
             </View>
             <View style={{ position: 'absolute', bottom: 44, width: '100%', alignItmes: 'center', left: 22 }}>
-                <TouchableOpacity style={{ borderWidth: 0.5, backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
+                <TouchableOpacity style={{ backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
                     onPress={() => {
                         setIsScopeSelecting(true);
                     }}

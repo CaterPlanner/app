@@ -7,7 +7,16 @@ export default function PurposeBox({data, onPress}){
 
     return(
     <TouchableOpacity activeOpacity={1} onPress={onPress}  style={styles.container}>
-       <Image
+        <Image
+            source={{uri : data.photoUrl}}
+            style={{flex: 2.7, marginTop: 14, marginBottom: 5, borderRadius: 10}}
+        />
+        <View style={{flex: 1}}>
+            <Text style={styles.purposeNameFont}>
+                {data.name}
+            </Text>
+        </View>
+       {/* <Image
                 source={{uri : data.photoUrl}}
                 resizeMode="stretch"
                 style={styles.photoContainer}
@@ -30,44 +39,19 @@ export default function PurposeBox({data, onPress}){
                 fontStyle={{ alignSelf: 'flex-end', marginBottom: 5}}
             />
             </View>
-        </View>
+        </View> */}
     </TouchableOpacity>)
 }
 
 const styles = StyleSheet.create({
     container: {
         width : '100%',
-        height: 300,
-        borderRadius: 20,
-        elevation : 5
-    },
-    photoContainer:{
-        flex: 2,
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5
-        },
-    emptyContainer: {
-        flex: 1,
-    },
-    infoContainer :{
-        paddingHorizontal: 15,
-        position: 'absolute',
-         width: '100%',
-        paddingVertical: 10,
-       backgroundColor:'white',
-       borderRadius : 10,
-       elevation: 10,
-       bottom : 0,
-       paddingBottom : 10
+        height: 380,
+        backgroundColor: 'white',
+        paddingHorizontal: 14
     },
     purposeNameFont: {
-        fontSize: 22,
-        paddingTop: 10,
-        paddingBottom: 20,
+        fontSize: 19,
+        marginVertical: 10
     },
-    purposeDescriptionFont: {
-        fontSize: 16,
-        height: 40,
-        marginBottom: 15
-    }
 })

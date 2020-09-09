@@ -68,7 +68,7 @@ export default function StoryBlock({data, onPress}){
             <View style={{marginTop : 10, flexDirection:'row'}}>
                 <View style={{flexDirection: 'row', justfiyContent:'center'}}>
                     <ImageButton
-                        imageStyle={{width: 22, height: 20, tintColor : isLikes ? 'blue' : undefined}}
+                        imageStyle={{width: 22, height: 20, tintColor : isLikes ? 'blue' : '#9D9D9D'}}
                         source={require('../../../../asset/icon/likes_icon.png')}
                         onPress={toggleLikes}
                     />
@@ -78,15 +78,12 @@ export default function StoryBlock({data, onPress}){
                 </View>
                 <View style={{flexDirection: 'row', justfiyContent:'center', marginLeft: 20}}>
                     <ImageButton
-                        imageStyle={{width: 22, height: 20}}
+                        imageStyle={{tintColor: '#9D9D9D', width: 22, height: 20}}
                         source={require('../../../../asset/button/comment_button.png')}
                         onPress={() => {
-                            naviagation.navigate('PublicNavigation', {
-                                screen : 'CommnetView',
-                                params : {
-                                    entity : Model.STORY,
+                            naviagation.navigate('CommnetView', {
+                                entity : Model.STORY,
                                     id : data.id
-                                }
                             })
                         }}
                     />

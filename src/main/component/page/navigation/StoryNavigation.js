@@ -12,15 +12,16 @@ const Stack = createStackNavigator();
 const StoryNavigation = () => {
     return(
           <Stack.Navigator>
-            <Stack.Screen options={(navigation) => ({
-                ...defaultHeaderStyle,
+            <Stack.Screen options={({navigation}) => ({
+                ...defaultHeaderStyle(),
                 headerTitle: '스토리',
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
                     fontWeight: 'bold'
                 }
             })} name="Story" component={Story}  />
-            <Stack.Screen options={{headerShown : false}}name="PublicNavigation" component={PublicNavigation} />
+            {/* <Stack.Screen options={{headerShown : false}}name="PublicNavigation" component={PublicNavigation} /> */}
+            {PublicNavigation.get()}
         </Stack.Navigator>
     )
     

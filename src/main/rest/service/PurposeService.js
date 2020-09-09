@@ -169,8 +169,8 @@ export default class PurposeService {
         return new Promise(async (resolve, reject) => {
             SQLiteManager.transaction(this.db, async (resolve, reject) => {
                 try{
-                    await PurposeRepository.updatePurposeDate(this.db, id, purpose);
-                    await GoalRepository.deleteByPurposeId(this.db, id);
+                    await PurposeRepository.deleteById(this.db, id);
+                    await PurposeRepository.insert(this.db, purpose);
                     await GoalRepository.insertAll(this.db, purpose.detailPlans);
                     resolve();
                 }catch(e){
@@ -261,23 +261,19 @@ export default class PurposeService {
             .catch(e => reject(e))
         })
     }
-    addBriefing = (purpose, clearGoalIdList, token) => {
+    update = (purpose, updateGoalList, token) => {
 
-        console.log(clearGoalIdList);
 
         return new Promise((resolve, reject) => {
             SQLiteManager.transaction(this.db, async (resolve, reject) => {
                 try{
-                    let checkedGoals = [];
-                    for(goalId of clearGoalIdList){
+                    console.log(updateGoalList);
 
-
-                        const goal = purpose.detailPlans[goalId];
+                    for(goal of updateGoalList){
                         await BriefingRepository.insert(this.db, purpose.id, goal.id);
                         
 
                         goal.lastBriefingDate = EasyDate.now();
-                        goal.briefingCount = goal.briefingCount + 1;
     
                         // if (goal.achieve == 100 && goal.stat == State.PROCEED) {
                         //     goal.stat = State.SUCCEES;
@@ -290,13 +286,14 @@ export default class PurposeService {
                         //     await PurposeRepository.updateStatById(this.db, purpose.id, purpose.stat);
                         // }
 
-                        checkedGoals.push(purpose.detailPlans[goalId])
+                        // checkedGoals.push(purpose.detailPlans[goalId])
                     }
+
 
                     await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}/update`, JSON.stringify({
                         achieve: purpose.achieve,
                         stat : purpose.stat,
-                        modifiedGoalAchieve: checkedGoals.map((goal) => ({
+                        modifiedGoalAchieve: updateGoalList.map((goal) => ({
                             id: goal.id,
                             briefingCount: goal.briefingCount,
                             lastBriefingDate: goal.lastBriefingDate.toString(),

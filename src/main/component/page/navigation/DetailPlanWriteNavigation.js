@@ -5,7 +5,6 @@ import DetailPlanWriteBoard from '../screen/detailPlanWrites/DetailPlanWriteBoar
 import ImageButton from '../../atom/button/ImageButton';
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 import GoalWrite from '../screen/detailPlanWrites/GoalWrite';
-import DetailPlanDecimalDayWrite from '../screen/detailPlanWrites/DetailPlanDecimalDayWrite'
 
 const Stack = createStackNavigator();
 
@@ -15,54 +14,33 @@ const DetailPlanWriteNavigation = () => {
         <Stack.Navigator >
             {/* <Stack.Screen options={{headerShown: false}} name="DetailPlanDecimalDayWrite" component={DetailPlanDecimalDayWrite} /> */}
             <Stack.Screen options={({ route, navigation }) => ({
-                ...defaultHeaderStyle,
+                ...defaultHeaderStyle(navigation),
                 title: '',
-                headerLeft: () => (
-                    <ImageButton
-                        backgroundStyle={{
-                            marginVertical: 5,
-                            marginLeft: 12
-                        }}
-                        imageStyle={{
-                            width: 24,
-                            height: 20
-                        }}
-                        source={require('../../../../../asset/button/arrow_button.png')}
-                        onPress={() => { navigation.goBack(); }}
-                    />
-                ),
-                headerRight: () => (
-                    <View style={{flexDirection : 'row', justifyContent: 'center'}}>
-                         {/* <ImageButton
-                            backgroundStyle={{
-                                marginVertical: 5,
-                                marginRight: 15
-                            }}
-                            imageStyle={{
-                                width: 24,
-                                height: 24
-                            }}
-                            source={
-                                route.params == undefined || !route.params.isGraph ?
-                                    require('../../../../../asset/button/show_goalGraph_button.png') : require('../../../../../asset/button/show_goalList_button.png')}
-                            onPress={route.params ? route.params.changeShow : null}
-                        /> */}
+                headerRight: () => {
+                                
+                    return (<View style={{flexDirection : 'row', justifyContent: 'center'}}>
                         <ImageButton
+                            disabled={!route.params.isCanSave}
                             backgroundStyle={{
                                 marginVertical: 5,
                                 marginRight: 10
                             }}
                             imageStyle={{
                                 width: 35,
-                                height: 35
+                                height: 35,
+                                tintColor : route.params.isCanSave ? '#25B046' : '#888888'
                             }}
                             source={
                                 require('../../../../../asset/button/check_button.png')}
-                            onPress={route.params ? route.params.saveDetailPlans : null}
+                            onPress={() => {
+                                if(route.params.isCanSave){
+                                    route.params.saveDetailPlans();
+                                }
+                            }}
                         />
                     
                     </View>
-                )
+                )}
             })}
                 name="DetailPlanWriteBoard" component={DetailPlanWriteBoard} />
             <Stack.Screen options={{ headerShown: false }} name={"GoalWrite"} component={GoalWrite} />

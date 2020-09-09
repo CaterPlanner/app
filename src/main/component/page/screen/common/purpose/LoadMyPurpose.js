@@ -54,7 +54,6 @@ export default class LoadMyPurpose extends Component{
                     data : {
                         ...response.data,
                         purpose: purpose,
-                        refreshHome : this.props.route.params.refreshHome,
                         refreshPurpose : this._getData
                     }
                 })
@@ -80,22 +79,15 @@ export default class LoadMyPurpose extends Component{
         }
     }
 
-    componentDidMount(){
-        this.props.navigation.addListener('focus', () => {
-            this.setState({
-                isLoading : true
-            }, this._getData)
-        })
-    }
 
-    componentWillUnmount(){
-        this.props.navigation.removeListener('focus');
+    componentDidMount(){
+        this._getData();
     }
 
     render(){
         return (
             <View style={{ flex: 1 }}>
-                {this.state.isLoading ? <Loader /> : <DetailPurpose data={this.state.data} />}
+                {this.state.isLoading ? <Loader /> : <DetailPurpose data={this.state.data} navigation={this.props.navigation} />}
             </View>
         );
     }

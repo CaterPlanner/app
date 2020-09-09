@@ -1,6 +1,7 @@
 import React, {Component } from 'react';
 import { View, Image, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import CameraRoll from "@react-native-community/cameraroll";
+import Loader from '../../Loader';
 
 //https://stackoverflow.com/questions/43824261/react-native-fetch-file-upload-error
 
@@ -92,9 +93,7 @@ export default class SelectPhoto extends Component{
                     />
                 ) :
                 (
-                    <Text>
-                        isLoadings
-                    </Text>
+                    <Loader/>
                 )
                 }
             </View>

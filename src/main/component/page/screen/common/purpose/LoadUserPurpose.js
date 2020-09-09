@@ -19,6 +19,7 @@ export default function LoadUserPurpose({ navigation }) {
 
     const { authStore } = useStores();
 
+    console.log(navigation.dangerouslyGetParent());
 
     const getData = async () => {
         try {
@@ -52,18 +53,10 @@ export default function LoadUserPurpose({ navigation }) {
         getData();
     }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-        
-        getData();
-          return () => {return null;};
-        }, [])
-      );
-
 
     return (
         <View style={{ flex: 1 }}>
-            {isLoading ? <Loader /> : <DetailPurpose data={data} />}
+            {isLoading ? <Loader /> : <DetailPurpose data={data} navigation={navigation} />}
         </View>
     )
 
