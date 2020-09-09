@@ -72,8 +72,6 @@ export default class PurposeStories extends Component{
     }
 
     render(){
-        console.log(this.isFinish)
-
         return(
             <View style={{flex: 1}}>
             <FlatList
@@ -81,11 +79,11 @@ export default class PurposeStories extends Component{
                 data={this.state.data}
                 renderItem={({item}) => {
                     item.createDate = new EasyDate(item.createDate);
-                    return <StoryBlock data={item} onPress={() => {
+                    return (<View style={{marginTop : 10, marginHorizontal: 10 }}><StoryBlock data={item} onPress={() => {
                         this.props.navigation.navigate('DetailStory', {
                             id : item.id
                         })
-                    }}/>
+                    }}/></View>)
                 }}
                 keyExtractor={(item) => item.id}
                 onEndReached={this._handleLoadMore}

@@ -20,13 +20,13 @@ const CreateNavigation = () => {
             <Stack.Screen options={{headerShown: false}} name="PurposeWriteBoard" component={PurposeWriteBoard}  />
             <Stack.Screen options={{headerShown: false}} name="PurposeWriteDone" component={PurposeWriteDone}/>
             <Stack.Screen options={{headerShown: false}} name="DetailPlanWriteNavigation" component={DetailPlanWriteNavigation} />
-            <Stack.Screen options={{
-                ...defaultHeaderStyle,
-                headerTitle: ''
-            }} name="SelectAlbum" component={SelectAlbum} />
+            <Stack.Screen options={({navigation}) => ({
+                ...defaultHeaderStyle(navigation),
+                title: ''
+            })} name="SelectAlbum" component={SelectAlbum} />
             <Stack.Screen name="SelectPhoto" component={SelectPhoto} options={({route, navigation}) => ({
-                ...defaultHeaderStyle,
-                headerTitle : route.params.photoName,
+                ...defaultHeaderStyle(navigation),
+                title : '',
                 // headerRight : () => {
                 //     // const enable = route.params.purposeWriteStore.isSelectPh
                     

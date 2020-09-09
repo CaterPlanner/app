@@ -49,7 +49,6 @@ export default class Story extends Component{
 
         try{
 
-            console.log('Load More' + this.state.page);
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story?page=${this.state.page + (this.state.type ? `&type=${this.state.type}` : '')}`, null, null, 8000)
             .auth(await this.authStore.getToken())
             .submit();
@@ -106,13 +105,10 @@ export default class Story extends Component{
                 data={this.state.data}
                 renderItem={({item}) => {
                     item.createDate = new EasyDate(item.createDate);
-                    return (<View style={{marginBottom : 10, marginHorizontal: 10 }}>
+                    return (<View style={{marginTop : 10, marginHorizontal: 10 }}>
                         <StoryBlock data={item}
-                            onPress={() => {this.props.navigation.navigate('PublicNavigation', {
-                                screen : 'DetailStory',
-                                params : {
-                                    id : item.id
-                                }
+                            onPress={() => {this.props.navigation.navigate('DetailStory', {
+                                id : item.id
                             })}}
                         /></View>)
                 }}

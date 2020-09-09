@@ -12,32 +12,37 @@ export default class BriefingGoalList extends Component{
         
         this.state = {
             isLoading : false,
-            goals : this.props.route.params.goals,
+            goals : this.props.route.params.purpose.detailPlans.filter(g => g.isNowBriefing)
         }
 
-        this.clearGoalIdStat = new Array(this.state.goals.length);
+        this.updateGoalIdStat = new Array(this.state.goals.length);
 
         this.props.navigation.setParams({
             save : this.save
         })
+
+        this.checkCount = 0;
+
     }
 
     _briefing = async () => {
         
+        //addBrieifng이 아닌 update로 변경
         try{
-            let clearGoalIdList = [];
-            this.clearGoalIdStat.map((r, index) => {
+
+            let updateGoalList = [];
+            this.updateGoalIdStat.map((r, index) => {
                 if(r)
-                    clearGoalIdList.push(index);
+                    updateGoalList.push(this.state.goals[index]);
             });
 
-            const updatedPurpose = await PurposeService.getInstance().addBriefing(this.props.route.params.purpose, 
-                clearGoalIdList , await this.props.authStore.getToken());
+
+            const updatedPurpose = await PurposeService.getInstance().update(this.props.route.params.purpose, 
+                updateGoalList , await this.props.authStore.getToken());
 
             this.props.route.params.acceptData(updatedPurpose);
 
             this.props.navigation.goBack();
-
 
         }catch(e){
             console.log(e);
@@ -63,6 +68,7 @@ export default class BriefingGoalList extends Component{
     }
 
     render(){
+
         return(
             <FlatList
                 style={{flex: 1}}
@@ -73,9 +79,32 @@ export default class BriefingGoalList extends Component{
                         <DetailPlanCheckBox
                             color={item.color}
                             name={item.name}
-                            acheive={item.acheive}
+                            acheive={item.achieve}
                             onChange={() => {
-                                this.clearGoalIdStat[index] = !this.clearGoalIdStat[index];  
+                                this.updateGoalIdStat[index] = !this.updateGoalIdStat[index];
+                                const isChecked = this.updateGoalIdStat[index];
+
+
+                                if(isChecked){
+                                    this.checkCount++;
+                                    item.briefingCount++;
+                                }else{
+                                    this.checkCount--;
+                                    item.briefingCount--;
+                                }
+                                console.log(item.achieve)
+
+                                this.setState({
+                                    goals : this.state.goals
+                                }, () => {
+                                    
+                                    if(this.checkCount == 0){
+                                        this.props.navigation.setParams({isCanSubmit : false})
+                                    }else if(this.checkCount == 1){
+                                        this.props.navigation.setParams({isCanSubmit : true})
+                                    }
+                                })
+
                             }}
                         />
                     </View>

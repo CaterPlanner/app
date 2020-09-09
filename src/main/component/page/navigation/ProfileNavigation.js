@@ -11,14 +11,15 @@ const ProfileNavigation = () => {
   return(
     <Stack.Navigator>
             <Stack.Screen options={({ navigation }) => ({
-                ...defaultHeaderStyle,
+                ...defaultHeaderStyle(),
                 title: '프로필',
                 headerTitleAlign:'center',
                 headerTitleStyle: {
                     fontWeight: 'bold'
                 }
             })} name="MyProfile" component={MyProfile}/>
-        <Stack.Screen options={{ headerShown: false }} name="PublicNavigation" component={PublicNavigation} />
+        {/* <Stack.Screen options={{ headerShown: false }} name="PublicNavigation" component={PublicNavigation} /> */}
+        {PublicNavigation.get()}
     </Stack.Navigator>
   );
 }

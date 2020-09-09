@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, Image, TouchableOpacity, PermissionsAndroid } from 'react-native';
+import { View, Text, Image, PermissionsAndroid } from 'react-native';
 import purposeStyles from './style/PurposeStyle';
 import useStores from '../../../../mobX/helper/useStores'
 import ImageButton from '../../../atom/button/ImageButton';
@@ -25,7 +25,7 @@ export default function PurposePhotoWrite({index}) {
 
     return (
         <View style={purposeStyles.container}>
-            <View style={purposeStyles.headContainer}>
+            <View style={[purposeStyles.headContainer,{marginBottom : 0}]}>
                 <View style={purposeStyles.titleArea}>
                     <Text style={purposeStyles.title}>
                         목적을 대표할{"\n"}
@@ -40,30 +40,29 @@ export default function PurposePhotoWrite({index}) {
                 </View>
             </View>
 
-            <View style={[purposeStyles.bottomContainer, {justifyContent: 'center', alignItmes:'center'}]}>
+            <View style={[purposeStyles.bottomContainer]}>
                     <ImageButton
-                    backgroundStyle={{ flex:1}}
-                    imageStyle={
-                        purposePhoto ?  {flex : 1, width : '100%' , height : undefined} : { width: 100, height: 100, marginLeft: 5 }
-                    }
-                    source={
-                        purposePhoto ? {uri : purposeWriteStore.isChangePhoto ? purposePhoto.uri : purposePhoto} : require('../../../../../../asset/button/select_thumbnail_button.png')
-                    }
-                    onPress={async () => {
-
-                        const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
-                        if (!hasPermission) {
-                            const { status } = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
-                            if (status != 'granted') {
-                                return;
+                        backgroundStyle={{paddingLeft: 10, alignSelf: 'flex-start', marginRight:10, marginBottom : 20}}
+                        imageStyle={{width: 70,height: 70}}
+                        source={require('../../../../../../asset/button/select_thumbnail_button.png')}
+                        onPress={async () => {
+                            const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+                            if (!hasPermission) {
+                                const { status } = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+                                if (status != 'granted') {
+                                    return;
+                                }
                             }
-                        }
-
-                        navigation.navigate('SelectAlbum' , {
-                            setPurposePhoto : setPhoto
-                        })
-                    }}
-                    />           
+                            navigation.navigate('SelectAlbum' , {
+                                setPurposePhoto : setPhoto
+                            })
+                        }}
+                        />
+                <View style={{justifyContent: 'center', alignItmes:'center', flex: 1}}>
+                    <Image
+                    style={{flex: 1}}
+                    source={purposePhoto ? {uri : purposeWriteStore.isChangePhoto ? purposePhoto.uri : purposePhoto} : null}/>           
+                </View>
             </View>
         </View>
     );

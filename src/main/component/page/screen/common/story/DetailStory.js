@@ -42,10 +42,10 @@ export default class DetailStory extends Component {
         } catch (e) {
             console.log(e);
 
-            this.setState({
-                isLikes: !this.state.isLikes,
-                likesCount : !this.state.isLikes ? this.state.likesCount + 1 : this.state.likesCount - 1
-            })
+            // this.setState({
+            //     isLikes: !this.state.isLikes,
+            //     likesCount : !this.state.isLikes ? this.state.likesCount + 1 : this.state.likesCount - 1
+            // })
         }
     }
 
@@ -97,6 +97,7 @@ export default class DetailStory extends Component {
     }
 
     render() {
+
         return (
             <View style={{ flex: 1 }}>
                 <View style={{ alignSelf: 'flex-end' }}>
@@ -204,7 +205,7 @@ export default class DetailStory extends Component {
                                 backgroundStyle={{
                                     marginLeft: 20
                                 }}
-                                imageStyle={{ width: 27, height: 25, tintColor: this.state.isLikes ? 'blue' : undefined }}
+                                imageStyle={{ width: 27, height: 25, tintColor: this.state.isLikes ? 'blue' : '#9D9D9D' }}
                                 source={require('../../../../../../../asset/icon/likes_icon.png')}
                                 onPress={this._toggleLikes}
                             />
@@ -213,15 +214,12 @@ export default class DetailStory extends Component {
                                 backgroundStyle={{
                                     marginLeft: 20
                                 }}
-                                imageStyle={{ width: 27, height: 25 }}
+                                imageStyle={{ width: 27, height: 25, tintColor :'#9D9D9D' }}
                                 source={require('../../../../../../../asset/button/comment_button.png')}
                                 onPress={() => {
-                                    this.props.navigation.navigate('PublicNavigation', {
-                                        screen: 'CommnetView',
-                                        params: {
-                                            entity: Model.STORY,
-                                            id: this.state.data.id
-                                        }
+                                    this.props.navigation.navigate('CommnetView', {
+                                        entity: Model.STORY,
+                                        id: this.state.data.id
                                     })
                                 }}
                             />

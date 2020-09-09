@@ -5,7 +5,7 @@ import Home from '../screen/homes/Home'
 import BriefingPurposeList from '../screen/homes/BriefingPurposeList'
 
 import ImageButton from '../../atom/button/ImageButton'
-import PublicNavigation from './PublicNavigation'
+import PublicNavigation, { hey } from './PublicNavigation'
 
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 import BriefingGoalList from '../screen/homes/BriefingGoalList';
@@ -17,55 +17,9 @@ const Stack = createStackNavigator();
 const HomeNavigation = () => {
     return (
         <Stack.Navigator>
-            {/* <Stack.Screen
-                options={({navigation}) => ({
-                    ...defaultHeaderStyle,
-                    title: ''
-                })}
-                name={"DetailStory"}
-                component={DetailStory}
-            /> */}
-            {/* <Stack.Screen options={({navigation}) => ({
-                ...defaultHeaderStyle,
-                title: ''
-            })} name={"DetailStory"} component={DetailStory}/> */}
-            {/* <Stack.Screen
-                options={({ navigation }) => ({
-                    ...defaultHeaderStyle,
-                    title: ''
-                })}
-                name={'CommnetView'}
-                component={CommnetView}
-            /> */}
-            {/* <Stack.Screen options={({navigation}) => (
-                {
-                    ...defaultHeaderStyle,
-                    titie: ''
-                }
-            )} name={"WriteStory"} component={WriteStory}/> */}
-            {/* <Stack.Screen options={({navigation}) => (
-                {
-                    ...defaultHeaderStyle,
-                title: '',
-                headerLeft: () => (
-                    <ImageButton
-                        backgroundStyle={{
-                            marginVertical: 5,
-                            marginLeft: 12
-                        }}
-                        imageStyle={{
-                            width: 24,
-                            height: 20
-                        }}
-                        source={require('../../../../../asset/button/arrow_button.png')}
-                        onPress={() => { navigation.goBack(); }}
-                    />
-                )
-                }
-            )} name="DetailGoal" component={DetailGoal}/> */}
             <Stack.Screen options={({ navigation }) => (
                 {
-                    ...defaultHeaderStyle,
+                    ...defaultHeaderStyle(),
                     headerTitle: '',
                     headerLeft: () => (
                         <View style={{ marginLeft: 12, width: 180, height: 28 }}>
@@ -103,9 +57,9 @@ const HomeNavigation = () => {
                     )
                 }
             )} name="Home" component={Home} />
-            <Stack.Screen options={{ headerShown: false }} name="PublicNavigation" component={PublicNavigation} />
+            {/* <Stack.Screen options={{ headerShown: false }} name="PublicNavigation" component={PublicNavigation} /> */}
             <Stack.Screen options={({ navigation }) => ({
-                ...defaultHeaderStyle,
+                ...defaultHeaderStyle(navigation),
                 headerTitle: '수행 리스트',
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
@@ -113,7 +67,7 @@ const HomeNavigation = () => {
                 }
             })} name="BriefingPurposeList" component={BriefingPurposeList} />
             <Stack.Screen options={({ navigation, route }) => ({
-                ...defaultHeaderStyle,
+                ...defaultHeaderStyle(navigation),
                 headerTitle: route.params.purpose.name,
                 headerTitleAlign: 'center',
                 animationEnabled: false,
@@ -121,15 +75,23 @@ const HomeNavigation = () => {
                     return(
                         <View style={{marginRight: 5}}>
                             <ImageButton
+                                disabled={!route.params.isCanSubmit}
                                 source={require('../../../../../asset/button/check_button.png')}
                                 backgroundStyle={{ width: 40, height: 40}}
-                                imageStyle={{ width: 35, height: 32 }}
-                                onPress={route.params ? route.params.save : null}
+                                imageStyle={{ width: 35, height: 32,
+                                    tintColor : route.params.isCanSubmit ? '#25B046' : '#888888'
+                                }}
+                                onPress={() => {
+                                    if(route.params && route.params.isCanSubmit){
+                                        route.params.save();
+                                    }
+                                }}
                             />
                         </View>
                     )
                 }
             })} name='BriefingGoalList' component={BriefingGoalList} />
+            {PublicNavigation.get()}
         </Stack.Navigator>
     )
 }

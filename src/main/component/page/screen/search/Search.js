@@ -61,7 +61,6 @@ export default class Search extends Component {
 
         try {
 
-            console.log('Load More' + this.state.page);
             const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose?page=${this.state.page + (this.state.prefix ? `&prefix=${this.state.prefix}` : '')}`, null, null, 8000)
                 .auth(await this.authStore.getToken())
                 .submit();
@@ -114,7 +113,8 @@ export default class Search extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, backgroundColor: 'white' }}>
+            <View style={{ flex: 1}}>
+                <View style={{backgroundColor:'white'}}>
                 <View style={styles.searchContainer}>
                     <TextInput
                         numberOfLines={1}
@@ -143,26 +143,20 @@ export default class Search extends Component {
                         onPress={this._search}
                     />
                 </View>
+                </View>
                 <FlatList
-                    style={{ flex: 1, marginTop: 10 }}
+                    style={{ flex: 1, backgroundColor:undefined}}
                     data={this.state.data}
                     renderItem={({ item }) => {
                         return (
                         <View style={{
-                            marginHorizontal: 15,
-                            marginBottom: 15
+                            marginTop: 10 
                         }}>
                             <PurposeBox
                                 data={item}
                                 onPress={() => {
-                                    this.props.navigation.navigate('SearchNavigation', {
-                                        screen : 'PublicNavigation',
-                                        params : {
-                                            screen : 'LoadUserPurpose',
-                                            params : {
-                                                id : item.id
-                                            }
-                                        }
+                                    this.props.navigation.navigate('LoadUserPurpose', {
+                                        id : item.id
                                     })
                                 }}
                             />
@@ -181,7 +175,7 @@ export default class Search extends Component {
 }
 
 const styles = StyleSheet.create({
-    searchContainer: {
+    searchContainer: { 
         marginVertical: 10,
         paddingBottom: 5,
         marginHorizontal: 20,

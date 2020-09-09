@@ -140,7 +140,12 @@ export default class WriteStory extends Component {
                                 padding: 10,
                                 textAlignVertical: 'center',
                             }]}
-                            onChangeText={text => {
+                            onChange={({nativeEvent}) => {
+                                let text = nativeEvent.text;
+        
+                                if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z]/g).test(text)){
+                                    text = "";
+                                }
                                 this.setState({
                                     storyTitle: text
                                 })
@@ -157,7 +162,12 @@ export default class WriteStory extends Component {
                                 flex: 1,
                                 textAlignVertical: 'top',
                             }]}
-                            onChangeText={text => {
+                            onChange={({nativeEvent}) => {
+                                let text = nativeEvent.text;
+        
+                                if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z]/g).test(text)){
+                                    text = "";
+                                }
                                 this.setState({
                                     storyContent: text
                                 })
@@ -165,7 +175,7 @@ export default class WriteStory extends Component {
                             value={this.state.storyContent}
                         />
                         <View style={{ width: '100%', height: 55, backgroundColor: '#888888', justifyContent:'center' }}>
-                            <TouchableOpacity style={{alignSelf: 'flex-end', marginRight: 5, borderWidth: 0.5, backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
+                            <TouchableOpacity style={{alignSelf: 'flex-end', marginRight: 5, backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
                                 onPress={() => {
                                     if(this.purpose.disclosureScope == Scope.PRIVATE){
                                         ToastAndroid.showWithGravity('비공개된 목적은 변경할 수 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);

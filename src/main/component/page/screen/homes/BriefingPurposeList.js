@@ -9,6 +9,7 @@ import GlobalConfig from '../../../../GlobalConfig';
 import Request from '../../../../util/Request';
 import { inject } from 'mobx-react';
 import EasyDate from '../../../../util/EasyDate';
+import Purpose from '../../../../rest/model/Purpose';
 
 
 @inject(['appStore'])
@@ -66,12 +67,13 @@ export default class BriefingPurposeList extends Component {
                         contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 10 }}
                         data={this.state.purposes}
                         renderItem={({ item: purpose, index }) => {
-                            const goalList = purpose.detailPlans.filter(g => g.isNowBriefing);
 
-                            console.log(goalList.length);
+                            const goalList = purpose.detailPlans.filter(g => g.isNowBriefing);
 
                             if (goalList.length == 0)
                                 return;
+
+                            console.log('dsfsd')
 
                             return (
                                 <View style={{ marginTop: 8 }}>
@@ -80,9 +82,11 @@ export default class BriefingPurposeList extends Component {
                                         name={purpose.name}
                                         count={goalList.length}
                                         onPress={() => {
+
+                                            const purpose = Purpose.clone(this.state.purposes[index]);
+
                                             this.props.navigation.navigate('BriefingGoalList', {
                                                 purpose: purpose,
-                                                goals: goalList,
                                                 acceptData: (updatePurpose) => {
                                                     this._acceptPurpose(index, updatePurpose)
                                                 }

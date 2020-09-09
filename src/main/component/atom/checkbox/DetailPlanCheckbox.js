@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, TouchableOpacity, CheckBox } from 'react-native';
+import { View, Text, TouchableOpacity, CheckBox, Dimensions } from 'react-native';
 import MyProgressBar from '../progressBar/MyProgressBar';
 
 export default function DetailPlanCheckBox({ color, name, acheive, onChange}) {
@@ -20,7 +20,7 @@ export default function DetailPlanCheckBox({ color, name, acheive, onChange}) {
                         <MyProgressBar
                             value={acheive}
                             height={6}
-                            width={200}
+                            width={Dimensions.get('window').width - 135}
                             animated={true}
                             barColor={color}
                             backgroundColor={'#F2F2F2'}
