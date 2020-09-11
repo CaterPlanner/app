@@ -51,7 +51,7 @@ export default class UserPurposeList extends Component{
                                 name={purpose.name}
                                 checkedBriefing={false}
                                 onPress={() => {
-                                    this.props.navigation.navigate('LoadUserPurpose', {
+                                    this.props.navigation.push('LoadUserPurpose', {
                                         id : purpose.id
                                     })
                                 }}

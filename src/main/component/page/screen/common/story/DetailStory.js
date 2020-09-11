@@ -147,18 +147,19 @@ export default class DetailStory extends Component {
                                 </View>
 
                                 <View style={{ alignItems: 'center' }}>
-                                    <Text numberOfLines={1} style={styles.titleFont}>
+                                    <Text style={styles.titleFont}>
                                         {this.state.data.title}
                                     </Text>
                                 </View>
 
                                 <View style={{ marginHorizontal: 7 }}>
-                                    <Text style={styles.contentFont}>
+                                    <Text 
+                                    style={styles.contentFont}>
                                         {this.state.data.content}
                                     </Text>
                                     <TouchableOpacity style={{ marginTop: 30, marginBottom: 20, flexDirection: 'row', elevation: 5, height: 90, width: '100%', backgroundColor: 'white', marginVertical: 10 }}
                                         onPress={() => {
-                                            this.props.navigation.navigate('LoadUserPurpose', {
+                                            this.props.navigation.push('LoadUserPurpose', {
                                                 id: this.state.data.purpose.id
                                             })
                                         }}
@@ -189,7 +190,7 @@ export default class DetailStory extends Component {
                             </View>
                             {
                                 this.state.data.comments.map((comment) => (
-                                    <View style={{ marginVertical: 10 }}>
+                                    <View style={{paddingHorizontal: 10 }}>
                                         <Comment
                                             user={comment.user}
                                             createDate={new EasyDate(comment.createDate)}
@@ -217,7 +218,7 @@ export default class DetailStory extends Component {
                                 imageStyle={{ width: 27, height: 25, tintColor :'#9D9D9D' }}
                                 source={require('../../../../../../../asset/button/comment_button.png')}
                                 onPress={() => {
-                                    this.props.navigation.navigate('CommnetView', {
+                                    this.props.navigation.push('CommnetView', {
                                         entity: Model.STORY,
                                         id: this.state.data.id
                                     })

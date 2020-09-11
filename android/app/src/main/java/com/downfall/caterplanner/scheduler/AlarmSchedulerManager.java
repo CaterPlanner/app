@@ -69,13 +69,8 @@ public class AlarmSchedulerManager {
             statisticsTime.set(Calendar.SECOND, 0);
             statisticsTime.set(Calendar.MILLISECOND, 0);
 
-            System.out.println(statisticsTime);
-            System.out.println(statisticsTime);
-            System.out.println(statisticsTime);
-            System.out.println(statisticsTime);
-
             alarmManager.setInexactRepeating(
-                AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), 1000 * 60 * 60 * intervalHour,
+                AlarmManager.RTC_WAKEUP, statisticsTime.getTimeInMillis(), 1000 * 60 * 60 * 6,
                     sender);
         }
 

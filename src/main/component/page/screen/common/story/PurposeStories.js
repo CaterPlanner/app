@@ -79,8 +79,8 @@ export default class PurposeStories extends Component{
                 data={this.state.data}
                 renderItem={({item}) => {
                     item.createDate = new EasyDate(item.createDate);
-                    return (<View style={{marginTop : 10, marginHorizontal: 10 }}><StoryBlock data={item} onPress={() => {
-                        this.props.navigation.navigate('DetailStory', {
+                    return (<View style={{marginTop : 5, marginHorizontal: 10 }}><StoryBlock data={item} onPress={() => {
+                        this.props.navigation.push('DetailStory', {
                             id : item.id
                         })
                     }}/></View>)

@@ -197,17 +197,6 @@ const cardStyles = StyleSheet.create({
     },
 })
 
-function DummyUseFocus({ loadData }) {
-    useFocusEffect(
-        React.useCallback(() => {
-            loadData();
-            return;
-        }, [])
-    );
-
-    return null;
-}
-
 @inject(['appStore'])
 export default class Home extends Component {
 
@@ -228,7 +217,7 @@ export default class Home extends Component {
         return (
             <ActiveCard purpose={item} loadData={this._loadData}
                 onPress={() => {
-                    this.props.navigation.navigate('LoadMyPurpose', {
+                    this.props.navigation.push('LoadMyPurpose', {
                         id: item.id,
                         refreshHome: this._loadData
                     })

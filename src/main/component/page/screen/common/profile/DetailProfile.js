@@ -70,7 +70,7 @@ export default function UserProfile({ data }) {
                 title={'My 목적'}
                 detailButtonHint={'모든 목적보기'}
                 detailButtonPress={() => {
-                    navigation.navigate('UserPurposeList', {
+                    navigation.push('UserPurposeList', {
                         id : data.id
                     });
                 }}
@@ -84,7 +84,7 @@ export default function UserProfile({ data }) {
                                         name={purpose.name}
                                         checkedBriefing={false}
                                         onPress={() => {
-                                            navigation.navigate('LoadUserPurpose', {
+                                            navigation.push('LoadUserPurpose', {
                                                 id : purpose.id
                                             });
                                         }}

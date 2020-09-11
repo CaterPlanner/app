@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, Modal, TouchableOpacity } from 'react-native';
+import { View, Text, Modal, TouchableOpacity  } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput';
@@ -26,9 +26,13 @@ export default function PurposeNameWrite({index}) {
                 transparent={true}
                 visible={isScopeSelecting}
             >
-                <View style={{
+                <TouchableOpacity style={{
                     backgroundColor: '#000000aa', flex: 1, justifyContent: 'flex-end'
-                }}>
+                }}
+                onPress={() => {
+                    setIsScopeSelecting(false);
+                }}
+                >
                     <View style={{ backgroundColor: 'white', paddingVertical: 15, paddingHorizontal: 15, borderTopRightRadius: 10,
                     borderTopLeftRadius: 10 }}>
                         {
@@ -47,7 +51,7 @@ export default function PurposeNameWrite({index}) {
                             })
                         }
                     </View>
-                </View>
+                </TouchableOpacity>
             </Modal>
             <View style={purposeStyles.headContainer}>
                 <View style={purposeStyles.titleArea}>
@@ -66,7 +70,7 @@ export default function PurposeNameWrite({index}) {
                     label={'목적 이름 설정하기'}
                     numberOfLines={1}
                     maxLength={32}
-                    placeHolder={"목적 이름을 적어주세요!"}
+                    placeHolder={"이름을 입력해주세요"}
                     // onSubmitEditing={event => {
                     //     if (purposeWriteStore.isPermitNextScene)
                     //         next();

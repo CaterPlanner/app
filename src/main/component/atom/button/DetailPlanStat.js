@@ -11,7 +11,7 @@ export default function DetailPlanStat({goal, onPress, disabled=false}){
                 />
                 <View style={{flex: 1}}>
                     <View style={{flex: 1, paddingHorizontal: 10}}>
-                        <Text style={{fontSize: 18, paddingVertical :10}}>
+                        <Text numberOfLines={1} style={{fontSize: 18, paddingVertical :10}}>
                             {goal.name}
                         </Text>
                         <MyProgressBar

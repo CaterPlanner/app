@@ -5,6 +5,8 @@ import Story from '../screen/mains/Story';
 import PublicNavigation from './PublicNavigation'
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 
+import TestView from '../../../../test/TestView';
+
 
 const Stack = createStackNavigator();
 
@@ -12,6 +14,7 @@ const Stack = createStackNavigator();
 const StoryNavigation = () => {
     return(
           <Stack.Navigator>
+            {/* <Stack.Screen name="TestView" component={TestView}/> */}
             <Stack.Screen options={({navigation}) => ({
                 ...defaultHeaderStyle(),
                 headerTitle: '스토리',

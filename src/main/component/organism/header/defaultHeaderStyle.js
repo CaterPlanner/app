@@ -10,7 +10,7 @@ export default (navigation) => ({
       (
           <ImageButton
               backgroundStyle={{
-                  marginVertical: 5,
+                  height: '100%',
                   marginLeft: 14
               }}
               imageStyle={{

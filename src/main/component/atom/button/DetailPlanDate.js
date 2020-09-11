@@ -10,7 +10,7 @@ export default function DetailPlanDate({goal, onPress, disabled=false}){
                 />
                 <View style={{flex: 1}}>
                     <View style={{flex: 1, paddingHorizontal: 10}}>
-                        <Text style={{fontSize: 18, paddingTop :10}}>
+                        <Text numberOfLines={1} style={{fontSize: 18, paddingTop :10}}>
                             {goal.name}
                         </Text>
                         <Text style={{fontSize: 14, color : '#888888', marginTop: 2}}>

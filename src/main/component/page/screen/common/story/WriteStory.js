@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, Modal, Text, TouchableOpacity,ToastAndroid } from 'react-native';
+import { View, TextInput, StyleSheet, Modal, Text, TouchableOpacity,ToastAndroid, TouchableWithoutFeedback } from 'react-native';
 import GlobalConfig from '../../../../../GlobalConfig';
 import Loader from '../../../Loader';
 import { useRoute } from '@react-navigation/native';
@@ -78,9 +78,15 @@ export default class WriteStory extends Component {
                     .submit();
             }
 
-
-            this.props.navigation.navigate('DetailStory', {
-                id: id
+            this.props.navigation.pop();
+            this.props.navigation.push('MainNavigation', {
+                screen : 'HomeNavigation',
+                params: {
+                    screen : 'DetailStory',
+                    params : {
+                        id: id
+                    }
+                }
             })
 
 
@@ -106,9 +112,16 @@ export default class WriteStory extends Component {
                             transparent={true}
                             visible={this.state.isScopeSelecting}
                         >
-                            <View style={{
+                            <TouchableOpacity style={{
                                 backgroundColor: '#000000aa', flex: 1, justifyContent: 'flex-end'
-                            }}>
+                            }}
+                            activeOpacity={1}
+                            onPress={() => {
+                                this.setState({
+                                    isScopeSelecting: false
+                                })
+                            }}
+                            >
                                 <View style={{
                                     backgroundColor: 'white', paddingVertical: 15, paddingHorizontal: 15, borderTopRightRadius: 10,
                                     borderTopLeftRadius: 10
@@ -130,11 +143,12 @@ export default class WriteStory extends Component {
                                         })
                                     }
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         </Modal>
                         <TextInput
                             numberOfLines={1}
-                            placeholder={'제목을 입력해주세요'}
+                            maxLength={32}
+                            placeholder={'제목을 입력해주세요 (최대 32자)'}
                             style={[styles.inputFont, {
                                 backgroundColor: 'white',
                                 padding: 10,
@@ -143,7 +157,7 @@ export default class WriteStory extends Component {
                             onChange={({nativeEvent}) => {
                                 let text = nativeEvent.text;
         
-                                if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z]/g).test(text)){
+                                if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]/g).test(text)){
                                     text = "";
                                 }
                                 this.setState({
@@ -155,7 +169,8 @@ export default class WriteStory extends Component {
                         <View style={{ height: 0.4, backgroundColor: '#888888' }} />
                         <TextInput
                             multiline={true}
-                            placeholder={'내용을 입력해주세요'}
+                            maxLength={100}
+                            placeholder={'내용을 입력해주세요 (최대 100자)'}
                             style={[styles.inputFont, {
                                 backgroundColor: 'white',
                                 padding: 10,
@@ -165,7 +180,7 @@ export default class WriteStory extends Component {
                             onChange={({nativeEvent}) => {
                                 let text = nativeEvent.text;
         
-                                if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z]/g).test(text)){
+                                if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]/g).test(text)){
                                     text = "";
                                 }
                                 this.setState({

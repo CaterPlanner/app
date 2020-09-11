@@ -8,11 +8,11 @@ export default function ProfileIcon({user, imageBackgroundStyle, imageStyle, onP
 
     return(
         <ImageButton
-        backgroundStyle={[{marginRight: 5}, imageBackgroundStyle]}
-        imageStyle={[{width : 30, height: 30, borderRadius: 30}, imageStyle]}
+        backgroundStyle={[{marginRight: 5, borderRadius: 30, overflow: "hidden"}, imageBackgroundStyle]}
+        imageStyle={[{width : 30, height: 30}, imageStyle]}
         source={{uri : user.profileUrl}}
         onPress={!onPress ? () => {
-            navigation.navigate('LoadProfile', {
+            navigation.push('LoadProfile', {
                 id : user.id
             })
         } : onPress}

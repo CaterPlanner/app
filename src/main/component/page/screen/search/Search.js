@@ -155,7 +155,7 @@ export default class Search extends Component {
                             <PurposeBox
                                 data={item}
                                 onPress={() => {
-                                    this.props.navigation.navigate('LoadUserPurpose', {
+                                    this.props.navigation.push('LoadUserPurpose', {
                                         id : item.id
                                     })
                                 }}

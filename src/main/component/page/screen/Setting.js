@@ -38,6 +38,7 @@ export default function Setting(){
                 <Text style={styles.boxTitle}>계정 변경</Text>
     
             </TouchableOpacity>
+        <Text>{new Date().toString()}</Text>
         </View>
     )
 }

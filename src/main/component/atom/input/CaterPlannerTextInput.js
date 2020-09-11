@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native'
+import MyTextInput from './MyTextInput';
 
 
 export default class CaterPlannerTextInput extends Component {
@@ -23,28 +24,32 @@ export default class CaterPlannerTextInput extends Component {
                 {this.props.label && (
                     <Text style={[{ marginBottom: 6 }, this.props.labelStyle]}>{this.props.label}</Text>)
                 }
-                <TextInput
+                <MyTextInput
                     ref={input => this.textInput = input}
                     underlineColorAndroid="transparent"
                     numberOfLines={this.props.numberOfLines}
                     multiline={this.props.multiline}
                     maxLength={this.props.maxLength}
+                    containerMaxHeight={this.props.containerMaxHeight}
+                    maxLine={this.props.maxLine}
                     blueOnSumbit={this.props.blueOnSumbit}
-                    returnKeyType={"next"}
                     placeholder={this.props.placeHolder}
-                    style={{
-                        fontSize: 15,
+                    backgroundStyles={{
                         paddingVertical: 0,
                         paddingLeft: 0,
                         paddingBottom: 3,
                         borderBottomColor: '#7F7F7F', // Add this to specify bottom border color
                         borderBottomWidth: 0.7
                     }}
+                    textStyles={{
+                        fontSize: 15,
+                    }}
+                    onContentSizeChange
                     onSubmitEditing={this.props.onSubmitEditing}
                     onChange={({nativeEvent}) => {
                         let text = nativeEvent.text;
 
-                        if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z]/g).test(text)){
+                        if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]/g).test(text)){
                             text = "";
                         }
                         this.props.onChangeText(text);
