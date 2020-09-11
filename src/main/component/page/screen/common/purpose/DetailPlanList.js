@@ -25,7 +25,7 @@ export default function DetailPlanList({ navigation }) {
                     <DetailPlanStat
                         goal={item}
                         onPress={() => {
-                            navigation.navigate('DetailGoal', {
+                            navigation.push('DetailGoal', {
                                 goal: item
                             })
                         }}

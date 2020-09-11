@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Component } from 'react';
-import { View, Image, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Alert } from 'react-native'
+import { View, Image, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Alert, Modal, TouchableOpacity } from 'react-native'
 import InfoBox from '../../../../molecule/InfoBox';
 import ImageButton from '../../../../atom/button/ImageButton';
 import DecimalDayWidget from '../../../../atom/icon/DecimalDayWidget';
@@ -33,10 +33,10 @@ function BottomBar({ data }) {
 
     const toggleCheer = async () => {
         try {
-        
+
             data.setCheersCount(!isCheer ? ++data.cheersCount : --data.cheersCount)
             setIsCheer(!isCheer);
-            
+
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${data.purpose.id}/cheer/${isCheer ? 'negative' : 'positive'}`)
                 .auth(await authStore.getToken())
                 .submit();
@@ -54,7 +54,7 @@ function BottomBar({ data }) {
                 backgroundStyle={{
                     marginLeft: 20
                 }}
-                imageStyle={{width: 27, height: 25, tintColor: isCheer ? 'red' : undefined }}
+                imageStyle={{ width: 27, height: 25, tintColor: isCheer ? 'red' : undefined }}
                 source={require('../../../../../../../asset/button/heart_button.png')}
                 onPress={toggleCheer}
             />
@@ -63,10 +63,10 @@ function BottomBar({ data }) {
                 backgroundStyle={{
                     marginLeft: 20
                 }}
-                imageStyle={{ width: 27, height: 25, tintColor :'#9D9D9D' }}
+                imageStyle={{ width: 27, height: 25, tintColor: '#9D9D9D' }}
                 source={require('../../../../../../../asset/button/comment_button.png')}
                 onPress={() => {
-                    navigation.navigate('CommnetView', {
+                    navigation.push('CommnetView', {
                         entity: Model.PURPOSE,
                         id: data.purpose.id
                     })
@@ -137,7 +137,7 @@ class ActionFloatingButton extends Component {
                         }
                     })
                 },
-                icon : require('../../../../../../../asset/button/purpose_follow_button.png')
+                icon: require('../../../../../../../asset/button/purpose_follow_button.png')
             }
         ]
 
@@ -150,14 +150,13 @@ class ActionFloatingButton extends Component {
                         purpose: this.props.data.purpose
                     })
                 },
-                icon : require('../../../../../../../asset/button/write_story_button.png')
+                icon: require('../../../../../../../asset/button/write_story_button.png')
             }
         ]
 
         const currentAction = this.props.data.isOwner ? ownerAction : visitorAction;
         return (
             <View style={{ alignItems: 'center' }}>
-
                 {
                     currentAction.map((e, index) => (
                         <TouchableWithoutFeedback onPressIn={e.action}
@@ -177,28 +176,7 @@ class ActionFloatingButton extends Component {
                         </TouchableWithoutFeedback>
                     ))
                 }
-
-                {/* <TouchableWithoutFeedback>
-                    <Animated.View style={[floatingButtonStyles.elementButtonStyle, elementAnimation(-40), { backgroundColor: '#F2994A' }]}>
-                        <View style={{ borderRadius: 5, position: 'absolute', right: 70, backgroundColor: 'white', width: 80, height: 25, alignItems: 'center', justifyContent: 'center', elevation: 5 }}>
-                            <Text style={floatingButtonStyles.elementFontStyle}>
-                                VLOG
-                            </Text>
-                        </View>
-                    </Animated.View>
-                </TouchableWithoutFeedback>
-    
-                <TouchableWithoutFeedback >
-                    <Animated.View style={[floatingButtonStyles.elementButtonStyle, elementAnimation(-20), { backgroundColor: '#F2C94C' }]}>
-                        <View style={{ borderRadius: 5, position: 'absolute', right: 70, backgroundColor: 'white', width: 80, height: 25, alignItems: 'center', justifyContent: 'center', elevation: 5 }}>
-                            <Text style={floatingButtonStyles.elementFontStyle}>
-                                도움요청
-                            </Text>
-                        </View>
-                    </Animated.View>
-                </TouchableWithoutFeedback> */}
-
-                <TouchableWithoutFeedback style={{ alignItems: 'center', justifyContent: 'center' }} onPress={this._toggleMenu} onPressOut={this._toggleMenu}>
+                <TouchableWithoutFeedback style={{ alignItems: 'center', justifyContent: 'center' }} onPress={this._toggleMenu} >
                     <Animated.View style={[floatingButtonStyles.buttonStyle]}>
                         <Image
                             style={floatingButtonStyles.actionIcon}
@@ -239,14 +217,14 @@ const floatingButtonStyles = StyleSheet.create({
         textAlign: 'center'
     },
     actionIcon: {
-        width : 35,
+        width: 35,
         height: 35,
-        tintColor : 'white'
+        tintColor: 'white'
     },
-    subIcon : {
-        width : 30,
+    subIcon: {
+        width: 30,
         height: 30,
-        tintColor : 'white'
+        tintColor: 'white'
     }
 })
 
@@ -260,7 +238,9 @@ function StoryBox({ type, text }) {
                     style={{ width: 20, height: 20 }}
                 />
             </View>
-            <Text style={{ marginLeft: 30 }}>
+            <Text 
+            numberOfLines={1}
+            style={{ marginLeft: 30, width: '83%' }} >
                 {text}
             </Text>
         </View>
@@ -281,7 +261,7 @@ function StoryTimeLine({ stories }) {
     let beforeDate = null;
 
     return (
-        <View style={{ flexDirection: 'row', height :300, width: '100%', backgroundColor: 'white',   paddingBottom: 30 }}>
+        <View style={{ flexDirection: 'row', paddingBottom: 10, width: '100%', backgroundColor: 'white', paddingBottom: 30 }}>
             <View style={{ marginLeft: 29, height: '100%', width: 1, backgroundColor: 'black' }} />
             <View style={{ marginTop: 5 }}>
                 {
@@ -306,13 +286,13 @@ function StoryTimeLine({ stories }) {
 }
 
 @inject(['authStore'])
-export default class DetailPurpose extends Component{
+export default class DetailPurpose extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
 
- 
+
         this.authStore = props.authStore;
         this.navigation = this.props.navigation;
 
@@ -320,17 +300,17 @@ export default class DetailPurpose extends Component{
 
 
         this.state = {
-            headerVisible : true,
-            data : props.data
+            headerVisible: true,
+            data: props.data
         }
-        
+
 
     }
 
     _setCheersCount = async (value) => {
         this.state.data.purpose.cheersCount = value;
         this.setState({
-            data : this.state.data
+            data: this.state.data
         })
     }
 
@@ -379,38 +359,38 @@ export default class DetailPurpose extends Component{
             this.state.data.purpose.stat = State.FAIL;
 
             this.setState({
-                data : this.state.data
+                data: this.state.data
             })
-            
+
         } catch (e) {
             console.log(e);
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.navigation.addListener('focus', () => {
             this.setState({
-                data : this.state.data
+                data: this.state.data
             })
         })
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.navigation.removeListener('focus');
     }
 
-    render(){
+    render() {
         return (
             <View style={{ flex: 1 }}>
                 <View style={{ alignSelf: 'flex-end' }}>
                     <Menu
                         ref={ref => { this._purposeContolMenuRef = ref }}>
-                        {!this.state.data.purpose.isFinish && 
-                        <MenuItem onPress={() => {
-                            this._purposeContolMenuRef.hide();
-                            this._modifyPurpose();
-                        }}>수정</MenuItem>}
-                        {this.state.data.purpose.stat == State.PROCEED && !this.state.data.purpose.isSucceeseProceed && 
+                        {!this.state.data.purpose.isFinish &&
+                            <MenuItem onPress={() => {
+                                this._purposeContolMenuRef.hide();
+                                this._modifyPurpose();
+                            }}>수정</MenuItem>}
+                        {this.state.data.purpose.stat == State.PROCEED && !this.state.data.purpose.isSucceeseProceed &&
                             <View>
                                 <MenuDivider />
                                 <MenuItem onPress={() => {
@@ -458,10 +438,10 @@ export default class DetailPurpose extends Component{
                                     }
                                 ]
                             );
-    
-    
-    
-    
+
+
+
+
                         }}>삭제</MenuItem>
                     </Menu>
                 </View>
@@ -476,24 +456,24 @@ export default class DetailPurpose extends Component{
                         return (
                             <View>
                                 {this.state.headerVisible &&
-                                    <View style={{ overflow: 'visible', backgroundColor: 'white', height: 48, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
-                                          <ImageButton
+                                    <View style={{ overflow: 'visible', backgroundColor: 'white', height: 50, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
+                                        <ImageButton
                                             backgroundStyle={{
-                                                marginVertical: 5,
-                                                marginLeft: 0
+                                                marginLeft: 0,
+                                                height: '100%'
                                             }}
                                             imageStyle={{
                                                 width: 21,
                                                 height: 17
                                             }}
                                             source={require('../../../../../../../asset/button/arrow_button.png')}
-                                            onPress={() => { this.navigation.goBack(); }}/>
+                                            onPress={() => { this.navigation.goBack(); }} />
                                         {this.state.data.isOwner &&
                                             <ImageButton
                                                 backgroundStyle={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    width : 20,
+                                                    width: 20,
                                                     height: 30
                                                 }}
                                                 imageStyle={{
@@ -506,7 +486,7 @@ export default class DetailPurpose extends Component{
                                                 source={require('../../../../../../../asset/button/more_button.png')}
                                             />}
                                     </View>
-    
+
                                 }
                             </View>
                         )
@@ -531,36 +511,42 @@ export default class DetailPurpose extends Component{
                             <Text style={detailPurposeStyles.purposeNameFont}>
                                 {this.state.data.purpose.name}
                             </Text>
-                            <View style={{ alignSelf: 'flex-start', marginBottom: 20 }}>
-                                <DecimalDayWidget purpose={this.state.data.purpose}/>
-    
+                            <View 
+                            style={{ alignSelf: 'flex-start', marginBottom: 20 }}>
+                                <DecimalDayWidget purpose={this.state.data.purpose} />
+
                             </View>
-                            <Text style={detailPurposeStyles.purposeDescriptionFont}>
+                            <Text 
+                            style={detailPurposeStyles.purposeDescriptionFont}>
                                 {this.state.data.purpose.description}
                             </Text>
-                                            <View style={{ paddingVertical: 10 }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-                        >
-                            <Text style={{fontSize: 14,
-            textAlign: 'right',
-            paddingVertical: 8}}>
-                                달성률
+                            <View style={{ paddingVertical: 10 }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+                                >
+                                    <Text style={{
+                                        fontSize: 14,
+                                        textAlign: 'right',
+                                        paddingVertical: 8
+                                    }}>
+                                        달성률
                             </Text>
-                            <Text style={{fontSize: 14,
-            textAlign: 'right',
-            paddingVertical: 8}}>
-                                {!this.state.data.purpose.achieve || this.state.data.purpose.achieve == 0 ? 0 : this.state.data.purpose.achieve}%
+                                    <Text style={{
+                                        fontSize: 14,
+                                        textAlign: 'right',
+                                        paddingVertical: 8
+                                    }}>
+                                        {!this.state.data.purpose.achieve || this.state.data.purpose.achieve == 0 ? 0 : this.state.data.purpose.achieve}%
                             </Text>
-                            </View>
-                            <View style={{alignItems:'center'}}>
-                            <MyPrgoressBar
-                                    width={Dimensions.get('window').width - 40}
-                                    height={7}
-                                    animated={true}
-                                    barColor={'red'}
-                                    value={this.state.data.purpose.achieve}
-                                />
-                            </View>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <MyPrgoressBar
+                                        width={Dimensions.get('window').width - 40}
+                                        height={7}
+                                        animated={true}
+                                        barColor={'red'}
+                                        value={this.state.data.purpose.achieve}
+                                    />
+                                </View>
                             </View>
                             <View style={detailPurposeStyles.purposeProfileContainer}>
                                 <ProfileWidget
@@ -568,16 +554,20 @@ export default class DetailPurpose extends Component{
                                     fontStyle={{ alignSelf: 'flex-end', marginBottom: 5 }}
                                 />
                             </View>
-                            <View style={{paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-                                    <Text style={{   fontSize: 15,
-            fontWeight: 'bold'}}>
-                                        응원 {this.state.data.cheersCount}
-                                    </Text>
-                                    <Text style={{   fontSize: 15, marginLeft : 15,
-            fontWeight: 'bold'}}>
-                                        댓글 {this.state.data.commentCount}
-                                    </Text>
-                                </View>
+                            <View style={{ paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                <Text style={{
+                                    fontSize: 15,
+                                    fontWeight: 'bold'
+                                }}>
+                                    응원 {this.state.data.cheersCount}
+                                </Text>
+                                <Text style={{
+                                    fontSize: 15, marginLeft: 15,
+                                    fontWeight: 'bold'
+                                }}>
+                                    댓글 {this.state.data.commentCount}
+                                </Text>
+                            </View>
                         </View>
                         <View style={{ marginTop: 5 }}>
                             <InfoBox
@@ -592,15 +582,15 @@ export default class DetailPurpose extends Component{
                                     <View style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
                                         {
                                             this.state.data.purpose.detailPlans.map((goal) => {
-                                                if(goal.isProcceedEnd)
+                                                if (goal.isProcceedEnd)
                                                     return;
-    
-                                               return( <View style={detailPurposeStyles.paperContainer}>
+
+                                                return (<View style={detailPurposeStyles.paperContainer}>
                                                     <DetailPlanStat
                                                         goal={goal}
                                                         onPress={() => {
                                                             this.navigation.navigate('DetailGoal', {
-                                                                goal : goal
+                                                                goal: goal
                                                             })
                                                         }}
                                                     />
@@ -611,11 +601,11 @@ export default class DetailPurpose extends Component{
                                 )}
                             />
                         </View>
-                        <View style={{ marginTop: 5}}>
+                        <View style={{ marginTop: 5 }}>
                             <InfoBox
                                 title={'스토리 타임라인'}
                                 detailButtonPress={() => {
-                                    this.navigation.navigate('PurposeStories', {
+                                    this.navigation.push('PurposeStories', {
                                         purpose: this.state.data.purpose
                                     })
                                 }}

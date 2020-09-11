@@ -52,6 +52,9 @@ export default class NavController extends Component {
 
         } catch (e) {
             console.log(e);
+            setTimeout(() => {
+                SplashScreen.hide();
+            }, 500);
         }
     }
 
@@ -62,7 +65,7 @@ export default class NavController extends Component {
                     barStyle="white-content"
                     backgroundColor="#000000"
                 />
-                {/* <AppNavigation />     */}
+                {/* <BeginNavigation /> */}
                 {this.appStore.isBegin ?
                     <BeginNavigation /> :
                     this.authStore.isLogin || this.appStore.offlineMode ? <AppNavigation /> : <SignIn />

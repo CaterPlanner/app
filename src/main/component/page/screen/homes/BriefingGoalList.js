@@ -3,6 +3,7 @@ import {View, FlatList} from 'react-native';
 import DetailPlanCheckBox from '../../../atom/checkbox/DetailPlanCheckbox';
 import PurposeService from '../../../../rest/service/PurposeService';
 import { inject } from 'mobx-react';
+import Loader from '../../Loader';
 
 @inject(['authStore'])
 export default class BriefingGoalList extends Component{
@@ -49,12 +50,20 @@ export default class BriefingGoalList extends Component{
             this.setState({
                 isLoading : false
             })
+
+            this.props.navigation.setParams({
+                showHeader : true
+            })
         }
     }
 
     save = () => {
         if(this.state.isLoading)
             return;
+
+        this.props.navigation.setParams({
+            showHeader : false
+        })
 
         this.setState({
             isLoading : true
@@ -69,7 +78,7 @@ export default class BriefingGoalList extends Component{
 
     render(){
 
-        return(
+        return this.state.isLoading ? <Loader style={{flex:1}}/> : (
             <FlatList
                 style={{flex: 1}}
                 contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 20}}
@@ -109,8 +118,7 @@ export default class BriefingGoalList extends Component{
                         />
                     </View>
                 )}
-            />
-        );
+            />)
     }
 
 

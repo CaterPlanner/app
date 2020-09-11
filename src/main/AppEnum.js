@@ -27,3 +27,10 @@ export const Model = {
     PURPOSE : 0,
     STORY: 1
 }
+
+export const LoadType = {
+    MORE : 0,
+    REFRESH : 1,
+    UPLOAD : 2,
+    REMOVE : 3
+}

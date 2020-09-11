@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions, BackHandler, StatusBar } from 'react-native';
+import { View, Text, Image, Dimensions, BackHandler, StatusBar, StyleSheet, Alert } from 'react-native';
 import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
 import LinearGradient from 'react-native-linear-gradient';
 import RoundButton from '../../../atom/button/RoundButton';
 import PageStateIcon from '../../../atom/icon/PageStateIcon';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -13,13 +14,13 @@ const fullWidth = Dimensions.get('window').width;
 
 @inject(['appStore'])
 @observer
-export default class Begin extends Component{
+export default class Begin extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            activeIndex : 0
+            activeIndex: 0
         }
 
         this.appStore = this.props.appStore;
@@ -43,7 +44,7 @@ export default class Begin extends Component{
         ];
     }
 
-   componentWillMount() {
+    componentWillMount() {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
             if (this.state.activeIndex != 0) {
                 this.carousel._snapToItem(this.state.activeIndex - 1);
@@ -54,8 +55,8 @@ export default class Begin extends Component{
         })
     }
 
-    _renderItem = ({item}) => {
-        return(
+    _renderItem = ({ item }) => {
+        return (
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ marginBottom: 55, fontSize: 22, fontWeight: 'bold', color: 'white' }}>{item.title}</Text>
                 <View style={{ marginBottom: 55, width: 200, height: 200, borderRadius: 200, backgroundColor: '#B2E7BD', alignItems: 'center', justifyContent: 'center' }}>
@@ -72,11 +73,13 @@ export default class Begin extends Component{
         )
     }
 
-    render(){
+
+
+    render() {
         return (
-            <LinearGradient colors={['#B0DF5C', '#5EDF8C']} style={{ flex: 1, paddingVertical: 80, paddingHorizontal: 40 }}>
+            <LinearGradient colors={['#B0DF5C', '#5EDF8C']} style={{ flex: 1 }}>
                 <StatusBar hidden />
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginTop: 80, marginHorizontal: 40 }}>
                     <Carousel
                         style={{ flex: 1 }}
                         ref={ref => this.carousel = ref}
@@ -88,15 +91,39 @@ export default class Begin extends Component{
                         onSnapToItem={
                             index => {
                                 this.setState({
-                                    activeIndex : index
+                                    activeIndex: index
                                 })
                             }
                         }
                     />
-                    <View style={{ marginVertical: 35 }}>
-                        <PageStateIcon current={this.state.activeIndex} max={3} selectColor={'#FFFFFF'} unselectColor={'#B2E7BD'} />
+                    <View style={{ paddingVertical: 25, position: 'absolute', bottom: 0, width: '100%', flexDirection: 'row' }}>
+
+                        <View style={{flex:1, alignItems:'flex-start'}}>
+                            {!this.isFirst && 
+                            <TouchableOpacity onPress={() => {
+                                if (!this.isFirst) {
+                                    this.carousel._snapToItem(this.state.activeIndex - 1);
+                                }
+                            }}>
+                                <Text style={styles.bottomTextButtonFont}>{this.isFirst ? '건너뛰기' : '이전'}</Text>
+                            </TouchableOpacity>}
+                        </View>
+                        <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                            <PageStateIcon current={this.state.activeIndex} max={3} selectColor={'#FFFFFF'} unselectColor={'#B2E7BD'} />
+                        </View>
+                        <View style={{ flex:1, alignItems: 'flex-end'}}>
+                            <TouchableOpacity onPress={() => {
+                                if (this.isLast) {
+                                    this.appStore.setIsBegin(false);
+                                } else {
+                                    this.carousel._snapToItem(this.state.activeIndex + 1);
+                                }
+                            }}>
+                                <Text style={styles.bottomTextButtonFont}>{this.isLast ? '완료' : '다음'}</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <RoundButton
+                    {/* <RoundButton
                         text={this.state.activeIndex == 2 ? '시 작 하 기' : '다 음 으 로'}
                         color={'#B2E7BD'}
                         width={250}
@@ -109,7 +136,7 @@ export default class Begin extends Component{
                                 this.carousel._snapToItem(this.state.activeIndex + 1);
                             }
                         }}
-                    />
+                    /> */}
                 </View>
             </LinearGradient>
         )
@@ -119,7 +146,20 @@ export default class Begin extends Component{
         this.backHandler.remove();
     }
 
+    get isFirst() {
+        return this.state.activeIndex == 0;
+    }
+
+    get isLast() {
+        return this.state.activeIndex == 2;
+    }
+
 }
 
 
 
+const styles = StyleSheet.create({
+    bottomTextButtonFont: {
+        fontSize: 18, textAlign: 'center', color: 'white'
+    }
+})

@@ -34,7 +34,8 @@ export default function PurposeDescriptionWrite({index}) {
                     label={'자세히 입력하기'}
                     multiline={true}
                     maxLength={100}
-                    placeHolder={'정한 목표에 대한 설명이나 시작하게 된 동기를 적어주세요.'}
+                    maxLine={5}
+                    placeHolder={'내용을 입력해 주세요'}
                     blueOnSumbit={true}
                     onChangeText={text => {
                         setPurposeDescription(text);

@@ -22,8 +22,6 @@ export default class AuthStore {
     constructor() {
         this.isLogin = false;
 
-   
-
         //socialSign
         GoogleSignin.configure({
             scopes: ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"],
@@ -71,6 +69,7 @@ export default class AuthStore {
                 }))
                     .submit();
 
+
                 this.userToken = {
                     token: response.data.token,
                     refreshToken: response.data.refreshToken,
@@ -94,10 +93,8 @@ export default class AuthStore {
     vaildate = (userToken) => {
         if(!userToken)
             return false;
-        console.log(new Date(userToken.expired))
-        console.log(new Date());
-        // return new Date(userToken.expired) < new Date();
-        return new Date(userToken.expired) > new Date();
+
+         return new Date(userToken.expired) > new Date();
     }
 
     login = (idToken, user) => {

@@ -1,9 +1,11 @@
 import React, {Component } from 'react';
-import { View, Image, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import { View, Image, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, YellowBox} from 'react-native';
 import CameraRoll from "@react-native-community/cameraroll";
 import Loader from '../../Loader';
 
-//https://stackoverflow.com/questions/43824261/react-native-fetch-file-upload-error
+YellowBox.ignoreWarnings = ([
+    'VirtualizedList: missing keys for items, make sure to specify a key or id property on each item or provide a custom keyExtractor.'
+  ])
 
 export default class SelectPhoto extends Component{
 
@@ -68,6 +70,7 @@ export default class SelectPhoto extends Component{
                 {this.state.isLoading ? (
                     <FlatList
                         style={{flex: 1}}
+                        keyExtractor={(item, index) => index}
                         data={this._formatData(this.state.photos, this.numColumns)}
                         renderItem={({item}) => (
                             <View style={styles.item} >

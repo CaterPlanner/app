@@ -71,6 +71,7 @@ const HomeNavigation = () => {
                 headerTitle: route.params.purpose.name,
                 headerTitleAlign: 'center',
                 animationEnabled: false,
+                headerShown : route.params.showHeader == undefined || route.params.showHeader == true ? true : false, 
                 headerRight: () => {
                     return(
                         <View style={{marginRight: 5}}>

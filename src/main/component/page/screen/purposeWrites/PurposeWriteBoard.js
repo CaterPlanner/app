@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, BackHandler } from 'react-native'
+import { View, StyleSheet, Dimensions, BackHandler, YellowBox } from 'react-native'
 import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
@@ -18,8 +18,27 @@ import { PurposeWriteType } from '../../../../AppEnum';
 import GlobalConfig from '../../../../GlobalConfig';
 import Purpose from '../../../../rest/model/Purpose';
 import NotificationManager from '../../../../util/NotificationManager';
+import { useFocusEffect } from '@react-navigation/native';
 
 const fullWidth = Dimensions.get('window').width;
+
+YellowBox.ignoreWarnings = ([
+    'Possible Unhandled Promise Rejection'
+  ])
+
+
+function SceneBackPressHandler({focus, unFocus}){
+    useFocusEffect(
+        React.useCallback(() => {
+            focus();
+
+            return () => unFocus();
+        }, [])
+    );
+
+    return null;
+}
+
 
 @inject(stores => ({
     purposeWriteStore : stores.purposeWriteStore,
@@ -61,6 +80,8 @@ export default class PurposeWriteBoard extends Component {
         const result = this.purposeWriteStore.purpose;
         let response = null;
 
+
+        console.log(this.purposeWriteStore.activeIndex)
 
         try {
             switch (this.purposeWriteStore.writeType) {
@@ -144,7 +165,7 @@ export default class PurposeWriteBoard extends Component {
             console.log(e);
             this.setState({
                 isUploading : false
-            })
+            }, () => this.carousel._snapToItem(this.purposeWriteStore.activeIndex))
         }
     }
 
@@ -157,21 +178,26 @@ export default class PurposeWriteBoard extends Component {
         }
     }
 
-    componentWillMount() {
-        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            if (this.purposeWriteStore.activeIndex != 0) {
-                this.purposeWriteStore.previous(this.carousel);
-            } else {
-                return false;
-            }
-            return true;
-        })
-    }
 
     render() {
-
         return (
             <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
+                <SceneBackPressHandler
+                    focus={() =>{
+                        this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+                            
+                            if (this.purposeWriteStore.activeIndex != 0 && !this.state.isUploading) {
+                                this.purposeWriteStore.previous(this.carousel);
+                            } else {
+                                return false;
+                            }
+                            return true;
+                        })
+                    }}
+                    unFocus={() => {
+                        this.backHandler.remove();
+                    }}
+                />
                 {this.state.isUploading ? <Loader /> : (
                     <View style={{ flex: 1 }}>
                         <View style={styles.topContainer}>
@@ -243,9 +269,7 @@ export default class PurposeWriteBoard extends Component {
         );
     }
 
-    componentWillUnmount() {
-        this.backHandler.remove();
-    }
+
 }
 /*
 */

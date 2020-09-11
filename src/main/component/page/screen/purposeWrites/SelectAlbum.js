@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { View, Image, Text, StyleSheet, FlatList, TouchableOpacity, YellowBox } from 'react-native'
 import CameraRoll from "@react-native-community/cameraroll";
 import { useRoute } from "@react-navigation/native";
 import Loader from "../../Loader";
+
+
+YellowBox.ignoreWarnings = ([
+    'VirtualizedList: missing keys for items, make sure to specify a key or id property on each item or provide a custom keyExtractor.'
+  ])
 
 function Album({ imageUri, name, count, onPress }) {
     return (
@@ -66,6 +71,7 @@ export default function SelectAlbum({ navigation }) {
             { isLoading ? (
                     <FlatList
                         data={allAlbum}
+                        keyExtractor={(item, index) => index}
                         renderItem={({item}) => (
                             <Album name={item.title} count={item.count} imageUri={item.firstPhotoUri}
                                 onPress={() => {

@@ -4,7 +4,7 @@ import ImageButton from '../../atom/button/ImageButton';
 
 export default function PurposePaper({ imageUri, name, count, onPress, checkedBriefing=true }) {
     return (
-        <TouchableOpacity onPress={onPress} activeOpacity={1} style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItmes: 'center', width: '100%', height: 65 }}>
+        <TouchableOpacity activeOpacity={1} onPress={onPress} style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItmes: 'center', width: '100%', height: 65 }}>
             <View style={{ width: '90%', backgroundColor: 'white', justifyContent: 'center', elevation: 5, height: '100%' }}>
                 <View style={{ position: 'absolute', left: -30, justifyContent: 'center', alignItmes: 'center' }}>
                     <Image
@@ -14,7 +14,7 @@ export default function PurposePaper({ imageUri, name, count, onPress, checkedBr
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                     <View style={{ justifyContent: 'center', alignItmes: 'center', flex: 1, marginLeft: 35 }}>
-                        <Text>
+                        <Text numberOfLines={1}>
                             {name}
                         </Text>
                         {checkedBriefing &&

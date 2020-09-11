@@ -56,7 +56,6 @@ export default class AppStore {
 
     offScheduler = async () => {
         if(CaterPlannerScheduler.isScheduling()){
-            console.log('off');
             CaterPlannerScheduler.offScheduler();
         }
     }
