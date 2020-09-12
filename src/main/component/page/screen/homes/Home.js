@@ -12,15 +12,50 @@ import { useNavigation } from '@react-navigation/native';
 import Purpose from '../../../../rest/model/Purpose';
 import GlobalConfig from '../../../../GlobalConfig';
 import useStores from '../../../../mobX/helper/useStores';
-import EasyDate from '../../../../util/EasyDate';
 import Request from '../../../../util/Request';
 import SplashScreen from 'react-native-splash-screen';
-
-
-import CaterPlannerScheduler from '../../../../native/CaterPlannerScheduler';
+import CaterPlannerRank from '../../../atom/icon/CaterPlannerRank';
 
 
 const fullWidth = Dimensions.get('window').width;
+
+function CardDecimalDayWidget({ purpose }) {
+
+    const decimalDay = purpose.leftDay;
+
+    let text;
+    let color;
+
+
+    switch (purpose.stat) {
+        case 0:
+            if(!purpose.isProcceedEnd){
+                text = (decimalDay == 0 ? 'FinalDay' : 'D - ' + decimalDay);
+            }else{
+                text = purpose.isSucceeseProceed ? '수행완료' : '수행실패'
+            }
+            break;
+        case 1:
+            text = '대기'
+            break;
+        case 2:         
+            text = '성공'
+            break;
+        case 3:
+            text = '실패'
+            break;
+    }
+
+ 
+
+    
+
+    return (
+        <Text style={{ color: 'gray', fontSize: 12, textAlign: 'center' }}>
+        {text}
+        </Text>
+    )
+}
 
 
 function EmptyCard({ onPress }) {
@@ -74,57 +109,59 @@ function ActiveCard({ purpose, onPress, loadData }) {
             height: '100%', justifyContent: 'center'
         }} activeOpacity={1} onPress={onPress}>
 
-            <View style={cardStyles.container}
+            <View style={[cardStyles.container, {elevation : purpose.isFailProceed || purpose.stat == State.WAIT ? 0 : 3}]}
             >
                 <View style={{
-                    flex: 2,
-                    borderWidth: 5,
-                    borderColor: 'white',
-                    borderTopRightRadius: 45,
-                    borderTopLeftRadius: 45,
+                    flex: 1,
+                    borderBottomWidth: 1, borderBottomColor: 'gray'
                 }}>
-                    <Image
-                        source={{ uri: purpose.photoUrl }}
-                        style={{
-                            flex: 1, width: "100%", height: undefined, borderTopRightRadius: 40,
-                            borderTopLeftRadius: 40,
-                        }}
-                    />
-                </View>
-                <View style={{
-                    flex: 1
+                    <View style={{ position: 'absolute', top: 12, right: 12, paddingBottom: 2,
+                    borderBottomWidth: 1, borderBottomColor: '#888888'
                 }}>
+                        <CardDecimalDayWidget purpose={purpose} />
+                    </View>
                     <View style={{ flex: 1, justifyContent: 'center' }}>
                         <Text
                             adjustsFontSizeToFit
-                            numberOfLines={1}
+                            numberOfLines={2}
                             style={{
-                                alignSelf: 'center',
-                                fontSize: 20
+                                textAlign: 'center',
+                                fontSize: 16,
                             }}>
                             {purpose.name}
                         </Text>
                     </View>
-                    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                        <DecimalDayWidget purpose={purpose} />
-                    </View>
+     
                 </View>
-
+                <View style={{
+                    flex: 2.5,
+                    borderTopRightRadius: 5,
+                    borderTopLeftRadius: 5,
+                }}>
+                    <Image
+                        source={{ uri: purpose.photoUrl }}
+                        style={{
+                            flex: 1, width: "100%", height: undefined, borderBottomRightRadius: 5,
+                            borderBottomLeftRadius: 5,
+                        }}
+                    />
+                                   <View style={{ position: 'absolute', right: 8, top: -30}}>
+                        <CaterPlannerRank
+                            purpose={purpose}
+                            style={{
+                                width: 60,
+                                height: 60,
+                            }}
+                        />
+                </View>
+                </View>
                 {(purpose.stat == State.WAIT || purpose.isFailProceed) &&
-                    <View style={[cardStyles.container, { right: 0, heigth: '100%', width: '100%', margin: 0, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.5)' }]} />
+                    <View style={[cardStyles.container, { right: 0, heigth: '100%', width: '100%', margin: 0, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.3)' }]} />
                 }
 
 
-                <View style={{ position: 'absolute', top: -40, width: '100%', alignItems: 'center', elevation: 10 }}>
-                    <Image
-                        resizeMode="stretch"
-                        style={{ width: '90%', height: 80, tintColor: '#585858' }}
-                        source={require('../../../../../../asset/image/card_header.png')}
-                    />
-                </View>
-
                 {(purpose.stat == State.WAIT || purpose.isFailProceed) &&
-                    <View style={{ position: 'absolute', elevation: 10, left: 126, top: 70 }} >
+                    <View style={{ position: 'absolute', elevation: 10, left: 116, top: 70 }} >
                         <ImageButton
                             imageStyle={{
                                 width: 80,
@@ -146,7 +183,7 @@ function ActiveCard({ purpose, onPress, loadData }) {
                 }
 
                 {purpose.isSucceeseProceed &&
-                    <View style={{ position: 'absolute', elevation: 10, left: 126, top: 70 }} >
+                    <View style={{ position: 'absolute', elevation: 10, left: 116, top: 70 }} >
                         <ImageButton
                             imageStyle={{
                                 width: 80,
@@ -186,13 +223,12 @@ function ActiveCard({ purpose, onPress, loadData }) {
 
 const cardStyles = StyleSheet.create({
     container: {
-        borderTopRightRadius: 45,
-        borderTopLeftRadius: 45,
-        borderBottomStartRadius: 40,
-        borderBottomEndRadius: 40,
+        borderTopRightRadius: 5,
+        borderTopLeftRadius: 5,
+        borderBottomStartRadius: 5,
+        borderBottomEndRadius: 5,
         backgroundColor: '#ffffff',
-        elevation: 3,
-        height: 380,
+        height: 400,
         margin: 3,
     },
 })
@@ -206,7 +242,7 @@ export default class Home extends Component {
 
         this.state = {
             activeIndex: 0,
-            isLoading : true
+            isLoading: true
         }
 
         this.appStore = this.props.appStore;
@@ -264,7 +300,7 @@ export default class Home extends Component {
                 activeIndex: 0,
                 endIndex: data ? data.length : 0,
                 data: data,
-                isLoading : false
+                isLoading: false
             });
         } catch (e) {
             console.log(e);
@@ -276,7 +312,7 @@ export default class Home extends Component {
 
         this.props.navigation.addListener('focus', () => {
             this.setState({
-                isLoading : true
+                isLoading: true
             }, this._loadData);
         });
         setTimeout(() => {
@@ -284,51 +320,51 @@ export default class Home extends Component {
         }, 500);
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.navigation.removeListener('focus');
     }
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
                 {!this.state.isLoading &&
-                <View style={{ flex: 1 }}>
-                    <View style={{ flex: 11, justifyContent: 'center' }}>
-                        <View style={{ alignItems: 'center' }}>
-                            {!this.state.data || this.state.data.length == 0 ?
-                                <EmptyCard
-                                    onPress={() => {
-                                        this.props.navigation.navigate('CreateNavigation', {
-                                            screen: 'PurposeWriteBoard',
-                                            params: {
-                                                type: PurposeWriteType.CREATE
-                                            }
-                                        })
-                                    }}
-                                /> :
-                                <Carousel
-                                    ref={(ref) => { this.carousel = ref; }}
-                                    data={this.state.data}
-                                    renderItem={this._renderItem}
-                                    scrollEnabled={true}
-                                    sliderWidth={fullWidth}
-                                    itemWidth={316}
-                                    onSnapToItem={
-                                        index => this.setState({ activeIndex: index })}
-                                    hasParallaxImages={true}
+                    <View style={{ flex: 1 }}>
+                        <View style={{ flex: 11, justifyContent: 'center' }}>
+                            <View style={{ alignItems: 'center' }}>
+                                {!this.state.data || this.state.data.length == 0 ?
+                                    <EmptyCard
+                                        onPress={() => {
+                                            this.props.navigation.navigate('CreateNavigation', {
+                                                screen: 'PurposeWriteBoard',
+                                                params: {
+                                                    type: PurposeWriteType.CREATE
+                                                }
+                                            })
+                                        }}
+                                    /> :
+                                    <Carousel
+                                        ref={(ref) => { this.carousel = ref; }}
+                                        data={this.state.data}
+                                        renderItem={this._renderItem}
+                                        scrollEnabled={true}
+                                        sliderWidth={fullWidth}
+                                        itemWidth={300}
+                                        onSnapToItem={
+                                            index => this.setState({ activeIndex: index })}
+                                        hasParallaxImages={true}
+                                    />
+                                }
+                            </View>
+                        </View>
+                        <View style={{ justifyContent: 'flex-start', flex: 1 }}>
+                            {this.state.data && this.state.data.length != 0 &&
+                                <PageStateText
+                                    activeIndex={this.state.activeIndex + 1}
+                                    endIndex={this.state.endIndex}
                                 />
                             }
                         </View>
-                    </View>
-                    <View style={{ justifyContent: 'flex-start', flex: 1 }}>
-                        {this.state.data && this.state.data.length != 0 &&
-                            <PageStateText
-                                activeIndex={this.state.activeIndex + 1}
-                                endIndex={this.state.endIndex}
-                            />
-                        }
-                    </View>
-                </View>}
+                    </View>}
             </View>
 
 

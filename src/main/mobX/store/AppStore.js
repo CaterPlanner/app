@@ -31,6 +31,7 @@ export default class AppStore {
             if (this.isBegin) {
                 //초기 세팅
                 await AsyncStorage.setItem('IS_BEGIN', 'false');
+                this.offScheduler();
                 this.onScheduler();
             }
 

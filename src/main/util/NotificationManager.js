@@ -63,6 +63,9 @@ export default {
 
     title = `오늘 수행목표가 ${goalCount}개 있습니다.`
 
+    PushNotification.setApplicationIconBadgeNumber(0);
+    PushNotification.cancelAllLocalNotifications();
+
     PushNotification.localNotification({
       id: 0,
       visibility: 'public', //잠금화면도 보임

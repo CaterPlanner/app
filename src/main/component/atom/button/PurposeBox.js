@@ -1,26 +1,39 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import ImageButton from '../../atom/button/ImageButton';
 import ProfileWidget from '../../molecule/ProfileWidget';
+import CaterPlannerRank from '../icon/CaterPlannerRank';
 
-export default function PurposeBox({data, onPress}){
+export default function PurposeBox({ data, onPress }) {
 
-    return(
-    <TouchableOpacity activeOpacity={1} onPress={onPress}  style={styles.container}>
-        <View style={{flex: 2.7, backgroundColor:'white',overflow: "hidden", elevation:5, marginTop: 14, marginBottom: 5}}>
-            <Image
-                source={{uri : data.photoUrl}}
-                style={{flex: 1}}
-            />
-        </View>
-        <View style={{flex: 1}}>
-            <Text 
-            numberOfLines={1}
-            style={styles.purposeNameFont}>
-                {data.name}
-            </Text>
-        </View>
-       {/* <Image
+    return (
+        <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.container}>
+
+            <View style={{ flex: 2.7, backgroundColor: 'white', elevation: 5, marginTop: 14, marginBottom: 5 }}>
+
+                <Image
+                    source={{ uri: data.photoUrl }}
+                    style={{ flex: 1 }}
+                />
+                <View style={{ position: 'absolute', right: 3, bottom: -45 }}>
+                    <CaterPlannerRank
+                        purpose={data}
+                        style={{
+                            width: 75,
+                            height: 75,
+                        }}
+                    />
+                </View>
+            </View>
+            <View style={{ flex: 1 }}>
+                <Text
+                    numberOfLines={2}
+                    style={styles.purposeNameFont}>
+                    {data.name}
+                </Text>
+            </View>
+
+            {/* <Image
                 source={{uri : data.photoUrl}}
                 resizeMode="stretch"
                 style={styles.photoContainer}
@@ -44,18 +57,19 @@ export default function PurposeBox({data, onPress}){
             />
             </View>
         </View> */}
-    </TouchableOpacity>)
+        </TouchableOpacity>)
 }
 
 const styles = StyleSheet.create({
     container: {
-        width : '100%',
-        height: 380,
+        width: '100%',
+        height: 390,
         backgroundColor: 'white',
-        paddingHorizontal: 14
+        paddingHorizontal: 16
     },
     purposeNameFont: {
-        fontSize: 19,
-        marginVertical: 10
+        fontSize: 18,
+        marginVertical: 10,
+        width: '60%'
     },
 })

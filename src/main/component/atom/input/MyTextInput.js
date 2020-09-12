@@ -54,9 +54,9 @@ export default class MyTextInput extends Component {
     render() {
         console.log(this.state.textHeight)
         return (
-            <View style={[this.props.backgroundStyles, {
+            <View style={[{justifyContent: 'center'},this.props.backgroundStyles, {
                 overWrite: 'hidden',
-                height : this._getViewHeight(), justifyContent: 'center'}]}
+                height : this._getViewHeight()}]}
                 >
                 <TextInput
                     ref={input => this.textInput = input}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Image } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../screen/homes/Home'
 import BriefingPurposeList from '../screen/homes/BriefingPurposeList'
@@ -22,18 +22,22 @@ const HomeNavigation = () => {
                     ...defaultHeaderStyle(),
                     headerTitle: '',
                     headerLeft: () => (
-                        <View style={{ marginLeft: 12, width: 180, height: 28 }}>
-                            <Image
+                        <View style={{ marginLeft: 14, width: 180, height: 28, justifyContent:'center' }}>
+                            {/* <Image
                                 resizeMode="stretch"
                                 style={{ flex: 1, width: "100%", height: undefined }}
-                                source={require('../../../../../asset/logo/CaterPlanner.png')} />
+                                source={require('../../../../../asset/logo/CaterPlanner.png')} /> */}
+                            <Text style={{color : '#00B412', fontSize: 23, fontWeight: 'bold'}}>
+                                CaterPlanner
+                            </Text>
                         </View>
                     ),
                     headerRight: () => (
                         <View style={{ flexDirection: 'row', alignItems:'center' }}>
                             <View style={{ marginRight: 25 }}>
                                 <ImageButton
-                                    imageStyle={{ width: 22, height: 22 }}
+
+                                    imageStyle={{ width: 26.5, height: 26.5, tintColor:'black' }}
                                     source={require('../../../../../asset/button/briefingList_button.png')}
                                     onPress={
                                         () => {
@@ -44,7 +48,7 @@ const HomeNavigation = () => {
                             </View>
                             <View style={{ marginRight: 12 }}>
                                 <ImageButton
-                                    imageStyle={{ width: 25, height: 25 }}
+                                    imageStyle={{ width: 27, height: 27, tintColor:'black'  }}
                                     source={require('../../../../../asset/button/setting_button.png')}
                                     onPress={
                                         () => {

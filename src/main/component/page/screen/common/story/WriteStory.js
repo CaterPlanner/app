@@ -6,6 +6,7 @@ import { useRoute } from '@react-navigation/native';
 import Request from '../../../../../util/Request';
 import { inject } from 'mobx-react';
 import { Scope } from '../../../../../AppEnum';
+import MyTextInput from '../../../../atom/input/MyTextInput';
 
 const scopeNames = ['전체공개', '비공개']
 
@@ -107,7 +108,7 @@ export default class WriteStory extends Component {
         return (
             <View style={{ flex: 1 }}>
                 {this.state.isUploading ? <Loader /> : (
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1, backgroundColor:'white' }}>
                         <Modal
                             transparent={true}
                             visible={this.state.isScopeSelecting}
@@ -145,38 +146,47 @@ export default class WriteStory extends Component {
                                 </View>
                             </TouchableOpacity>
                         </Modal>
-                        <TextInput
-                            numberOfLines={1}
-                            maxLength={32}
-                            placeholder={'제목을 입력해주세요 (최대 32자)'}
-                            style={[styles.inputFont, {
-                                backgroundColor: 'white',
-                                padding: 10,
-                                textAlignVertical: 'center',
-                            }]}
-                            onChange={({nativeEvent}) => {
-                                let text = nativeEvent.text;
-        
-                                if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]/g).test(text)){
-                                    text = "";
-                                }
-                                this.setState({
-                                    storyTitle: text
-                                })
-                            }}
-                            value={this.state.storyTitle}
-                        />
+                        <MyTextInput
+                                numberOfLines={1}
+                                maxLength={32}
+                                placeholder={'제목을 입력해주세요 (최대 32자)'}
+                                backgroundStyles={{
+                                    margin: 10,
+                                    backgroundColor:'white'
+                                }}
+                                textStyles={[styles.inputFont, {
+                                    lineHeight: 20,
+                                    textAlign: 'left'
+                                }]}
+                                onChange={({nativeEvent}) => {
+                                    let text = nativeEvent.text;
+            
+                                    if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]/g).test(text)){
+                                        text = "";
+                                    }
+                                    this.setState({
+                                        storyTitle: text
+                                    })
+                                }}
+                                value={this.state.storyTitle}
+                            />
                         <View style={{ height: 0.4, backgroundColor: '#888888' }} />
-                        <TextInput
+                        <MyTextInput
                             multiline={true}
                             maxLength={100}
-                            placeholder={'내용을 입력해주세요 (최대 100자)'}
-                            style={[styles.inputFont, {
+                            placeholder={'내용을 입력해주세요 (최대 100자, 25줄)'}
+                            maxLine={25}
+                            textStyles={[styles.inputFont, {
+                                lineHeight: 20,
+                                textAlign: 'left',
+                                textAlignVertical: 'top',
+                            }]}
+                            backgroundStyles={{
                                 backgroundColor: 'white',
                                 padding: 10,
                                 flex: 1,
-                                textAlignVertical: 'top',
-                            }]}
+                                justifyContent: 'flex-start'
+                            }}
                             onChange={({nativeEvent}) => {
                                 let text = nativeEvent.text;
         

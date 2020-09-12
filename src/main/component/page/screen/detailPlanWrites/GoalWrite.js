@@ -102,9 +102,6 @@ export default class GoalWrite extends Component {
         this.props.navigation.goBack();
     }
 
-    componentDidMount() {
-        this.goalNameInput.focus();
-    }
 
     render() {
 
@@ -157,16 +154,16 @@ export default class GoalWrite extends Component {
                     </View>
                     <View style={styles.editContainer}>
                         <CaterPlannerTextInput
-                            ref={(r) => {
-                                this.goalNameInput = r;
-                            }}
+                            // ref={(r) => {
+                            //     this.goalNameInput = r;
+                            // }}
                             label={'수행 목표 이름 설정하기'}
                             numberOfLines={1}
                             maxLength={32}
                             placeHolder={"이름을 입력하세요"}
-                            onSubmitEditing={event => {
-                                this.goalDescriptionInput.focus();
-                            }}
+                            // onSubmitEditing={event => {
+                            //     this.goalDescriptionInput.focus();
+                            // }}
                             onChangeText={text => {
                                 this.setState({
                                     goalName: text
@@ -177,7 +174,7 @@ export default class GoalWrite extends Component {
                     </View>
                     <View style={styles.editContainer}>
                         <CaterPlannerTextInput
-                            ref={(r) => { this.goalDescriptionInput = r; }}
+                            // ref={(r) => { this.goalDescriptionInput = r; }}
                             label={'수행 목표 설명 적기'}
                             maxLength={100}
                             multiline={true}
