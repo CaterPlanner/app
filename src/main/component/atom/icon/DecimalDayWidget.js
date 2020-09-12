@@ -33,6 +33,10 @@ export default function DecimalDayWidget({ purpose }) {
             break;
     }
 
+ 
+
+    
+
     return (
         <View style={{ justifyContent: 'center', alignSelf: 'center', height: 29, width: 65, borderWidth: 2, borderRadius: 5, borderColor: color }}>
             <Text style={{ color: color, fontSize: 12, textAlign: 'center' }}>

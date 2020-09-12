@@ -11,6 +11,51 @@ import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import Request from '../../../../../util/Request';
 import Comment from '../../../../molecule/Comment';
 import { Model } from '../../../../../AppEnum';
+import { useNavigation } from '@react-navigation/native';
+import CaterPlannerRank from '../../../../atom/icon/CaterPlannerRank';
+
+
+function PurposeInfo({ purpose }) {
+
+    const navigation = useNavigation();
+
+    return (
+        <TouchableOpacity  activeOpacity={1} style={{ flexDirection: 'row', elevation: 5, height: 90, width: '100%', backgroundColor: 'white', marginVertical: 10 }}
+            onPress={() => {
+                navigation.push('LoadUserPurpose', {
+                    id: purpose.id
+                })
+            }}
+        >
+            <View style={{ position: 'absolute', right: 5, bottom: 5 }}>
+                    <CaterPlannerRank
+                        purpose={purpose}
+                        style={{
+                            width: 50,
+                            height: 50,
+                        }}
+                    />
+                </View>
+            <Image
+                resizeMode="stretch"
+                source={{ uri: purpose.photoUrl }}
+                style={{
+                    height: '100%',
+                    width: 90,
+                }}
+            />
+            <View style={{ flex: 1 }}>
+                <Text
+                    numberOfLines={1}
+                    style={{
+                        fontSize: 17,
+                        marginHorizontal: 20,
+                        marginVertical: 15
+                    }}>{purpose.name}</Text>
+            </View>
+        </TouchableOpacity>
+    )
+}
 
 @inject(['authStore'])
 export default class DetailStory extends Component {
@@ -31,7 +76,7 @@ export default class DetailStory extends Component {
         try {
             this.setState({
                 isLikes: !this.state.isLikes,
-                likesCount : !this.state.isLikes ? this.state.likesCount + 1 : this.state.likesCount - 1
+                likesCount: !this.state.isLikes ? this.state.likesCount + 1 : this.state.likesCount - 1
             })
 
             await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}/likes/${this.state.isLikes ? 'negative' : 'positive'}`)
@@ -42,10 +87,6 @@ export default class DetailStory extends Component {
         } catch (e) {
             console.log(e);
 
-            // this.setState({
-            //     isLikes: !this.state.isLikes,
-            //     likesCount : !this.state.isLikes ? this.state.likesCount + 1 : this.state.likesCount - 1
-            // })
         }
     }
 
@@ -58,7 +99,7 @@ export default class DetailStory extends Component {
                 isLoading: false,
                 data: response.data,
                 isLikes: !response.data.canLikes,
-                likesCount : response.data.likesCount
+                likesCount: response.data.likesCount
             });
 
         } catch (e) {
@@ -69,12 +110,12 @@ export default class DetailStory extends Component {
     }
 
     _storyDelete = async () => {
-        try{
+        try {
             await Request.delete(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story/${this.state.data.id}`)
-            .auth(await this.props.authStore.getToken()).submit();
-    
+                .auth(await this.props.authStore.getToken()).submit();
+
             this.props.navigation.goBack();
-        }catch(e){
+        } catch (e) {
             console.log(e);
         }
     }
@@ -87,12 +128,12 @@ export default class DetailStory extends Component {
         })
         this.props.navigation.addListener('focus', () => {
             this.setState({
-                isLoading : true
+                isLoading: true
             }, this._loadData)
         })
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.navigation.removeListener('focus');
     }
 
@@ -142,7 +183,7 @@ export default class DetailStory extends Component {
                                         fontStyle={{
                                             fontSize: 15
                                         }}
-                                        user={this.state.data.author}/>
+                                        user={this.state.data.author} />
                                     <TimeAgo time={EasyDate.now()} />
                                 </View>
 
@@ -153,31 +194,15 @@ export default class DetailStory extends Component {
                                 </View>
 
                                 <View style={{ marginHorizontal: 7 }}>
-                                    <Text 
-                                    style={styles.contentFont}>
+                                    <Text
+                                        style={styles.contentFont}>
                                         {this.state.data.content}
                                     </Text>
-                                    <TouchableOpacity style={{ marginTop: 30, marginBottom: 20, flexDirection: 'row', elevation: 5, height: 90, width: '100%', backgroundColor: 'white', marginVertical: 10 }}
-                                        onPress={() => {
-                                            this.props.navigation.push('LoadUserPurpose', {
-                                                id: this.state.data.purpose.id
-                                            })
-                                        }}
-                                    >
-                                        <Image
-                                            resizeMode="stretch"
-                                            source={{ uri: this.state.data.purpose.photoUrl }}
-                                            style={{
-                                                height: '100%',
-                                                width: 90,
-                                            }}
+                                    <View style={{marginTop: 30, marginBottom: 20}}>
+                                        <PurposeInfo
+                                            purpose={this.state.data.purpose}
                                         />
-                                        <View style={{ flex: 1 }}>
-                                            <Text
-                                                numberOfLines={1}
-                                                style={styles.purposeNameFont}>{this.state.data.purpose.name}</Text>
-                                        </View>
-                                    </TouchableOpacity>
+                                    </View>
                                 </View>
                             </View>
                             <View style={{ borderBottomWidth: 0.3, borderTopWidth: 0.3, paddingHorizontal: 10, paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -190,7 +215,7 @@ export default class DetailStory extends Component {
                             </View>
                             {
                                 this.state.data.comments.map((comment) => (
-                                    <View style={{paddingHorizontal: 10 }}>
+                                    <View style={{ paddingHorizontal: 10 }}>
                                         <Comment
                                             user={comment.user}
                                             createDate={new EasyDate(comment.createDate)}
@@ -215,7 +240,7 @@ export default class DetailStory extends Component {
                                 backgroundStyle={{
                                     marginLeft: 20
                                 }}
-                                imageStyle={{ width: 27, height: 25, tintColor :'#9D9D9D' }}
+                                imageStyle={{ width: 27, height: 25, tintColor: '#9D9D9D' }}
                                 source={require('../../../../../../../asset/button/comment_button.png')}
                                 onPress={() => {
                                     this.props.navigation.push('CommnetView', {
