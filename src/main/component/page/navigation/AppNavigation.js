@@ -26,8 +26,8 @@ const AppNavigation = () => {
             <Stack.Screen options={{headerShown:false}} name="MainNavigation" component={MainNavigation} />
             <Stack.Screen options={{headerShown:false}} name="CreateNavigation" component={CreateNavigation} />
             <Stack.Screen name="ServerNotification" component={ServerNotification} />
-            <Stack.Screen options={({route}) => ({
-                ...defaultHeaderStyle,
+            <Stack.Screen options={({route, navigation}) => ({
+                ...defaultHeaderStyle(navigation),
                 title: '설정',
                 headerTitleAlign:'center',
                 headerTitleStyle: {
@@ -50,8 +50,7 @@ const AppNavigation = () => {
                             marginRight: 10
                         }}
                         imageStyle={{
-                            width: 35,
-                            height: 35
+                            width: 35, height: 28
                         }}
                         source={
                             require('../../../../../asset/button/check_button.png')}

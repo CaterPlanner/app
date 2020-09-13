@@ -9,7 +9,7 @@ export default function PurposeBox({ data, onPress }) {
     return (
         <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.container}>
 
-            <View style={{ flex: 2.7, backgroundColor: 'white', elevation: 5, marginTop: 14, marginBottom: 5 }}>
+            <View style={{ flex: 2.7, backgroundColor: 'white', marginTop: 14, marginBottom: 5 }}>
 
                 <Image
                     source={{ uri: data.photoUrl }}

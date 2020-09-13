@@ -128,8 +128,8 @@ export default class DetailPlanWriteBoard extends Component {
                 <View style={{ position: 'absolute', bottom: 30, right: 22 }}>
                     <ImageButton
                         backgroundStyle={{ backgroundColor: '#2CBD4F', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
-                        imageStyle={{ width: 31, height: 34, marginLeft: 5 }}
-                        source={require('../../../../../../asset/button/plan_write_button.png')}
+                        imageStyle={{ width: 36, height: 34, tintColor: 'black'}}
+                        source={require('../../../../../../asset/button/plan_insert_button.png')}
                         onPress={() => {
                             this.props.navigation.navigate('GoalWrite');
                         }}

@@ -34,8 +34,7 @@ export default function PurposePhotoWrite({index}) {
                 </View>
                 <View style={purposeStyles.subtitleArea}>
                     <Text style={purposeStyles.subtitle}>
-                        다른 사람들과 함께 목적을 공유하실 건가요? {"\n"}
-                        그렇다면 당신만의 특별한 사진을 넣어보도록 해요.
+                        당신의 목적을 위한 특별한 사진을 넣어주세요
                     </Text>
                 </View>
             </View>

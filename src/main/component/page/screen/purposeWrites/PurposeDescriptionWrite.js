@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, KeyboardAvoidingView } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput'
@@ -15,20 +15,18 @@ export default function PurposeDescriptionWrite({index}) {
                 <View style={purposeStyles.titleArea}>
                     <Text
                         style={purposeStyles.title}>
+                        당신의 목적은...{"\n"}
                         {purposeWriteStore.purpose.name}
-                        {"\n"}
-                        대해 자세히 적어주세요
                 </Text>
                 </View>
-                {/* <View style={purposeStyles.subtitleArea}>
+                <View style={purposeStyles.subtitleArea}>
                     <Text style={purposeStyles.subtitle}>
-
-                         {"\n"}
-                        소망하는 이유나 상상한 미래 등을 한 줄로 써 주세요.
+                        목적을 이루고 싶은 이유를 적어주세요.{"\n"}
+                        목적을 이루고 싶은 이유는 당신에게 좋은 동기부여가 됩니다.
                     </Text>
-                </View>                 */}
+                </View>                
             </View>
-            <View style={purposeStyles.bottomContainer}>
+            <KeyboardAvoidingView style={[purposeStyles.bottomContainer, {marginTop : 30}]} disabled>
                 <CaterPlannerTextInput
                     labelStyle={{color : '#25B046'}}
                     label={'자세히 입력하기'}
@@ -50,7 +48,7 @@ export default function PurposeDescriptionWrite({index}) {
                     value={purposeDescription}
 
                 />
-            </View>
+            </KeyboardAvoidingView>
         </View>
     );
 }

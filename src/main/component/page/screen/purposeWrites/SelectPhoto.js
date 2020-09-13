@@ -7,6 +7,8 @@ YellowBox.ignoreWarnings = ([
     'VirtualizedList: missing keys for items, make sure to specify a key or id property on each item or provide a custom keyExtractor.'
   ])
 
+const PHOTO_LIMIT_SIZE = 1024 * 1024 * 10;
+
 export default class SelectPhoto extends Component{
 
 
@@ -42,8 +44,12 @@ export default class SelectPhoto extends Component{
             first: this.props.route.params.photoCount,
             groupName: this.props.route.params.albumName,
             assertType: 'Photos',
-            include: ['filename']
+            include: ['filename', 'fileSize']
         })).edges.map((photo) => {
+
+            if(photo.node.image.fileSize > PHOTO_LIMIT_SIZE)
+                return;
+
             return {
                 isEmpty : false,
                 uri : photo.node.image.uri,

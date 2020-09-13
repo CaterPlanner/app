@@ -208,15 +208,25 @@ export default class PurposeWriteBoard extends Component {
                                         require('../../../../../../asset/button/arrow_button.png')
                                     }
 
-                                    backgroundStyle={{ width: 40, height: 40 }}
-                                    imageStyle={{ width: 25, height: 22 }}
+                                    backgroundStyle={{
+                                        marginLeft: 7,
+                                        width: 40, height: 40
+                                        
+                                    }}
+                                    imageStyle={{
+                                        width: 28,
+                                        height: 35,
+                                        tintColor: 'black'
+                                    }}
                                     onPress={() => { this.purposeWriteStore.previous(this.carousel); }}
                                 />
                                 :
                                 <ImageButton
                                     source={require('../../../../../../asset/button/exit_button.png')}
-                                    backgroundStyle={{ width: 40, height: 40 }}
-                                    imageStyle={{ width: 22, height: 22 }}
+                                    backgroundStyle={{ 
+                                        marginLeft: 7,
+                                        width: 40, height: 40 }}
+                                    imageStyle={{ width: 30, height: 30,tintColor: 'black' }}
                                     onPress={this.props.navigation.goBack}
                                 />
                             }
@@ -237,8 +247,8 @@ export default class PurposeWriteBoard extends Component {
                                 backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#2CBD4F' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
                                 imageStyle={[
                                     (!this.purposeWriteStore.isLast ?
-                                        { width: 18, height: 28, marginLeft: 5 } :
-                                        { width: 40, height: 40 }),
+                                        { width: 25, height: 28, marginLeft: 5, tintColor: 'black' } :
+                                        {width: 35, height: 28, tintColor: 'black' }),
                                     { tintColor: this.purposeWriteStore.isPermitNextScene ? undefined : '#888888' }
                                 ]}
                                 source={
@@ -275,10 +285,9 @@ export default class PurposeWriteBoard extends Component {
 */
 const styles = StyleSheet.create({
     topContainer: {
-        flex: 0.52,
+        height : 50,
         alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingLeft: 7.5
 
     },
     viewContainer: {

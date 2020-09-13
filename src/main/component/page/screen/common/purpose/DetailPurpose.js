@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Component } from 'react';
-import { View, Image, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Alert, Modal, TouchableOpacity } from 'react-native'
+import React, { useState, Component } from 'react';
+import { View, Image, Text, ScrollView, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Alert, Modal, TouchableOpacity } from 'react-native'
 import InfoBox from '../../../../molecule/InfoBox';
 import ImageButton from '../../../../atom/button/ImageButton';
 import DecimalDayWidget from '../../../../atom/icon/DecimalDayWidget';
@@ -20,7 +20,7 @@ import { PurposeWriteType } from '../../../../../AppEnum';
 import Purpose from '../../../../../rest/model/Purpose';
 import MyPrgoressBar from '../../../../atom/progressBar/MyProgressBar';
 import { inject } from 'mobx-react';
-
+import CaterPlannerRank from '../../../../atom/icon/CaterPlannerRank';
 
 function BottomBar({ data }) {
 
@@ -458,14 +458,14 @@ export default class DetailPurpose extends Component {
                                 {this.state.headerVisible &&
                                     <View style={{ overflow: 'visible', backgroundColor: 'white', height: 50, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
                                         <ImageButton
-                                            backgroundStyle={{
-                                                marginLeft: 0,
-                                                height: '100%'
-                                            }}
-                                            imageStyle={{
-                                                width: 21,
-                                                height: 17
-                                            }}
+                                         backgroundStyle={{
+                                            height: '100%',
+                                        }}
+                                        imageStyle={{
+                                            width: 28,
+                                            height: 35,
+                                            tintColor: 'black'
+                                        }}
                                             source={require('../../../../../../../asset/button/arrow_button.png')}
                                             onPress={() => { this.navigation.goBack(); }} />
                                         {this.state.data.isOwner &&
@@ -508,6 +508,15 @@ export default class DetailPurpose extends Component {
                 >
                     <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
                         <View style={detailPurposeStyles.purposeInfoContainer}>
+                        <View style={{ position: 'absolute', right: 15, top: -30}}>
+                            <CaterPlannerRank
+                                purpose={this.state.data.purpose}
+                                style={{
+                                    width: 70,
+                                    height: 70
+                                }}
+                            />
+                        </View>
                             <Text style={detailPurposeStyles.purposeNameFont}>
                                 {this.state.data.purpose.name}
                             </Text>
@@ -579,7 +588,7 @@ export default class DetailPurpose extends Component {
                                 }}
                                 detailButtonHint={'더보기'}
                                 child={(
-                                    <View style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
+                                    <ScrollView style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
                                         {
                                             this.state.data.purpose.detailPlans.map((goal) => {
                                                 if (goal.isProcceedEnd)
@@ -597,7 +606,7 @@ export default class DetailPurpose extends Component {
                                                 </View>)
                                             })
                                         }
-                                    </View>
+                                    </ScrollView>
                                 )}
                             />
                         </View>
@@ -643,7 +652,6 @@ const detailPurposeStyles = StyleSheet.create({
         marginBottom: 15
     },
     purposeDescriptionFont: {
-        height: 60
     },
     purposeProfileContainer: {
         flexDirection: 'row',

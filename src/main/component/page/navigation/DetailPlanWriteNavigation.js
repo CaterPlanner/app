@@ -26,8 +26,7 @@ const DetailPlanWriteNavigation = () => {
                                 marginRight: 10
                             }}
                             imageStyle={{
-                                width: 35,
-                                height: 35,
+                                width: 35, height: 28,
                                 tintColor : route.params.isCanSave ? '#25B046' : '#888888'
                             }}
                             source={
