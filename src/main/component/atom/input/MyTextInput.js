@@ -60,6 +60,7 @@ export default class MyTextInput extends Component {
                 >
                 <TextInput
                     ref={input => this.textInput = input}
+                    pointerEvents="none"
                     style={[this.props.textStyles, { paddingVertical:0, paddingHorizontal: 0, lineHeight: this.lineHeight}]}
                     multiline={this.props.multiline}
                     value={this.props.value}

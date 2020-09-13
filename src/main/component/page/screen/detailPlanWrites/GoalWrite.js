@@ -144,7 +144,7 @@ export default class GoalWrite extends Component {
                     <ImageButton
                         source={require('../../../../../../asset/button/check_button.png')}
                         backgroundStyle={{ width: 40, height: 40 }}
-                        imageStyle={{ width: 35,height: 35}}
+                        imageStyle={{width: 35, height: 28}}
                         onPress={this._updateGoal}
                     />
                 </View>

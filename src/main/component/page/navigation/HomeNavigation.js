@@ -83,7 +83,7 @@ const HomeNavigation = () => {
                                 disabled={!route.params.isCanSubmit}
                                 source={require('../../../../../asset/button/check_button.png')}
                                 backgroundStyle={{ width: 40, height: 40}}
-                                imageStyle={{ width: 35, height: 32,
+                                imageStyle={{ width: 35, height: 28,
                                     tintColor : route.params.isCanSubmit ? '#25B046' : '#888888'
                                 }}
                                 onPress={() => {

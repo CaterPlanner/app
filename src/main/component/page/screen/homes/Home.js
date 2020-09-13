@@ -113,14 +113,14 @@ function ActiveCard({ purpose, onPress, loadData }) {
             >
                 <View style={{
                     flex: 1,
-                    borderBottomWidth: 1, borderBottomColor: 'gray'
                 }}>
                     <View style={{ position: 'absolute', top: 12, right: 12, paddingBottom: 2,
-                    borderBottomWidth: 1, borderBottomColor: '#888888'
+                    borderBottomWidth: 1, borderBottomColor: 'gray'
+                   
                 }}>
                         <CardDecimalDayWidget purpose={purpose} />
                     </View>
-                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <View style={{ flex: 1, justifyContent: 'center', marginHorizontal: 15 }}>
                         <Text
                             adjustsFontSizeToFit
                             numberOfLines={2}
@@ -145,15 +145,15 @@ function ActiveCard({ purpose, onPress, loadData }) {
                             borderBottomLeftRadius: 5,
                         }}
                     />
-                                   <View style={{ position: 'absolute', right: 8, top: -30}}>
-                        <CaterPlannerRank
-                            purpose={purpose}
-                            style={{
-                                width: 60,
-                                height: 60,
-                            }}
-                        />
-                </View>
+                        <View style={{ position: 'absolute', right: 8, top: -30}}>
+                            <CaterPlannerRank
+                                purpose={purpose}
+                                style={{
+                                    width: 60,
+                                    height: 60,
+                                }}
+                            />
+                        </View>
                 </View>
                 {(purpose.stat == State.WAIT || purpose.isFailProceed) &&
                     <View style={[cardStyles.container, { right: 0, heigth: '100%', width: '100%', margin: 0, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.3)' }]} />
@@ -228,7 +228,7 @@ const cardStyles = StyleSheet.create({
         borderBottomStartRadius: 5,
         borderBottomEndRadius: 5,
         backgroundColor: '#ffffff',
-        height: 400,
+        height: 440,
         margin: 3,
     },
 })

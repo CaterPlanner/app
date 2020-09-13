@@ -12,7 +12,7 @@ const styles = {
     },
 
     titleArea: {
-        marginBottom: 10 
+        marginBottom: 15
     },
 
     title: {

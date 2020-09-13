@@ -14,8 +14,9 @@ export default (navigation) => ({
                   marginLeft: 14
               }}
               imageStyle={{
-                  width: 21,
-                  height: 17,
+                  width: 28,
+                  height: 35,
+                  tintColor: 'black'
               }}
               source={require('../../../../../asset/button/arrow_button.png')}
               onPress={() => { navigation.goBack(); }}

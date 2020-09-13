@@ -35,12 +35,12 @@ export default function PurposeDetailPlansWrite({ index }) {
                     <Text style={purposeStyles.title}>
                         목적을 달성하기 위한
                         {"\n"}
-                        수행 목표를 세워봐요.
+                        수행 목표를 세워주세요.
                 </Text>
                 </View>
                 <View style={[purposeStyles.subtitleArea, { flexDirection: 'row', justifyContent: 'space-between' }]}>
                     <Text style={purposeStyles.subtitle}>
-                        생성시 현재 시점 부터 수행 목표 관리 시스템이 시작되며 {"\n"}
+                        생성시 현재 시점 부터 수행 목표 관리가 시작되며 {"\n"}
                         나중에 수행을 선택하면 입력한 데이터만 저장됩니다.
                     </Text>
                     <ImageButton
@@ -54,7 +54,7 @@ export default function PurposeDetailPlansWrite({ index }) {
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <ImageButton
                             backgroundStyle={{ paddingLeft: 10, alignSelf: 'flex-start', marginRight: 10, marginBottom: 20 }}
-                            imageStyle={{ width: 65, height: 70 }}
+                            imageStyle={{ width: 80, height: 75 }}
                             source={require('../../../../../../asset/button/plan_insert_button.png')}
                             onPress={() => {
                                 if (purposeWriteStore.writeType == PurposeWriteType.MODIFY) {
