@@ -13,6 +13,7 @@ import Comment from '../../../../molecule/Comment';
 import { Model } from '../../../../../AppEnum';
 import { useNavigation } from '@react-navigation/native';
 import CaterPlannerRank from '../../../../atom/icon/CaterPlannerRank';
+import SafeOverFlowText from '../../../../atom/text/SafeOverFlowText';
 
 
 function PurposeInfo({ purpose }) {
@@ -176,12 +177,12 @@ export default class DetailStory extends Component {
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
                                     <ProfileWidget
                                         imageStyle={{
-                                            width: 40,
-                                            height: 40,
-                                            borderRadius: 150
+                                            width: 35,
+                                            height: 35,
+                                            borderRadius: 30
                                         }}
                                         fontStyle={{
-                                            fontSize: 15
+                                            fontSize: 14
                                         }}
                                         user={this.state.data.author} />
                                     <TimeAgo time={EasyDate.now()} />
@@ -194,10 +195,12 @@ export default class DetailStory extends Component {
                                 </View>
 
                                 <View style={{ marginHorizontal: 7 }}>
-                                    <Text
-                                        style={styles.contentFont}>
-                                        {this.state.data.content}
-                                    </Text>
+                                    <SafeOverFlowText
+                                        fontStyle={styles.contentFont}
+                                        backgroundStyle={{marginTop : 30}}
+                                        text={this.state.data.content}
+                                        minNumberOfLines={7}
+                                    />
                                     <View style={{marginTop: 30, marginBottom: 20}}>
                                         <PurposeInfo
                                             purpose={this.state.data.purpose}
@@ -226,12 +229,12 @@ export default class DetailStory extends Component {
                             }
 
                         </ScrollView >
-                        <View style={{ backgroundColor: 'white', paddingVertical: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <View style={{ backgroundColor: 'white', paddingVertical: 12, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <ImageButton
                                 backgroundStyle={{
                                     marginLeft: 20
                                 }}
-                                imageStyle={{ width: 27, height: 25, tintColor: this.state.isLikes ? 'blue' : '#9D9D9D' }}
+                                imageStyle={{width: 30, height: 33, tintColor: this.state.isLikes ? 'blue' : undefined }}
                                 source={require('../../../../../../../asset/icon/likes_icon.png')}
                                 onPress={this._toggleLikes}
                             />
@@ -240,7 +243,7 @@ export default class DetailStory extends Component {
                                 backgroundStyle={{
                                     marginLeft: 20
                                 }}
-                                imageStyle={{ width: 27, height: 25, tintColor: '#9D9D9D' }}
+                                imageStyle={{width: 29, height: 32, tintColor: 'black' }}
                                 source={require('../../../../../../../asset/button/comment_button.png')}
                                 onPress={() => {
                                     this.props.navigation.push('CommnetView', {
@@ -269,7 +272,6 @@ const styles = StyleSheet.create({
     contentFont: {
         color: '#323232',
         fontSize: 14,
-        marginTop: 30
     },
     purposeNameFont: {
         fontSize: 17,

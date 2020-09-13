@@ -11,10 +11,10 @@ export default (navigation) => ({
           <ImageButton
               backgroundStyle={{
                   height: '100%',
-                  marginLeft: 14
+                  marginLeft: 10
               }}
               imageStyle={{
-                  width: 28,
+                  width: 30,
                   height: 35,
                   tintColor: 'black'
               }}

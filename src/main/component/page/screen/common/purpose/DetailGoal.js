@@ -3,6 +3,7 @@ import { View, Text, Dimensions, StyleSheet } from 'react-native';
 
 import MyPrgoressBar from '../../../../atom/progressBar/MyProgressBar';
 import { useRoute } from '@react-navigation/native';
+import SafeOverFlowText from '../../../../atom/text/SafeOverFlowText';
 
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토']
@@ -21,9 +22,12 @@ export default function DetailGoal() {
                 <Text style={detailGoalstyles.goalNameFont}>
                     {goal.name}
                 </Text>
-                <Text style={detailGoalstyles.goalDescription}>
-                    {goal.description}
-                </Text>
+                <SafeOverFlowText
+                    backgroundStyle={{marginTop : 15}}
+                    fontStyle={detailGoalstyles.goalDescription}
+                    text={goal.description}
+                    minNumberOfLines={4}
+                />
                 {/* <View style={{ alignSelf: 'flex-end', marginTop: 10 }}>
                     <Text>다음 수행 날짜   2019-02-03</Text>
                 </View> */}
@@ -107,7 +111,6 @@ const detailGoalstyles = StyleSheet.create({
     goalDescription: {
         fontSize: 15,
         textAlign: 'left',
-        marginTop: 12
     },
     goalAchieveFont: {
         fontSize: 14,

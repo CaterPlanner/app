@@ -150,7 +150,7 @@ export default class Search extends Component {
                     renderItem={({ item }) => {
                         return (
                         <View style={{
-                            marginTop: 10 
+                            marginBottom: 10 
                         }}>
                             <PurposeBox
                                 data={item}

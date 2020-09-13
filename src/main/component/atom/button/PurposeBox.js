@@ -15,15 +15,6 @@ export default function PurposeBox({ data, onPress }) {
                     source={{ uri: data.photoUrl }}
                     style={{ flex: 1 }}
                 />
-                <View style={{ position: 'absolute', right: 3, bottom: -45 }}>
-                    <CaterPlannerRank
-                        purpose={data}
-                        style={{
-                            width: 75,
-                            height: 75,
-                        }}
-                    />
-                </View>
             </View>
             <View style={{ flex: 1 }}>
                 <Text
@@ -32,7 +23,15 @@ export default function PurposeBox({ data, onPress }) {
                     {data.name}
                 </Text>
             </View>
-
+            <View style={{ position: 'absolute', right: 16, bottom: 20 }}>
+                    <CaterPlannerRank
+                        purpose={data}
+                        style={{
+                            width: 75,
+                            height: 75,
+                        }}
+                    />
+                </View>
             {/* <Image
                 source={{uri : data.photoUrl}}
                 resizeMode="stretch"

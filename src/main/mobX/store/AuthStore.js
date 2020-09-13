@@ -60,11 +60,10 @@ export default class AuthStore {
     }
 
     @action
-    reissuanceToken = async (userToken) => {
+    reissuanceToken = (userToken) => {
         return new Promise(async (resolve, reject) => {
             try {
                 const response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/auth/refreshToken`, JSON.stringify({
-                    token: userToken.token,
                     refreshToken: userToken.refreshToken
                 }))
                     .submit();
@@ -102,12 +101,15 @@ export default class AuthStore {
             try{
                 await firebase.messaging().requestPermission();
 
+                console.log(idToken);
+                
                 const json = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/auth/social/google`, JSON.stringify({
                     idToken: idToken,
                     fcmToken: await firebase.messaging().getToken()
                 }))
                     .submit();
-        
+                
+
                 this.userToken = {
                     token: json.data.token,
                     refreshToken: json.data.refreshToken,
@@ -164,7 +166,7 @@ export default class AuthStore {
     }
 
     @action
-    logout = async () => {
+    logout = () => {
         return new Promise(async (resolve, reject) => {
             try {
                 if (!this.isLogin)

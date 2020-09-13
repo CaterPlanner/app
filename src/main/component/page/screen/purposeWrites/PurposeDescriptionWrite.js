@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, KeyboardAvoidingView } from 'react-native';
+import { View, Text } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput'
@@ -26,7 +26,7 @@ export default function PurposeDescriptionWrite({index}) {
                     </Text>
                 </View>                
             </View>
-            <KeyboardAvoidingView style={[purposeStyles.bottomContainer, {marginTop : 30}]} disabled>
+            <View style={[purposeStyles.bottomContainer]} disabled>
                 <CaterPlannerTextInput
                     labelStyle={{color : '#25B046'}}
                     label={'자세히 입력하기'}
@@ -39,16 +39,16 @@ export default function PurposeDescriptionWrite({index}) {
                         setPurposeDescription(text);
                         purposeWriteStore.purpose.description = text;
 
-                        if(text === ""){
+                        if (!(/[^\s]/g).test(text)) {
                             purposeWriteStore.changePermit(false, index);
-                        }else{
+                        } else {
                             purposeWriteStore.changePermit(true, index);
                         }
                     }}
                     value={purposeDescription}
 
                 />
-            </KeyboardAvoidingView>
+            </View>
         </View>
     );
 }

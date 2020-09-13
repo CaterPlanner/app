@@ -19,6 +19,7 @@ export default function PurposePhotoWrite({index}) {
         setPurposePhoto(photo);
         purposeWriteStore.changePermit(true, index);
         
+
         purposeWriteStore.purpose.photo = photo;
         purposeWriteStore.isChangePhoto = true;
     } 
@@ -34,7 +35,8 @@ export default function PurposePhotoWrite({index}) {
                 </View>
                 <View style={purposeStyles.subtitleArea}>
                     <Text style={purposeStyles.subtitle}>
-                        당신의 목적을 위한 특별한 사진을 넣어주세요
+                        당신의 목적을 위한 특별한 사진을 넣어주세요 {"\n"}
+                        크기는 10MB 이하로 제한됩니다
                     </Text>
                 </View>
             </View>

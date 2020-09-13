@@ -29,7 +29,7 @@ export const PublicNavigation = {
                 fontWeight: 'bold'
             }
         })} name="LoadProfile" component={LoadProfile}/>,
-        <Stack.Screen options={{ headerShown: false }} name="LoadMyPurpose" component={LoadMyPurpose} />,
+        <Stack.Screen options={{ headerShown: false}} name="LoadMyPurpose" component={LoadMyPurpose} />,
         <Stack.Screen  options={({ navigation }) => ({
             ...defaultHeaderStyle(navigation),
             title: ''
@@ -55,19 +55,18 @@ export const PublicNavigation = {
                 return(
                     <ImageButton
                     backgroundStyle={{
-                        marginVertical: 5,
-                        marginRight: 10,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        width : 20,
+                        width: 20,
                         height: 30,
+                        marginRight: 10
                     }}
                     imageStyle={{
-                        width: 6,
-                        height: 25
+                        width: 30,
+                        height: 30
                     }}
                     source={
-                        require('../../../../../asset/button/more_button.png')}
+                        require('../../../../../asset/button/more_button2.png')}
                     onPress={route.params ? route.params.showStoryMenu : null}
                 />
                 )

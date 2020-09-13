@@ -6,7 +6,14 @@ import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 
 const Stack = createStackNavigator();
 
-const SearchNavigation = () => {
+const SearchNavigation = ({navigation, route}) => {
+
+  if(route.state && route.state.index > 0){
+    navigation.setOptions({tabBarVisible: false})
+}else{
+    navigation.setOptions({tabBarVisible: true})
+}
+
   return(
     <Stack.Navigator>
         <Stack.Screen options={({ navigation }) => ({

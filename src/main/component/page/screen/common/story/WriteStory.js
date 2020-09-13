@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, StyleSheet, Modal, Text, TouchableOpacity,ToastAndroid, TouchableWithoutFeedback } from 'react-native';
+import { View, ToastAndroid, StyleSheet, Modal, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import GlobalConfig from '../../../../../GlobalConfig';
 import Loader from '../../../Loader';
 import { useRoute } from '@react-navigation/native';
@@ -26,8 +26,8 @@ export default class WriteStory extends Component {
         this.state = {
             isUploading: false,
             isScopeSelecting: false,
-            storyTitle: this.story ? this.story.title : null,
-            storyContent: this.story ? this.story.content : null,
+            storyTitle: this.story ? this.story.title : '',
+            storyContent: this.story ? this.story.content : '',
             storyType: this.story ? this.story.type : 0,
             storyDisclosureScope: this.story ? this.story.disclosureScope : (this.purpose.disclosureScope == Scope.PRIVATE ? Scope.PRIVATE : Scope.PUBLIC)
         }
@@ -48,6 +48,25 @@ export default class WriteStory extends Component {
     _uploadData = async () => {
         try {
 
+            console.log('보내기전')
+            console.log(this.state.storyTitle);
+            console.log(this.state.storyTitle == '');
+
+            if(this.state.storyTitle == ''){
+                ToastAndroid.showWithGravity('제목을 입력하여 주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                return;
+            }else if(!(/[^\s]/g).test(this.state.storyTitle)){
+                ToastAndroid.showWithGravity('제목이 공백이 될 순 없습니다', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                return;
+            }else if(this.state.storyContent == ''){
+                ToastAndroid.showWithGravity('내용을 입력하여 주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                return;
+            }else if(!(/[^\s]/g).test(this.state.storyContent)){
+                ToastAndroid.showWithGravity('내용이 공백이 될 순 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                return;
+            }
+
+
             this.props.navigation.setParams({
                 showHeader : false
             })
@@ -65,7 +84,7 @@ export default class WriteStory extends Component {
             }
 
 
-            let id = this.isModify ? this.this.story.id : null;
+            let id = this.isModify ? this.story.id : null;
 
             if (!this.isModify) {
                 const response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/story`, JSON.stringify(resource))
@@ -105,6 +124,7 @@ export default class WriteStory extends Component {
 
 
     render() {
+
         return (
             <View style={{ flex: 1 }}>
                 {this.state.isUploading ? <Loader /> : (
@@ -158,12 +178,7 @@ export default class WriteStory extends Component {
                                     lineHeight: 20,
                                     textAlign: 'left'
                                 }]}
-                                onChange={({nativeEvent}) => {
-                                    let text = nativeEvent.text;
-            
-                                    if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]/g).test(text)){
-                                        text = "";
-                                    }
+                                onChangeText={(text) => {
                                     this.setState({
                                         storyTitle: text
                                     })
@@ -187,12 +202,7 @@ export default class WriteStory extends Component {
                                 flex: 1,
                                 justifyContent: 'flex-start'
                             }}
-                            onChange={({nativeEvent}) => {
-                                let text = nativeEvent.text;
-        
-                                if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]/g).test(text)){
-                                    text = "";
-                                }
+                            onChangeText={(text) => {
                                 this.setState({
                                     storyContent: text
                                 })

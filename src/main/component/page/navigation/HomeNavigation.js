@@ -14,9 +14,15 @@ import BriefingGoalList from '../screen/homes/BriefingGoalList';
 const Stack = createStackNavigator();
 
 
-const HomeNavigation = () => {
+const HomeNavigation = ({navigation, route}) => {
+    if(route.state && route.state.index > 0){
+        navigation.setOptions({tabBarVisible: false})
+    }else{
+        navigation.setOptions({tabBarVisible: true})
+    }
+
     return (
-        <Stack.Navigator>
+        <Stack.Navigator scrren>
             <Stack.Screen options={({ navigation }) => (
                 {
                     ...defaultHeaderStyle(),
@@ -82,8 +88,8 @@ const HomeNavigation = () => {
                             <ImageButton
                                 disabled={!route.params.isCanSubmit}
                                 source={require('../../../../../asset/button/check_button.png')}
-                                backgroundStyle={{ width: 40, height: 40}}
-                                imageStyle={{ width: 35, height: 28,
+                                backgroundStyle={{ width: 40, height: 40,marginBottom: 2}}
+                                imageStyle={{  width: 29, height: 27,
                                     tintColor : route.params.isCanSubmit ? '#25B046' : '#888888'
                                 }}
                                 onPress={() => {

@@ -120,7 +120,9 @@ function ActiveCard({ purpose, onPress, loadData }) {
                 }}>
                         <CardDecimalDayWidget purpose={purpose} />
                     </View>
-                    <View style={{ flex: 1, justifyContent: 'center', marginHorizontal: 15 }}>
+                    <View style={{ flex: 1, justifyContent: 'center', 
+                    borderBottomWidth : 1, borderBottomColor: '#F3F3F3'
+                }}>
                         <Text
                             adjustsFontSizeToFit
                             numberOfLines={2}

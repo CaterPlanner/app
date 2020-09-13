@@ -11,7 +11,14 @@ import TestView from '../../../../test/TestView';
 const Stack = createStackNavigator();
 
 
-const StoryNavigation = () => {
+const StoryNavigation = ({navigation, route}) => {
+
+    if(route.state && route.state.index > 0){
+        navigation.setOptions({tabBarVisible: false})
+    }else{
+        navigation.setOptions({tabBarVisible: true})
+    }
+
     return(
           <Stack.Navigator>
             {/* <Stack.Screen name="TestView" component={TestView}/> */}

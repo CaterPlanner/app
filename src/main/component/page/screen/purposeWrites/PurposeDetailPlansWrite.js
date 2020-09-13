@@ -51,10 +51,9 @@ export default function PurposeDetailPlansWrite({ index }) {
                 </View>
             </View>
             <View style={[purposeStyles.bottomContainer, { alignItmes: 'center' }]}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <ImageButton
-                            backgroundStyle={{ paddingLeft: 10, alignSelf: 'flex-start', marginRight: 10, marginBottom: 20 }}
-                            imageStyle={{ width: 80, height: 75 }}
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                {/* <ImageButton
+                            imageStyle={{ width: 70, height: 70 }}
                             source={require('../../../../../../asset/button/plan_insert_button.png')}
                             onPress={() => {
                                 if (purposeWriteStore.writeType == PurposeWriteType.MODIFY) {
@@ -92,11 +91,47 @@ export default function PurposeDetailPlansWrite({ index }) {
                                     });
                                 }
                             }}
-                        />
+                        /> */}
                     <View style={{ width: 200, flexDirection: 'row',alignSelf: 'flex-start', marginTop : 10, justifyContent: 'space-between', marginRight: 10 }}>
                         <TouchableOpacity onPress={() => {
                             setPurposeStat(0);
                             purposeWriteStore.purpose.stat = 0;
+
+                            if (purposeWriteStore.writeType == PurposeWriteType.MODIFY) {
+                                Alert.alert(
+                                    null,
+                                    '진행중인 목적에 세부 목표 수정시 지금까지의 기록은 사라지고 새롭게 시작하게 됩니다.',
+                                    [
+                                        {
+                                            text: '취소',
+                                            style: 'cancel'
+                                        },
+                                        {
+                                            text: '확인',
+                                            onPress: () => {
+                                                navigation.navigate('DetailPlanWriteNavigation', {
+                                                    screen: 'DetailPlanWriteBoard',
+                                                    params: {
+                                                        setPurposeDetailPlans: setPurposeDetailPlans,
+                                                        detailPlans: purposeDeatilPlans
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    ],
+                                    { cancelable: false }
+
+                                )
+                            } else {
+                                navigation.navigate('DetailPlanWriteNavigation', {
+                                    screen: 'DetailPlanWriteBoard',
+                                    params: {
+                                        setPurposeDetailPlans: setPurposeDetailPlans,
+                                        detailPlans: purposeDeatilPlans
+                                    }
+                                });
+                            }
+
                         }} >
                             <Text style={{ fontSize: 16, fontWeight: 'bold', color: purposeStat == 0 ? '#25B046' : '#B2B2B2' }}>
                                 지금부터 수행

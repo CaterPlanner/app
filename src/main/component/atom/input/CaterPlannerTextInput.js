@@ -46,12 +46,7 @@ export default class CaterPlannerTextInput extends Component {
                     }}
                     onContentSizeChange
                     onSubmitEditing={this.props.onSubmitEditing}
-                    onChange={({nativeEvent}) => {
-                        let text = nativeEvent.text;
-
-                        if(text.length != 0 && !(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣a-zA-Z0-9]/g).test(text)){
-                            text = "";
-                        }
+                    onChangeText={(text) => {
                         this.props.onChangeText(text);
                     }}
                     value={this.props.value}

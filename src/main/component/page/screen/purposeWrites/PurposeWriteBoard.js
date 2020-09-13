@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, BackHandler, YellowBox } from 'react-native'
+import { View, StyleSheet, Dimensions, BackHandler, YellowBox, KeyboardAvoidingView } from 'react-native'
 import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
@@ -177,7 +177,7 @@ export default class PurposeWriteBoard extends Component {
             }
         }
     }
-
+    
 
     render() {
         return (
@@ -214,7 +214,7 @@ export default class PurposeWriteBoard extends Component {
                                         
                                     }}
                                     imageStyle={{
-                                        width: 28,
+                                        width: 30,
                                         height: 35,
                                         tintColor: 'black'
                                     }}
@@ -226,11 +226,12 @@ export default class PurposeWriteBoard extends Component {
                                     backgroundStyle={{ 
                                         marginLeft: 7,
                                         width: 40, height: 40 }}
-                                    imageStyle={{ width: 30, height: 30,tintColor: 'black' }}
+                                    imageStyle={{ width: 28, height: 28,tintColor: 'black' }}
                                     onPress={this.props.navigation.goBack}
                                 />
                             }
                         </View>
+                 
                         <View style={styles.viewContainer}>
                             <Carousel
                                 style={{ flex: 1 }}
@@ -241,13 +242,13 @@ export default class PurposeWriteBoard extends Component {
                                 sliderWidth={fullWidth}
                                 itemWidth={fullWidth}
                             />
-                        </View>
-                        <View style={{ position: 'absolute', bottom: 30, right: 22 }}>
+                        </View>       
+                        <View style={{ position: 'absolute', bottom: 30, right: 22}}>
                             <ImageButton
                                 backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#2CBD4F' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
                                 imageStyle={[
                                     (!this.purposeWriteStore.isLast ?
-                                        { width: 25, height: 28, marginLeft: 5, tintColor: 'black' } :
+                                        { width: 42, height: 38, tintColor: 'black' } :
                                         {width: 35, height: 28, tintColor: 'black' }),
                                     { tintColor: this.purposeWriteStore.isPermitNextScene ? undefined : '#888888' }
                                 ]}
@@ -268,6 +269,7 @@ export default class PurposeWriteBoard extends Component {
                                     }}}
                             />
                         </View>
+                
                         {/* <View style={{ position: 'absolute', bottom: 45, width: '100%', alignItmes: 'flex-end' }}>
                             <View style={{ alginSelf: 'center' }}>
                                 <PageStateText activeIndex={this.purposeWriteStore.activeIndex + 1} endIndex={this.purposeWriteStore.endIndex} />

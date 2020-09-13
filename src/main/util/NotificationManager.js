@@ -73,8 +73,7 @@ export default {
       playSound: false,
       title: title,
       message: message,
-      vibrate: false,
-      ongoing: true,
-    })
+      vibrate: false
+        })
   }
 }

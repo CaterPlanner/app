@@ -67,10 +67,16 @@ export default class GoalWrite extends Component {
         if (this.state.goalName == '') {
             ToastAndroid.showWithGravity('목표 이름을 입력해주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
             return false;
-        } else if (this.state.goalDescription == '') {
+        }else if(!(/[^\s]/g).test(this.state.goalName)){
+            ToastAndroid.showWithGravity('목표 이름이 공백이 될 순 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);
+            return false;
+        }else if (this.state.goalDescription == '') {
             ToastAndroid.showWithGravity('목표 설명을 입력해주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
             return false;
-        } else if (this.state.goalStartDate.isBefore(this.state.goalEndDate)) {
+        }else if(!(/[^\s]/g).test(this.state.goalDescription)){
+            ToastAndroid.showWithGravity('목표 설명이 공백이 될 순 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);
+            return false;
+        }else if (this.state.goalStartDate.isBefore(this.state.goalEndDate)) {
             ToastAndroid.showWithGravity('종료날짜는 시작날짜의 이후여야 합니다.', ToastAndroid.SHORT, ToastAndroid.CENTER)
             return false;
         } else if (getBetweenMaxBriefing(this.state.goalStartDate, this.state.goalEndDate, cycleType, cycleParams).day == 0) {
@@ -138,13 +144,15 @@ export default class GoalWrite extends Component {
                             require('../../../../../../asset/button/arrow_button.png')
                         }
                         backgroundStyle={{width: 40, height: 40}}
-                        imageStyle={{ width: 21, height: 17}}
+                        imageStyle={{          width: 30,
+                            height: 35,
+                            tintColor: 'black'}}
                         onPress={this.props.navigation.goBack}
                     />
                     <ImageButton
                         source={require('../../../../../../asset/button/check_button.png')}
-                        backgroundStyle={{ width: 40, height: 40 }}
-                        imageStyle={{width: 35, height: 28}}
+                        backgroundStyle={{ width: 40, height: 40, marginBottom: 5 }}
+                        imageStyle={{width: 29, height: 27}}
                         onPress={this._updateGoal}
                     />
                 </View>
@@ -342,11 +350,10 @@ export default class GoalWrite extends Component {
 
 const styles = StyleSheet.create({
     headerContainer: {
-        marginTop: 5,
         flexDirection: 'row',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 7.5,
+        paddingHorizontal: 7,
         height : 50
     },
     contentContainer: {
