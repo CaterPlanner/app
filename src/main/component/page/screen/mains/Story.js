@@ -105,7 +105,7 @@ export default class Story extends Component{
                 data={this.state.data}
                 renderItem={({item}) => {
                     item.createDate = new EasyDate(item.createDate);
-                    return (<View style={{ marginTop: 5, marginHorizontal: 10 }}>
+                    return (<View style={{ marginBottom: 10}}>
                         <StoryBlock data={item}
                             onPress={() => {this.props.navigation.push('DetailStory', {
                                 id : item.id

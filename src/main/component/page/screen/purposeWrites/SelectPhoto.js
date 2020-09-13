@@ -1,5 +1,5 @@
 import React, {Component } from 'react';
-import { View, Image, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, YellowBox} from 'react-native';
+import { View, Image, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, YellowBox, ToastAndroid} from 'react-native';
 import CameraRoll from "@react-native-community/cameraroll";
 import Loader from '../../Loader';
 
@@ -47,8 +47,11 @@ export default class SelectPhoto extends Component{
             include: ['filename', 'fileSize']
         })).edges.map((photo) => {
 
+
             if(photo.node.image.fileSize > PHOTO_LIMIT_SIZE)
                 return;
+
+
 
             return {
                 isEmpty : false,
@@ -67,6 +70,12 @@ export default class SelectPhoto extends Component{
 
     componentDidMount() {
         this._getPhotos();
+
+        setTimeout(() => {
+            ToastAndroid.showWithGravity(
+                '크기가 10MB 이상인 사진들은 제외되었습니다.'
+                ,ToastAndroid.SHORT, ToastAndroid.CENTER);
+        }, 500);
     }
 
 

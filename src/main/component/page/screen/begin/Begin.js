@@ -38,7 +38,7 @@ export default class Begin extends Component {
             },
             {
                 title: '귀여운 애벌레들과 매일 목표를 달성',
-                imageUrl: require('../../../../../../asset/image/normal_caterpillar.gif'),
+                imageUrl: require('../../../../../../asset/image/begin_page3.png'),
                 content: '마스코트 애벌레의 응원과 함께\n목적을 이룰 수 있도록 도와 드릴게요'
             }
         ];
@@ -57,16 +57,14 @@ export default class Begin extends Component {
 
     _renderItem = ({ item }) => {
         return (
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ marginBottom: 55, fontSize: 22, fontWeight: 'bold', color: 'white' }}>{item.title}</Text>
-                <View style={{ marginBottom: 55, width: 200, height: 200, borderRadius: 200, backgroundColor: '#B2E7BD', alignItems: 'center', justifyContent: 'center' }}>
-                    <Image
-                        resizeMode="stretch"
-                        style={{ width: 180, height: 180 }}
-                        source={item.imageUrl}
-                    />
-                </View>
-                <Text style={{ fontSize: 16, textAlign: 'center', color: 'white' }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ marginBottom: 55, fontSize: 22, fontWeight: 'bold', color: '#1FBE2F' }}>{item.title}</Text>
+                <Image
+                    resizeMode="stretch"
+                    style={{ width: 280, height: 280, marginBottom: 55 }}
+                    source={item.imageUrl}
+                />
+                <Text style={{ fontSize: 16, textAlign: 'center', color: '#888888' }}>
                     {item.content}
                 </Text>
             </View>
@@ -77,9 +75,9 @@ export default class Begin extends Component {
 
     render() {
         return (
-            <LinearGradient colors={['#B0DF5C', '#5EDF8C']} style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: 'white'}}>
                 <StatusBar hidden />
-                <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1, marginTop: 80, marginHorizontal: 40 }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1}}>
                     <Carousel
                         style={{ flex: 1 }}
                         ref={ref => this.carousel = ref}
@@ -96,49 +94,36 @@ export default class Begin extends Component {
                             }
                         }
                     />
-                    <View style={{ paddingVertical: 25, position: 'absolute', bottom: 0, width: '100%', flexDirection: 'row' }}>
 
-                        <View style={{flex:1, alignItems:'flex-start'}}>
-                            {!this.isFirst && 
+                </View>
+                <View style={{paddingHorizontal: 30 ,paddingVertical: 25, width: '100%', flexDirection: 'row' }}>
+
+                    <View style={{ flex: 1, alignItems: 'flex-start' }}>
+                        {!this.isFirst &&
                             <TouchableOpacity onPress={() => {
                                 if (!this.isFirst) {
                                     this.carousel._snapToItem(this.state.activeIndex - 1);
                                 }
                             }}>
-                                <Text style={styles.bottomTextButtonFont}>{this.isFirst ? '건너뛰기' : '이전'}</Text>
+                                <Text style={[styles.bottomTextButtonFont, {color : '#888888'}]}>{'이전'}</Text>
                             </TouchableOpacity>}
-                        </View>
-                        <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                            <PageStateIcon current={this.state.activeIndex} max={3} selectColor={'#FFFFFF'} unselectColor={'#B2E7BD'} />
-                        </View>
-                        <View style={{ flex:1, alignItems: 'flex-end'}}>
-                            <TouchableOpacity onPress={() => {
-                                if (this.isLast) {
-                                    this.appStore.setIsBegin(false);
-                                } else {
-                                    this.carousel._snapToItem(this.state.activeIndex + 1);
-                                }
-                            }}>
-                                <Text style={styles.bottomTextButtonFont}>{this.isLast ? '완료' : '다음'}</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
-                    {/* <RoundButton
-                        text={this.state.activeIndex == 2 ? '시 작 하 기' : '다 음 으 로'}
-                        color={'#B2E7BD'}
-                        width={250}
-                        height={30}
-                        textStyle={{ textAlign: 'center', color: 'white', fontSize: 20 }}
-                        onPress={() => {
-                            if(this.state.activeIndex == 2){ //final
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <PageStateIcon current={this.state.activeIndex} max={3} selectColor={'#1FBE2F'} unselectColor={'#B2E7BD'} />
+                    </View>
+                    <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                        <TouchableOpacity onPress={() => {
+                            if (this.isLast) {
                                 this.appStore.setIsBegin(false);
-                            }else{
+                            } else {
                                 this.carousel._snapToItem(this.state.activeIndex + 1);
                             }
-                        }}
-                    /> */}
+                        }}>
+                            <Text style={[styles.bottomTextButtonFont, {color: '#10A71F'}]}>{this.isLast ? '완료' : '다음'}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </LinearGradient>
+            </View>
         )
     }
 
@@ -160,6 +145,6 @@ export default class Begin extends Component {
 
 const styles = StyleSheet.create({
     bottomTextButtonFont: {
-        fontSize: 18, textAlign: 'center', color: 'white'
+        fontSize: 18, textAlign: 'center'
     }
 })

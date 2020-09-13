@@ -22,6 +22,8 @@ import MyPrgoressBar from '../../../../atom/progressBar/MyProgressBar';
 import { inject } from 'mobx-react';
 import CaterPlannerRank from '../../../../atom/icon/CaterPlannerRank';
 
+import SafeOverFlowText from '../../../../atom/text/SafeOverFlowText';
+
 function BottomBar({ data }) {
 
     const navigation = useNavigation();
@@ -49,21 +51,23 @@ function BottomBar({ data }) {
     }
 
     return (
-        <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 12, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
             <ImageButton
                 backgroundStyle={{
-                    marginLeft: 20
+                    marginLeft: 20,
+                    marginBottom : 4
+
                 }}
-                imageStyle={{ width: 27, height: 25, tintColor: isCheer ? 'red' : undefined }}
+                imageStyle={{ width: 30, height: 33, tintColor: isCheer ? 'red' : undefined }}
                 source={require('../../../../../../../asset/button/heart_button.png')}
                 onPress={toggleCheer}
             />
 
             <ImageButton
                 backgroundStyle={{
-                    marginLeft: 20
+                    marginLeft: 20,
                 }}
-                imageStyle={{ width: 27, height: 25, tintColor: '#9D9D9D' }}
+                imageStyle={{ width: 29, height: 32, tintColor: 'black' }}
                 source={require('../../../../../../../asset/button/comment_button.png')}
                 onPress={() => {
                     navigation.push('CommnetView', {
@@ -477,13 +481,13 @@ export default class DetailPurpose extends Component {
                                                     height: 30
                                                 }}
                                                 imageStyle={{
-                                                    width: 6,
-                                                    height: 25
+                                                    width: 30,
+                                                    height: 30
                                                 }}
                                                 onPress={() => {
                                                     this._purposeContolMenuRef.show();
                                                 }}
-                                                source={require('../../../../../../../asset/button/more_button.png')}
+                                                source={require('../../../../../../../asset/button/more_button2.png')}
                                             />}
                                     </View>
 
@@ -525,10 +529,17 @@ export default class DetailPurpose extends Component {
                                 <DecimalDayWidget purpose={this.state.data.purpose} />
 
                             </View>
-                            <Text 
-                            style={detailPurposeStyles.purposeDescriptionFont}>
+                            {/* <Text 
+                            style={detailPurposeStyles.purposeDescriptionFont}
+                            >
                                 {this.state.data.purpose.description}
-                            </Text>
+                            </Text> */}
+                            <SafeOverFlowText
+                                backgroundStyle={{marginBottom : 10}}
+                                fontStyle={detailPurposeStyles.purposeDescriptionFont}
+                                text={this.state.data.purpose.description}
+                                minNumberOfLines={6}
+                            />
                             <View style={{ paddingVertical: 10 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}
                                 >
@@ -547,15 +558,15 @@ export default class DetailPurpose extends Component {
                                         {!this.state.data.purpose.achieve || this.state.data.purpose.achieve == 0 ? 0 : this.state.data.purpose.achieve}%
                             </Text>
                                 </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <MyPrgoressBar
-                                        width={Dimensions.get('window').width - 40}
-                                        height={7}
-                                        animated={true}
-                                        barColor={'red'}
-                                        value={this.state.data.purpose.achieve}
-                                    />
-                                </View>
+                            <View style={{ alignItems: 'center', marginBottom: 15 }}>
+                                <MyPrgoressBar
+                                    width={Dimensions.get('window').width - 40}
+                                    height={7}
+                                    animated={true}
+                                    barColor={'red'}
+                                    value={this.state.data.purpose.achieve}
+                                />
+                            </View>
                             </View>
                             <View style={detailPurposeStyles.purposeProfileContainer}>
                                 <ProfileWidget
@@ -657,7 +668,7 @@ const detailPurposeStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        paddingVertical: 15
+        marginBottom : 10
     },
     paperContainer: {
         marginBottom: 5

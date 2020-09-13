@@ -64,7 +64,7 @@ export default function PurposeNameWrite({index}) {
                         </Text>
                 </View>
             </View>
-            <KeyboardAvoidingView style={purposeStyles.bottomContainer}disabled>
+            <View style={purposeStyles.bottomContainer}>
                 <CaterPlannerTextInput
                     labelStyle={{color : '#25B046'}}
                     label={'목적 이름 설정하기'}
@@ -77,9 +77,10 @@ export default function PurposeNameWrite({index}) {
                     // }}
                     onChangeText={text => {
                         setPurposeName(text);
+
                         purposeWriteStore.purpose.name = text;
 
-                        if (text === "") {
+                        if (!(/[^\s]/g).test(text)) {
                             purposeWriteStore.changePermit(false, index);
                         } else {
                             purposeWriteStore.changePermit(true, index);
@@ -87,7 +88,7 @@ export default function PurposeNameWrite({index}) {
                     }}
                     value={purposeName}
                 />
-            </KeyboardAvoidingView>
+            </View>
             <View style={{ position: 'absolute', bottom: 44, width: '100%', alignItmes: 'center', left: 22 }}>
                 <TouchableOpacity style={{ backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
                     onPress={() => {

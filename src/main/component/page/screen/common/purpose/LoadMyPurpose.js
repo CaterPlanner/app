@@ -40,8 +40,6 @@ export default class LoadMyPurpose extends Component{
                 const purpose = new Purpose(response.data.id, response.data.name, response.data.description, response.data.photoUrl, response.data.disclosureScope,
                     response.data.startDate, response.data.endDate, response.data.stat);
                     
-
-                console.log(purpose);
                 
                 purpose.setDetailPlans(
                     response.data.detailPlans.map((goal) =>(

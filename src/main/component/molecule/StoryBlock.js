@@ -10,26 +10,11 @@ import useStores from '../../mobX/helper/useStores';
 import { useNavigation } from '@react-navigation/native';
 import { Model } from '../../AppEnum';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import SafeOverFlowText from '../atom/text/SafeOverFlowText';
 
 export default function StoryBlock({ data, onPress }) {
 
-    // data = {
-    //     id: 0,
-    //     title: '달리기하는데 숨차 죽을뻔 함;;',
-    //     content: 
-    //     '솔직히 한번에 8km 속도로 10km 달리기 하는거 \n시간은 얼마나 걸릴지 몰라도 죽을 거 같잖어 안그래?\nㅇㄴㄹㄴㅇㄹㄴㅇㄹ',
-    //     type: 0,
-    //     commentCount : 5,
-    //     likesCount : 3,
-    //     canLikes: false,
-    //     createDate: EasyDate.now().minusDays(17),
-    //     author : {
-    //         id: 1,
-    //         name: '사용자',
-    //         profileUrl: 'https://itcm.co.kr/files/attach/images/813/931/364/e2717f5d0ac1131302ff3eaba78f99ed.jpg'
-    //     }
 
-    // }
     const naviagation = useNavigation();
     const { authStore } = useStores();
     const [isLikes, setIsLikes] = useState(!data.canLikes)
@@ -51,28 +36,32 @@ export default function StoryBlock({ data, onPress }) {
 
 
     return (
-        <View>
-            <TouchableOpacity
-                activeOpacity={1}
-                style={{ height: 270, borderRadius: 10, paddingHorizontal: 15, backgroundColor: 'white', paddingVertical: 12, width: '100%' }}
-                onPress={onPress}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 10 }}>
+        <View style={{ height: 280, width: '100%', borderRadius: 10, backgroundColor: 'white' }}>
+            <View style={{ flex: 1, paddingHorizontal: 15, }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}>
                     <ProfileWidget user={data.author} disabled={true} />
                     <TimeAgo time={data.createDate} />
                 </View>
-                <View style={{ alignItems: 'center' }}>
-                    <Text style={styles.titleFont}>
-                        {data.title}
-                    </Text>
-                </View>
-                <Text numberOfLines={5} style={styles.contentFont}>
-                    {data.content}
-                </Text>
-            </TouchableOpacity>
-            <View style={{ positoin: 'absolute', bottom: 35, left: 15,  flexDirection: 'row', elevation: 5 }}>
+                <TouchableOpacity
+                    style={{ width: '100%', height: '100%'}}
+                    activeOpacity={1}
+                    onPress={onPress}>
+                    <View style={{ paddingBottom: 12 }}>
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={styles.titleFont}>
+                                {data.title}
+                            </Text>
+                        </View>
+                        <Text numberOfLines={5} style={styles.contentFont}>
+                            {data.content}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+            <View style={{ positoin: 'absolute', bottom: 15, left: 15, flexDirection: 'row', elevation: 5 }}>
                 <View style={{ flexDirection: 'row', justfiyContent: 'center' }}>
                     <ImageButton
-                        imageStyle={{ width: 27, height: 24, tintColor: isLikes ? 'blue' : 'black' }}
+                        imageStyle={{ width: 27, height: 28, tintColor: isLikes ? 'blue' : undefined }}
                         source={require('../../../../asset/icon/likes_icon.png')}
                         onPress={toggleLikes}
                     />
@@ -80,9 +69,9 @@ export default function StoryBlock({ data, onPress }) {
                     {data.likesCount}
                     </Text> */}
                 </View>
-                <View style={{ flexDirection: 'row', justfiyContent: 'center', marginLeft: 15 }}>
+                <View style={{ flexDirection: 'row', justfiyContent: 'center', marginLeft: 17 }}>
                     <ImageButton
-                        imageStyle={{ tintColor: 'black', width: 24, height: 22, }}
+                        imageStyle={{ tintColor: 'black', width: 25, height: 27, }}
                         source={require('../../../../asset/button/comment_button.png')}
                         onPress={() => {
                             naviagation.navigate('CommnetView', {
@@ -123,8 +112,8 @@ const styles = StyleSheet.create({
     contentFont: {
         color: '#323232',
         fontSize: 14,
-        marginTop: 30,
-        lineHeight: 20
+        lineHeight: 20,
+        marginTop: 15
     },
     scoreText: {
         fontSize: 15,

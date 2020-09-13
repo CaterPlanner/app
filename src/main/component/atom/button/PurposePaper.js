@@ -30,8 +30,8 @@ export default function PurposePaper({ imageUri, name, count, onPress, checkedBr
                     <View style={{marginRight : 20, justifyContent:'center'}}>
                         <Image
                             style={{
-                                width: 13,
-                                height: 27,
+                                width: 15,
+                                height: 33,
                                 tintColor : 'black'
                             }}
                             source={require('../../../../../asset/button/next_button.png')}

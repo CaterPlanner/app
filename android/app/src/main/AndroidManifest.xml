@@ -16,7 +16,7 @@
       android:allowBackup="false"
       android:fullBackupContent="false"
       android:usesCleartextTraffic="true"
-      android:windowSoftInputMode="adjustPan|adjustResize"
+      android:windowSoftInputMode="adjustResize"
       android:theme="@style/AppTheme">
         <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
                 android:value="com.downfall.caterplanner"/>

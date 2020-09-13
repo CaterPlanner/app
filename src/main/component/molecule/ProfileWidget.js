@@ -6,7 +6,7 @@ export default function ProfileWidget({user, imageBackgroundStyle, imageStyle, f
     return(
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <ProfileIcon user={user} imageBackgroundStyle={imageBackgroundStyle} imageStyle={imageStyle} onPress={profilePress} />
-            <Text style={[{fontSize : 14, marginHorizontal: 5, alignSelf: 'flex-start', marginTop : 5}, fontStyle]}>
+            <Text style={[{fontSize : 14, marginHorizontal: 5}, fontStyle]}>
                 {user.name}
             </Text>
         </View>

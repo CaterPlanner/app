@@ -2,17 +2,14 @@ const styles = {
     container: {
         flex:1,
         paddingHorizontal: 15,
-        backgrondColor: 'white'
     },
     headContainer: {
-
-        flex:1,
-        marginTop: 5,
-        marginBottom: 5
+        paddingTop: 5,
+        paddingBottom: 25,
     },
 
     titleArea: {
-        marginBottom: 15
+        paddingBottom: 15
     },
 
     title: {
@@ -30,8 +27,8 @@ const styles = {
     },
 
     bottomContainer : {
-        flex:2.5,
-        marginBottom: 100
+        flex: 1,
+        paddingBottom :110
     }
 
 }

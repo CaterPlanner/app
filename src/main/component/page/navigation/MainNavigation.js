@@ -10,18 +10,21 @@ import ProfileNavigation from './ProfileNavigation';
 
 const Tab = createBottomTabNavigator();
 
-const moveTab = (navigation, name) => {
-     
-  console.log(navigation);
+// const getTabBarVisibility = (route) => {
+  
+//   if(!route.params)
+//     return;
 
-  if(navigation.canGoBack()){
-    navigation.popToTop();
-   }
-  //   navigation.navigate(name)
+//   const routeName = route.state.routes[route.state.index].name;
 
 
-    console.log('ddd');
-}
+
+
+//   if(['Home', 'MyProfile', 'Search', 'Story'].includes(routeName))
+//     return true;
+
+//   return false;
+// }
 
 
 
@@ -35,25 +38,41 @@ const MainNavigation = () => {
         unmountOnBlur: true,
         tabBarIcon: ({ focused }) => {
           let iconSource;
+          let size;
           switch (route.name) {
             case "HomeNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_home.png');
+              size={
+                width: 23, height: 25
+              }
               break;
             case "SearchNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_search.png');
+              size={
+                width: 24, height: 25
+              }
               break;
             case "Make":
               iconSource = require('../../../../../asset/icon/tab_icon_make.png');
+              size={
+                width: 24, height: 25
+              }
               break;
             case "StoryNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_story.png');
+              size={
+                width: 23, height: 20
+              }
               break;
             case "ProfileNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_profile.png');
+              size={
+                width: 24, height: 25
+              }
               break;
           }
 
-          return <Image source={iconSource} resizeMode="stretch" style={{ tintColor: focused ? '#25B046' : undefined, width: '90%', height: '100%' }} />
+          return <Image source={iconSource} resizeMode="stretch" style={[{ tintColor: focused ? '#25B046' : 'black'}, size]} />
         },
       })}
       tabBarOptions={{
@@ -70,10 +89,11 @@ const MainNavigation = () => {
       }}
     >
       <Tab.Screen name="HomeNavigation" component={HomeNavigation}
+
         
       />
       <Tab.Screen name="SearchNavigation" component={SearchNavigation}
-       
+
       />
       <Tab.Screen name="Make" component={Make}
         listeners={({ navigation }) => ({
@@ -88,10 +108,10 @@ const MainNavigation = () => {
           },
         })} />
       <Tab.Screen name="StoryNavigation" component={StoryNavigation}
-        
+
       />
       <Tab.Screen name="ProfileNavigation" component={ProfileNavigation}
-        
+
       />
     </Tab.Navigator>
   );

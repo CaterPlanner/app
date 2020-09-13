@@ -9,7 +9,7 @@ const fullWidth = Dimensions.get('window').width;
 
 function SocialButton({ logo, name, onPress }) {
     return (
-        <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', backgroundColor: '#B2E7BD', width: 300, height: 40, borderRadius: 25, alignItems: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', backgroundColor: '#1FBE2F', width: 300, height: 45, alignItems: 'center', justifyContent: 'center' }}>
             <View style={{ position: 'absolute', left: 15, height: '100%' }}>
                 <View style={{ justifyContent: 'center', flex: 1 }}>
                     <Image
@@ -19,7 +19,7 @@ function SocialButton({ logo, name, onPress }) {
                     />
                 </View>
             </View>
-            <Text style={{ marginLeft: 15, color: 'white', fontSize: 18, textAlign: 'center' }}>
+            <Text style={{ marginLeft: 20, color: 'white', fontSize: 18, textAlign: 'center' }}>
                 {name}
             </Text>
         </TouchableOpacity>
@@ -44,7 +44,7 @@ export default function SignIn() {
     }
 
     return (
-        <LinearGradient colors={['#B0DF5C', '#5EDF8C']} style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor:'white' }}>
             <StatusBar hidden />
             <Modal
                 transparent={true}
@@ -72,7 +72,7 @@ export default function SignIn() {
                     </View>
                 </View>
             </View>
-        </LinearGradient>
+        </View>
     )
 }
 
