@@ -52,6 +52,8 @@ export const PublicNavigation = {
             ...defaultHeaderStyle(navigation),
             title: '',
             headerRight: () => {
+
+
                 return(
                     <ImageButton
                     backgroundStyle={{

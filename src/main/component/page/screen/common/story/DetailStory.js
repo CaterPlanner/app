@@ -71,6 +71,8 @@ export default class DetailStory extends Component {
 
 
         this.authStore = this.props.authStore;
+
+
     }
 
     _toggleLikes = async () => {
@@ -102,6 +104,7 @@ export default class DetailStory extends Component {
                 isLikes: !response.data.canLikes,
                 likesCount: response.data.likesCount
             });
+
 
         } catch (e) {
             console.log(e);
@@ -167,7 +170,7 @@ export default class DetailStory extends Component {
                         <MenuItem onPress={() => {
                             this._storyControlMenuRef.hide();
 
-                        }}>신고하기</MenuItem>
+                        }}>신고하기(준비중)</MenuItem>
                     </Menu>
                 </View>
                 {this.state.isLoading ? <Loader /> : (
@@ -177,15 +180,12 @@ export default class DetailStory extends Component {
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
                                     <ProfileWidget
                                         imageStyle={{
-                                            width: 35,
-                                            height: 35,
+                                            width: 33,
+                                            height: 33,
                                             borderRadius: 30
                                         }}
-                                        fontStyle={{
-                                            fontSize: 14
-                                        }}
                                         user={this.state.data.author} />
-                                    <TimeAgo time={EasyDate.now()} />
+                                    <TimeAgo time={new Date(this.state.data.createDate)} />
                                 </View>
 
                                 <View style={{ alignItems: 'center' }}>
@@ -229,10 +229,10 @@ export default class DetailStory extends Component {
                             }
 
                         </ScrollView >
-                        <View style={{ backgroundColor: 'white', paddingVertical: 12, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <ImageButton
                                 backgroundStyle={{
-                                    marginLeft: 20
+                                    marginLeft: 22
                                 }}
                                 imageStyle={{width: 30, height: 33, tintColor: this.state.isLikes ? 'blue' : undefined }}
                                 source={require('../../../../../../../asset/icon/likes_icon.png')}
@@ -241,7 +241,7 @@ export default class DetailStory extends Component {
 
                             <ImageButton
                                 backgroundStyle={{
-                                    marginLeft: 20
+                                    marginLeft: 27
                                 }}
                                 imageStyle={{width: 29, height: 32, tintColor: 'black' }}
                                 source={require('../../../../../../../asset/button/comment_button.png')}

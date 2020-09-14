@@ -36,7 +36,7 @@ export default function StoryBlock({ data, onPress }) {
 
 
     return (
-        <View style={{ height: 280, width: '100%', borderRadius: 10, backgroundColor: 'white' }}>
+        <View style={{ height: 300, width: '100%', borderRadius: 10, backgroundColor: 'white' }}>
             <View style={{ flex: 1, paddingHorizontal: 15, }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 12 }}>
                     <ProfileWidget user={data.author} disabled={true} />
@@ -46,8 +46,8 @@ export default function StoryBlock({ data, onPress }) {
                     style={{ width: '100%', height: '100%'}}
                     activeOpacity={1}
                     onPress={onPress}>
-                    <View style={{ paddingBottom: 12 }}>
-                        <View style={{ alignItems: 'center' }}>
+                    <View>
+                        <View style={{ alignItems: 'center' ,paddingBottom: 12 }}>
                             <Text style={styles.titleFont}>
                                 {data.title}
                             </Text>
@@ -58,10 +58,10 @@ export default function StoryBlock({ data, onPress }) {
                     </View>
                 </TouchableOpacity>
             </View>
-            <View style={{ positoin: 'absolute', bottom: 15, left: 15, flexDirection: 'row', elevation: 5 }}>
+            <View style={{ positoin: 'absolute', bottom: 25, left: 22, flexDirection: 'row', elevation: 5 }}>
                 <View style={{ flexDirection: 'row', justfiyContent: 'center' }}>
                     <ImageButton
-                        imageStyle={{ width: 27, height: 28, tintColor: isLikes ? 'blue' : undefined }}
+                        imageStyle={{ width: 29, height: 30, tintColor: isLikes ? 'blue' : undefined }}
                         source={require('../../../../asset/icon/likes_icon.png')}
                         onPress={toggleLikes}
                     />
@@ -69,9 +69,9 @@ export default function StoryBlock({ data, onPress }) {
                     {data.likesCount}
                     </Text> */}
                 </View>
-                <View style={{ flexDirection: 'row', justfiyContent: 'center', marginLeft: 17 }}>
+                <View style={{ flexDirection: 'row', justfiyContent: 'center', marginLeft:29}}>
                     <ImageButton
-                        imageStyle={{ tintColor: 'black', width: 25, height: 27, }}
+                        imageStyle={{ tintColor: 'black', width: 27, height: 29, tintColor : '#888888'}}
                         source={require('../../../../asset/button/comment_button.png')}
                         onPress={() => {
                             naviagation.navigate('CommnetView', {
@@ -110,10 +110,11 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     contentFont: {
-        color: '#323232',
+        color: 'black',
         fontSize: 14,
         lineHeight: 20,
-        marginTop: 15
+        marginTop: 15,
+        paddingHorizontal: 7
     },
     scoreText: {
         fontSize: 15,

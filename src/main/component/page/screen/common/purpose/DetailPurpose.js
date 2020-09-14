@@ -51,11 +51,10 @@ function BottomBar({ data }) {
     }
 
     return (
-        <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 12, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
             <ImageButton
                 backgroundStyle={{
-                    marginLeft: 20,
-                    marginBottom : 4
+                    marginLeft: 22,
 
                 }}
                 imageStyle={{ width: 30, height: 33, tintColor: isCheer ? 'red' : undefined }}
@@ -65,7 +64,7 @@ function BottomBar({ data }) {
 
             <ImageButton
                 backgroundStyle={{
-                    marginLeft: 20,
+                    marginLeft: 27,
                 }}
                 imageStyle={{ width: 29, height: 32, tintColor: 'black' }}
                 source={require('../../../../../../../asset/button/comment_button.png')}
@@ -310,6 +309,7 @@ export default class DetailPurpose extends Component {
 
 
     }
+
 
     _setCheersCount = async (value) => {
         this.state.data.purpose.cheersCount = value;
@@ -571,7 +571,7 @@ export default class DetailPurpose extends Component {
                             <View style={detailPurposeStyles.purposeProfileContainer}>
                                 <ProfileWidget
                                     user={this.state.data.author}
-                                    fontStyle={{ alignSelf: 'flex-end', marginBottom: 5 }}
+                                    fontStyle={{ alignSelf: 'flex-end', fontSize: 12, marginBottom: 4 }}
                                 />
                             </View>
                             <View style={{ paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>

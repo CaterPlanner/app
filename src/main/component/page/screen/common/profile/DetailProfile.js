@@ -78,7 +78,7 @@ export default function UserProfile({ data }) {
                     (
                         <View style={{paddingRight: 10, paddingLeft: 2, paddingVertical: 10}}>
                             {data.purposeList.map((purpose) => (
-                                <View style={{ paddingVertical: 5}}>
+                                <View style={{ marginTop : 12}}>
                                     <PurposePaper
                                         imageUri={purpose.photoUrl}
                                         name={purpose.name}

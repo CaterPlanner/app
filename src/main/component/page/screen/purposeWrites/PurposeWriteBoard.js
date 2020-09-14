@@ -242,8 +242,8 @@ export default class PurposeWriteBoard extends Component {
                                 sliderWidth={fullWidth}
                                 itemWidth={fullWidth}
                             />
-                        </View>       
-                        <View style={{ position: 'absolute', bottom: 30, right: 22}}>
+                        </View>     
+                        <View style={{ position: 'absolute', top: Dimensions.get('window').height - 115, right: 22}}>
                             <ImageButton
                                 backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#2CBD4F' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
                                 imageStyle={[
