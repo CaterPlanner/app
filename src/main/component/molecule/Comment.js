@@ -24,7 +24,7 @@ export default function Comment({user, createDate, content, onLongPress}){
                         </Text>
                         <TimeAgo time={createDate}/>
                     </View>
-                    <View style={{ padding : 15, borderRadius: 5, width: '100%', backgroundColor:'#E9E9E9', }}>
+                    <View style={{ marginLeft: 5, padding : 15, borderRadius: 5, width: '100%', backgroundColor:'#E9E9E9', }}>
                         <Text style={{fontSize: 13}}>{content}</Text>
                     </View>    
                 </View>

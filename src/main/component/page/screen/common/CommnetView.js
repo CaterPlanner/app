@@ -239,8 +239,7 @@ export default class CommentView extends Component {
                     onEndReachedThreshold={0.01}
                     ListFooterComponent={this._renderFooter}
                 />
-                <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={5} enabled>
-                    <View style={{ width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10, elevation: 15}}>
+                    <View style={{ width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, paddingVertical: 12, elevation: 15}}>
                         <View style={{
                             backgroundColor: '#E9E9E9',
                             width: '85%',
@@ -296,7 +295,6 @@ export default class CommentView extends Component {
                             }
                         </TouchableOpacity>
                     </View>
-                </KeyboardAvoidingView>
             </View>
         )
     }

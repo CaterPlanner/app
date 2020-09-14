@@ -28,7 +28,7 @@ export default function TimeAgo({time, style}){
     
     return(
         <View style={{justifyContent: 'center'}}>
-            <Text style={[{ fontSize: 12, color: '#656565'}, style]}>{text}</Text>
+            <Text style={[{ fontSize: 11, color: '#656565'}, style]}>{text}</Text>
         </View>
     )
 }

@@ -84,7 +84,7 @@ export default class BriefingGoalList extends Component{
                 contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 20}}
                 data={this.state.goals}
                 renderItem={({item, index}) => (
-                    <View style={{ marginTop: 8}}>
+                    <View style={{ marginTop: 12}}>
                         <DetailPlanCheckBox
                             color={item.color}
                             name={item.name}

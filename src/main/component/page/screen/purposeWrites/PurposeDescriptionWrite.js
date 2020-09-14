@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput'
@@ -26,7 +26,7 @@ export default function PurposeDescriptionWrite({index}) {
                     </Text>
                 </View>                
             </View>
-            <View style={[purposeStyles.bottomContainer]} disabled>
+            <View style={[purposeStyles.bottomContainer, {alignSelf:'center', top : Dimensions.get('window').height / 4 ,position : 'absolute', width:'100%'}]} disabled>
                 <CaterPlannerTextInput
                     labelStyle={{color : '#25B046'}}
                     label={'자세히 입력하기'}

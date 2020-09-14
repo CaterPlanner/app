@@ -72,7 +72,7 @@ const MainNavigation = () => {
               break;
           }
 
-          return <Image source={iconSource} resizeMode="stretch" style={[{ tintColor: focused ? '#25B046' : 'black'}, size]} />
+          return <Image source={iconSource} resizeMode="stretch" style={[{ tintColor: focused ? '#25B046' : '#888888'}, size]} />
         },
       })}
       tabBarOptions={{

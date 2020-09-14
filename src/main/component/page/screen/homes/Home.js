@@ -61,14 +61,14 @@ function CardDecimalDayWidget({ purpose }) {
 function EmptyCard({ onPress }) {
     return (
         <TouchableOpacity style={{
-            height: '100%', justifyContent: 'center', width: 316
+            height: '100%', justifyContent: 'center', width: 300
         }} onPress={onPress}>
             <View style={[cardStyles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.8)', elevation: 0 }]}>
-                <View style={{ width: 100, height: 110, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ width: 110, height: 110, justifyContent: 'center', alignItems: 'center' }}>
                     <Image
                         resizeMode="stretch"
                         style={{ flex: 1, height: undefined, width: '100%' }}
-                        source={require('../../../../../../asset/button/plan_insert_button.png')}
+                        source={require('../../../../../../asset/button/plus_button.png')}
                     />
                 </View>
                 <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 40 }}>

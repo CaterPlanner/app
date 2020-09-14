@@ -60,7 +60,7 @@ export default function DetailGoal() {
                             {goal.startDate.toString()} ~ {goal.endDate.toString()}</Text>
                     </View>
                     <View style={detailGoalstyles.infoPropertyContainer}>
-                        <Text style={detailGoalstyles.goalInfoFont}>브리핑 주기</Text>
+                        <Text style={detailGoalstyles.goalInfoFont}>수행 주기</Text>
                         <Text style={detailGoalstyles.fogoalInfoFontntStyle}>
                             {
                                 goal.cycleType == 'A' ? '매일' : '매주'

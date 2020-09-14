@@ -45,7 +45,7 @@ export default class UserPurposeList extends Component {
                 {this.state.isLoading ? <Loader /> : (
                     <View style={{ paddingRight: 10, paddingLeft: 2, paddingVertical: 10 }}>
                         <FlatList
-                            style={{ paddingVertical: 5 }}
+                            style={{  marginTop : 12 }}
                             data={this.state.data}
                             renderItem={({ item }) => (
                                 <View style={{marginBottom: 10}}>

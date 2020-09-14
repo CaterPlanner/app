@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, Modal, TouchableOpacity, KeyboardAvoidingView  } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, Dimensions  } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput';
@@ -18,7 +18,7 @@ export default function PurposeNameWrite({index}) {
 
     const scopeNames = ['전체공개', '비공개']
 
-
+    console.log( Dimensions.get('window').height / 2);
 
     return (
         <View style={purposeStyles.container}>
@@ -64,7 +64,7 @@ export default function PurposeNameWrite({index}) {
                         </Text>
                 </View>
             </View>
-            <View style={purposeStyles.bottomContainer}>
+            <View style={[purposeStyles.bottomContainer, {alignSelf:'center', top : Dimensions.get('window').height / 4 ,position : 'absolute', width:'100%'}]}>
                 <CaterPlannerTextInput
                     labelStyle={{color : '#25B046'}}
                     label={'목적 이름 설정하기'}
@@ -89,7 +89,7 @@ export default function PurposeNameWrite({index}) {
                     value={purposeName}
                 />
             </View>
-            <View style={{ position: 'absolute', bottom: 44, width: '100%', alignItmes: 'center', left: 22 }}>
+            <View style={{ position: 'absolute', top:  Dimensions.get('window').height - 144, width: '100%', alignItmes: 'center', left: 22 }}>
                 <TouchableOpacity style={{ backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
                     onPress={() => {
                         setIsScopeSelecting(true);

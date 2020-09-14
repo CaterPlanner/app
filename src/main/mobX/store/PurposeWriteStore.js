@@ -57,6 +57,10 @@ export default class PurposeWriteStore{
                 this.permitCache = [true, true, true, true];
 
                 this.purpose.stat = State.PROCEED;
+                
+                console.log(this.purpose);
+
+                console.log('sdf')
 
                 this.resetDetailPlans(this.purpose)
 
@@ -80,6 +84,8 @@ export default class PurposeWriteStore{
     }
 
     resetDetailPlans = (purpose) => {
+
+
         const diffDay = EasyDate.between(EasyDate.now(), purpose.startDate).day;
 
         purpose.startDate = EasyDate.now();

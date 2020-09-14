@@ -76,7 +76,7 @@ export default class BriefingPurposeList extends Component {
                             console.log('dsfsd')
 
                             return (
-                                <View style={{ marginTop: 8 }}>
+                                <View style={{ marginTop: 12 }}>
                                     <PurposePaper
                                         imageUri={purpose.photoUrl}
                                         name={purpose.name}
