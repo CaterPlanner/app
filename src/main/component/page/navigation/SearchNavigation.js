@@ -18,8 +18,8 @@ const SearchNavigation = ({navigation, route}) => {
     <Stack.Navigator>
         <Stack.Screen options={({ navigation }) => ({
                 ...defaultHeaderStyle(),
-                title: '검색',
-                headerTitleAlign:'center',
+                title: '탐색',
+                headerTitleAlign:'left',
                 headerTitleStyle: {
                     fontWeight: 'bold'
                 }

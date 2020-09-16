@@ -1,30 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
-import { useRoute, useFocusEffect } from '@react-navigation/native';
-import useStores from '../../../../../mobX/helper/useStores';
 import Loader from '../../../Loader';
 import GlobalConfig from '../../../../../GlobalConfig';
 import Request from '../../../../../util/Request';
 import Purpose from '../../../../../rest/model/Purpose';
 import Goal from '../../../../../rest/model/Goal';
 import DetailPurpose from './DetailPurpose';
+import { inject } from 'mobx-react';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
+import { ResultState } from '../../../../../AppEnum';
 
+@inject(['authStore'])
+export default class LoadUserPurpose extends Component{
 
-export default function LoadUserPurpose({ navigation }) {
+    constructor(props){
+        super(props);
 
-    const route = useRoute();
+        this.state = {
+            isLoading : true,
+            data:  null
+        }
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState(null);
+        this.authStore = this.props.authStore;
+    }
 
-    const { authStore } = useStores();
-
-    console.log(navigation.dangerouslyGetParent());
-
-    const getData = async () => {
+    _getData = async () => {
         try {
-            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${route.params.id}`)
-                .auth(await authStore.getToken()).submit();
+            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.props.route.params.id}`)
+                .auth(await this.authStore.getToken()).submit();
 
             const purpose = new Purpose(response.data.id, response.data.name, response.data.description, response.data.photoUrl, response.data.disclosureScope,
                 response.data.startDate, response.data.endDate, response.data.stat);
@@ -35,29 +38,53 @@ export default function LoadUserPurpose({ navigation }) {
                 ))
             );
 
-            setData({
-                ...response.data,
-                purpose: purpose
-            });
+            this.setState({
+                isLoading : false,
+                data : {
+                    ...response.data,
+                    purpose: purpose
+                }
+            })
 
-            setIsLoading(false);
 
         } catch (e) {
             console.log(e);
-            navigation.goBack();
+            this.setState({
+                isLoading : false,
+                isTimeout: true
+            })
         }   
     }
 
-    useEffect(() => {
-        setIsLoading(true);
-        getData();
-    }, []);
+    componentDidMount(){
+        // this._getData();
+        this.props.navigation.addListener('focus', () => {
+            this._getData();
+        })
+    }
 
+    componentWillUnmount() {
+        this.props.navigation.removeListener('focus');
+    }
 
-    return (
-        <View style={{ flex: 1 }}>
-            {isLoading ? <Loader /> : <DetailPurpose data={data} navigation={navigation} />}
-        </View>
-    )
+    render(){
+        return (
+            <View style={{ flex: 1 }}>
+                {this.state.isLoading ? <Loader /> : 
+                    this.state.isTimeout ? 
+                    <CaterPlannerResult
+                        state={ResultState.TIMEOUT}
+                        reRequest={() => {
+                            this.setState({
+                                isLoading : true,
+                                isTimeout : false
+                            }, this._getData)
+                        }}
+                    />
+                    :
+                    <DetailPurpose data={this.state.data} navigation={this.props.navigation} />}
+            </View>
+        )
+    }
 
 }

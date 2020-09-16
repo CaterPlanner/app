@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Dimensions } from 'react-native';
 import purposeStyles from './style/PurposeStyle';
-import RoundButton from '../../../atom/button/RoundButton';
+import ColorButton from '../../../atom/button/ColorButton';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 
@@ -16,10 +16,10 @@ export default function PurposeWriteDone() {
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Image
             resizeMode="stretch"
-            style={{ width: 200, height: 200 }}
-            source={require('../../../../../../asset/image/normal_caterpillar.gif')}
+            style={{ width: 270, height: 220, marginLeft: 20 }}
+            source={require('../../../../../../asset/image/caterpillar_great.png')}
         />
-        <View style={{ marginTop: 80 }}>
+        <View style={{ marginTop: 20 }}>
             <Text style={purposeStyles.title}>
                 목적 생성이 완료되었습니다!
 </Text>
@@ -30,16 +30,19 @@ export default function PurposeWriteDone() {
     원하는 모든 것들을 이룰 수 있길 바랍니다.
 </Text>
         </View>
-        <View>
-            <RoundButton
+        <View style={{marginTop : 60}}>
+            <ColorButton
                 textStyle={{
                     paddingVertical: 5,
                     textAlign: 'center',
                     color: 'white'
                 }}
                 text={'완 료'}
-                color={'#25B046'}
-                width={280}
+                backgroundStyle={{
+                    width: Dimensions.get('window').width - 40,       
+                    backgroundColor:'#25B046',
+                    paddingVertical:4
+                }}
                 onPress={
                     () => {
                         navigation.navigate('HomeNavigation');

@@ -267,7 +267,6 @@ export default class PurposeService {
         return new Promise((resolve, reject) => {
             SQLiteManager.transaction(this.db, async (resolve, reject) => {
                 try{
-                    console.log(updateGoalList);
 
                     for(goal of updateGoalList){
                         await BriefingRepository.insert(this.db, purpose.id, goal.id);
@@ -289,6 +288,7 @@ export default class PurposeService {
                         // checkedGoals.push(purpose.detailPlans[goalId])
                     }
 
+                    console.log(purpose.achieve);
 
                     await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}/update`, JSON.stringify({
                         achieve: purpose.achieve,

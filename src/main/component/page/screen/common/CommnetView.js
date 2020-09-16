@@ -127,6 +127,7 @@ export default class CommentView extends Component {
     _postComment = async () => {
         try {
             //page 이용
+
             this.flatList.scrollToOffset({ animated: true, offset: 0 });
 
             const commentText = this.state.commentText;
@@ -134,6 +135,10 @@ export default class CommentView extends Component {
             const resource = {
                 content: commentText
             }
+
+            this.setState({
+                commentText : ''
+            })
 
             switch (this.props.route.params.entity) {
                 case Model.PURPOSE:

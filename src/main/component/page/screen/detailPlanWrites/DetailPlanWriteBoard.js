@@ -41,7 +41,7 @@ export default class DetailPlanWriteBoard extends Component {
     componentDidMount() {
         setTimeout(() => {
             ToastAndroid.showWithGravity(
-                this.purposeWriteStore.writeType == PurposeWriteType.CREATE ? 
+                this.detailPlanWriteStore.goals.length == 0 ? 
                 '버튼을 눌러 수행 목표를 생성해주세요' : 
                 '수행 목표 기간이 현재 날짜에 맞추어 재설정 되었습니다.'
                 ,ToastAndroid.SHORT, ToastAndroid.CENTER);
@@ -127,8 +127,9 @@ export default class DetailPlanWriteBoard extends Component {
                 />
                 <View style={{ position: 'absolute', bottom: 30, right: 22 }}>
                     <ImageButton
-                        backgroundStyle={{ backgroundColor: '#2CBD4F', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
-                        imageStyle={{ width: 35, height: 35, tintColor: 'black'}}
+                        disabled={this.detailPlanWriteStore.isFilled}
+                        backgroundStyle={{ backgroundColor: this.detailPlanWriteStore.isFilled ? '#F1F1F1' : '#25B046', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
+                        imageStyle={{ width: 35, height: 35, tintColor: this.detailPlanWriteStore.isFilled ? '#888888' : 'white'}}
                         source={require('../../../../../../asset/button/plus_button.png')}
                         onPress={() => {
                             this.props.navigation.navigate('GoalWrite');

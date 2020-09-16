@@ -51,6 +51,10 @@ export default class MyTextInput extends Component {
         }
     }
 
+    focus(){
+        this.textInput.focus();
+    }
+
     render() {
         console.log(this.state.textHeight)
         return (

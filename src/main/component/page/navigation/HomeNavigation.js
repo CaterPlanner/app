@@ -71,7 +71,7 @@ const HomeNavigation = ({navigation, route}) => {
             <Stack.Screen options={({ navigation }) => ({
                 ...defaultHeaderStyle(navigation),
                 headerTitle: '수행 리스트',
-                headerTitleAlign: 'center',
+                headerTitleAlign: 'left',
                 headerTitleStyle: {
                     fontWeight: 'bold'
                 }
@@ -79,7 +79,7 @@ const HomeNavigation = ({navigation, route}) => {
             <Stack.Screen options={({ navigation, route }) => ({
                 ...defaultHeaderStyle(navigation),
                 headerTitle: route.params.purpose.name,
-                headerTitleAlign: 'center',
+                headerTitleAlign: 'left',
                 animationEnabled: false,
                 headerShown : route.params.showHeader == undefined || route.params.showHeader == true ? true : false, 
                 headerRight: () => {

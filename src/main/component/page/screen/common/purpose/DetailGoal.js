@@ -44,7 +44,7 @@ export default function DetailGoal() {
                         width={Dimensions.get('window').width - 18}
                         height={7}
                         animated={true}
-                        barColor={'red'}
+                        barColor={goal.color}
                         value={goal.achieve}
                     />
                 </View>

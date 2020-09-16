@@ -10,6 +10,8 @@ import PurposeService from '../../../../../rest/service/PurposeService';
 import GlobalConfig from '../../../../../GlobalConfig';
 import { inject } from 'mobx-react';
 import { useFocusEffect} from '@react-navigation/native';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
+import { ResultState } from '../../../../../AppEnum';
 
 @inject(['authStore'])
 export default class LoadMyPurpose extends Component{
@@ -31,10 +33,7 @@ export default class LoadMyPurpose extends Component{
         const id = this.props.route.params.id;
 
         try {
-            if(!this.authStore.offlineMode){
-
-
-                const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${id}`)
+            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${id}`)
                 .auth(await this.authStore.getToken()).submit();
 
                 const purpose = new Purpose(response.data.id, response.data.name, response.data.description, response.data.photoUrl, response.data.disclosureScope,
@@ -56,36 +55,44 @@ export default class LoadMyPurpose extends Component{
                     }
                 })
 
-            }else{
-                const offlineUser = this.authStore.user;
-
-                this.setState({
-                    isLoading : false,
-                    data : {
-                        purpose : await PurposeService.getInstance().read(id),
-                        author : {
-                            name : offlineUser.name,
-                            profileUrl : offlineUser.profileUrl
-                        }
-                    }
-                })
-            }
 
         } catch (e) {
             console.log(e);
-            this.props.navigation.goBack();
+            this.setState({
+                isLoading : false,
+                isTimeout: true
+            })
         }
     }
 
 
     componentDidMount(){
-        this._getData();
+        // this._getData();
+        this.props.navigation.addListener('focus', () => {
+            this._getData();
+        })
     }
+
+    componentWillUnmount() {
+        this.props.navigation.removeListener('focus');
+    }
+
 
     render(){
         return (
             <View style={{ flex: 1 }}>
-                {this.state.isLoading ? <Loader /> : <DetailPurpose data={this.state.data} navigation={this.props.navigation} />}
+                {this.state.isLoading ? <Loader /> : 
+                    this.state.isTimeout ? 
+                    <CaterPlannerResult
+                        state={ResultState.TIMEOUT}
+                        reRequest={() => {
+                            this.setState({
+                                isLoading : true,
+                                isTimeout : false
+                            }, this._getData)
+                        }}
+                    /> :
+                    <DetailPurpose data={this.state.data} navigation={this.props.navigation} />}
             </View>
         );
     }

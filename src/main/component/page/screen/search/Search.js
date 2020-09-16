@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Image } from 'react-native';
 import GlobalConfig from '../../../../GlobalConfig';
 import Loader from '../../Loader';
 import Request from '../../../../util/Request';
@@ -7,6 +7,11 @@ import EasyDate from '../../../../util/EasyDate';
 import { inject } from 'mobx-react';
 import ImageButton from '../../../atom/button/ImageButton';
 import PurposeBox from '../../../atom/button/PurposeBox';
+import CaterPlannerResult from '../../../organism/CaterPlannerResult';
+import { ResultState, LoadType } from '../../../../AppEnum';
+
+
+
 
 @inject(['authStore'])
 export default class Search extends Component {
@@ -17,9 +22,8 @@ export default class Search extends Component {
         this.state = {
             isLoading: false,
             data: [],
-            isRefreshing: false,
-            isResearching : false,
             isFinish: false,
+            isTimeout : false,
             page: 0,
         }
 
@@ -29,27 +33,26 @@ export default class Search extends Component {
     }
 
     _search = () => {
-        if (this.state.isLoading || this.state.isRefreshing || this.state.isResearching)
+        if (this.state.isLoading)
             return;
 
-        console.log('search')
 
         this.setState({
             page: 0,
-            isResearching : true,
+            loadType : LoadType.SEARCH,
             prefix : this.state.text
         }, this._loadData)
     }
 
     _refreshing = () => {
 
-        if (this.state.isLoading || this.state.isRefreshing || this.state.isResearching)
+        if (this.state.isLoading)
             return;
 
 
         this.setState({
             page: 0,
-            isRefreshing: true
+            loadType : LoadType.REFRESH
         }, this._loadData)
 
     }
@@ -68,36 +71,34 @@ export default class Search extends Component {
             this.isFinish = response.data.final;
 
             this.setState({
-                data: this.state.isRefreshing || this.state.isResearching ? response.data.elements : this.state.data.concat(response.data.elements),
+                data: this.state.loadType == LoadType.REFRESH || this.state.loadType == LoadType.SEARCH ? response.data.elements : this.state.data.concat(response.data.elements),
                 isLoading: false,
-                isRefreshing: false,
                 isFinish: response.data.final,
-                isResearching : false
             })
         } catch (e) {
             console.log(e);
 
             this.setState({
                 isLoading: false,
-                isRefreshing: false,
-                isResearching : false
+                isTimeOut : true
             })
         }
     }
 
     _handleLoadMore = () => {
-        if (this.state.isFinish || this.state.isLoading || this.state.isRefreshing || this.state.isResearching)
+        if (this.state.isFinish || this.state.isLoading)
             return;
 
         this.setState({
             page: this.state.page + 1,
+            loadType : LoadType.MORE,
             isLoading: true
         }, this._loadData)
     }
 
     _renderFooter = () => {
         return (
-            this.state.isLoading ?
+            this.state.isLoading  && (this.state.loadType == LoadType.MORE || this.state.loadType == LoadType.SEARCH)?
                 <View style={{ height: 210, width: '100%' }}>
                     <Loader />
                 </View> : null
@@ -106,7 +107,8 @@ export default class Search extends Component {
 
     componentDidMount() {
         this.setState({
-            isLoading: true
+            isLoading: true,
+            loadType : LoadType.MORE
         }, this._loadData)
     }
 
@@ -122,13 +124,17 @@ export default class Search extends Component {
                         style={{
                             flex: 1,
                             paddingVertical: 0,
-                            fontSize: 17,
+                            fontSize: 15,
                             paddingLeft: 0,
-                            marginBottom: 3,
+                            paddingBottom : 0,
                             color : 'black',
                         }}
-                        blueOnSubmit={this._search}
-                        placeHolder={'검색하시고 싶은 목적 이름을 입력해주세요'}
+                        blueOnSubmit={() => {
+                            this.setState({
+                                data : []
+                            },this._search)
+                        }}
+                        placeholder={'검색하시고 싶은 목적 이름을 입력해주세요'}
                         onChangeText={
                             text => this.setState({ text: text })
                         }
@@ -140,35 +146,55 @@ export default class Search extends Component {
                             width: 25,
                             height: 25
                         }}
-                        onPress={this._search}
+                        onPress={() => {this.setState({
+                            data : []
+                        },this._search)}}
                     />
                 </View>
                 </View>
-                <FlatList
-                    style={{ flex: 1, backgroundColor:undefined}}
-                    data={this.state.data}
-                    renderItem={({ item }) => {
-                        return (
-                        <View style={{
-                            marginBottom: 10 
-                        }}>
-                            <PurposeBox
-                                data={item}
-                                onPress={() => {
-                                    this.props.navigation.push('LoadUserPurpose', {
-                                        id : item.id
-                                    })
-                                }}
-                            />
-                        </View>)
-                    }}
-                    keyExtractor={(item, index) => index}
-                    onEndReached={this._handleLoadMore}
-                    onEndReachedThreshold={0.4}
-                    ListFooterComponent={this._renderFooter}
-                    onRefresh={this._refreshing}
-                    refreshing={this.state.isRefreshing}
-                />
+                {(() => {
+                    if(!this.state.isLoading && this.state.isTimeOut){
+                        return <CaterPlannerResult 
+                        backgroundStyle={{flex:1}}           
+                        state={ResultState.TIMEOUT}
+                        reRequest={()=>{
+                            this.setState({
+                                isLoading: true,
+                                loadType : LoadType.MORE
+                            }, this._loadData)
+                        }}
+                        />
+                    }else if(!this.state.isLoading && this.state.data.length == 0){
+                        return <CaterPlannerResult backgroundStyle={{flex:1}}state={ResultState.NOTFOUND}  text={'검색 결과가 없습니다.'}/>
+                    }else{
+                        return <FlatList
+                        style={{ flex: 1, backgroundColor:undefined}}
+                        data={this.state.data}
+                        renderItem={({ item }) => {
+                            return (
+                            <View style={{
+                                marginBottom: 10 
+                            }}>
+                                <PurposeBox
+                                    data={item}
+                                    onPress={() => {
+                                        this.props.navigation.push('LoadUserPurpose', {
+                                            id : item.id
+                                        })
+                                    }}
+                                />
+                            </View>)
+                        }}
+                        keyExtractor={(item, index) => index}
+                        onEndReached={this._handleLoadMore}
+                        onEndReachedThreshold={0.4}
+                        ListFooterComponent={this._renderFooter}
+                        onRefresh={this._refreshing}
+                        refreshing={this.state.isLoading && this.state.loadType == LoadType.REFRESH}
+                    />
+
+                    }
+                })()}
             </View>
         );
     }
@@ -177,7 +203,7 @@ export default class Search extends Component {
 const styles = StyleSheet.create({
     searchContainer: { 
         marginVertical: 10,
-        paddingBottom: 5,
+        paddingBottom: 2,
         marginHorizontal: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',

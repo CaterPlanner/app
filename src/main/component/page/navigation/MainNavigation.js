@@ -11,7 +11,7 @@ import ProfileNavigation from './ProfileNavigation';
 const Tab = createBottomTabNavigator();
 
 // const getTabBarVisibility = (route) => {
-  
+
 //   if(!route.params)
 //     return;
 
@@ -34,6 +34,7 @@ const MainNavigation = () => {
   return (
 
     <Tab.Navigator
+      backBehavior='none'
       screenOptions={({ route, navigation }) => ({
         unmountOnBlur: true,
         tabBarIcon: ({ focused }) => {
@@ -42,37 +43,37 @@ const MainNavigation = () => {
           switch (route.name) {
             case "HomeNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_home.png');
-              size={
+              size = {
                 width: 23, height: 25
               }
               break;
             case "SearchNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_search.png');
-              size={
+              size = {
                 width: 24, height: 25
               }
               break;
             case "Make":
               iconSource = require('../../../../../asset/icon/tab_icon_make.png');
-              size={
+              size = {
                 width: 24, height: 25
               }
               break;
             case "StoryNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_story.png');
-              size={
+              size = {
                 width: 23, height: 20
               }
               break;
             case "ProfileNavigation":
               iconSource = require('../../../../../asset/icon/tab_icon_profile.png');
-              size={
+              size = {
                 width: 24, height: 25
               }
               break;
           }
 
-          return <Image source={iconSource} resizeMode="stretch" style={[{ tintColor: focused ? '#25B046' : '#888888'}, size]} />
+          return <Image source={iconSource} resizeMode="stretch" style={[{ tintColor: focused ? '#25B046' : '#888888' }, size]} />
         },
       })}
       tabBarOptions={{
@@ -90,7 +91,7 @@ const MainNavigation = () => {
     >
       <Tab.Screen name="HomeNavigation" component={HomeNavigation}
 
-        
+
       />
       <Tab.Screen name="SearchNavigation" component={SearchNavigation}
 
@@ -101,9 +102,9 @@ const MainNavigation = () => {
             navigation.navigate('CreateNavigation', {
               screen: 'PurposeWriteBoard',
               params: {
-                  type : PurposeWriteType.CREATE
+                type: PurposeWriteType.CREATE
               }
-          })
+            })
             e.preventDefault();
           },
         })} />
@@ -111,7 +112,6 @@ const MainNavigation = () => {
 
       />
       <Tab.Screen name="ProfileNavigation" component={ProfileNavigation}
-
       />
     </Tab.Navigator>
   );

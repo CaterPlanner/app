@@ -10,10 +10,11 @@ import { inject } from 'mobx-react';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import Request from '../../../../../util/Request';
 import Comment from '../../../../molecule/Comment';
-import { Model } from '../../../../../AppEnum';
+import { Model, ResultState } from '../../../../../AppEnum';
 import { useNavigation } from '@react-navigation/native';
 import CaterPlannerRank from '../../../../atom/icon/CaterPlannerRank';
 import SafeOverFlowText from '../../../../atom/text/SafeOverFlowText';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
 
 
 function PurposeInfo({ purpose }) {
@@ -66,7 +67,8 @@ export default class DetailStory extends Component {
 
         this.state = {
             isLoading: true,
-            data: null
+            data: null,
+            isTimeout :false
         };
 
 
@@ -108,7 +110,10 @@ export default class DetailStory extends Component {
 
         } catch (e) {
             console.log(e);
-            this.props.navigation.goBack();
+            this.setState({
+                isTimeout: true,
+                isLoading : false
+            })
         }
 
     }
@@ -126,14 +131,12 @@ export default class DetailStory extends Component {
 
     componentDidMount() {
 
-        this._loadData();
+        // this._loadData();
         this.props.navigation.setParams({
             showStoryMenu: this._storyControlMenuRef.show
         })
         this.props.navigation.addListener('focus', () => {
-            this.setState({
-                isLoading: true
-            }, this._loadData)
+            this._loadData();
         })
     }
 
@@ -173,88 +176,98 @@ export default class DetailStory extends Component {
                         }}>신고하기(준비중)</MenuItem>
                     </Menu>
                 </View>
-                {this.state.isLoading ? <Loader /> : (
-                    <View style={{ flex: 1 }}>
-                        <ScrollView style={{ flex: 1 }}>
-                            <View style={{ backgroundColor: 'white', paddingHorizontal: 15 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
-                                    <ProfileWidget
-                                        imageStyle={{
-                                            width: 33,
-                                            height: 33,
-                                            borderRadius: 30
-                                        }}
-                                        user={this.state.data.author} />
-                                    <TimeAgo time={new Date(this.state.data.createDate)} />
-                                </View>
+                {this.state.isLoading ? <Loader /> :
+                    this.state.isTimeout ? <CaterPlannerResult
+                        state={ResultState.TIMEOUT}
+                        reRequest={() => {
+                            this.setState({
+                                isTimeout : false,
+                                isLoading : true
+                            }, this._loadData)
+                        }}
+                    /> :
+                    (
+                        <View style={{ flex: 1 }}>
+                            <ScrollView style={{ flex: 1 }}>
+                                <View style={{ backgroundColor: 'white', paddingHorizontal: 15 }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+                                        <ProfileWidget
+                                            imageStyle={{
+                                                width: 33,
+                                                height: 33,
+                                                borderRadius: 30
+                                            }}
+                                            user={this.state.data.author} />
+                                        <TimeAgo time={new Date(this.state.data.createDate)} />
+                                    </View>
 
-                                <View style={{ alignItems: 'center' }}>
-                                    <Text style={styles.titleFont}>
-                                        {this.state.data.title}
+                                    <View style={{ alignItems: 'center' }}>
+                                        <Text style={styles.titleFont}>
+                                            {this.state.data.title}
+                                        </Text>
+                                    </View>
+
+                                    <View style={{ marginHorizontal: 7 }}>
+                                        <SafeOverFlowText
+                                            fontStyle={styles.contentFont}
+                                            backgroundStyle={{marginTop : 30}}
+                                            text={this.state.data.content}
+                                            minNumberOfLines={7}
+                                        />
+                                        <View style={{marginTop: 30, marginBottom: 20}}>
+                                            <PurposeInfo
+                                                purpose={this.state.data.purpose}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={{ borderBottomWidth: 0.3, borderTopWidth: 0.3, paddingHorizontal: 10, paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Text style={styles.scoreFont}>
+                                        응원 {this.state.likesCount}
+                                    </Text>
+                                    <Text style={styles.scoreFont}>
+                                        댓글 {this.state.data.commentCount}
                                     </Text>
                                 </View>
+                                {
+                                    this.state.data.comments.map((comment) => (
+                                        <View style={{ paddingHorizontal: 10 }}>
+                                            <Comment
+                                                user={comment.user}
+                                                createDate={new EasyDate(comment.createDate)}
+                                                content={comment.content}
+                                            />
+                                        </View>
+                                    ))
+                                }
 
-                                <View style={{ marginHorizontal: 7 }}>
-                                    <SafeOverFlowText
-                                        fontStyle={styles.contentFont}
-                                        backgroundStyle={{marginTop : 30}}
-                                        text={this.state.data.content}
-                                        minNumberOfLines={7}
-                                    />
-                                    <View style={{marginTop: 30, marginBottom: 20}}>
-                                        <PurposeInfo
-                                            purpose={this.state.data.purpose}
-                                        />
-                                    </View>
-                                </View>
+                            </ScrollView >
+                            <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 13, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                <ImageButton
+                                    backgroundStyle={{
+                                        marginLeft: 18
+                                    }}
+                                    imageStyle={{width: 28, height: 30, tintColor: this.state.isLikes ? 'red' : undefined }}
+                                    source={require('../../../../../../../asset/button/heart_button.png')}
+                                    onPress={this._toggleLikes}
+                                />
+
+                                <ImageButton
+                                    backgroundStyle={{
+                                        marginLeft: 20
+                                    }}
+                                    imageStyle={{width: 27, height: 29, tintColor: 'black' }}
+                                    source={require('../../../../../../../asset/button/comment_button.png')}
+                                    onPress={() => {
+                                        this.props.navigation.push('CommnetView', {
+                                            entity: Model.STORY,
+                                            id: this.state.data.id
+                                        })
+                                    }}
+                                />
                             </View>
-                            <View style={{ borderBottomWidth: 0.3, borderTopWidth: 0.3, paddingHorizontal: 10, paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <Text style={styles.scoreFont}>
-                                    좋아요 {this.state.likesCount}
-                                </Text>
-                                <Text style={styles.scoreFont}>
-                                    댓글 {this.state.data.commentCount}
-                                </Text>
-                            </View>
-                            {
-                                this.state.data.comments.map((comment) => (
-                                    <View style={{ paddingHorizontal: 10 }}>
-                                        <Comment
-                                            user={comment.user}
-                                            createDate={new EasyDate(comment.createDate)}
-                                            content={comment.content}
-                                        />
-                                    </View>
-                                ))
-                            }
-
-                        </ScrollView >
-                        <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                            <ImageButton
-                                backgroundStyle={{
-                                    marginLeft: 22
-                                }}
-                                imageStyle={{width: 30, height: 33, tintColor: this.state.isLikes ? 'blue' : undefined }}
-                                source={require('../../../../../../../asset/icon/likes_icon.png')}
-                                onPress={this._toggleLikes}
-                            />
-
-                            <ImageButton
-                                backgroundStyle={{
-                                    marginLeft: 27
-                                }}
-                                imageStyle={{width: 29, height: 32, tintColor: 'black' }}
-                                source={require('../../../../../../../asset/button/comment_button.png')}
-                                onPress={() => {
-                                    this.props.navigation.push('CommnetView', {
-                                        entity: Model.STORY,
-                                        id: this.state.data.id
-                                    })
-                                }}
-                            />
                         </View>
-                    </View>
-                )}
+                    )}
             </View>
         )
     }

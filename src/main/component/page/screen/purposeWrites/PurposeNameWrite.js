@@ -89,7 +89,7 @@ export default function PurposeNameWrite({index}) {
                     value={purposeName}
                 />
             </View>
-            <View style={{ position: 'absolute', top:  Dimensions.get('window').height - 144, width: '100%', alignItmes: 'center', left: 22 }}>
+            <View style={{ position: 'absolute', top:  Dimensions.get('window').height  - Dimensions.get('window').height * 0.2, width: '100%', alignItmes: 'center', left: 22 }}>
                 <TouchableOpacity style={{ backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
                     onPress={() => {
                         setIsScopeSelecting(true);

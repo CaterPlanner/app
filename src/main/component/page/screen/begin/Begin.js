@@ -3,8 +3,6 @@ import { View, Text, Image, Dimensions, BackHandler, StatusBar, StyleSheet, Aler
 import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
-import LinearGradient from 'react-native-linear-gradient';
-import RoundButton from '../../../atom/button/RoundButton';
 import PageStateIcon from '../../../atom/icon/PageStateIcon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 

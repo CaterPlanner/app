@@ -5,6 +5,8 @@ import GlobalConfig from '../../../../../GlobalConfig';
 import Loader from '../../../Loader';
 import { inject } from 'mobx-react';
 import PurposePaper from '../../../../atom/button/PurposePaper';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
+import { ResultState } from '../../../../../AppEnum';
 
 @inject(['authStore'])
 export default class UserPurposeList extends Component {
@@ -42,27 +44,44 @@ export default class UserPurposeList extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                {this.state.isLoading ? <Loader /> : (
-                    <View style={{ paddingRight: 10, paddingLeft: 2, paddingVertical: 10 }}>
-                        <FlatList
-                            style={{  marginTop : 12 }}
-                            data={this.state.data}
-                            renderItem={({ item }) => (
-                                <View style={{marginBottom: 10}}>
-                                    <PurposePaper
-                                        imageUri={item.photoUrl}
-                                        name={item.name}
-                                        checkedBriefing={false}
-                                        onPress={() => {
-                                            this.props.navigation.push('LoadUserPurpose', {
-                                                id: item.id
-                                            })
-                                        }}
-                                    />
-                                </View>
-                            )} />
-                    </View>
-                )}
+                {this.state.isLoading ? <Loader /> : 
+                    this.state.isTimeout ?
+                        <CaterPlannerResult
+                            state={ResultState.TIMEOUT}
+                            backgroundStyle={{flex: 1}}
+                            reRequest={() => {
+                                this.setState({
+                                    isTimeout : false,
+                                    isLoading : true
+                                }, this._loadData)
+                            }}
+                        /> :
+                            this.state.data.length == 0 ? 
+                            <CaterPlannerResult
+                                backgroundStyle={{flex:1}}
+                                text="생성된 목적이 없습니다."
+                                state={ResultState.NOTHING}
+                            /> : 
+                            <View style={{ paddingRight: 10, paddingLeft: 2, paddingVertical: 10 }}>
+                                <FlatList
+                                    style={{  marginTop : 12 }}
+                                    data={this.state.data}
+                                    renderItem={({ item }) => (
+                                        <View style={{marginBottom: 10}}>
+                                            <PurposePaper
+                                                imageUri={item.photoUrl}
+                                                name={item.name}
+                                                checkedBriefing={false}
+                                                onPress={() => {
+                                                    this.props.navigation.push('LoadUserPurpose', {
+                                                        id: item.id
+                                                    })
+                                                }}
+                                            />
+                                        </View>
+                                    )} />
+                            </View>
+                }
             </View>
         )
     }

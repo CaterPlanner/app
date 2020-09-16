@@ -1,5 +1,5 @@
 import React, { useState, Component } from 'react';
-import { View, Image, Text, ScrollView, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Alert, Modal, TouchableOpacity } from 'react-native'
+import { View, Image, Text, ScrollView, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Alert } from 'react-native'
 import InfoBox from '../../../../molecule/InfoBox';
 import ImageButton from '../../../../atom/button/ImageButton';
 import DecimalDayWidget from '../../../../atom/icon/DecimalDayWidget';
@@ -11,7 +11,7 @@ import Request from '../../../../../util/Request'
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import { useNavigation } from '@react-navigation/native';
 import EasyDate from '../../../../../util/EasyDate';
-import { Model, State } from '../../../../../AppEnum';
+import { Model, State, ResultState } from '../../../../../AppEnum';
 import GlobalConfig from '../../../../../GlobalConfig';
 import useStores from '../../../../../mobX/helper/useStores';
 import PurposeService from '../../../../../rest/service/PurposeService';
@@ -23,6 +23,7 @@ import { inject } from 'mobx-react';
 import CaterPlannerRank from '../../../../atom/icon/CaterPlannerRank';
 
 import SafeOverFlowText from '../../../../atom/text/SafeOverFlowText';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
 
 function BottomBar({ data }) {
 
@@ -51,22 +52,22 @@ function BottomBar({ data }) {
     }
 
     return (
-        <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 15, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <View style={{ elevation: 5, backgroundColor: 'white', paddingVertical: 13, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
             <ImageButton
                 backgroundStyle={{
-                    marginLeft: 22,
+                    marginLeft: 18,
 
                 }}
-                imageStyle={{ width: 30, height: 33, tintColor: isCheer ? 'red' : undefined }}
+                imageStyle={{ width: 28, height: 30, tintColor: isCheer ? 'red' : undefined }}
                 source={require('../../../../../../../asset/button/heart_button.png')}
                 onPress={toggleCheer}
             />
 
             <ImageButton
                 backgroundStyle={{
-                    marginLeft: 27,
+                    marginLeft: 20,
                 }}
-                imageStyle={{ width: 29, height: 32, tintColor: 'black' }}
+                imageStyle={{ width: 27, height: 29, tintColor: 'black' }}
                 source={require('../../../../../../../asset/button/comment_button.png')}
                 onPress={() => {
                     navigation.push('CommnetView', {
@@ -148,12 +149,16 @@ class ActionFloatingButton extends Component {
             {
                 name: '스토리 쓰기',
                 color: '#3CAE14',
+                iconStyle :{
+                    height: 32,
+                    width: 28
+                },
                 action: () => {
                     this.props.navigation.navigate('WriteStory', {
                         purpose: this.props.data.purpose
                     })
                 },
-                icon: require('../../../../../../../asset/button/write_story_button.png')
+                icon: require('../../../../../../../asset/icon/story_icon.png')
             }
         ]
 
@@ -167,7 +172,8 @@ class ActionFloatingButton extends Component {
                         >
                             <Animated.View style={[floatingButtonStyles.elementButtonStyle, this._elementAnimation(-20 * (index + 1)), { backgroundColor: e.color }]}>
                                 <Image
-                                    style={floatingButtonStyles.subIcon}
+                                 resizeMode="stretch"
+                                    style={[floatingButtonStyles.subIcon, e.iconStyle]}
                                     source={e.icon}
                                 />
                                 <View style={{ borderRadius: 5, position: 'absolute', right: 70, backgroundColor: 'white', width: 80, height: 25, alignItems: 'center', justifyContent: 'center', elevation: 5 }}>
@@ -233,17 +239,18 @@ const floatingButtonStyles = StyleSheet.create({
 
 function StoryBox({ type, text }) {
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10 }}>
-            <View style={{ position: 'absolute', left: -15, width: 30, height: 30, borderRadius: 30, backgroundColor: '#E5E5E5', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ height: 60, width: Dimensions.get('window').width, alignItems: 'center', flexDirection: 'row', backgroundColor: 'white' }}>
+            <View style={{ position: 'absolute', left: 40, height: '100%', width: 1, backgroundColor: '#C4C4C4' }} />
+            <View style={{ marginLeft: 25, width: 30, height: 30, borderRadius: 30, backgroundColor: '#E5E5E5', justifyContent: 'center', alignItems: 'center' }}>
                 <Image
-                    source={require('../../../../../../../asset/icon/story_vlog_icon.png')}
+                    source={require('../../../../../../../asset/icon/story_icon.png')}
                     resizeMode="stretch"
                     style={{ width: 20, height: 20 }}
                 />
             </View>
-            <Text 
-            numberOfLines={1}
-            style={{ marginLeft: 30, width: '83%' }} >
+            <Text
+                numberOfLines={1}
+                style={{ marginLeft: 15, width: '83%', textAlign: 'left' }} >
                 {text}
             </Text>
         </View>
@@ -252,9 +259,15 @@ function StoryBox({ type, text }) {
 
 function StoryTag({ date }) {
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5 }}>
-            <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, width: 30, height: 1, marginRight: 8 }} />
-            <Text>{date.toString()}</Text>
+        <View style={{ height: 35, justifyContent: 'center', marginVertical: 8 }}>
+            <View style={{ position: 'absolute', left: 10, width: 65, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', borderRadius: 30, borderWidth: 1, borderColor: '#9E9E9E', paddingVertical: 5 }}>
+                <Text
+                    style={{
+                        color: '#9E9E9E',
+                        fontSize: 10
+                    }}
+                >{date.toStringFormat('.')}</Text>
+            </View>
         </View>
     )
 }
@@ -263,9 +276,10 @@ function StoryTimeLine({ stories }) {
 
     let beforeDate = null;
 
+
     return (
-        <View style={{ flexDirection: 'row', paddingBottom: 10, width: '100%', backgroundColor: 'white', paddingBottom: 30 }}>
-            <View style={{ marginLeft: 29, height: '100%', width: 1, backgroundColor: 'black' }} />
+        <View style={{ flexDirection: 'row', paddingBottom: 10, width: '100%' }}>
+            <View style={{ position: 'absolute', left: 40, height: '100%', width: 1, backgroundColor: '#C4C4C4' }} />
             <View style={{ marginTop: 5 }}>
                 {
                     stories.map((story) => {
@@ -277,8 +291,12 @@ function StoryTimeLine({ stories }) {
                         }
                         return (
                             <View>
-                                {dateChange && <StoryTag date={story.createDate} />}
-                                <StoryBox text={story.title} />
+                                <View>
+                                    {dateChange && <StoryTag date={story.createDate} />}
+                                </View>
+                                <View>
+                                    <StoryBox text={story.title} />
+                                </View>
                             </View>
                         )
                     })
@@ -307,7 +325,7 @@ export default class DetailPurpose extends Component {
             data: props.data
         }
 
-
+        console.log(this.props.data.purpose.achieve);
     }
 
 
@@ -460,16 +478,16 @@ export default class DetailPurpose extends Component {
                         return (
                             <View>
                                 {this.state.headerVisible &&
-                                    <View style={{ overflow: 'visible', backgroundColor: 'white', height: 50, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, elevation: 5 }}>
+                                    <View style={{ overflow: 'visible', backgroundColor: 'white', height: 53, alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 11, elevation: 5 }}>
                                         <ImageButton
-                                         backgroundStyle={{
-                                            height: '100%',
-                                        }}
-                                        imageStyle={{
-                                            width: 28,
-                                            height: 35,
-                                            tintColor: 'black'
-                                        }}
+                                            backgroundStyle={{
+                                                height: '100%',
+                                            }}
+                                            imageStyle={{
+                                                width: 32,
+                                                height: 37,
+                                                tintColor: 'black'
+                                            }}
                                             source={require('../../../../../../../asset/button/arrow_button.png')}
                                             onPress={() => { this.navigation.goBack(); }} />
                                         {this.state.data.isOwner &&
@@ -512,20 +530,20 @@ export default class DetailPurpose extends Component {
                 >
                     <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
                         <View style={detailPurposeStyles.purposeInfoContainer}>
-                        <View style={{ position: 'absolute', right: 15, top: -30}}>
-                            <CaterPlannerRank
-                                purpose={this.state.data.purpose}
-                                style={{
-                                    width: 70,
-                                    height: 70
-                                }}
-                            />
-                        </View>
+                            <View style={{ position: 'absolute', right: 15, top: -30 }}>
+                                <CaterPlannerRank
+                                    purpose={this.state.data.purpose}
+                                    style={{
+                                        width: 70,
+                                        height: 70
+                                    }}
+                                />
+                            </View>
                             <Text style={detailPurposeStyles.purposeNameFont}>
                                 {this.state.data.purpose.name}
                             </Text>
-                            <View 
-                            style={{ alignSelf: 'flex-start', marginBottom: 20 }}>
+                            <View
+                                style={{ alignSelf: 'flex-start', marginBottom: 20 }}>
                                 <DecimalDayWidget purpose={this.state.data.purpose} />
 
                             </View>
@@ -535,10 +553,10 @@ export default class DetailPurpose extends Component {
                                 {this.state.data.purpose.description}
                             </Text> */}
                             <SafeOverFlowText
-                                backgroundStyle={{marginBottom : 10}}
+                                backgroundStyle={{ marginBottom: 10 }}
                                 fontStyle={detailPurposeStyles.purposeDescriptionFont}
                                 text={this.state.data.purpose.description}
-                                minNumberOfLines={6}
+                                minNumberOfLines={4}
                             />
                             <View style={{ paddingVertical: 10 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}
@@ -558,15 +576,15 @@ export default class DetailPurpose extends Component {
                                         {!this.state.data.purpose.achieve || this.state.data.purpose.achieve == 0 ? 0 : this.state.data.purpose.achieve}%
                             </Text>
                                 </View>
-                            <View style={{ alignItems: 'center', marginBottom: 15 }}>
-                                <MyPrgoressBar
-                                    width={Dimensions.get('window').width - 40}
-                                    height={7}
-                                    animated={true}
-                                    barColor={'red'}
-                                    value={this.state.data.purpose.achieve}
-                                />
-                            </View>
+                                <View style={{ alignItems: 'center', marginBottom: 15 }}>
+                                    <MyPrgoressBar
+                                        width={Dimensions.get('window').width - 40}
+                                        height={7}
+                                        animated={true}
+                                        barColor={'red'}
+                                        value={this.state.data.purpose.achieve}
+                                    />
+                                </View>
                             </View>
                             <View style={detailPurposeStyles.purposeProfileContainer}>
                                 <ProfileWidget
@@ -574,19 +592,29 @@ export default class DetailPurpose extends Component {
                                     fontStyle={{ alignSelf: 'flex-end', fontSize: 12, marginBottom: 4 }}
                                 />
                             </View>
-                            <View style={{ paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-                                <Text style={{
-                                    fontSize: 15,
-                                    fontWeight: 'bold'
-                                }}>
-                                    응원 {this.state.data.cheersCount}
+                            <View style={{ paddingVertical: 10, backgroundColor: 'white', width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Text
+                                    style={{
+                                        fontSize:12,
+                                        color:'gray',
+                                    }}
+                                >
+                                    since {new EasyDate(this.state.data.createDate).toStringFormat('.')}
                                 </Text>
-                                <Text style={{
-                                    fontSize: 15, marginLeft: 15,
-                                    fontWeight: 'bold'
-                                }}>
-                                    댓글 {this.state.data.commentCount}
-                                </Text>
+                                <View style={{ flexDirection: 'row', alignItems:'center'}}>
+                                    <Text style={{
+                                        fontSize: 15,
+                                        fontWeight: 'bold'
+                                    }}>
+                                        응원 {this.state.data.cheersCount}
+                                    </Text>
+                                    <Text style={{
+                                        fontSize: 15, marginLeft: 15,
+                                        fontWeight: 'bold'
+                                    }}>
+                                        댓글 {this.state.data.commentCount}
+                                    </Text>
+                                </View>
                             </View>
                         </View>
                         <View style={{ marginTop: 5 }}>
@@ -598,27 +626,39 @@ export default class DetailPurpose extends Component {
                                     })
                                 }}
                                 detailButtonHint={'더보기'}
-                                child={(
-                                    <ScrollView style={{ backgroundColor: '#F8F8F8', height: 300, paddingHorizontal: 10, marginTop: 10 }}>
-                                        {
-                                            this.state.data.purpose.detailPlans.map((goal) => {
-                                                if (goal.isProcceedEnd)
-                                                    return;
+                                child={(() => {
 
-                                                return (<View style={detailPurposeStyles.paperContainer}>
-                                                    <DetailPlanStat
-                                                        goal={goal}
-                                                        onPress={() => {
-                                                            this.navigation.navigate('DetailGoal', {
-                                                                goal: goal
-                                                            })
-                                                        }}
-                                                    />
-                                                </View>)
-                                            })
-                                        }
-                                    </ScrollView>
-                                )}
+                                    const activeGoals = this.state.data.purpose.detailPlans.filter(g => !g.isProcceedEnd);
+
+                                    console.log(activeGoals.length);
+
+                                    return (
+                                        <View style={{ height: 300, width:'100%' }}>
+                                            {activeGoals.length == 0 ?
+                                            <CaterPlannerResult
+                                                backgroundStyle={{ flex: 1 }}
+                                                text="현재 진행 중인 목표가 없습니다."
+                                                state={ResultState.NOTHING}
+                                            />:
+                                            <ScrollView style={{ backgroundColor: '#F8F8F8', flex: 1, paddingHorizontal: 10, marginTop: 10 }}>
+                                                {
+                                                    activeGoals.map((goal) => {
+                                                        return (<View style={detailPurposeStyles.paperContainer}>
+                                                            <DetailPlanStat
+                                                                goal={goal}
+                                                                onPress={() => {
+                                                                    this.navigation.navigate('DetailGoal', {
+                                                                        goal: goal
+                                                                    })
+                                                                }}
+                                                            />
+                                                        </View>)
+                                                    })
+                                                }
+                                            </ScrollView>}
+                                        </View>
+                                    )
+                                })()}
                             />
                         </View>
                         <View style={{ marginTop: 5 }}>
@@ -629,8 +669,18 @@ export default class DetailPurpose extends Component {
                                         purpose: this.state.data.purpose
                                     })
                                 }}
-                                detailButtonHint={'자세히보기'}
-                                child={(<StoryTimeLine stories={this.state.data.storyTags} />)}
+                                detailButtonHint={'모두 보기'}
+                                child={(
+                                    this.state.data.storyTags.length == 0 ?
+                                        <CaterPlannerResult
+                                            backgroundStyle={{
+                                                height: 300
+                                            }}
+                                            text={'활동한 스토리가 없습니다.'}
+                                            state={ResultState.NOTHING}
+                                        />
+                                        :
+                                        <StoryTimeLine stories={this.state.data.storyTags} />)}
                             />
                         </View>
                     </View>
@@ -668,7 +718,7 @@ const detailPurposeStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginBottom : 10
+        marginBottom: 10
     },
     paperContainer: {
         marginBottom: 5

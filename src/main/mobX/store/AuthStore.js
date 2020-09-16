@@ -92,7 +92,9 @@ export default class AuthStore {
     vaildate = (userToken) => {
         if(!userToken)
             return false;
-
+        console.log(new Date())
+        console.log(new Date(userToken.expired))
+        console.log(new Date(userToken.expired).getTime())
          return new Date(userToken.expired) > new Date();
     }
 
@@ -217,8 +219,10 @@ export default class AuthStore {
         return new Promise(async (resolve, reject) => {
             try {
                 if (!this.vaildate(this.userToken)) {
+                    console.log('토큰 재요청')
                     await this.reissuanceToken(this.userToken);
                 }
+                console.log('요청 시작')
                 resolve(this.userToken.token);
             } catch (e) {
                 console.log(e);
