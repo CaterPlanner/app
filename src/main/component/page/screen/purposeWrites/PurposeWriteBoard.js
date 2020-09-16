@@ -210,12 +210,12 @@ export default class PurposeWriteBoard extends Component {
 
                                     backgroundStyle={{
                                         marginLeft: 7,
-                                        width: 40, height: 40
+                                        width: 40, height: '100%'
                                         
                                     }}
                                     imageStyle={{
-                                        width: 30,
-                                        height: 35,
+                                        width: 32,
+                                        height: 37,
                                         tintColor: 'black'
                                     }}
                                     onPress={() => { this.purposeWriteStore.previous(this.carousel); }}
@@ -243,14 +243,14 @@ export default class PurposeWriteBoard extends Component {
                                 itemWidth={fullWidth}
                             />
                         </View>     
-                        <View style={{ position: 'absolute', top: Dimensions.get('window').height - 115, right: 22}}>
+                        <View style={{ position: 'absolute', top: Dimensions.get('window').height - Dimensions.get('window').height * 0.15, right: 22}}>
                             <ImageButton
-                                backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#2CBD4F' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
+                                backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#25B046' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
                                 imageStyle={[
                                     (!this.purposeWriteStore.isLast ?
                                         { width: 42, height: 38, tintColor: 'black' } :
                                         {width: 35, height: 28, tintColor: 'black' }),
-                                    { tintColor: this.purposeWriteStore.isPermitNextScene ? undefined : '#888888' }
+                                    { tintColor: this.purposeWriteStore.isPermitNextScene ? 'white': '#888888' }
                                 ]}
                                 source={
                                     !this.purposeWriteStore.isLast ?
@@ -287,7 +287,7 @@ export default class PurposeWriteBoard extends Component {
 */
 const styles = StyleSheet.create({
     topContainer: {
-        height : 50,
+        height : 53,
         alignItems: 'flex-start',
         justifyContent: 'center',
 

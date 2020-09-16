@@ -28,8 +28,8 @@ const styles = {
 
     bottomContainer : {
         flex: 2,
-        paddingBottom :110
-    }
+        marginBottom :'30%'
+        }
 
 }
 

@@ -3,6 +3,8 @@ import { View, Text, Image, Dimensions, StyleSheet, ScrollView } from 'react-nat
 import InfoBox from '../../../../molecule/InfoBox';
 import PurposePaper from '../../../../atom/button/PurposePaper';
 import { useNavigation } from '@react-navigation/native';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
+import { ResultState } from '../../../../../AppEnum';
 
 
 const userImage = 'https://cdn.pixabay.com/photo/2018/04/18/18/56/user-3331256__340.png'
@@ -18,16 +20,7 @@ const helpCount = '195'
 export default function UserProfile({ data }) {
 
     const navigation = useNavigation();
-    let succeesCount = 0;
-
-    data.purposeList.forEach((purpose) => {
-        if(purpose.stat == 2)
-            succeesCount++;
-    })
-
-    console.log(data);
-
-    const succeesPer = succeesCount == 0 ? 0 :  Math.round((succeesCount / data.purposeList.length) * 100);
+  
 
     return (
         <ScrollView style={{ style: 1 }}>
@@ -50,11 +43,11 @@ export default function UserProfile({ data }) {
                 <View style={{ width: '100%', alignItems: 'center', marginTop: 15, marginBottom: 25, flexDirection: 'row' }}>
 
                     <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{ fontSize: 16 }}>{succeesPer}%</Text>
+                        <Text style={{ fontSize: 16 }}>{data.successPer}%</Text>
                         <Text style={{ marginTop: 5, fontSize: 13, color: '#676767' }}>목적 성공률</Text>
                     </View>
                     <View style={{ flex: 1, alignItems: 'center' }}>
-                        <Text style={{ fontSize: 16 }}>{succeesCount}</Text>
+                        <Text style={{ fontSize: 16 }}>{data.successCount}</Text>
                         <Text style={{ marginTop: 5, fontSize: 13, color: '#676767' }}>성공한 목적</Text>
                     </View>
                     <View style={{ flex: 1, alignItems: 'center' }}>
@@ -67,8 +60,8 @@ export default function UserProfile({ data }) {
 
             {/* 사용자 목적, 모든 목적 보기 */}
             <InfoBox
-                title={'My 목적'}
-                detailButtonHint={'모든 목적보기'}
+                title={'수행중 목적'}
+                detailButtonHint={'전체 목적보기'}
                 detailButtonPress={() => {
                     navigation.push('UserPurposeList', {
                         id : data.id
@@ -76,6 +69,13 @@ export default function UserProfile({ data }) {
                 }}
                 child={
                     (
+                        <View style={{height: Dimensions.get('window').height - 413}}>
+                        {data.purposeList.length == 0 ? 
+                        <CaterPlannerResult
+                            backgroundStyle={{flex:1}}
+                            state={ResultState.NOTHING}
+                            text={'현재 수행중인 목적이 없습니다.'}
+                        /> : 
                         <View style={{paddingRight: 10, paddingLeft: 2, paddingVertical: 10}}>
                             {data.purposeList.map((purpose) => (
                                 <View style={{ marginTop : 12}}>
@@ -92,7 +92,7 @@ export default function UserProfile({ data }) {
                                 </View>
                             ))}
                            
-                        </View>
+                        </View>}</View>
                     )
                 }
             />

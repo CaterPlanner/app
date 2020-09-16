@@ -6,6 +6,8 @@ import Loader from '../../../Loader';
 import Request from '../../../../../util/Request';
 import EasyDate from '../../../../../util/EasyDate';
 import { inject } from 'mobx-react';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
+import { ResultState } from '../../../../../AppEnum';
 
 //https://www.youtube.com/watch?v=Jc2MX0Ew3PE&t=284s
 
@@ -41,7 +43,8 @@ export default class PurposeStories extends Component{
             console.log(e);
 
             this.setState({
-                isLoading : false
+                isLoading : false,
+                isTimeout : true
             })
         }
     }
@@ -74,6 +77,17 @@ export default class PurposeStories extends Component{
     render(){
         return(
             <View style={{flex: 1}}>
+            {!this.state.isLoading && this.state.isTimeout ?
+            <CaterPlannerResult
+                state={ResultState.TIMEOUT}
+                reRequest={() => {
+                    this.setState({
+                        isLoading : true,
+                        isTimeout : false
+                    }, this._loadData)
+                }}
+            />
+            :
             <FlatList
                 style={{flex: 1}}
                 data={this.state.data}
@@ -89,7 +103,7 @@ export default class PurposeStories extends Component{
                 onEndReached={this._handleLoadMore}
                 onEndReachedThreshold={0.4}
                 ListFooterComponent={this._renderFooter}
-            />
+            />}
         </View>  
         )
     }

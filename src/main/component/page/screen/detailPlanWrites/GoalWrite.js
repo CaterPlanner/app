@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, ScrollView, StyleSheet, ToastAndroid } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ToastAndroid, TouchableWithoutFeedback, Image } from 'react-native';
 import EasyDate from '../../../../util/EasyDate';
 import useStores from '../../../../mobX/helper/useStores';
 import ImageButton from '../../../atom/button/ImageButton';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput'
-import RoundButton from '../../../atom/button/RoundButton';
+import RoundColorButton from '../../../atom/button/RoundColorButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Goal, { getBetweenMaxBriefing } from '../../../../rest/model/Goal';
@@ -67,16 +67,16 @@ export default class GoalWrite extends Component {
         if (this.state.goalName == '') {
             ToastAndroid.showWithGravity('목표 이름을 입력해주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
             return false;
-        }else if(!(/[^\s]/g).test(this.state.goalName)){
+        } else if (!(/[^\s]/g).test(this.state.goalName)) {
             ToastAndroid.showWithGravity('목표 이름이 공백이 될 순 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);
             return false;
-        }else if (this.state.goalDescription == '') {
+        } else if (this.state.goalDescription == '') {
             ToastAndroid.showWithGravity('목표 설명을 입력해주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
             return false;
-        }else if(!(/[^\s]/g).test(this.state.goalDescription)){
+        } else if (!(/[^\s]/g).test(this.state.goalDescription)) {
             ToastAndroid.showWithGravity('목표 설명이 공백이 될 순 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);
             return false;
-        }else if (this.state.goalStartDate.isBefore(this.state.goalEndDate)) {
+        } else if (this.state.goalStartDate.isBefore(this.state.goalEndDate)) {
             ToastAndroid.showWithGravity('종료날짜는 시작날짜의 이후여야 합니다.', ToastAndroid.SHORT, ToastAndroid.CENTER)
             return false;
         } else if (getBetweenMaxBriefing(this.state.goalStartDate, this.state.goalEndDate, cycleType, cycleParams).day == 0) {
@@ -115,16 +115,16 @@ export default class GoalWrite extends Component {
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
                 {this.state.showDatePicker &&
-                <DateTimePicker
+                    <DateTimePicker
                         testID="dateTimePicker"
                         value={this.state.changeDate == 0 ? this.state.goalStartDate : this.state.goalEndDate}
                         is24Hour={true}
                         display="default"
                         minimumDate={this.detailPlanWriteStore.entryStartDate}
                         onChange={(event, date) => {
-                            if(event.type == 'set'){
+                            if (event.type == 'set') {
                                 date = new EasyDate(date);
-                                const data = this.state.changeDate == 0 ? {goalStartDate: date} : {goalEndDate: date};
+                                const data = this.state.changeDate == 0 ? { goalStartDate: date } : { goalEndDate: date };
                                 console.log({
                                     a: 2,
                                     ...data
@@ -136,29 +136,31 @@ export default class GoalWrite extends Component {
                                     ...data,
                                 })
                             }
-                        }}  
+                        }}
                     />}
                 <View style={styles.headerContainer}>
                     <ImageButton
                         source={
                             require('../../../../../../asset/button/arrow_button.png')
                         }
-                        backgroundStyle={{width: 40, height: 40}}
-                        imageStyle={{          width: 30,
-                            height: 35,
-                            tintColor: 'black'}}
+                        backgroundStyle={{ width: 40, height: '100%' }}
+                        imageStyle={{
+                            width: 32,
+                            height: 37,
+                            tintColor: 'black'
+                        }}
                         onPress={this.props.navigation.goBack}
                     />
                     <ImageButton
                         source={require('../../../../../../asset/button/check_button.png')}
                         backgroundStyle={{ width: 40, height: 40, marginBottom: 5 }}
-                        imageStyle={{width: 29, height: 27}}
+                        imageStyle={{ width: 29, height: 27 }}
                         onPress={this._updateGoal}
                     />
                 </View>
                 <View style={styles.contentContainer}>
-                    <View style={{ paddingBottom: 50 }}>
-                        <Text style={{ fontSize: 25, fontWeight: 'bold' }}>수행 목표를 설정해 주세요.</Text>
+                    <View style={{ paddingBottom: 50, marginTop: 5 }}>
+                        <Text style={{ fontSize: 22, fontWeight: 'bold' }}>수행 목표를 설정해 주세요.</Text>
                     </View>
                     <View style={styles.editContainer}>
                         <CaterPlannerTextInput
@@ -205,45 +207,46 @@ export default class GoalWrite extends Component {
                         <Text>
                             시작일
                          </Text>
-                        <RoundButton
-                            text={this.state.goalStartDate.toStringDateByView()}
-                            textStyle={{
-                                textAlign: 'center'
-                            }}
-                            color={'white'}
-                            borderWidth={2}
-                            width={160}
-                            height={33}
-                            onPress={() => {
-                                this.setState({
-                                    changeDate: 0,
-                                    selectDate: this.state.goalStartDate,
-                                    showDatePicker: true
-                                })
-                            }}
-                        />
+                        <TouchableWithoutFeedback onPress={() => {
+                            this.setState({
+                                changeDate: 0,
+                                selectDate: this.state.goalStartDate,
+                                showDatePicker: true
+                            })
+                        }}>
+                            <View style={styles.choiceDateButton}>
+
+                                <Text style={{ textAlign: 'center' }}>
+                                    {this.state.goalStartDate.toStringDateByView()}
+                                </Text>
+                                <Image
+                                    style={styles.choiceIcon}
+                                    source={require('../../../../../../asset/icon/calender_icon.png')}
+                                />
+                            </View>
+                        </TouchableWithoutFeedback>
                     </View>
                     <View style={[styles.editContainer, styles.choiceContainer]}>
                         <Text>
                             마지막일
                          </Text>
-                        <RoundButton
-                            text={this.state.goalEndDate.toStringDateByView()}
-                            textStyle={{
-                                textAlign: 'center'
-                            }}
-                            color={'white'}
-                            borderWidth={2}
-                            width={160}
-                            height={33}
-                            onPress={() => {
-                                this.setState({
-                                    changeDate: 1,
-                                    selectDate: this.state.goalEndDate,
-                                    showDatePicker: true
-                                })
-                            }}
-                        />
+                        <TouchableWithoutFeedback onPress={() => {
+                            this.setState({
+                                changeDate: 1,
+                                selectDate: this.state.goalEndDate,
+                                showDatePicker: true
+                            })
+                        }}>
+                            <View style={styles.choiceDateButton}>
+                                <Text style={{ textAlign: 'center' }}>
+                                    {this.state.goalEndDate.toStringDateByView()}
+                                </Text>
+                                <Image
+                                    style={styles.choiceIcon}
+                                    source={require('../../../../../../asset/icon/calender_icon.png')}
+                                />
+                            </View>
+                        </TouchableWithoutFeedback>
                     </View>
                     <View style={[styles.editContainer, styles.choiceContainer]}>
                         <Text>
@@ -273,13 +276,14 @@ export default class GoalWrite extends Component {
                             브리핑 주기
                          </Text>
                         <View style={[styles.choiceContainer, { width: 170 }]}>
-                            <RoundButton
+                            <RoundColorButton
                                 text={'매일'}
                                 textStyle={{
                                     textAlign: 'center'
                                 }}
-                                borderWidth={1}
-                                color={this.state.goalCycleType == 0 ? this.state.goalColor : '#F2F2F2'}
+                                borderWidth={0}
+                                elevation={this.state.goalCycleType == 0 ? 1 : 0}
+                                color={this.state.goalCycleType == 0 ? 'white' : '#F2F2F2'}
                                 width={80}
                                 height={33}
                                 onPress={() => {
@@ -288,13 +292,14 @@ export default class GoalWrite extends Component {
                                     })
                                 }}
                             />
-                            <RoundButton
+                            <RoundColorButton
                                 text={'매주'}
                                 textStyle={{
                                     textAlign: 'center'
                                 }}
-                                borderWidth={1}
-                                color={this.state.goalCycleType == 1 ? this.state.goalColor : '#F2F2F2'}
+                                borderWidth={0}
+                                elevation={this.state.goalCycleType == 1 ? 1 : 0}
+                                color={this.state.goalCycleType == 1 ? 'white' : '#F2F2F2'}
                                 width={80}
                                 height={33}
                                 onPress={() => {
@@ -316,7 +321,8 @@ export default class GoalWrite extends Component {
                                                 width: 40, height: 40, borderRadius: 40,
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                backgroundColor: this.state.goalCycleParamByDays[index] || this.state.goalCycleType == 0 ? this.state.goalColor : '#C4C4C4'
+                                                elevation: this.state.goalCycleParamByDays[index] || this.state.goalCycleType == 0 ? 1 : 0,
+                                                backgroundColor: this.state.goalCycleParamByDays[index] || this.state.goalCycleType == 0 ? 'white' : '#F2F2F2'
                                             }}
                                             onPress={() => {
                                                 this.state.goalCycleParamByDays[index] = !this.state.goalCycleParamByDays[index];
@@ -354,7 +360,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 7,
-        height : 50
+        height: 50
     },
     contentContainer: {
         paddingTop: 10,
@@ -362,6 +368,18 @@ const styles = StyleSheet.create({
     },
     editContainer: {
         marginBottom: 30
+    },
+    choiceDateButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width : 155,
+        padding: 5,
+        borderBottomWidth: 1
+    },
+    choiceIcon:{
+        width: 22,
+        height: 22
     },
     choiceContainer: {
         flexDirection: 'row',

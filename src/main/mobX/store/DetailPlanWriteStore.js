@@ -11,10 +11,12 @@ export default class DetailPlanWriteStore{
     entryStartDate;
     entryEndDate;
 
+    LIMIT = 10;
+
     @action
     init = (purpose) => {
 
-        this.entryStartDate = EasyDate.now();
+        this.entryStartDate = purpose.startDate;
         this.entryEndDate = purpose.endDate;
         this.goals = purpose.detailPlans;
         this.isCanSave = false;
@@ -55,34 +57,9 @@ export default class DetailPlanWriteStore{
         return this.goals.length != 0;
     }
 
-    //경고 메시지 주어야함... endDate가 entryEnddate와 일치하지 않는 문재
-    // valid(){
-    //     if(this.goals.length == 0)
-    //         throw '최소 하나 이상의 목표를 가지고 있어야 합니다.'
-
-    //     if(this.goals[0].id != 0)
-    //         throw '시스템 오류';
-
-    //     let minStartDate = this.goals[0].startDate;
-
-    //     for(let i = 1; i < this.goals.length; i++){
-    //         if(!this.goals[i]){
-    //             throw '시스템 오류';
-    //         }else if(!(this.goals[i - 1].id < this.goals[i].id)){
-    //             throw '시스템 오류';
-    //         }else if(!this.goals[i].startDate || !this.goals[i].endDate || !this.goals[i].cycle){ //insertGoal에서 유효성 처리르 할것이기 때문에 따로 경고메시지를 주지 않음
-    //             throw '시스템 오류';
-    //         }
-
-    //         if(this.goals[i].startDate.isAfter(minStartDate)){
-    //             minStartDate = this.goals[i].startDate;
-    //         }
-
-    //     }
-
-    //     if(!minStartDate.equalsDate(this.entryStartDate))
-    //         throw '최소 하나 이상의 목표 시작날짜는 목적의 시작날짜와 같아야 합니다.'
-    // }
+    get isFilled(){
+        return this.goals.length == this.LIMIT;
+    }
 
     get graphData(){
         const entryDiff = EasyDate.between(this.entryStartDate, this.entryEndDate).day;

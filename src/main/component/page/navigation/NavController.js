@@ -56,6 +56,7 @@ export default class NavController extends Component {
                 SplashScreen.hide();
             }, 500);
         }
+     
     }
 
     render() {

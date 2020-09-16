@@ -4,13 +4,11 @@ import PurposePaper from '../../../atom/button/PurposePaper';
 import Loader from '../../Loader';
 import PurposeService from '../../../../rest/service/PurposeService';
 
-import NotificationManager from '../../../../util/NotificationManager';
-import GlobalConfig from '../../../../GlobalConfig';
-import Request from '../../../../util/Request';
-import { inject } from 'mobx-react';
-import EasyDate from '../../../../util/EasyDate';
-import Purpose from '../../../../rest/model/Purpose';
 
+import { inject } from 'mobx-react';
+import Purpose from '../../../../rest/model/Purpose';
+import CaterPlannerResult from '../../../organism/CaterPlannerResult'
+import {ResultState} from '../../../../AppEnum'
 
 @inject(['appStore'])
 export default class BriefingPurposeList extends Component {
@@ -53,15 +51,18 @@ export default class BriefingPurposeList extends Component {
         this._getData();
     }
 
-    componentWillUnmount() {
-        if(this.appStore.isScheduling)
-        NotificationManager.briefingAlarmShow(this.state.purposes);
-    }
 
     render() {
         return (
             <View style={{ flex: 1 }}>
-                {this.state.isLoading ? <Loader /> : (
+                {this.state.isLoading ? <Loader /> : 
+                    !this.state.purposes || this.state.purposes.length == 0 ?  
+                        <CaterPlannerResult
+                        backgroundStyle={{flex:1}}
+                        state={ResultState.GREAT}
+                        text={'수행할 목표가 없습니다.'}
+                        />
+                    :
                     <FlatList
                         style={{ flex: 1 }}
                         contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 10 }}
@@ -73,7 +74,7 @@ export default class BriefingPurposeList extends Component {
                             if (goalList.length == 0)
                                 return;
 
-                            console.log('dsfsd')
+               
 
                             return (
                                 <View style={{ marginTop: 12 }}>
@@ -96,7 +97,7 @@ export default class BriefingPurposeList extends Component {
                                 </View>)
                         }}
                     />
-                )
+                
                 }
             </View>
         );

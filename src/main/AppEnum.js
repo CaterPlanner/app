@@ -32,5 +32,13 @@ export const LoadType = {
     MORE : 0,
     REFRESH : 1,
     UPLOAD : 2,
-    REMOVE : 3
+    REMOVE : 3,
+    SEARCH : 4
+}
+
+export const ResultState = {
+    NOTFOUND: 0,
+    NOTHING : 1,
+    GREAT : 2,
+    TIMEOUT : 3
 }

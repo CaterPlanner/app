@@ -59,6 +59,13 @@ export default class EasyDate extends Date{
         return text;
     }
 
+    toStringFormat = (seperator) => {
+        let text = this.getFullYear() + seperator
+        text += (this.getMonth() + 1 < 10 ? '0' : '') + (this.getMonth() + 1) + seperator;
+        text += (this.getDate() < 10 ? '0' : '') + this.getDate();
+        return text;
+    }
+
     toStringDateByView = () => {
         let text = this.getFullYear() + "년 "
         text += (this.getMonth() + 1 < 10 ? '0' : '') + (this.getMonth() + 1) + "월 ";

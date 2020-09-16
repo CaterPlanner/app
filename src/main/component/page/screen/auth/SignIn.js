@@ -59,7 +59,7 @@ export default function SignIn() {
                     <View style={{ marginTop: 10, paddingHorizontal: 1 }}>
                         <Image
                             resizeMode={'stretch'}
-                            source={require('../../../../../../asset/image/caterplanner_logo.png')}
+                            source={require('../../../../../../asset/image/intro_logo.png')}
                             style={{ width: 220, height: 320 }}
                         />
                     </View>

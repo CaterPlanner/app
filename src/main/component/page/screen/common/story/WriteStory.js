@@ -48,9 +48,7 @@ export default class WriteStory extends Component {
     _uploadData = async () => {
         try {
 
-            console.log('보내기전')
-            console.log(this.state.storyTitle);
-            console.log(this.state.storyTitle == '');
+         
 
             if(this.state.storyTitle == ''){
                 ToastAndroid.showWithGravity('제목을 입력하여 주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
@@ -185,30 +183,40 @@ export default class WriteStory extends Component {
                                 }}
                                 value={this.state.storyTitle}
                             />
-                        <View style={{ height: 0.4, backgroundColor: '#888888' }} />
-                        <MyTextInput
-                            multiline={true}
-                            maxLength={100}
-                            placeholder={'내용을 입력해주세요 (최대 100자, 25줄)'}
-                            maxLine={25}
-                            textStyles={[styles.inputFont, {
-                                lineHeight: 20,
-                                textAlign: 'left',
-                                textAlignVertical: 'top',
-                            }]}
-                            backgroundStyles={{
-                                backgroundColor: 'white',
-                                padding: 10,
-                                flex: 1,
-                                justifyContent: 'flex-start'
+                        <View style={{ height: 0.4, backgroundColor: '#888888' }} />   
+                        <TouchableOpacity
+                            style={{flex:1}}
+                            activeOpacity={1}
+                            onPress={() => {
+                                this.contentInput.focus();
+                                console.log('focus')
                             }}
-                            onChangeText={(text) => {
-                                this.setState({
-                                    storyContent: text
-                                })
-                            }}
-                            value={this.state.storyContent}
-                        />
+                        >
+                            <MyTextInput
+                                ref={(ref) => {this.contentInput = ref;}}
+                                multiline={true}
+                                maxLength={100}
+                                placeholder={'내용을 입력해주세요 (최대 100자, 25줄)'}
+                                maxLine={25}
+                                textStyles={[styles.inputFont, {
+                                    lineHeight: 20,
+                                    textAlign: 'left',
+                                    textAlignVertical: 'top',
+                                }]}
+                                backgroundStyles={{
+                                    backgroundColor: 'white',
+                                    padding: 10,
+                                    flex:1,
+                                    justifyContent: 'flex-start'
+                                }}
+                                onChangeText={(text) => {
+                                    this.setState({
+                                        storyContent: text
+                                    })
+                                }}
+                                value={this.state.storyContent}
+                            />
+                        </TouchableOpacity>
                         <View style={{ width: '100%', height: 55, backgroundColor: '#888888', justifyContent:'center' }}>
                             <TouchableOpacity style={{alignSelf: 'flex-end', marginRight: 5, backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
                                 onPress={() => {

@@ -23,10 +23,10 @@ export const PublicNavigation = {
     elements : [
         <Stack.Screen options={({ navigation }) => ({
             ...defaultHeaderStyle(navigation),
-            title: '프로필',
-            headerTitleAlign:'center',
+            title: '사용자 정보',
+            headerTitleAlign:'left',
             headerTitleStyle: {
-                fontWeight: 'bold'
+                fontWeight: 'bold',
             }
         })} name="LoadProfile" component={LoadProfile}/>,
         <Stack.Screen options={{ headerShown: false}} name="LoadMyPurpose" component={LoadMyPurpose} />,
@@ -42,7 +42,7 @@ export const PublicNavigation = {
         <Stack.Screen options={({ route, navigation }) => ({
             ...defaultHeaderStyle(navigation),
             title: '스토리라인',
-            headerTitleAlign: 'center',
+            headerTitleAlign: 'left',
             headerTitleStyle: {
                 fontWeight: 'bold'
             }
@@ -77,7 +77,7 @@ export const PublicNavigation = {
         <Stack.Screen options={({route, navigation}) => ({
             ...defaultHeaderStyle(navigation),
             title: '목적 리스트',
-            headerTitleAlign:'center',
+            headerTitleAlign:'left',
             headerTitleStyle: {
                 fontWeight: 'bold'
             }

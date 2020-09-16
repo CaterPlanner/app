@@ -24,8 +24,8 @@ const StoryNavigation = ({navigation, route}) => {
             {/* <Stack.Screen name="TestView" component={TestView}/> */}
             <Stack.Screen options={({navigation}) => ({
                 ...defaultHeaderStyle(),
-                headerTitle: '스토리',
-                headerTitleAlign: 'center',
+                headerTitle: '피드',
+                headerTitleAlign: 'left',
                 headerTitleStyle: {
                     fontWeight: 'bold'
                 }

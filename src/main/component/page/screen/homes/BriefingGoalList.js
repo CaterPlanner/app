@@ -101,7 +101,6 @@ export default class BriefingGoalList extends Component{
                                     this.checkCount--;
                                     item.briefingCount--;
                                 }
-                                console.log(item.achieve)
 
                                 this.setState({
                                     goals : this.state.goals

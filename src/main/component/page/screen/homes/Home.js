@@ -17,6 +17,7 @@ import SplashScreen from 'react-native-splash-screen';
 import CaterPlannerRank from '../../../atom/icon/CaterPlannerRank';
 
 
+
 const fullWidth = Dimensions.get('window').width;
 
 function CardDecimalDayWidget({ purpose }) {
@@ -320,6 +321,7 @@ export default class Home extends Component {
         setTimeout(() => {
             SplashScreen.hide();
         }, 500);
+
     }
 
     componentWillUnmount() {

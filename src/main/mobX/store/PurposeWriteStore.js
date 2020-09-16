@@ -58,16 +58,12 @@ export default class PurposeWriteStore{
 
                 this.purpose.stat = State.PROCEED;
                 
-                console.log(this.purpose);
-
-                console.log('sdf')
 
                 this.resetDetailPlans(this.purpose)
 
                 break;
         }
 
-        console.log(this.purpose);
 
         // this.purpose = purpose ? purpose : new Purpose(null, "", "", null, 0,  EasyDate.now(), new EasyDate().plusDays(1), 0 );
 
@@ -89,12 +85,15 @@ export default class PurposeWriteStore{
         const diffDay = EasyDate.between(EasyDate.now(), purpose.startDate).day;
 
         purpose.startDate = EasyDate.now();
+        purpose.endDate = purpose.endDate.plusDays(diffDay)
+
+
 
         purpose.detailPlans.forEach((goal) => {
             
             goal.briefingCount = 0;
             goal.lastBriefingDate = null;
-            goal.startDate = goal.startDate.plusDays(diffDay);
+            goal.startDate = EasyDate.now();
             goal.endDate = goal.endDate.plusDays(diffDay);
 
             if(goal.endDate.isBefore(purpose.endDate)){

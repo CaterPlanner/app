@@ -19,7 +19,7 @@ const ProfileNavigation = ({navigation, route}) => {
             <Stack.Screen options={({ navigation }) => ({
                 ...defaultHeaderStyle(),
                 title: '프로필',
-                headerTitleAlign:'center',
+                headerTitleAlign:'left',
                 headerTitleStyle: {
                     fontWeight: 'bold'
                 }

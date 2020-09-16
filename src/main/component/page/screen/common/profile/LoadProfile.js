@@ -1,49 +1,79 @@
-import React, {useEffect, useState} from 'react';
+import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 
 import Request from '../../../../../util/Request';
 import useStores from '../../../../../mobX/helper/useStores';
 import Loader from '../../../Loader';
-import Offline from '../../../../organism/Offline';
 import DetailProfile from './DetailProfile';
 import GlobalConfig from '../../../../../GlobalConfig';
-import { useRoute } from '@react-navigation/native';
+import { inject } from 'mobx-react';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
+import { ResultState } from '../../../../../AppEnum';
 
-export default function LoadProfile(){
+@inject(['authStore'])
+export default class LoadProfile extends Component{
+    constructor(props){
+        super(props);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [data, setData] = useState(null);
+        this.state = {
+            isLoading : true,
+            data: null,
+            isTimeout : false
+        }
 
-    const {authStore} = useStores();
-    const route = useRoute();
+        this.authStore = this.props.authStore;
+    }
 
-    const loadProfile = async () => {
+    _loadProfile = async () => {
 
         try{
-            if(!authStore.isLogin){
-                setIsLoading(false);
-            }else{
-                const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/${route.params.id}`)
-                .auth(await authStore.getToken())
+            const response = await Request.get(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/user/${this.props.route.params.id}`)
+                .auth(await this.authStore.getToken())
                 .submit();
 
-                setData(response.data);
-                setIsLoading(false);
-            }
+            this.setState({
+                data : response.data,
+                isLoading : false
+            })
+
+
         }catch(e){
             console.log(e);
+            this.setState({
+                isTimeout: true,
+                isLoading : false
+            })
         }
     }
 
-    useEffect(() => {
-        loadProfile();
-    },[])
+    componentDidMount(){
+        this.props.navigation.addListener('focus', () => {
+            this._loadProfile();
+        })
+    }
 
-    return(
-        <View style={{flex : 1}}>
-            {isLoading ? <Loader/> :
-                data == null ?  <Offline/> : <DetailProfile data={data} />
-            }
-        </View>
-    );
+    componentWillUnmount() {
+        this.props.navigation.removeListener('focus');
+    }
+
+    render(){
+        return (
+            <View style={{ flex: 1 }}>
+                {this.state.isLoading ? <Loader /> :
+                    this.state.isTimeout ?
+                    <CaterPlannerResult
+                        state={ResultState.TIMEOUT}
+                        reRequest={() => {
+                            this.setState({
+                                isTimeout : false,
+                                isLoading : true
+                            }, this._loadProfile)
+                        }}
+                    />
+                    :
+                    <DetailProfile data={this.state.data} />
+                }
+            </View>)
+    }
 }
+
