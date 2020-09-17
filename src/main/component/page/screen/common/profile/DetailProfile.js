@@ -20,7 +20,7 @@ const helpCount = '195'
 export default function UserProfile({ data }) {
 
     const navigation = useNavigation();
-  
+
 
     return (
         <ScrollView style={{ style: 1 }}>
@@ -64,38 +64,36 @@ export default function UserProfile({ data }) {
                 detailButtonHint={'전체 목적보기'}
                 detailButtonPress={() => {
                     navigation.push('UserPurposeList', {
-                        id : data.id
+                        id: data.id
                     });
                 }}
-                child={
-                    (
-                        <View style={{height: Dimensions.get('window').height - 413}}>
-                        {data.purposeList.length == 0 ? 
+            >
+                <View >
+                    {data.purposeList.length == 0 ?
                         <CaterPlannerResult
-                            backgroundStyle={{flex:1}}
+                            backgroundStyle={{ height: Dimensions.get('window').height - 413 }}
                             state={ResultState.NOTHING}
                             text={'현재 수행중인 목적이 없습니다.'}
-                        /> : 
-                        <View style={{paddingRight: 10, paddingLeft: 2, paddingVertical: 10}}>
+                        /> :
+                        <View style={{ paddingRight: 10, paddingLeft: 2, paddingVertical: 10 }}>
                             {data.purposeList.map((purpose) => (
-                                <View style={{ marginTop : 12}}>
+                                <View style={{ marginTop: 12 }}>
                                     <PurposePaper
                                         imageUri={purpose.photoUrl}
                                         name={purpose.name}
                                         checkedBriefing={false}
                                         onPress={() => {
                                             navigation.push('LoadUserPurpose', {
-                                                id : purpose.id
+                                                id: purpose.id
                                             });
                                         }}
                                     />
                                 </View>
                             ))}
-                           
-                        </View>}</View>
-                    )
-                }
-            />
+                        </View>
+                    }</View>
+
+            </InfoBox>
         </ScrollView>
 
 

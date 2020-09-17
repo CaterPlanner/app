@@ -28,10 +28,8 @@ export default class PullTest extends Component{
         this.setState({isLoading:true})
         fetch(apiURL).then(res => res.json()).then(res => {
             this.setState({items: res})
-            console.log('로딩 - 새로고침 완료 ----' + this.state.isLoading)
 
         }).finally(() => this.setState({isLoading:false}))
-        console.log('로딩 - 새로고침 하기 ----' + this.state.isLoading)
     }
 
     renderItem({item}){

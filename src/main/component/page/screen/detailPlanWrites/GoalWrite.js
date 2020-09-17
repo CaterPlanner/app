@@ -33,7 +33,7 @@ export default class GoalWrite extends Component {
             goalPurposeId: this.baseGoal ? this.baseGoal.purposeId : null,
             goalName: this.baseGoal ? this.baseGoal.name : '',
             goalDescription: this.baseGoal ? this.baseGoal.description : '',
-            goalStartDate: this.baseGoal ? this.baseGoal.startDate : this.detailPlanWriteStore.entryStartDate,
+            goalStartDate: this.baseGoal ? this.baseGoal.startDate : this.detailPlanWriteStore.entryStartDate.isAfter(EasyDate.now()) ? EasyDate.now() : this.detailPlanWriteStore.entryStartDate,
             goalEndDate: this.baseGoal ? this.baseGoal.endDate : this.detailPlanWriteStore.entryEndDate,
             goalColor: this.baseGoal ? this.baseGoal.color : colorList[0],
             goalCycleType: this.baseGoal ? (this.baseGoal.cycleType == 'A' ? 0 : 1) : 0,
@@ -125,10 +125,7 @@ export default class GoalWrite extends Component {
                             if (event.type == 'set') {
                                 date = new EasyDate(date);
                                 const data = this.state.changeDate == 0 ? { goalStartDate: date } : { goalEndDate: date };
-                                console.log({
-                                    a: 2,
-                                    ...data
-                                })
+                                
                                 this.setState({
                                     selectDate: date.isBefore(this.detailPlanWriteStore.entryStartDate.minusDays(1)) ? date : this.state.selectDate,
                                     selectDate: null,
@@ -143,7 +140,7 @@ export default class GoalWrite extends Component {
                         source={
                             require('../../../../../../asset/button/arrow_button.png')
                         }
-                        backgroundStyle={{ width: 40, height: '100%' }}
+                        backgroundStyle={{ width: 50, height: '100%' }}
                         imageStyle={{
                             width: 32,
                             height: 37,
@@ -153,13 +150,15 @@ export default class GoalWrite extends Component {
                     />
                     <ImageButton
                         source={require('../../../../../../asset/button/check_button.png')}
-                        backgroundStyle={{ width: 40, height: 40, marginBottom: 5 }}
+                        backgroundStyle={{ 
+                            width: 50, height: '100%' , paddingBottom:6
+                            }}
                         imageStyle={{ width: 29, height: 27 }}
                         onPress={this._updateGoal}
                     />
                 </View>
                 <View style={styles.contentContainer}>
-                    <View style={{ paddingBottom: 50, marginTop: 5 }}>
+                    <View style={{ paddingBottom: 50}}>
                         <Text style={{ fontSize: 22, fontWeight: 'bold' }}>수행 목표를 설정해 주세요.</Text>
                     </View>
                     <View style={styles.editContainer}>
@@ -359,9 +358,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 7,
-        height: 50
-    },
+        paddingHorizontal: 2,
+        height: 53
+        },
     contentContainer: {
         paddingTop: 10,
         paddingHorizontal: 15

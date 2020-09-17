@@ -18,7 +18,6 @@ export default function PurposeNameWrite({index}) {
 
     const scopeNames = ['전체공개', '비공개']
 
-    console.log( Dimensions.get('window').height / 2);
 
     return (
         <View style={purposeStyles.container}>
@@ -64,7 +63,7 @@ export default function PurposeNameWrite({index}) {
                         </Text>
                 </View>
             </View>
-            <View style={[purposeStyles.bottomContainer, {alignSelf:'center', top : Dimensions.get('window').height / 4 ,position : 'absolute', width:'100%'}]}>
+            <View style={[{alignSelf:'center', top : Dimensions.get('window').height / 4  ,position : 'absolute', width:'100%'}]}>
                 <CaterPlannerTextInput
                     labelStyle={{color : '#25B046'}}
                     label={'목적 이름 설정하기'}

@@ -22,9 +22,9 @@ const DetailPlanWriteNavigation = () => {
                         <ImageButton
                             disabled={!route.params.isCanSave}
                             backgroundStyle={{
-                                marginVertical: 5,
-                                marginRight: 10
-                                ,marginBottom: 5 
+                                paddingVertical: 5,
+                                paddingRight: 10
+                                ,paddingBottom: 5,
                             }}
                             imageStyle={{
                                 width: 29, height: 27,

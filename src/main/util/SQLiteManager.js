@@ -7,7 +7,7 @@ const connection = SQLite.openDatabase({
 },
     (db) => {
         db.executeSql("PRAGMA foreign_keys = ON");
-        console.log('DB Connected!')},
+        },
     error => { console.log(error); }
 )
 
@@ -24,7 +24,6 @@ export default {
                 db.executeSql('COMMIT');
                 resolve(data);
             }catch(e){
-                console.log('main reject')
                 db.executeSql('ROLLBACK')
                 reject(e);
             }finally{

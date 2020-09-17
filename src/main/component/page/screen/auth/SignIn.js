@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Dimensions, StatusBar, TouchableOpacity, Modal } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import ImageButton from '../../../atom/button/ImageButton';
 import useStores from '../../../../mobX/helper/useStores';
 import Loader from '../../Loader';
 

@@ -59,11 +59,13 @@ export default class Story extends Component{
 
             this.isFinish = response.data.final;
 
+
             this.setState({
                 data : this.state.loadType == LoadType.REFRESH ? response.data.elements : this.state.data.concat(response.data.elements),
                 isLoading : false,
                 isFinish : response.data.final
-            })
+            });
+
         }catch(e){
             console.log(e);
 
@@ -126,6 +128,7 @@ export default class Story extends Component{
                             onPress={() => {this.props.navigation.push('DetailStory', {
                                 id : item.id
                             })}}
+                            navigation={this.props.navigation}
                         /></View>)
                 }}
                 keyExtractor={(item) => item.id}

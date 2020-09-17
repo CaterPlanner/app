@@ -54,7 +54,6 @@ export default class Request{
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
                     return new Promise((resolve, reject) => {
                         if(isOk){
                             resolve(data)
@@ -63,7 +62,7 @@ export default class Request{
                         }
                     })
                 }),
-                new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), this.timeout))
+                new Promise((_, reject) => setTimeout(() => reject(new Error('타임 아웃')), this.timeout))
             ])
     
         })();

@@ -32,7 +32,6 @@ export default class MyTextInput extends Component {
 
     _getViewHeight = () => {
         const viewHeight = Math.max(this.state.textHeight, this.viewHeight);
-        // console.log(viewHeight + ", " + this.state.textHeight);
         return viewHeight > this.containerMaxHeight ? this.containerMaxHeight : viewHeight;
     }
 
@@ -56,7 +55,6 @@ export default class MyTextInput extends Component {
     }
 
     render() {
-        console.log(this.state.textHeight)
         return (
             <View style={[{justifyContent: 'center'},this.props.backgroundStyles, {
                 overWrite: 'hidden',

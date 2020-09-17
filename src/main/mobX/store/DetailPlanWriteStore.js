@@ -33,9 +33,14 @@ export default class DetailPlanWriteStore{
 
         this.goals = this.goals.slice();
         
-        if(goal.endDate.isBefore(this.entryEndDate)){
-            this.entryEndDate = goal.endDate;
-        }
+        let maxEndDate = goal.endDate;
+        this.goals.forEach((goal) => {
+            if(goal.endDate.isBefore(this.entryEndDate)){
+                maxEndDate = goal.endDate;
+            }
+        })
+
+        this.entryEndDate = maxEndDate;
 
     }
 
@@ -45,7 +50,6 @@ export default class DetailPlanWriteStore{
         this.goals.forEach((goal , index) => {
             goal.id = index;
         })
-        console.log(this.goals);
         this.goals = this.goals.slice();
     }
 

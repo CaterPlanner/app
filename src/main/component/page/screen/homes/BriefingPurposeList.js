@@ -9,6 +9,7 @@ import { inject } from 'mobx-react';
 import Purpose from '../../../../rest/model/Purpose';
 import CaterPlannerResult from '../../../organism/CaterPlannerResult'
 import {ResultState} from '../../../../AppEnum'
+import Goal from '../../../../rest/model/Goal';
 
 @inject(['appStore'])
 export default class BriefingPurposeList extends Component {
@@ -42,6 +43,7 @@ export default class BriefingPurposeList extends Component {
     _acceptPurpose = async (index, updatePurpose) => {
         const newPurposes = this.state.purposes.slice();
         newPurposes[index] = updatePurpose;
+        
         this.setState({
             purposes : newPurposes
         })
@@ -53,10 +55,30 @@ export default class BriefingPurposeList extends Component {
 
 
     render() {
+        let activePurpose = [];
+        if(!this.state.isLoading && this.state.purposes){
+            this.state.purposes.forEach((purpose, index) => {
+                const goalList = purpose.detailPlans.filter(g => g.isNowBriefing);
+
+
+
+
+                if(goalList.length != 0){
+                    activePurpose.push({
+                        index: index,
+                        purpose : purpose,
+                        activeGoals : goalList
+                    });
+                }
+            })
+        }
+        
+
+
         return (
             <View style={{ flex: 1 }}>
                 {this.state.isLoading ? <Loader /> : 
-                    !this.state.purposes || this.state.purposes.length == 0 ?  
+                    !this.state.purposes || activePurpose.length == 0 ?  
                         <CaterPlannerResult
                         backgroundStyle={{flex:1}}
                         state={ResultState.GREAT}
@@ -66,30 +88,26 @@ export default class BriefingPurposeList extends Component {
                     <FlatList
                         style={{ flex: 1 }}
                         contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 10 }}
-                        data={this.state.purposes}
-                        renderItem={({ item: purpose, index }) => {
-
-                            const goalList = purpose.detailPlans.filter(g => g.isNowBriefing);
-
-                            if (goalList.length == 0)
-                                return;
-
-               
-
+                        data={activePurpose}
+                        renderItem={({ item }) => {
                             return (
                                 <View style={{ marginTop: 12 }}>
                                     <PurposePaper
-                                        imageUri={purpose.photoUrl}
-                                        name={purpose.name}
-                                        count={goalList.length}
+                                        imageUri={item.purpose.photoUrl}
+                                        name={item.purpose.name}
+                                        count={item.activeGoals.length}
                                         onPress={() => {
 
-                                            const purpose = Purpose.clone(this.state.purposes[index]);
+                                            const purposeClone = Purpose.clone(item.purpose);
+                                            const activeGoalsClone = item.activeGoals.map((goal) => {
+                                                return Goal.clone(goal);
+                                            })
 
                                             this.props.navigation.navigate('BriefingGoalList', {
-                                                purpose: purpose,
+                                                purpose: purposeClone,
+                                                activeGoals : activeGoalsClone,
                                                 acceptData: (updatePurpose) => {
-                                                    this._acceptPurpose(index, updatePurpose)
+                                                    this._acceptPurpose(item.index, updatePurpose)
                                                 }
                                             })
                                         }}

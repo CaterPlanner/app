@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
-export default function InfoBox({ title, detailButtonPress, detailButtonHint = '자세히 보기', child }) {
+export default function InfoBox({ title, detailButtonPress, detailButtonHint = '자세히 보기', children }) {
     return (
-        <View style={{width: '100%'}}>
+        <View style={{flex:1}}>
             <View style={{paddingHorizontal: 12, paddingVertical: 10 , backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                 <Text style={{ fontSize: 17 }}>
                     {title}
@@ -18,7 +18,7 @@ export default function InfoBox({ title, detailButtonPress, detailButtonHint = '
                 </TouchableOpacity>
             </View>
             <View>
-                {child}
+                {children}
             </View>
         </View>
     )

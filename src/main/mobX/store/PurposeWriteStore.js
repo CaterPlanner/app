@@ -46,6 +46,7 @@ export default class PurposeWriteStore{
 
                 break;
             case PurposeWriteType.FOLLOW:
+                this.purpose.startDate = purpose.startDate;
                 this.purpose.detailPlans = purpose.detailPlans;
                 this.permitCache =  [false, false, false, true]
                 
@@ -58,7 +59,7 @@ export default class PurposeWriteStore{
 
                 this.purpose.stat = State.PROCEED;
                 
-
+     
                 this.resetDetailPlans(this.purpose)
 
                 break;
@@ -76,18 +77,17 @@ export default class PurposeWriteStore{
 
         this.isChangePhoto = false;
 
-       
     }
 
     resetDetailPlans = (purpose) => {
 
-
+        
         const diffDay = EasyDate.between(EasyDate.now(), purpose.startDate).day;
 
         purpose.startDate = EasyDate.now();
         purpose.endDate = purpose.endDate.plusDays(diffDay)
 
-
+     
 
         purpose.detailPlans.forEach((goal) => {
             
@@ -173,6 +173,7 @@ export default class PurposeWriteStore{
                     this.purpose.detailPlans.map((goal) => {
                         return {
                             ...goal,
+                            lastBriefingDate :  goal.lastBriefingDate ?  goal.lastBriefingDate.toString() : null,
                             startDate: goal.startDate.toString(),
                             endDate: goal.endDate.toString()
                         }
@@ -180,6 +181,10 @@ export default class PurposeWriteStore{
                 )
             );
  
+        }
+
+        if(this.writeType == PurposeWriteType.RETRY && this.writeType == PurposeWriteType.GROUND_MODIFY){
+            formData.append('achieve', this.purpose.achieve)
         }
 
         return formData;

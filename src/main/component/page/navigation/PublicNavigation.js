@@ -14,6 +14,7 @@ import UserPurposeList from '../screen/common/profile/UserPurposeList';
 
 import CommnetView from '../screen/common/CommnetView';
 import ImageButton from '../../atom/button/ImageButton';
+import WriteStory from '../screen/common/story/WriteStory';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,32 @@ export const PublicNavigation = {
                 fontWeight: 'bold',
             }
         })} name="LoadProfile" component={LoadProfile}/>,
+        <Stack.Screen options={({ route, navigation }) => ({
+            ...defaultHeaderStyle(navigation),
+            title: '스토리 작성',
+            headerShown : route.params.showHeader == undefined || route.params.showHeader == true ? true : false, 
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+                fontWeight: 'bold'
+            },
+            headerRight: () => {
+                return(
+                    <ImageButton
+                    backgroundStyle={{
+                        paddingVertical: 5,
+                        paddingRight: 10
+                        ,paddingBottom: 5,
+                    }}
+                    imageStyle={{
+                        width: 29, height: 27,
+                    }}
+                    source={
+                        require('../../../../../asset/button/check_button.png')}
+                    onPress={route.params ? route.params.save : null}
+                />
+                )
+            }
+        })} name="WriteStory" component={WriteStory}/>,
         <Stack.Screen options={{ headerShown: false}} name="LoadMyPurpose" component={LoadMyPurpose} />,
         <Stack.Screen  options={({ navigation }) => ({
             ...defaultHeaderStyle(navigation),
@@ -93,76 +120,5 @@ export const PublicNavigation = {
         })
     }
 }
-
-// const PublicNavigation = () => {
-//     return(
-//           <Stack.Navigator>
-//             <Stack.Screen options={({ navigation }) => ({
-//                 ...defaultHeaderStyle(navigation),
-//                 title: '프로필',
-//                 headerTitleAlign:'center',
-//                 headerTitleStyle: {
-//                     fontWeight: 'bold'
-//                 }
-//             })} name="LoadProfile" component={LoadProfile}/>
-//             <Stack.Screen options={{ headerShown: false }} name="LoadMyPurpose" component={LoadMyPurpose} />
-//             <Stack.Screen  options={({ navigation }) => ({
-//                 ...defaultHeaderStyle(navigation),
-//                 title: ''
-//             })} name="DetailPlanList" component={DetailPlanList}/>
-//             <Stack.Screen options={({ navigation }) => ({
-//                 ...defaultHeaderStyle(navigation),
-//                 title: ''
-//             })} name="DetailGoal" component={DetailGoal}/>
-//             <Stack.Screen options={{ headerShown: false }} name="LoadUserPurpose" component={LoadUserPurpose}/>
-//             <Stack.Screen options={({ route, navigation }) => ({
-//                 ...defaultHeaderStyle(navigation),
-//                 title: '스토리라인',
-//                 headerTitleAlign: 'center',
-//                 headerTitleStyle: {
-//                     fontWeight: 'bold'
-//                 }
-               
-//             })} name="PurposeStories" component={PurposeStories}/>
-//             <Stack.Screen  options={({ route, navigation }) => ({
-//                 ...defaultHeaderStyle(navigation),
-//                 title: '',
-//                 headerRight: () => {
-//                     return(
-//                         <ImageButton
-//                         backgroundStyle={{
-//                             marginVertical: 5,
-//                             marginRight: 10,
-//                             alignItems: 'center',
-//                             justifyContent: 'center',
-//                             width : 20,
-//                             height: 30,
-//                         }}
-//                         imageStyle={{
-//                             width: 6,
-//                             height: 25
-//                         }}
-//                         source={
-//                             require('../../../../../asset/button/more_button.png')}
-//                         onPress={route.params ? route.params.showStoryMenu : null}
-//                     />
-//                     )
-//                 }
-//             })} name="DetailStory" component={DetailStory}/>
-//             <Stack.Screen options={({route, navigation}) => ({
-//                 ...defaultHeaderStyle(navigation),
-//                 title: '목적 리스트',
-//                 headerTitleAlign:'center',
-//                 headerTitleStyle: {
-//                     fontWeight: 'bold'
-//                 }
-//             })} name="UserPurposeList" component={UserPurposeList}/>
-//             <Stack.Screen options={({route, navigation}) => ({
-//                 ...defaultHeaderStyle(navigation),
-//                 title: ''
-//             })} name="CommnetView" component={CommnetView}/>
-//         </Stack.Navigator>
-//     )
-// }
 
 export default PublicNavigation;

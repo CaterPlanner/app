@@ -102,7 +102,6 @@ const GoalRepository = {
     },
 
     updateByKey : (txn, purposeId, id, goal) => {
-        console.log(goal);
         return new Promise((resolve, reject) => {
             txn.executeSql(
                 'update goal set briefing_count = ?, last_briefing_date = ? where purpose_id = ? and id = ?',

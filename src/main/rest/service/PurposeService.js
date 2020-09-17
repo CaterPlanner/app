@@ -54,7 +54,6 @@ export default class PurposeService {
             SQLiteManager.transaction(this.db, async (resolve, reject) => {   
                 try{
                     await PurposeRepository.deleteAll(this.db);
-                    console.log('ehllo');
                     for(purpose of responsePurposes){
                         await PurposeRepository.insert(this.db, new Purpose(purpose.id, purpose.name, purpose.description, purpose.photoUrl, purpose.disclosureScope, purpose.startDate, purpose.endDate, purpose.stat))
 
@@ -92,6 +91,8 @@ export default class PurposeService {
             }
         });
     }
+
+   
 
     findActivePurposes = () => {
         return new Promise(async (resolve, reject) => {
@@ -286,9 +287,10 @@ export default class PurposeService {
                         // }
 
                         // checkedGoals.push(purpose.detailPlans[goalId])
+               
+                        purpose.detailPlans[goal.id] = goal;
                     }
 
-                    console.log(purpose.achieve);
 
                     await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${purpose.id}/update`, JSON.stringify({
                         achieve: purpose.achieve,

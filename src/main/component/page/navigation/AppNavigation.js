@@ -34,31 +34,6 @@ const AppNavigation = () => {
                     fontWeight: 'bold'
                 }
             })} name="Setting" component={Setting} />
-            <Stack.Screen options={({ route, navigation }) => ({
-                ...defaultHeaderStyle(navigation),
-                title: '스토리 작성',
-                headerShown : route.params.showHeader == undefined || route.params.showHeader == true ? true : false, 
-                headerTitleAlign: 'center',
-                headerTitleStyle: {
-                    fontWeight: 'bold'
-                },
-                headerRight: () => {
-                    return(
-                        <ImageButton
-                        backgroundStyle={{
-                            marginVertical: 5,
-                            marginRight: 10
-                        }}
-                        imageStyle={{
-                            width: 35, height: 28
-                        }}
-                        source={
-                            require('../../../../../asset/button/check_button.png')}
-                        onPress={route.params ? route.params.save : null}
-                    />
-                    )
-                }
-            })} name="WriteStory" component={WriteStory}/>
         </Stack.Navigator>
     )
 }

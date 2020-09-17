@@ -5,8 +5,9 @@ import Loader from '../../../Loader';
 import { useRoute } from '@react-navigation/native';
 import Request from '../../../../../util/Request';
 import { inject } from 'mobx-react';
-import { Scope } from '../../../../../AppEnum';
+import { Scope, ResultState } from '../../../../../AppEnum';
 import MyTextInput from '../../../../atom/input/MyTextInput';
+import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
 
 const scopeNames = ['전체공개', '비공개']
 
@@ -37,7 +38,7 @@ export default class WriteStory extends Component {
         // this.props.navigation.dangerouslyGetParent().setOptions({ tabBarVisible: false })
 
         this.props.navigation.setParams({
-            save: this._uploadData
+            save: this._save
         })
     }
 
@@ -45,33 +46,35 @@ export default class WriteStory extends Component {
     }
 
 
+    _save = () => {
+        if(this.state.storyTitle == ''){
+            ToastAndroid.showWithGravity('제목을 입력하여 주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
+            return;
+        }else if(!(/[^\s]/g).test(this.state.storyTitle)){
+            ToastAndroid.showWithGravity('제목이 공백이 될 순 없습니다', ToastAndroid.SHORT, ToastAndroid.CENTER);
+            return;
+        }else if(this.state.storyContent == ''){
+            ToastAndroid.showWithGravity('내용을 입력하여 주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
+            return;
+        }else if(!(/[^\s]/g).test(this.state.storyContent)){
+            ToastAndroid.showWithGravity('내용이 공백이 될 순 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);
+            return;
+        }
+
+
+        this.props.navigation.setParams({
+            showHeader : false
+        })
+
+        this.setState({
+            isUploading: true
+        });
+
+        this._uploadData();
+    }
+
     _uploadData = async () => {
-        try {
-
-         
-
-            if(this.state.storyTitle == ''){
-                ToastAndroid.showWithGravity('제목을 입력하여 주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
-                return;
-            }else if(!(/[^\s]/g).test(this.state.storyTitle)){
-                ToastAndroid.showWithGravity('제목이 공백이 될 순 없습니다', ToastAndroid.SHORT, ToastAndroid.CENTER);
-                return;
-            }else if(this.state.storyContent == ''){
-                ToastAndroid.showWithGravity('내용을 입력하여 주세요', ToastAndroid.SHORT, ToastAndroid.CENTER);
-                return;
-            }else if(!(/[^\s]/g).test(this.state.storyContent)){
-                ToastAndroid.showWithGravity('내용이 공백이 될 순 없습니다.', ToastAndroid.SHORT, ToastAndroid.CENTER);
-                return;
-            }
-
-
-            this.props.navigation.setParams({
-                showHeader : false
-            })
-
-            this.setState({
-                isUploading: true
-            });
+        try{
 
             const resource = {
                 purposeId: this.purpose.id,
@@ -97,21 +100,15 @@ export default class WriteStory extends Component {
             }
 
             this.props.navigation.pop();
-            this.props.navigation.push('MainNavigation', {
-                screen : 'HomeNavigation',
-                params: {
-                    screen : 'DetailStory',
-                    params : {
-                        id: id
-                    }
-                }
+            this.props.navigation.push('DetailStory', {
+                id: id
             })
 
-
-        } catch (e) {
+        }catch(e){
             console.log(e);
             this.setState({
-                isUploading: false
+                isUploading: false,
+                isTimeout : true
             })
 
             this.props.navigation.setParams({
@@ -121,11 +118,22 @@ export default class WriteStory extends Component {
     }
 
 
+
     render() {
 
         return (
             <View style={{ flex: 1 }}>
-                {this.state.isUploading ? <Loader /> : (
+                {this.state.isUploading ? <Loader /> : 
+                    this.state.isTimeout ? <CaterPlannerResult
+                        state={ResultState.TIMEOUT}
+                        reRequest={() => {
+                            this.setState({
+                                isUploading : true,
+                                isTimeout : false
+                            },this._uploadData)
+                        }}
+                    /> :
+                    (
                     <View style={{ flex: 1, backgroundColor:'white' }}>
                         <Modal
                             transparent={true}
@@ -189,7 +197,6 @@ export default class WriteStory extends Component {
                             activeOpacity={1}
                             onPress={() => {
                                 this.contentInput.focus();
-                                console.log('focus')
                             }}
                         >
                             <MyTextInput

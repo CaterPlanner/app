@@ -6,10 +6,8 @@ import Request from '../../../../../util/Request';
 import Loader from '../../../Loader';
 import Purpose from '../../../../../rest/model/Purpose';
 import Goal from '../../../../../rest/model/Goal';
-import PurposeService from '../../../../../rest/service/PurposeService';
 import GlobalConfig from '../../../../../GlobalConfig';
 import { inject } from 'mobx-react';
-import { useFocusEffect} from '@react-navigation/native';
 import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
 import { ResultState } from '../../../../../AppEnum';
 
@@ -51,7 +49,6 @@ export default class LoadMyPurpose extends Component{
                     data : {
                         ...response.data,
                         purpose: purpose,
-                        refreshPurpose : this._getData
                     }
                 })
 
@@ -77,8 +74,16 @@ export default class LoadMyPurpose extends Component{
         this.props.navigation.removeListener('focus');
     }
 
+    _refresh = () => {
+        this.setState({
+            data : this.state.data
+        })
+    }
+
 
     render(){
+
+
         return (
             <View style={{ flex: 1 }}>
                 {this.state.isLoading ? <Loader /> : 
@@ -92,7 +97,9 @@ export default class LoadMyPurpose extends Component{
                             }, this._getData)
                         }}
                     /> :
-                    <DetailPurpose data={this.state.data} navigation={this.props.navigation} />}
+                    <DetailPurpose data={this.state.data} navigation={this.props.navigation} 
+                        refresh={this._refresh}
+                    />}
             </View>
         );
     }
