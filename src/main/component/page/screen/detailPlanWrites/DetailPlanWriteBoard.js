@@ -62,9 +62,11 @@ export default class DetailPlanWriteBoard extends Component {
 
         this.props.navigation.addListener('focus', () => {
             if (this.detailPlanWriteStore.isCanSave) {
+
                 this.props.navigation.setParams({
                     isCanSave: true
                 })
+ 
             }
         })
     }
@@ -94,7 +96,7 @@ export default class DetailPlanWriteBoard extends Component {
 
             this.props.route.params.setPurposeDetailPlans(this.purposeWriteStore.purpose.detailPlans);
 
-
+            
             this.props.navigation.navigate('PurposeWriteBoard');
 
         } catch (e) {

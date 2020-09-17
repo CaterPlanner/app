@@ -52,6 +52,8 @@ export default class GoalWrite extends Component {
             selectDate: null
         }
 
+        this.isWrited = false;
+
     }
 
     _vaild = () => {
@@ -105,7 +107,10 @@ export default class GoalWrite extends Component {
                 , this.state.goalStartDate, this.state.goalEndDate, this.state.goalColor, formatCycle, 0, null)
         )
 
-        this.props.navigation.goBack();
+        this.props.navigation.navigate('DetailPlanWriteBoard');
+
+
+
     }
 
 
@@ -154,7 +159,11 @@ export default class GoalWrite extends Component {
                             width: 50, height: '100%' , paddingBottom:6
                             }}
                         imageStyle={{ width: 29, height: 27 }}
-                        onPress={this._updateGoal}
+                        onPress={() => {
+                            if(this.isWrited)
+                                return;
+                            this.isWrited = true;
+                            this._updateGoal()}}
                     />
                 </View>
                 <View style={styles.contentContainer}>

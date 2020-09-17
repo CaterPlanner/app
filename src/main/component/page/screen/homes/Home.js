@@ -326,6 +326,8 @@ export default class Home extends Component {
     }
 
     render() {
+
+        console.log(this.appStore.isStart)
         return (
             <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
                  <Modal
