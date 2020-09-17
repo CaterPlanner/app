@@ -7,20 +7,16 @@ export default {
 
     PushNotification.configure({
       onRegister: function (token) {
-        console.log('onRegister')
-        console.log("TOKEN:", token);
+
       },
 
       onNotification: function (notification) {
-        console.log('onNotification')
-        console.log("NOTIFICATION:", notification);
+
 
       },
 
       onAction: function (notification) {
-        console.log('onAction')
-        console.log("ACTION:", notification.action);
-        console.log("NOTIFICATION:", notification);
+
 
         // process the action
       },

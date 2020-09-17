@@ -49,4 +49,3 @@ function a(type, startDate, endDate, piece){
 
 } 
 
-console.log(a("W", new Date("2020-07-19"), new Date("2020-07-27"), [0,1]));

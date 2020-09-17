@@ -100,7 +100,7 @@ export default function PurposeDetailPlansWrite({ index }) {
                             if (purposeWriteStore.writeType == PurposeWriteType.MODIFY) {
                                 Alert.alert(
                                     null,
-                                    '진행중인 목적에 세부 목표 수정시 지금까지의 기록은 사라지고 새롭게 시작하게 됩니다.',
+                                    '진행중인 수행 목표는 삭제만 가능하며 \n새롭게 설정된 수행 목표들에 따라 목적 진행도가 변경될 수 있습니다.',
                                     [
                                         {
                                             text: '취소',
@@ -131,6 +131,7 @@ export default function PurposeDetailPlansWrite({ index }) {
                                     }
                                 });
                             }
+                            
 
                         }} >
                             <Text style={{ fontSize: 16, fontWeight: 'bold', color: purposeStat == 0 ? '#25B046' : '#B2B2B2' }}>

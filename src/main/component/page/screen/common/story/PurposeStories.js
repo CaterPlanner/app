@@ -77,33 +77,52 @@ export default class PurposeStories extends Component{
     render(){
         return(
             <View style={{flex: 1}}>
-            {!this.state.isLoading && this.state.isTimeout ?
-            <CaterPlannerResult
-                state={ResultState.TIMEOUT}
-                reRequest={() => {
-                    this.setState({
-                        isLoading : true,
-                        isTimeout : false
-                    }, this._loadData)
-                }}
-            />
-            :
-            <FlatList
-                style={{flex: 1}}
-                data={this.state.data}
-                renderItem={({item}) => {
-                    item.createDate = new EasyDate(item.createDate);
-                    return (<View style={{marginBottom : 10, marginHorizontal: 10 }}><StoryBlock data={item} onPress={() => {
-                        this.props.navigation.push('DetailStory', {
-                            id : item.id
-                        })
-                    }}/></View>)
-                }}
-                keyExtractor={(item) => item.id}
-                onEndReached={this._handleLoadMore}
-                onEndReachedThreshold={0.4}
-                ListFooterComponent={this._renderFooter}
-            />}
+                {
+                    (() => {
+
+                        if(!this.state.isLoading && this.state.isTimeout){
+                            return  <CaterPlannerResult state={ResultState.TIMEOUT}
+                            backgroundStyle={{
+                                flex: 1
+                            }}
+                            reRequest={() => {
+                                this.setState({
+                                    isLoading : true,
+                                    isTimeout : false
+                                }, this._loadData)
+                            }}
+                        />
+                        }else if(!this.state.isLoading && this.state.data.length == 0){
+                            return <CaterPlannerResult
+                            state={ResultState.NOTHING}
+                            backgroundStyle={{
+                                flex: 1,
+                            }}
+                            text="내용이 없습니다."
+                        />
+                        }else{
+                            return(
+                                <FlatList
+                                style={{flex: 1}}
+                                data={this.state.data}
+                                renderItem={({item}) => {
+                                    item.createDate = new EasyDate(item.createDate);
+                                    return (<View style={{marginBottom : 10, marginHorizontal: 10 }}><StoryBlock data={item} onPress={() => {
+                                        this.props.navigation.push('DetailStory', {
+                                            id : item.id
+                                        })
+                                    }}/></View>)
+                                }}
+                                keyExtractor={(item) => item.id}
+                                onEndReached={this._handleLoadMore}
+                                onEndReachedThreshold={0.4}
+                                ListFooterComponent={this._renderFooter}
+                            /> 
+                            )
+                        }
+
+                    })()
+                }
         </View>  
         )
     }

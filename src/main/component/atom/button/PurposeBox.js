@@ -27,8 +27,8 @@ export default function PurposeBox({ data, onPress }) {
                     <CaterPlannerRank
                         purpose={data}
                         style={{
-                            width: 75,
-                            height: 75,
+                            width: 60,
+                            height: 60,
                         }}
                     />
                 </View>

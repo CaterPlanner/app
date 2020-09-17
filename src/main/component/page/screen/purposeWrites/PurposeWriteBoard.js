@@ -14,11 +14,12 @@ import Loader from '../../Loader';
 
 import PurposeService from '../../../../rest/service/PurposeService';
 import Request from '../../../../util/Request';
-import { PurposeWriteType } from '../../../../AppEnum';
+import { PurposeWriteType, ResultState } from '../../../../AppEnum';
 import GlobalConfig from '../../../../GlobalConfig';
 import Purpose from '../../../../rest/model/Purpose';
 import NotificationManager from '../../../../util/NotificationManager';
 import { useFocusEffect } from '@react-navigation/native';
+import CaterPlannerResult from '../../../organism/CaterPlannerResult';
 
 const fullWidth = Dimensions.get('window').width;
 
@@ -81,8 +82,6 @@ export default class PurposeWriteBoard extends Component {
         let response = null;
 
 
-        console.log(this.purposeWriteStore.activeIndex)
-
         try {
             switch (this.purposeWriteStore.writeType) {
                 case PurposeWriteType.CREATE:
@@ -137,8 +136,6 @@ export default class PurposeWriteBoard extends Component {
                 case PurposeWriteType.RETRY:
            
                     result.detailPlans.forEach((goal) => {
-                        goal.briefingCount = 0;
-                        goal.lastBriefingDate = null;
                         goal.purposeId = result.id;
                     })
 
@@ -157,26 +154,20 @@ export default class PurposeWriteBoard extends Component {
                     break;
             }
 
-            this.backHandler.remove();
-            this._newBriefingAlarm();
 
 
         } catch (e) {
             console.log(e);
             this.setState({
-                isUploading : false
-            }, () => this.carousel._snapToItem(this.purposeWriteStore.activeIndex))
+                isUploading : false,
+                isTimeout : true,
+            })
+        }finally{
+            this.backHandler.remove();
         }
     }
 
-    _newBriefingAlarm = async () => {
-        for(goal of this.purposeWriteStore.purpose.detailPlans){
-            if(goal.isNowBriefing){
-                NotificationManager.briefingAlarmShow();
-                return;
-            }
-        }
-    }
+ 
     
 
     render() {
@@ -198,7 +189,18 @@ export default class PurposeWriteBoard extends Component {
                         this.backHandler.remove();
                     }}
                 />
-                {this.state.isUploading ? <Loader /> : (
+                {this.state.isUploading ? <Loader /> : 
+                    this.state.isTimeout ? 
+                    <CaterPlannerResult
+                        state={ResultState.TIMEOUT}
+                        reRequest={() => {
+                            this.setState({
+                                isUploading : true,
+                                isTimeout : false
+                            }, this._uploadData)
+                        }}
+                    /> :
+                    (
                     <View style={{ flex: 1 }}>
                         <View style={styles.topContainer}>
                             {/* <PageStateText activeIndex={this.state.activeIndex + 1} endIndex={this.state.endIndex}/> */}

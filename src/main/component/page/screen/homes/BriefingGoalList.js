@@ -4,6 +4,8 @@ import DetailPlanCheckBox from '../../../atom/checkbox/DetailPlanCheckbox';
 import PurposeService from '../../../../rest/service/PurposeService';
 import { inject } from 'mobx-react';
 import Loader from '../../Loader';
+import CaterPlannerResult from '../../../organism/CaterPlannerResult';
+import { ResultState } from '../../../../AppEnum';
 
 @inject(['authStore'])
 export default class BriefingGoalList extends Component{
@@ -13,7 +15,8 @@ export default class BriefingGoalList extends Component{
         
         this.state = {
             isLoading : false,
-            goals : this.props.route.params.purpose.detailPlans.filter(g => g.isNowBriefing)
+            goals : props.route.params.activeGoals,
+            isTimeout : false
         }
 
         this.updateGoalIdStat = new Array(this.state.goals.length);
@@ -41,6 +44,7 @@ export default class BriefingGoalList extends Component{
             const updatedPurpose = await PurposeService.getInstance().update(this.props.route.params.purpose, 
                 updateGoalList , await this.props.authStore.getToken());
 
+
             this.props.route.params.acceptData(updatedPurpose);
 
             this.props.navigation.goBack();
@@ -48,12 +52,11 @@ export default class BriefingGoalList extends Component{
         }catch(e){
             console.log(e);
             this.setState({
-                isLoading : false
+                isLoading : false,
+                isTimeout : true
             })
 
-            this.props.navigation.setParams({
-                showHeader : true
-            })
+
         }
     }
 
@@ -78,7 +81,20 @@ export default class BriefingGoalList extends Component{
 
     render(){
 
-        return this.state.isLoading ? <Loader style={{flex:1}}/> : (
+        return this.state.isLoading ? <Loader style={{flex:1}}/> : 
+            this.state.isTimeout ? 
+            <CaterPlannerResult
+                state={ResultState.TIMEOUT}
+                reRequest={() => {
+
+
+                    this.setState({
+                        isLoading : true,
+                        isTimeout : false
+                    }, this._briefing)
+                }}
+            /> :
+            (
             <FlatList
                 style={{flex: 1}}
                 contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 20}}

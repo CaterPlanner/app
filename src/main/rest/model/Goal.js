@@ -98,7 +98,7 @@ export default class Goal {
 
     get isActive(){
         let today = EasyDate.now();
-        return today.isAfter(this.startDate) && today.isBefore(this.endDate);
+        return today.isBefore(this.startDate.minusDays(1)) && today.isAfter(this.endDate.plusDays(1));
     }
 
     get isProcceedEnd(){
@@ -143,7 +143,7 @@ export default class Goal {
         let result = false;
 
 
-        if(!this.lastBriefingDate || !this.lastBriefingDate.equalsDate(today)){
+        if((!this.lastBriefingDate || !this.lastBriefingDate.equalsDate(today)) && this.isActive){
             switch(this.cycleType){
                 case 'A':
                     result = true;

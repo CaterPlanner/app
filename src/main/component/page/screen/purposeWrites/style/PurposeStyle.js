@@ -5,7 +5,7 @@ const styles = {
     },
     headContainer: {
         paddingTop: 5,
-       flex: 1,
+       height: '28%',
     },
 
     titleArea: {
@@ -27,8 +27,7 @@ const styles = {
     },
 
     bottomContainer : {
-        flex: 2,
-        marginBottom :'30%'
+        height: '55%',
         }
 
 }

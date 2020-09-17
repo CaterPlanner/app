@@ -31,7 +31,7 @@ export default function CaterPlannerResult({text, fontStyle, imageStyle, backgro
                 source={resource}
             />
              <Text style={[{fontSize: 17, marginTop: 5},fontStyle]}>
-                {!text && state == ResultState.TIMEOUT ? '인터넷 접속이 원활하지 않습니다' : text}
+                {!text && state == ResultState.TIMEOUT ? '서버와의 연결이 불안정합니다.' : text}
             </Text>
             {state == ResultState.TIMEOUT &&
             <TouchableOpacity

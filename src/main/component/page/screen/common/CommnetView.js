@@ -30,7 +30,6 @@ export default class CommentView extends Component {
 
         this.authStore = this.props.authStore;
 
-        console.log(this.props.route.params)
         switch (this.props.route.params.entity) {
             case Model.PURPOSE:
                 this.entityName = 'purpose';
@@ -54,7 +53,6 @@ export default class CommentView extends Component {
 
             const include = this.state.loadType == LoadType.UPLOAD ? { commentText: '' } : {};
 
-            console.log(response.data.elements);
 
             this.setState({
                 data: this.state.loadType == LoadType.MORE ? this.state.data.slice(0, this.state.page * 15).concat(response.data.elements) : response.data.elements,

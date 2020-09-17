@@ -25,6 +25,7 @@ export default class StoryBlock extends Component{
 
         this.navigation = this.props.navigation;
         this.authStore = this.props.authStore;
+
     }
 
     _toggleLikes = async () => {
@@ -53,6 +54,9 @@ export default class StoryBlock extends Component{
     }
 
     render(){
+
+
+
         return (
             <View style={{ height: 300, width: '100%', borderRadius: 10, backgroundColor: 'white' }}>
                 <View style={{ flex: 1, paddingHorizontal: 15, }}>

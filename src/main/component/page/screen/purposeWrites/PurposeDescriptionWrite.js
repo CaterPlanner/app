@@ -11,7 +11,7 @@ export default function PurposeDescriptionWrite({index}) {
 
     return (
         <View style={purposeStyles.container}>
-            <View style={purposeStyles.headContainer}>
+            <View style={[purposeStyles.headContainer]}>
                 <View style={purposeStyles.titleArea}>
                     <Text
                         style={purposeStyles.title}>
@@ -26,7 +26,7 @@ export default function PurposeDescriptionWrite({index}) {
                     </Text>
                 </View>                
             </View>
-            <View style={[purposeStyles.bottomContainer, {alignSelf:'center', top : Dimensions.get('window').height / 4 ,position : 'absolute', width:'100%'}]} disabled>
+            <View style={[{alignSelf:'center', top : Dimensions.get('window').height / 4 ,position : 'absolute', width:'100%'}]} disabled>
                 <CaterPlannerTextInput
                     labelStyle={{color : '#25B046'}}
                     label={'자세히 입력하기'}

@@ -27,17 +27,22 @@ export default class Begin extends Component {
             {
                 title: '내가 원하는 목적에 도전',
                 imageUrl: require('../../../../../../asset/image/begin_page1.png'),
-                content: '당신이 머물고 살거나 얻고자 하는 것들을\n찾을 수 있는 길을 개척할 수 있어요.'
+                content: '스스초 원하는 것을 이루기 위해\n목적을 만들어 실천해보세요'
+            },
+            {
+                title: '성장을 기록하면서 한걸음씩',
+                imageUrl: require('../../../../../../asset/image/begin_page2.png'),
+                content: '자신의 목적을 위해 무엇을 했는지\n기록하며 나아가세요'
+            },
+            {   
+                title:'성장의 진행을 한눈에',
+                imageUrl: require('../../../../../../asset/image/begin_page3.png'),
+                content:'성장하는 애벌레의 모습으로\n진행도를 확인 할 수 있어요'
             },
             {
                 title: '다른 사람들과 목적을 공유',
-                imageUrl: require('../../../../../../asset/image/begin_page2.png'),
-                content: '다른 사람들의 피드백을 통해서\n좀 더 수월하게 목적을 달성할 수 있어요'
-            },
-            {
-                title: '귀여운 애벌레들과 매일 목표를 달성',
-                imageUrl: require('../../../../../../asset/image/begin_page3.png'),
-                content: '마스코트 애벌레의 응원과 함께\n목적을 이룰 수 있도록 도와 드릴게요'
+                imageUrl: require('../../../../../../asset/image/begin_page4.png'),
+                content: '다른 사람들과 자신의 목적들과\n목적을 위한 활동들을 공유해보세요'
             }
         ];
     }
@@ -107,7 +112,7 @@ export default class Begin extends Component {
                             </TouchableOpacity>}
                     </View>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <PageStateIcon current={this.state.activeIndex} max={3} selectColor={'#1FBE2F'} unselectColor={'#B2E7BD'} />
+                        <PageStateIcon current={this.state.activeIndex} max={this.data.length} selectColor={'#1FBE2F'} unselectColor={'#B2E7BD'} />
                     </View>
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
                         <TouchableOpacity onPress={() => {
@@ -134,7 +139,7 @@ export default class Begin extends Component {
     }
 
     get isLast() {
-        return this.state.activeIndex == 2;
+        return this.state.activeIndex == this.data.length - 1;
     }
 
 }

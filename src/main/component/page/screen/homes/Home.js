@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { View, Dimensions, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native'
+import { View, Dimensions, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native'
 import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
 
 import PurposeService from '../../../../rest/service/PurposeService';
 import DecimalDayWidget from '../../../atom/icon/DecimalDayWidget';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { PurposeWriteType, State } from '../../../../AppEnum';
 import ImageButton from '../../../atom/button/ImageButton';
 import { useNavigation } from '@react-navigation/native';
@@ -15,7 +15,7 @@ import useStores from '../../../../mobX/helper/useStores';
 import Request from '../../../../util/Request';
 import SplashScreen from 'react-native-splash-screen';
 import CaterPlannerRank from '../../../atom/icon/CaterPlannerRank';
-
+import UITutorial from '../tutorial/UITutorial'
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -237,6 +237,7 @@ const cardStyles = StyleSheet.create({
 })
 
 @inject(['appStore'])
+@observer
 export default class Home extends Component {
 
 
@@ -291,12 +292,6 @@ export default class Home extends Component {
 
 
 
-                // for (purpose of data) {
-                //     if (purpose.stat == 0) {
-                //         this.appStore.onScheduler();
-                //         break;
-                //     }
-                // }
             }
 
             this.setState({
@@ -322,6 +317,8 @@ export default class Home extends Component {
             SplashScreen.hide();
         }, 500);
 
+   
+
     }
 
     componentWillUnmount() {
@@ -331,6 +328,12 @@ export default class Home extends Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
+                 <Modal
+                        transparent={true}
+                        visible={this.appStore.isStart}
+                >
+                    <UITutorial/>
+                </Modal>
                 {!this.state.isLoading &&
                     <View style={{ flex: 1 }}>
                         <View style={{ flex: 11, justifyContent: 'center' }}>

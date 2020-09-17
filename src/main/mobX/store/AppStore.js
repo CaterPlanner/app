@@ -9,6 +9,9 @@ export default class AppStore {
     isBegin = null;
 
     @observable
+    isStart;
+
+    @observable
     offlineMode = false;
 
     userOptions;
@@ -24,16 +27,20 @@ export default class AppStore {
   
 
             const asyncBegin = await AsyncStorage.getItem('IS_BEGIN');
+            const asyncStart = await AsyncStorage.getItem('IS_START'); 
 
             this.isBegin = asyncBegin == null || asyncBegin == true ? true : false
-
+            this.isStart = asyncStart == null || asyncStart == true ? true : false
 
             if (this.isBegin) {
                 //초기 세팅
                 await AsyncStorage.setItem('IS_BEGIN', 'false');
+                await AsyncStorage.setItem('IS_START', 'false');
                 this.offScheduler();
                 this.onScheduler();
             }
+
+            // this.isStart = true;
 
             resolve();
 
@@ -45,6 +52,15 @@ export default class AppStore {
         return new Promise(async (resolve, reject) => {
             await AsyncStorage.setItem('IS_BEGIN', isBegin.toString());
             this.isBegin = isBegin;
+            resolve();
+        })
+    }
+
+    @action
+    setIsStart = (isStart) => {
+        return new Promise(async (resolve, reject) => {
+            await AsyncStorage.setItem('IS_START', isStart.toString());
+            this.isStart = isStart;
             resolve();
         })
     }

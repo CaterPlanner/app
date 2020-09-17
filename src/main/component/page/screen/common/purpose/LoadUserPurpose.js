@@ -67,6 +67,12 @@ export default class LoadUserPurpose extends Component{
         this.props.navigation.removeListener('focus');
     }
 
+    _refresh = () => {
+        this.setState({
+            data : this.state.data
+        })
+    }
+
     render(){
         return (
             <View style={{ flex: 1 }}>
@@ -82,7 +88,7 @@ export default class LoadUserPurpose extends Component{
                         }}
                     />
                     :
-                    <DetailPurpose data={this.state.data} navigation={this.props.navigation} />}
+                    <DetailPurpose data={this.state.data} navigation={this.props.navigation} refresh={this._refresh}/>}
             </View>
         )
     }

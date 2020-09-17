@@ -66,7 +66,7 @@ export default class NavController extends Component {
                     barStyle="white-content"
                     backgroundColor="#000000"
                 />
-               {/* <SignIn /> */}
+               {/* <BeginNavigation /> */}
                 {this.appStore.isBegin ?
                     <BeginNavigation /> :
                     this.authStore.isLogin || this.appStore.offlineMode ? <AppNavigation /> : <SignIn />

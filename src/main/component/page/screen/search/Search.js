@@ -40,6 +40,7 @@ export default class Search extends Component {
         this.setState({
             page: 0,
             loadType : LoadType.SEARCH,
+            isLoading : true,
             prefix : this.state.text
         }, this._loadData)
     }
@@ -52,6 +53,7 @@ export default class Search extends Component {
 
         this.setState({
             page: 0,
+            isLoading : true,
             loadType : LoadType.REFRESH
         }, this._loadData)
 
@@ -129,7 +131,7 @@ export default class Search extends Component {
                             paddingBottom : 0,
                             color : 'black',
                         }}
-                        blueOnSubmit={() => {
+                        onSubmitEditing={() => {
                             this.setState({
                                 data : []
                             },this._search)
@@ -144,7 +146,8 @@ export default class Search extends Component {
                         source={require('../../../../../../asset/button/search_button.png')}
                         imageStyle={{
                             width: 25,
-                            height: 25
+                            height: 25,
+                            tintColor : 'black'
                         }}
                         onPress={() => {this.setState({
                             data : []
@@ -208,7 +211,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottomColor: '#9AEC74',
+        borderBottomColor: '#888888',
         borderBottomWidth: 1,
     },
     inputBox: {
