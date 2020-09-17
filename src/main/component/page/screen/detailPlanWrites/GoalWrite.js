@@ -90,8 +90,10 @@ export default class GoalWrite extends Component {
     }
 
     _updateGoal = () => {
-        if (!this._vaild())
+        if (!this._vaild()){
+            this.isWrited = false;
             return;
+        }
 
         let formatCycle = this.state.goalCycleType == 0 ? 'A' : 'W';
         if (this.state.goalCycleType == 1) {
