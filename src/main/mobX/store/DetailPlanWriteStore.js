@@ -11,7 +11,7 @@ export default class DetailPlanWriteStore{
     entryStartDate;
     entryEndDate;
 
-    LIMIT = 10;
+    LIMIT = 20;
 
     @action
     init = (purpose) => {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, BackHandler, YellowBox, KeyboardAvoidingView } from 'react-native'
+import { View, StyleSheet, Dimensions, BackHandler, YellowBox, ToastAndroid } from 'react-native'
 import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
@@ -17,9 +17,9 @@ import Request from '../../../../util/Request';
 import { PurposeWriteType, ResultState } from '../../../../AppEnum';
 import GlobalConfig from '../../../../GlobalConfig';
 import Purpose from '../../../../rest/model/Purpose';
-import NotificationManager from '../../../../util/NotificationManager';
 import { useFocusEffect } from '@react-navigation/native';
 import CaterPlannerResult from '../../../organism/CaterPlannerResult';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const fullWidth = Dimensions.get('window').width;
 
@@ -71,6 +71,17 @@ export default class PurposeWriteBoard extends Component {
         this.purposeWriteStore.start(this.views.length, this.props.route.params ? this.props.route.params.purpose : null, this.props.route.params.type);
     }
 
+    async componentWillMount(){
+        if(this.purposeWriteStore.writeType == PurposeWriteType.CREATE || this.purposeWriteStore.writeType == PurposeWriteType.FOLLOW || this.purposeWriteStore.writeType == PurposeWriteType.RISE){
+            const count = await AsyncStorage.getItem("PURPOSE_COUNT");
+
+            if(count >= 5){
+            ToastAndroid.show('수행/대기 목적은 최대 5개까지 입니다.', ToastAndroid.LONG);
+            this.props.navigation.goBack();
+            }
+        }
+    }
+
     _renderItem = ({ item, index }) => {
         return (
             item
@@ -105,9 +116,12 @@ export default class PurposeWriteBoard extends Component {
                         result.detailPlans.length != 0 ? result.detailPlans : null
                     );
                     
+                    
+
                     this.props.navigation.navigate('PurposeWriteDone', {
                         id : response.id
                     })
+
 
                     break;
 
@@ -134,6 +148,7 @@ export default class PurposeWriteBoard extends Component {
 
                 case PurposeWriteType.GROUND_MODIFY:
                 case PurposeWriteType.RETRY:
+               
            
                     result.detailPlans.forEach((goal) => {
                         goal.purposeId = result.id;
@@ -148,6 +163,30 @@ export default class PurposeWriteBoard extends Component {
                     result.photoUrl = response.data.photoUrl;
 
                     await PurposeService.getInstance().groundModify(result.id, result)
+
+                    this.props.navigation.navigate('HomeNavigation');
+
+                    break;
+
+
+                case PurposeWriteType.RISE:
+
+                    result.detailPlans.forEach((goal) => {
+                        goal.purposeId = result.id;
+                    })
+
+                    response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
+                        'Content-Type': 'multipart/form-data'
+                    })
+                        .auth(await this.authStore.getToken())
+                        .submit();
+
+                    result.photoUrl = response.data.photoUrl;
+
+                    await PurposeService.getInstance().create(
+                        result,
+                        result.detailPlans.length != 0 ? result.detailPlans : null
+                    );
 
                     this.props.navigation.navigate('HomeNavigation');
 

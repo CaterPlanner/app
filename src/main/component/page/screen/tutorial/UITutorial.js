@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, Dimensions, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, Dimensions, Image, StyleSheet} from 'react-native';
 import { inject } from 'mobx-react';
 import Carousel from 'react-native-snap-carousel';
 import PageStateIcon from '../../../atom/icon/PageStateIcon';
+import ImageButton from '../../../atom/button/ImageButton';
 
 const fullWidth = Dimensions.get('window').width;
 
@@ -17,10 +18,22 @@ export default class UITutorial extends Component{
         }
 
         this.view = [
-            'sdf',
-            'sf',
-            'sdf',
-            'sdfsd'
+            {
+                content: '추가 아이콘을 터치해\n목적을 만들어보세요',
+                imageUrl : require('../../../../../../asset/image/start_page1.png')
+            },
+            {
+                content: '목적을 위해 수행을 기록하세요',
+                imageUrl : require('../../../../../../asset/image/start_page2.png')
+            },
+            {
+                content: '생성한 목적에 대한\n정보를 확인할 수 있어요',
+                imageUrl : require('../../../../../../asset/image/start_page3.png')
+            },
+            {
+                content: '수행하면서 활동을 기록, 공유할 수 있고\n다른 사람의 목적은 따라 할 수 있어요',
+                imageUrl : require('../../../../../../asset/image/start_page4.png')
+            }
         ]
 
         this.appStore = this.props.appStore;
@@ -28,8 +41,22 @@ export default class UITutorial extends Component{
 
     _renderItem = ({item}) => {
         return (
-            <View>
-                <Text>{item}</Text>
+            <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                <View style={{paddingBottom: 10,
+                            height: 55, flexDirection:'row', alignItems:'flex-end'}}>
+                    <Text
+                        style={{
+                            color : 'white',
+                            fontSize: 16,
+                            textAlign: 'center'
+                        }}
+                    >{item.content}</Text>
+                </View>
+                <Image
+                    resizeMode="stretch"
+                    style={{ width: 260, height: 550}}
+                    source={item.imageUrl}
+                />
             </View>
         )
     }
@@ -37,6 +64,21 @@ export default class UITutorial extends Component{
     render(){
         return(
         <View style={{flex:1, backgroundColor: '#000000aa'}}>
+            <ImageButton
+                source={require('../../../../../../asset/button/exit_button.png')}
+                backgroundStyle={{
+                    alignSelf :'flex-end',
+                }}
+                imageStyle={{
+                    width: 40,
+                    height: 40,
+                    margin : 8,
+                    tintColor: 'white'
+                }}
+                onPress={() => {
+                    this.appStore.setIsStart(false);
+                }}
+            />
             <View style={{justifyContent: 'center' ,alignItems:'center', flex:1}}>
                 <Carousel
                     style={{flex:1}}
@@ -55,7 +97,7 @@ export default class UITutorial extends Component{
                     }
                 />
             </View>
-            <View style={{paddingHorizontal: 30 ,paddingVertical: 25, width: '100%', flexDirection: 'row' }}>
+            <View style={{paddingHorizontal: 30 ,paddingBottom: 25, width: '100%', flexDirection: 'row' }}>
 
                     <View style={{ flex: 1, alignItems: 'flex-start' }}>
                         {!this.isFirst &&

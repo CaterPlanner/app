@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image } from 'react-native';
+import {ToastAndroid} from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeNavigation from './HomeNavigation'
 import SearchNavigation from './SearchNavigation'
@@ -7,6 +8,7 @@ import StoryNavigation from './StoryNavigation'
 import Make from '../screen/mains/Make'
 import { PurposeWriteType } from '../../../AppEnum';
 import ProfileNavigation from './ProfileNavigation';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -99,6 +101,7 @@ const MainNavigation = () => {
       <Tab.Screen name="Make" component={Make}
         listeners={({ navigation }) => ({
           tabPress: e => {
+
             navigation.navigate('CreateNavigation', {
               screen: 'PurposeWriteBoard',
               params: {

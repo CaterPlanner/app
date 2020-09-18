@@ -3,6 +3,7 @@ import { View, Text, Image, Dimensions } from 'react-native';
 import purposeStyles from './style/PurposeStyle';
 import ColorButton from '../../../atom/button/ColorButton';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 
@@ -11,6 +12,8 @@ export default function PurposeWriteDone() {
 
     const route = useRoute();
     const navigation = useNavigation();
+
+    
 
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
