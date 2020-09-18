@@ -54,6 +54,7 @@ export default class PurposeWriteStore{
 
                 break;
             case PurposeWriteType.RETRY:
+            case PurposeWriteType.RISE:
                 this.purpose = purpose;
                 this.permitCache = [true, true, true, true];
 
@@ -183,7 +184,7 @@ export default class PurposeWriteStore{
  
         }
 
-        if(this.writeType == PurposeWriteType.RETRY && this.writeType == PurposeWriteType.GROUND_MODIFY){
+        if(this.writeType == PurposeWriteType.RETRY && this.writeType == PurposeWriteType.RISE && this.writeType == PurposeWriteType.GROUND_MODIFY){
             formData.append('achieve', this.purpose.achieve)
         }
 

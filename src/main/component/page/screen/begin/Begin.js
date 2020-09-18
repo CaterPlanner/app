@@ -30,7 +30,7 @@ export default class Begin extends Component {
                 content: '스스초 원하는 것을 이루기 위해\n목적을 만들어 실천해보세요'
             },
             {
-                title: '성장을 기록하면서 한걸음씩',
+                title: '자신의 활동을 기록',
                 imageUrl: require('../../../../../../asset/image/begin_page2.png'),
                 content: '자신의 목적을 위해 무엇을 했는지\n기록하며 나아가세요'
             },

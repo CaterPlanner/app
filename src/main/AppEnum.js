@@ -20,7 +20,9 @@ export const PurposeWriteType = {
     MODIFY: 1,
     GROUND_MODIFY : 2,
     FOLLOW : 3,
-    RETRY: 4
+    RETRY: 4,
+    RISE : 5
+
 }
 
 export const Model = {

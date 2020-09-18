@@ -16,6 +16,7 @@ import Request from '../../../../util/Request';
 import SplashScreen from 'react-native-splash-screen';
 import CaterPlannerRank from '../../../atom/icon/CaterPlannerRank';
 import UITutorial from '../tutorial/UITutorial'
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -291,8 +292,10 @@ export default class Home extends Component {
                     Alert.alert(null, '수행을 실패한 목적이 있습니다.');
 
 
-
+                
             }
+
+            await AsyncStorage.setItem("PURPOSE_COUNT" , (data ? data.length : 0).toString())
 
             this.setState({
                 activeIndex: 0,
@@ -327,7 +330,6 @@ export default class Home extends Component {
 
     render() {
 
-        console.log(this.appStore.isStart)
         return (
             <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
                  <Modal

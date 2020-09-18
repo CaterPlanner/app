@@ -51,7 +51,7 @@ export default class DetailPlanWriteBoard extends Component {
                     '버튼을 눌러 수행 목표를 생성해주세요'
                     , ToastAndroid.SHORT, ToastAndroid.CENTER);
             }, 500);
-        } else if (this.purposeWriteStore.writeType == PurposeWriteType.RETRY || this.purposeWriteStore.writeType == PurposeWriteType.FOLLOW) {
+        } else if (this.purposeWriteStore.writeType == PurposeWriteType.RISE || this.purposeWriteStore.writeType == PurposeWriteType.RETRY || this.purposeWriteStore.writeType == PurposeWriteType.FOLLOW) {
             setTimeout(() => {
                 ToastAndroid.showWithGravity(
                     '수행 목표 기간이 현재 날짜에 맞추어 재설정 되었습니다.'

@@ -29,16 +29,18 @@ export default class AppStore {
             const asyncBegin = await AsyncStorage.getItem('IS_BEGIN');
             const asyncStart = await AsyncStorage.getItem('IS_START'); 
 
-            this.isBegin = asyncBegin == null || asyncBegin == true ? true : false
-            this.isStart = asyncStart == null || asyncStart == true ? true : false
+
+            this.isBegin = asyncBegin == null || asyncBegin == 'true' ? true : false
+            this.isStart = asyncStart == null || asyncStart == 'true' ? true : false
 
             if (this.isBegin) {
                 //초기 세팅
+                await AsyncStorage.setItem('IS_BEGIN', 'true');
+                await AsyncStorage.setItem('IS_START', 'true');
+                await AsyncStorage.setItem("PURPOSE_COUNT", "0");
                 this.offScheduler();
                 this.onScheduler();
             }
-
-            // this.isStart = true;
 
             resolve();
 
@@ -62,6 +64,8 @@ export default class AppStore {
             resolve();
         })
     }
+
+    
 
     onScheduler = async () => {
         if(!CaterPlannerScheduler.isScheduling()){

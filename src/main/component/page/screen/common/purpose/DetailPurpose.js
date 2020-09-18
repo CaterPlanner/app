@@ -340,12 +340,12 @@ export default class DetailPurpose extends Component {
         })
     }
 
-    _retryPurpose = async () => {
+    _risePurpose = async () => {
         this.navigation.navigate('CreateNavigation', {
             screen: 'PurposeWriteBoard',
             params: {
                 purpose: Purpose.clone(this.props.data.purpose),
-                type: PurposeWriteType.RETRY
+                type: PurposeWriteType.RISE
             }
         })
     }
@@ -419,7 +419,7 @@ export default class DetailPurpose extends Component {
                                 <MenuDivider />
                                 <MenuItem onPress={() => {
                                     this._purposeContolMenuRef.hide();
-                                    this._retryPurpose();
+                                    this._risePurpose();
                                 }} >다시하기</MenuItem>
                             </View>
                         }

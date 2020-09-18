@@ -8,6 +8,7 @@ import Purpose from '../model/Purpose';
 import PurposeWriteBoard from '../../component/page/screen/purposeWrites/PurposeWriteBoard';
 import GlobalConfig from '../../GlobalConfig';
 import Request from '../../util/Request';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class PurposeService {
 
@@ -37,6 +38,8 @@ export default class PurposeService {
                         }
                     }
     
+                    await AsyncStorage.setItem("PURPOSE_COUNT", (Number(await AsyncStorage.getItem("PURPOSE_COUNT")) + 1).toString());
+
                     resolve();
                 }catch(e){
                     console.log(e);
@@ -66,6 +69,9 @@ export default class PurposeService {
                         )));
     
                     }
+
+                    await AsyncStorage.setItem("PURPOSE_COUNT", responsePurposes.length.toString());
+
                 }catch(e){
                     reject(e);
                 }
@@ -187,6 +193,8 @@ export default class PurposeService {
         return new Promise(async (resolve, reject) => {
             try {
                 await PurposeRepository.deleteById(this.db, id);
+                await AsyncStorage.setItem("PURPOSE_COUNT", (Number(await AsyncStorage.getItem("PURPOSE_COUNT")) - 1).toString());
+
                 resolve();
             } catch (e) {
                 reject(e);
