@@ -9,6 +9,7 @@ import ImageButton from '../../../atom/button/ImageButton';
 import PurposeBox from '../../../atom/button/PurposeBox';
 import CaterPlannerResult from '../../../organism/CaterPlannerResult';
 import { ResultState, LoadType } from '../../../../AppEnum';
+import LoaderFooter from '../../../molecule/LoaderFooter';
 
 
 
@@ -101,9 +102,7 @@ export default class Search extends Component {
     _renderFooter = () => {
         return (
             this.state.isLoading  && (this.state.loadType == LoadType.MORE || this.state.loadType == LoadType.SEARCH)?
-                <View style={{ height: 210, width: '100%' }}>
-                    <Loader />
-                </View> : null
+                <LoaderFooter/> : null
         );
     }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, Modal, TouchableOpacity, Dimensions  } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import useStores from '../../../../mobX/helper/useStores'
 import purposeStyles from './style/PurposeStyle';
 import CaterPlannerTextInput from '../../../atom/input/CaterPlannerTextInput';
@@ -12,46 +12,13 @@ export default function PurposeNameWrite({index}) {
     const { purposeWriteStore } = useStores();
 
     const [purposeName, setPurposeName] = useState(purposeWriteStore.purpose.name);
-    const [purposeDisclosureScope, setDisclosureScope] = useState(purposeWriteStore.purpose.disclosureScope); //0 전체공개 1 비공개
+    // const [purposeDisclosureScope, setDisclosureScope] = useState(purposeWriteStore.purpose.disclosureScope); //0 전체공개 1 비공개
 
-    const [isScopeSelecting, setIsScopeSelecting] = useState(false);
 
-    const scopeNames = ['전체공개', '비공개']
 
 
     return (
         <View style={purposeStyles.container}>
-            <Modal
-                transparent={true}
-                visible={isScopeSelecting}
-            >
-                <TouchableOpacity style={{
-                    backgroundColor: '#000000aa', flex: 1, justifyContent: 'flex-end'
-                }}
-                onPress={() => {
-                    setIsScopeSelecting(false);
-                }}
-                >
-                    <View style={{ backgroundColor: 'white', paddingVertical: 15, paddingHorizontal: 15, borderTopRightRadius: 10,
-                    borderTopLeftRadius: 10 }}>
-                        {
-                            scopeNames.map((scopeName, index) => {
-                                return (
-                                    <TouchableOpacity style={{ paddingVertical: 10 }}
-                                        onPress={() => {
-                                            setDisclosureScope(index);
-                                            setIsScopeSelecting(false);
-                                            purposeWriteStore.purpose.disclosureScope = index;
-                                        }}
-                                    >
-                                        <Text>{scopeName}</Text>
-                                    </TouchableOpacity>
-                                )
-                            })
-                        }
-                    </View>
-                </TouchableOpacity>
-            </Modal>
             <View style={purposeStyles.headContainer}>
                 <View style={purposeStyles.titleArea}>
                     <Text style={purposeStyles.title}>이루고자 하는 목적을 적어주세요</Text>
@@ -87,17 +54,6 @@ export default function PurposeNameWrite({index}) {
                     }}
                     value={purposeName}
                 />
-            </View>
-            <View style={{ position: 'absolute', top:  Dimensions.get('window').height  - Dimensions.get('window').height * 0.2, width: '100%', alignItmes: 'center', left: 22 }}>
-                <TouchableOpacity style={{ backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
-                    onPress={() => {
-                        setIsScopeSelecting(true);
-                    }}
-                >
-                    <Text style={{ textAlign: 'center' }}>
-                        {scopeNames[purposeDisclosureScope]}
-                    </Text>
-                </TouchableOpacity>
             </View>
         </View>
 

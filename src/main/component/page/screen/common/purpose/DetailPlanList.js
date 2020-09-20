@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import DetailPlanStat from '../../../../atom/button/DetailPlanStat';
 import Goal from '../../../../../rest/model/Goal';
 import CaterPlannerResult from '../../../../organism/CaterPlannerResult';
+import { ResultState } from '../../../../../AppEnum';
 
 export default function DetailPlanList({ navigation }) {
 

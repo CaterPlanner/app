@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, ScrollView, StyleSheet, ToastAndroid, TouchableWithoutFeedback, Image } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ToastAndroid, TouchableWithoutFeedback, Image, PixelRatio } from 'react-native';
 import EasyDate from '../../../../util/EasyDate';
 import useStores from '../../../../mobX/helper/useStores';
 import ImageButton from '../../../atom/button/ImageButton';
@@ -169,7 +169,7 @@ export default class GoalWrite extends Component {
                     />
                 </View>
                 <View style={styles.contentContainer}>
-                    <View style={{ paddingBottom: 50}}>
+                    <View style={{ paddingBottom: 40}}>
                         <Text style={{ fontSize: 22, fontWeight: 'bold' }}>수행 목표를 설정해 주세요.</Text>
                     </View>
                     <View style={styles.editContainer}>

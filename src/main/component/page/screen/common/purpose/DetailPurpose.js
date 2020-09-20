@@ -507,7 +507,7 @@ export default class DetailPurpose extends Component {
                 >
                     <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
                         <View style={detailPurposeStyles.purposeInfoContainer}>
-                            <View style={{ position: 'absolute', right: 15, top: -30 }}>
+                            <View style={{ position: 'absolute', right: 15, top: -40 }}>
                                 <CaterPlannerRank
                                     purpose={this.props.data.purpose}
                                     style={{

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, PixelRatio } from 'react-native';
 import PurposePaper from '../../../atom/button/PurposePaper';
 import Loader from '../../Loader';
 import PurposeService from '../../../../rest/service/PurposeService';
@@ -91,7 +91,7 @@ export default class BriefingPurposeList extends Component {
                         data={activePurpose}
                         renderItem={({ item }) => {
                             return (
-                                <View style={{ marginTop: 12 }}>
+                                <View style={{ marginTop:12}}>
                                     <PurposePaper
                                         imageUri={item.purpose.photoUrl}
                                         name={item.purpose.name}

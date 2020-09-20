@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, Dimensions, Image, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, Dimensions, Image, StyleSheet, PixelRatio} from 'react-native';
 import { inject } from 'mobx-react';
 import Carousel from 'react-native-snap-carousel';
 import PageStateIcon from '../../../atom/icon/PageStateIcon';
 import ImageButton from '../../../atom/button/ImageButton';
+import normalize from '../../../../util/noramlize';
 
 const fullWidth = Dimensions.get('window').width;
 
@@ -42,19 +43,14 @@ export default class UITutorial extends Component{
     _renderItem = ({item}) => {
         return (
             <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                <View style={{paddingBottom: 10,
-                            height: 55, flexDirection:'row', alignItems:'flex-end'}}>
+                <View style={styles.contentContainer}>
                     <Text
-                        style={{
-                            color : 'white',
-                            fontSize: 16,
-                            textAlign: 'center'
-                        }}
+                        style={styles.content}
                     >{item.content}</Text>
                 </View>
                 <Image
                     resizeMode="stretch"
-                    style={{ width: 260, height: 550}}
+                    style={styles.image}
                     source={item.imageUrl}
                 />
             </View>
@@ -69,12 +65,7 @@ export default class UITutorial extends Component{
                 backgroundStyle={{
                     alignSelf :'flex-end',
                 }}
-                imageStyle={{
-                    width: 40,
-                    height: 40,
-                    margin : 8,
-                    tintColor: 'white'
-                }}
+                imageStyle={styles.exitButton}
                 onPress={() => {
                     this.appStore.setIsStart(false);
                 }}
@@ -97,7 +88,7 @@ export default class UITutorial extends Component{
                     }
                 />
             </View>
-            <View style={{paddingHorizontal: 30 ,paddingBottom: 25, width: '100%', flexDirection: 'row' }}>
+            <View style={styles.bottomButtonContainer}>
 
                     <View style={{ flex: 1, alignItems: 'flex-start' }}>
                         {!this.isFirst &&
@@ -137,7 +128,35 @@ export default class UITutorial extends Component{
 }
 
 const styles = StyleSheet.create({
+    image:{
+        width:  normalize(240), height: normalize(460, 'height')
+    },
+    contentContainer: {
+        paddingBottom: 10,
+        height: normalize(58),
+        // backgroundColor:'yellow',
+        flexDirection:'row', alignItems:'flex-end'
+    },
+    content:{
+        color : 'white',
+        fontSize: 16 / PixelRatio.getFontScale(),
+        textAlign: 'center'
+    },
+    bottomButtonContainer: {
+        paddingHorizontal: 25,
+        paddingVertical: normalize(30, 'height'), 
+        width: '100%', 
+        flexDirection: 'row' 
+    },
     bottomTextButtonFont: {
-        fontSize: 18, textAlign: 'center', color : 'white'
+        fontSize: 18, 
+        textAlign: 'center',
+        color : 'white'
+    },
+    exitButton:{
+        width: 40,
+                    height: 40,
+                    margin : 8,
+                    tintColor: 'white'
     }
 })

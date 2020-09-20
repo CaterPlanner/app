@@ -59,41 +59,43 @@ export default function UserProfile({ data }) {
             </View>
 
             {/* 사용자 목적, 모든 목적 보기 */}
-            <InfoBox
-                title={'수행중 목적'}
-                detailButtonHint={'전체 목적보기'}
-                detailButtonPress={() => {
-                    navigation.push('UserPurposeList', {
-                        id: data.id
-                    });
-                }}
-            >
-                <View >
-                    {data.purposeList.length == 0 ?
-                        <CaterPlannerResult
-                            backgroundStyle={{ height: Dimensions.get('window').height - 413 }}
-                            state={ResultState.NOTHING}
-                            text={'현재 수행중인 목적이 없습니다.'}
-                        /> :
-                        <View style={{ paddingRight: 10, paddingLeft: 2, paddingVertical: 10 }}>
-                            {data.purposeList.map((purpose) => (
-                                <View style={{ marginTop: 12 }}>
-                                    <PurposePaper
-                                        imageUri={purpose.photoUrl}
-                                        name={purpose.name}
-                                        checkedBriefing={false}
-                                        onPress={() => {
-                                            navigation.push('LoadUserPurpose', {
-                                                id: purpose.id
-                                            });
-                                        }}
-                                    />
-                                </View>
-                            ))}
-                        </View>
-                    }</View>
+            <View style={{marginTop: 5}}>
+                <InfoBox
+                    title={'수행중 목적'}
+                    detailButtonHint={'전체 목적보기'}
+                    detailButtonPress={() => {
+                        navigation.push('UserPurposeList', {
+                            id: data.id
+                        });
+                    }}
+                >
+                    <View >
+                        {data.purposeList.length == 0 ?
+                            <CaterPlannerResult
+                                backgroundStyle={{ height: 350 }}
+                                state={ResultState.NOTHING}
+                                text={'현재 수행중인 목적이 없습니다.'}
+                            /> :
+                            <View style={{ paddingRight: 10, paddingLeft: 2, paddingVertical: 10 }}>
+                                {data.purposeList.map((purpose) => (
+                                    <View style={{ marginTop: 12 }}>
+                                        <PurposePaper
+                                            imageUri={purpose.photoUrl}
+                                            name={purpose.name}
+                                            checkedBriefing={false}
+                                            onPress={() => {
+                                                navigation.push('LoadUserPurpose', {
+                                                    id: purpose.id
+                                                });
+                                            }}
+                                        />
+                                    </View>
+                                ))}
+                            </View>
+                        }</View>
 
-            </InfoBox>
+                </InfoBox>
+            </View>
         </ScrollView>
 
 

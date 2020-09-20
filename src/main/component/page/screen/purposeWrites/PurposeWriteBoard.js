@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, BackHandler, YellowBox, ToastAndroid } from 'react-native'
+import { View, StyleSheet, Dimensions, BackHandler, YellowBox, ToastAndroid, PixelRatio, Modal, TouchableOpacity, Text } from 'react-native'
 import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
@@ -41,6 +41,9 @@ function SceneBackPressHandler({focus, unFocus}){
 }
 
 
+const scopeNames = ['전체공개', '비공개']
+
+
 @inject(stores => ({
     purposeWriteStore : stores.purposeWriteStore,
     authStore : stores.authStore,
@@ -53,7 +56,8 @@ export default class PurposeWriteBoard extends Component {
         super(props)
 
         this.state = {
-            isUploading: false
+            isUploading: false,
+            isScopeSelecting : false
         }
 
 
@@ -272,7 +276,42 @@ export default class PurposeWriteBoard extends Component {
                                 />
                             }
                         </View>
-                 
+                        <Modal
+                            transparent={true}
+                            visible={this.state.isScopeSelecting}
+                        >
+                            <TouchableOpacity style={{
+                                backgroundColor: '#000000aa', flex: 1, justifyContent: 'flex-end'
+                            }}
+                            onPress={() => {
+                                this.setState({
+                                    isScopeSelecting : false
+                                })
+                            }}
+                            >
+                                <View style={{ backgroundColor: 'white', paddingVertical: 15, paddingHorizontal: 15, borderTopRightRadius: 10,
+                                borderTopLeftRadius: 10 }}>
+                                    {
+                                        scopeNames.map((scopeName, index) => {
+                                            return (
+                                                <TouchableOpacity style={{ paddingVertical: 10 }}
+                                                    onPress={() => {
+                                                        this.setState({
+                                                            isScopeSelecting : false
+                                                        })
+                                                        this.purposeWriteStore.purpose.disclosureScope = index;
+                                                    }}
+                                                >
+                                                    <Text>{scopeName}</Text>
+                                                </TouchableOpacity>
+                                            )
+                                        })
+                                    }
+                                </View>
+                            </TouchableOpacity>
+                        </Modal>
+
+
                         <View style={styles.viewContainer}>
                             <Carousel
                                 style={{ flex: 1 }}
@@ -284,7 +323,23 @@ export default class PurposeWriteBoard extends Component {
                                 itemWidth={fullWidth}
                             />
                         </View>     
-                        <View style={{ position: 'absolute', top: Dimensions.get('window').height - Dimensions.get('window').height * 0.15, right: 22}}>
+                        <View style={{ position: 'absolute', 
+                                top: Dimensions.get('window').height - (65 + PixelRatio.getPixelSizeForLayoutSize(9)), justifyContent:'space-between', alignItems:'center', flexDirection:'row', width: '100%', paddingHorizontal: 20}}>
+                             <View>
+                             {this.purposeWriteStore.activeIndex == 0 && 
+                             <TouchableOpacity style={{ backgroundColor: 'white', height: 26, width: 90, justifyContent: 'center', borderRadius: 8, elevation: 2 }}
+                                onPress={() => {
+                                    this.setState({
+                                        isScopeSelecting : true
+                                    })
+                                }}
+                            >
+                                <Text style={{ textAlign: 'center' }}>
+                                    {scopeNames[this.purposeWriteStore.purpose.disclosureScope]}
+                                </Text>
+                            </TouchableOpacity>}
+                            </View>
+
                             <ImageButton
                                 backgroundStyle={{ backgroundColor: this.purposeWriteStore.isPermitNextScene ? '#25B046' : '#F1F1F1', width: 60, height: 60, borderRadius: 60, elevation: 5 }}
                                 imageStyle={[

@@ -62,10 +62,7 @@ export default class NavController extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <StatusBar
-                    barStyle="white-content"
-                    backgroundColor="#000000"
-                />
+                <StatusBar hidden />
                {/* <BeginNavigation /> */}
                 {this.appStore.isBegin ?
                     <BeginNavigation /> :

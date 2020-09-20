@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions, BackHandler, StatusBar, StyleSheet, Alert } from 'react-native';
+import { View, Text, Image, Dimensions, BackHandler, StatusBar, StyleSheet, PixelRatio } from 'react-native';
 import { inject, observer } from 'mobx-react'
 
 import Carousel from 'react-native-snap-carousel';
 import PageStateIcon from '../../../atom/icon/PageStateIcon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import normalize from '../../../../util/noramlize';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -59,15 +60,19 @@ export default class Begin extends Component {
     }
 
     _renderItem = ({ item }) => {
+
+        // console.log(PixelRatio.getPixelSizeForLayoutSize(280))
+        // console.log(PixelRatio.get() * 280) same
+
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ marginBottom: 55, fontSize: 22, fontWeight: 'bold', color: '#1FBE2F' }}>{item.title}</Text>
+                <Text style={styles.title}>{item.title}</Text>
                 <Image
                     resizeMode="stretch"
-                    style={{ width: 280, height: 280, marginBottom: 55 }}
+                    style={styles.image}
                     source={item.imageUrl}
                 />
-                <Text style={{ fontSize: 16, textAlign: 'center', color: '#888888' }}>
+                <Text style={styles.content}>
                     {item.content}
                 </Text>
             </View>
@@ -77,9 +82,9 @@ export default class Begin extends Component {
 
 
     render() {
+
         return (
             <View style={{ flex: 1, backgroundColor: 'white'}}>
-                <StatusBar hidden />
                 <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1}}>
                     <Carousel
                         style={{ flex: 1 }}
@@ -99,7 +104,7 @@ export default class Begin extends Component {
                     />
 
                 </View>
-                <View style={{paddingHorizontal: 30 ,paddingVertical: 25, width: '100%', flexDirection: 'row' }}>
+                <View style={styles.bottomButtonContainer}>
 
                     <View style={{ flex: 1, alignItems: 'flex-start' }}>
                         {!this.isFirst &&
@@ -147,7 +152,30 @@ export default class Begin extends Component {
 
 
 const styles = StyleSheet.create({
+    title:{
+        marginBottom: normalize(60, 'height'), 
+        fontSize: 22, 
+        fontWeight: 'bold', 
+        color: '#1FBE2F'
+    },
+    image : {
+        width: normalize(250), 
+        height: normalize(250, 'height'), 
+        marginBottom: normalize(48) 
+    },
+    content:{
+        fontSize: 16, 
+        textAlign: 'center', 
+        color: '#888888'
+    },
+    bottomButtonContainer: {
+        paddingHorizontal: 25 ,
+        paddingVertical: normalize(30, 'height'), 
+        width: '100%', 
+        flexDirection: 'row' 
+    },
     bottomTextButtonFont: {
-        fontSize: 18, textAlign: 'center'
-    }
+        fontSize: 18 , 
+        textAlign: 'center'
+    },
 })

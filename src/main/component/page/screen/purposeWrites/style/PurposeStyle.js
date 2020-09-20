@@ -27,8 +27,8 @@ const styles = {
     },
 
     bottomContainer : {
-        height: '55%',
-        }
+        height: '53%',
+    }
 
 }
 

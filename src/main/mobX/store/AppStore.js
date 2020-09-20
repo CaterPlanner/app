@@ -42,6 +42,8 @@ export default class AppStore {
                 this.onScheduler();
             }
 
+            // this.isStart = true;
+
             resolve();
 
         })

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Dimensions, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native'
+import { View, Dimensions, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal, PixelRatio } from 'react-native'
 import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
 
@@ -17,6 +17,8 @@ import SplashScreen from 'react-native-splash-screen';
 import CaterPlannerRank from '../../../atom/icon/CaterPlannerRank';
 import UITutorial from '../tutorial/UITutorial'
 import AsyncStorage from '@react-native-community/async-storage';
+import styles from '../purposeWrites/style/PurposeStyle';
+import normalize from '../../../../util/noramlize';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -53,7 +55,7 @@ function CardDecimalDayWidget({ purpose }) {
     
 
     return (
-        <Text style={{ color: 'gray', fontSize: 12, textAlign: 'center' }}>
+        <Text style={{ color: 'gray', fontSize: 12  / PixelRatio.getFontScale(), textAlign: 'center' }}>
         {text}
         </Text>
     )
@@ -63,17 +65,17 @@ function CardDecimalDayWidget({ purpose }) {
 function EmptyCard({ onPress }) {
     return (
         <TouchableOpacity style={{
-            height: '100%', justifyContent: 'center', width: 300
+            height: '100%', justifyContent: 'center', width: PixelRatio.getPixelSizeForLayoutSize(110)
         }} onPress={onPress}>
             <View style={[cardStyles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.8)', elevation: 0 }]}>
-                <View style={{ width: 110, height: 110, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ width: PixelRatio.getPixelSizeForLayoutSize(30), height: PixelRatio.getPixelSizeForLayoutSize(30), justifyContent: 'center', alignItems: 'center' }}>
                     <Image
                         resizeMode="stretch"
-                        style={{ flex: 1, height: undefined, width: '100%' }}
+                        style={{ flex: 1, height: undefined, width: '100%', tintColor: '#292929' }}
                         source={require('../../../../../../asset/button/plus_button.png')}
                     />
                 </View>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 40 }}>
+                <Text style={{ fontSize: 20 / PixelRatio.getFontScale(), fontWeight: 'bold', marginTop: PixelRatio.getPixelSizeForLayoutSize(15) }}>
                     새로운 목적을 추가해보세요
                 </Text>
             </View>
@@ -85,7 +87,6 @@ function ActiveCard({ purpose, onPress, loadData }) {
 
     const navigation = useNavigation();
     const { authStore } = useStores();
-
 
     const sendResult = async (stat) => {
         try {
@@ -116,10 +117,7 @@ function ActiveCard({ purpose, onPress, loadData }) {
                 <View style={{
                     flex: 1,
                 }}>
-                    <View style={{ position: 'absolute', top: 12, right: 12, paddingBottom: 2,
-                    borderBottomWidth: 1, borderBottomColor: 'gray'
-                   
-                }}>
+                    <View style={cardStyles.decimalDayContianer}>
                         <CardDecimalDayWidget purpose={purpose} />
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', 
@@ -128,10 +126,7 @@ function ActiveCard({ purpose, onPress, loadData }) {
                         <Text
                             adjustsFontSizeToFit
                             numberOfLines={2}
-                            style={{
-                                textAlign: 'center',
-                                fontSize: 16,
-                            }}>
+                            style={cardStyles.title}>
                             {purpose.name}
                         </Text>
                     </View>
@@ -149,12 +144,12 @@ function ActiveCard({ purpose, onPress, loadData }) {
                             borderBottomLeftRadius: 5,
                         }}
                     />
-                        <View style={{ position: 'absolute', right: 8, top: -30}}>
+                        <View style={cardStyles.caterpillarRankContainer}>
                             <CaterPlannerRank
                                 purpose={purpose}
                                 style={{
                                     width: 60,
-                                    height: 60,
+                                    height: 60
                                 }}
                             />
                         </View>
@@ -165,12 +160,9 @@ function ActiveCard({ purpose, onPress, loadData }) {
 
 
                 {(purpose.stat == State.WAIT || purpose.isFailProceed) &&
-                    <View style={{ position: 'absolute', elevation: 10, left: 116, top: 70 }} >
+                    <View style={cardStyles.actionButtonContainer} >
                         <ImageButton
-                            imageStyle={{
-                                width: 80,
-                                height: 100
-                            }}
+                            imageStyle={cardStyles.actionButton}
                             source={require('../../../../../../asset/button/start_button.png')}
                             onPress={async () => {
 
@@ -187,12 +179,9 @@ function ActiveCard({ purpose, onPress, loadData }) {
                 }
 
                 {purpose.isSucceeseProceed &&
-                    <View style={{ position: 'absolute', elevation: 10, left: 116, top: 70 }} >
+                    <View style={cardStyles.actionButtonContainer} >
                         <ImageButton
-                            imageStyle={{
-                                width: 80,
-                                height: 100
-                            }}
+                            imageStyle={cardStyles.actionButton}
                             source={require('../../../../../../asset/button/start_button.png')}
                             onPress={() => {
 
@@ -232,9 +221,30 @@ const cardStyles = StyleSheet.create({
         borderBottomStartRadius: 5,
         borderBottomEndRadius: 5,
         backgroundColor: '#ffffff',
-        height: 440,
-        margin: 3,
+        height: normalize(385, 'height'),
     },
+    title:{
+        textAlign: 'center',
+        fontSize: 16
+    },
+    caterpillarRankContainer:{
+        position: 'absolute', right: 5, top: -35
+    },
+    decimalDayContianer: {
+        position: 'absolute', 
+        top: 12, 
+        right: 12, 
+        paddingBottom: 1.5,
+        borderBottomWidth: 1, 
+        borderBottomColor: 'gray'
+    },
+    actionButtonContainer:{
+        position: 'absolute', elevation: 10, left: normalize(140) - (80 / 3), top: normalize(200, 'height') - (100 / 2)
+    },
+    actionButton : {
+        width: 80,
+        height: 100
+    }
 })
 
 @inject(['appStore'])
@@ -252,6 +262,7 @@ export default class Home extends Component {
 
         this.appStore = this.props.appStore;
 
+        console.log(PixelRatio.get());
     }
     //
     _renderItem = ({ item, index }) => {
@@ -359,7 +370,7 @@ export default class Home extends Component {
                                         renderItem={this._renderItem}
                                         scrollEnabled={true}
                                         sliderWidth={fullWidth}
-                                        itemWidth={300}
+                                        itemWidth={normalize(280)}
                                         onSnapToItem={
                                             index => this.setState({ activeIndex: index })}
                                         hasParallaxImages={true}
@@ -367,7 +378,7 @@ export default class Home extends Component {
                                 }
                             </View>
                         </View>
-                        <View style={{ justifyContent: 'flex-start', flex: 1 }}>
+                        <View style={{ justifyContent: 'flex-start', flex: 1, paddingBottom: 10 }}>
                             {this.state.data && this.state.data.length != 0 &&
                                 <PageStateText
                                     activeIndex={this.state.activeIndex + 1}
@@ -385,3 +396,4 @@ export default class Home extends Component {
 }
 
 
+//110

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image} from 'react-native';
+import {Image} from 'react-native';
 import { State } from '../../../AppEnum';
 
 export default function CaterPlannerRank({purpose, style}){
@@ -21,7 +21,10 @@ export default function CaterPlannerRank({purpose, style}){
     
     return <Image
     resizeMode="stretch"
-        style={style}
+        style={[{
+            width: 60,
+            height: 60
+        }, style]}
         source={resource}
     />
 }
