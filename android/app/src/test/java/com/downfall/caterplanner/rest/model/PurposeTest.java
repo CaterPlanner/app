@@ -1,4 +1,4 @@
-package com.downfall.caterplanner.rest.model;
+package com.dawnfall.caterplanner.rest.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

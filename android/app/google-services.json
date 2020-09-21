@@ -8,6 +8,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:824557913187:android:fa9d27fc5d37130fd42456",
+        "android_client_info": {
+          "package_name": "com.dawnfall.caterplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824557913187-gbtlv6lto6pj6tlp8alvr0qjpon7pm2g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dawnfall.caterplanner",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "824557913187-k8onrhv3nt0q5cbfvc2hf6gamspjseo1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZEE5eIQ-i8j0FOk208ifEfKtZS5zcdB0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824557913187-k8onrhv3nt0q5cbfvc2hf6gamspjseo1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:824557913187:android:c624ab9bf7460c04d42456",
         "android_client_info": {
           "package_name": "com.downfall.caterplanner"

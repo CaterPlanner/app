@@ -29,7 +29,6 @@ export default class AuthStore {
             offlineAccess: true,
             forceCodeForRefreshToken: false,
         });
-
     }
 
     @action
