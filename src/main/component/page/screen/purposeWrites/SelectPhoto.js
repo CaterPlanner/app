@@ -34,7 +34,6 @@ export default class SelectPhoto extends Component{
             }
         }
 
-
         return data;
 
     }

@@ -1,4 +1,4 @@
-package com.dawnfall.caterplanner.scheduler.service;
+package com.downfall.caterplanner.scheduler.service;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -11,7 +11,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.dawnfall.caterplanner.R;
+import com.downfall.caterplanner.R;
 import com.facebook.react.HeadlessJsTaskService;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.jstasks.HeadlessJsTaskConfig;
@@ -22,7 +22,7 @@ public class BriefingAlarmService extends HeadlessJsTaskService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        final String CHANNEL_ID = "com.dawnfall.caterplanner";
+        final String CHANNEL_ID = "com.downfall.caterplanner";
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID, "dummy service channel",

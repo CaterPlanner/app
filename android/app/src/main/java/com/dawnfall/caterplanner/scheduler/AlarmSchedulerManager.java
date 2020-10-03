@@ -1,4 +1,4 @@
-package com.dawnfall.caterplanner.scheduler;
+package com.downfall.caterplanner.scheduler;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -9,8 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telecom.Call;
 
-import com.dawnfall.caterplanner.scheduler.receiver.BriefingAlarmReceiver;
-import com.dawnfall.caterplanner.scheduler.service.BriefingAlarmService;
+import com.downfall.caterplanner.scheduler.receiver.BriefingAlarmReceiver;
+import com.downfall.caterplanner.scheduler.service.BriefingAlarmService;
 
 import java.util.Calendar;
 

@@ -1,11 +1,11 @@
-package com.dawnfall.caterplanner;
+package com.downfall.caterplanner;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 
-import com.dawnfall.caterplanner.scheduler.CaterPlannerSchedulerMoudle;
+import com.downfall.caterplanner.scheduler.CaterPlannerSchedulerMoudle;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;

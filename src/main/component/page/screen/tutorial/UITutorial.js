@@ -53,7 +53,6 @@ export default class UITutorial extends Component{
                 />
             </View>
         )
-
     }
 
     render(){

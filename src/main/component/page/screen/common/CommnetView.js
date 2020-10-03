@@ -289,7 +289,6 @@ export default class CommentView extends Component {
                                 onChangeText={text => this.setState({ commentText: text })}
                                 value={this.state.commentText}
                             />
-
                         </View>
                         <TouchableOpacity
                             style={{
