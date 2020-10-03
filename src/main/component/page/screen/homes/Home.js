@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // import React, { Component } from 'react'
 // import { View, Dimensions, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native'
 // import Carousel from 'react-native-snap-carousel';
@@ -393,18 +392,10 @@
 
 import React, { Component } from 'react'
 import { View, Dimensions, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal, PixelRatio } from 'react-native'
-=======
-import React, { Component } from 'react'
-import { View, Dimensions, Text, Image, StyleSheet, TouchableOpacity, Alert, Modal } from 'react-native'
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
 import Carousel from 'react-native-snap-carousel';
 import PageStateText from '../../../atom/text/PageStateText'
 
 import PurposeService from '../../../../rest/service/PurposeService';
-<<<<<<< HEAD
-=======
-import DecimalDayWidget from '../../../atom/icon/DecimalDayWidget';
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
 import { inject, observer } from 'mobx-react';
 import { PurposeWriteType, State } from '../../../../AppEnum';
 import ImageButton from '../../../atom/button/ImageButton';
@@ -417,12 +408,9 @@ import SplashScreen from 'react-native-splash-screen';
 import CaterPlannerRank from '../../../atom/icon/CaterPlannerRank';
 import UITutorial from '../tutorial/UITutorial'
 import AsyncStorage from '@react-native-community/async-storage';
-<<<<<<< HEAD
 import normalize from '../../../../util/noramlize';
 import PageStateIcon from '../../../atom/icon/PageStateIcon';
 
-=======
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -436,7 +424,6 @@ function CardDecimalDayWidget({ purpose }) {
 
 
     switch (purpose.stat) {
-<<<<<<< HEAD
 
 
         case 0:
@@ -444,23 +431,13 @@ function CardDecimalDayWidget({ purpose }) {
             if (!purpose.isProcceedEnd) {
                 text = (decimalDay == 0 ? 'FinalDay' : 'D - ' + decimalDay);
             } else {
-=======
-        case 0:
-            if(!purpose.isProcceedEnd){
-                text = (decimalDay == 0 ? 'FinalDay' : 'D - ' + decimalDay);
-            }else{
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
                 text = purpose.isSucceeseProceed ? '수행완료' : '수행실패'
             }
             break;
         case 1:
             text = '대기'
             break;
-<<<<<<< HEAD
         case 2:
-=======
-        case 2:         
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
             text = '성공'
             break;
         case 3:
@@ -468,7 +445,6 @@ function CardDecimalDayWidget({ purpose }) {
             break;
     }
 
-<<<<<<< HEAD
 
 
 
@@ -476,15 +452,6 @@ function CardDecimalDayWidget({ purpose }) {
     return (
         <Text style={{ color: '#25B046', fontSize: 12 / PixelRatio.getFontScale(), textAlign: 'center' }}>
             {text}
-=======
- 
-
-    
-
-    return (
-        <Text style={{ color: 'gray', fontSize: 12, textAlign: 'center' }}>
-        {text}
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
         </Text>
     )
 }
@@ -493,7 +460,6 @@ function CardDecimalDayWidget({ purpose }) {
 function EmptyCard({ onPress }) {
     return (
         <TouchableOpacity style={{
-<<<<<<< HEAD
             height: '100%', justifyContent: 'center', width: PixelRatio.getPixelSizeForLayoutSize(110)
         }} onPress={onPress}>
             <View style={[cardStyles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.8)', elevation: 0 }]}>
@@ -505,19 +471,6 @@ function EmptyCard({ onPress }) {
                     />
                 </View>
                 <Text style={{ fontSize: 20 / PixelRatio.getFontScale(), fontWeight: 'bold', marginTop: PixelRatio.getPixelSizeForLayoutSize(15) }}>
-=======
-            height: '100%', justifyContent: 'center', width: 300
-        }} onPress={onPress}>
-            <View style={[cardStyles.container, { justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.8)', elevation: 0 }]}>
-                <View style={{ width: 110, height: 110, justifyContent: 'center', alignItems: 'center' }}>
-                    <Image
-                        resizeMode="stretch"
-                        style={{ flex: 1, height: undefined, width: '100%' }}
-                        source={require('../../../../../../asset/button/plus_button.png')}
-                    />
-                </View>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 40 }}>
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
                     새로운 목적을 추가해보세요
                 </Text>
             </View>
@@ -530,10 +483,6 @@ function ActiveCard({ purpose, onPress, loadData }) {
     const navigation = useNavigation();
     const { authStore } = useStores();
 
-<<<<<<< HEAD
-=======
-
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
     const sendResult = async (stat) => {
         try {
 
@@ -554,7 +503,6 @@ function ActiveCard({ purpose, onPress, loadData }) {
 
 
     return (
-<<<<<<< HEAD
             <TouchableOpacity style={{
                 justifyContent: 'center',
             }} activeOpacity={1} onPress={onPress}>
@@ -576,57 +524,11 @@ function ActiveCard({ purpose, onPress, loadData }) {
                                 style={{borderTopLeftRadius:20, borderTopRightRadius:20, position:'absolute', top:-20, left:0, height: 20, width: normalize(290), backgroundColor:'white'}}
                             />
                             <View style={{ position: 'absolute', right: 8, top: -50}}>
-=======
-        <TouchableOpacity style={{
-            height: '100%', justifyContent: 'center'
-        }} activeOpacity={1} onPress={onPress}>
-
-            <View style={[cardStyles.container, {elevation : purpose.isFailProceed || purpose.stat == State.WAIT ? 0 : 3}]}
-            >
-                <View style={{
-                    flex: 1,
-                }}>
-                    <View style={{ position: 'absolute', top: 12, right: 12, paddingBottom: 2,
-                    borderBottomWidth: 1, borderBottomColor: 'gray'
-                   
-                }}>
-                        <CardDecimalDayWidget purpose={purpose} />
-                    </View>
-                    <View style={{ flex: 1, justifyContent: 'center', 
-                    borderBottomWidth : 1, borderBottomColor: '#F3F3F3'
-                }}>
-                        <Text
-                            adjustsFontSizeToFit
-                            numberOfLines={2}
-                            style={{
-                                textAlign: 'center',
-                                fontSize: 16,
-                            }}>
-                            {purpose.name}
-                        </Text>
-                    </View>
-     
-                </View>
-                <View style={{
-                    flex: 2.5,
-                    borderTopRightRadius: 5,
-                    borderTopLeftRadius: 5,
-                }}>
-                    <Image
-                        source={{ uri: purpose.photoUrl }}
-                        style={{
-                            flex: 1, width: "100%", height: undefined, borderBottomRightRadius: 5,
-                            borderBottomLeftRadius: 5,
-                        }}
-                    />
-                        <View style={{ position: 'absolute', right: 8, top: -30}}>
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
                             <CaterPlannerRank
                                 purpose={purpose}
                                 style={{
                                     width: 60,
                                     height: 60,
-<<<<<<< HEAD
                                             }}
                                 />
                             </View>
@@ -703,81 +605,12 @@ function ActiveCard({ purpose, onPress, loadData }) {
                     </View></View>
             </TouchableOpacity>
            
-=======
-                                }}
-                            />
-                        </View>
-                </View>
-                {(purpose.stat == State.WAIT || purpose.isFailProceed) &&
-                    <View style={[cardStyles.container, { right: 0, heigth: '100%', width: '100%', margin: 0, position: 'absolute', backgroundColor: 'rgba(0,0,0,0.3)' }]} />
-                }
-
-
-                {(purpose.stat == State.WAIT || purpose.isFailProceed) &&
-                    <View style={{ position: 'absolute', elevation: 10, left: 116, top: 70 }} >
-                        <ImageButton
-                            imageStyle={{
-                                width: 80,
-                                height: 100
-                            }}
-                            source={require('../../../../../../asset/button/start_button.png')}
-                            onPress={async () => {
-
-                                navigation.navigate('CreateNavigation', {
-                                    screen: 'PurposeWriteBoard',
-                                    params: {
-                                        purpose: Purpose.clone(purpose),
-                                        type: PurposeWriteType.RETRY
-                                    }
-                                })
-                            }}
-                        />
-                    </View>
-                }
-
-                {purpose.isSucceeseProceed &&
-                    <View style={{ position: 'absolute', elevation: 10, left: 116, top: 70 }} >
-                        <ImageButton
-                            imageStyle={{
-                                width: 80,
-                                height: 100
-                            }}
-                            source={require('../../../../../../asset/button/start_button.png')}
-                            onPress={() => {
-
-                                Alert.alert(null, '목적 수행이 완료되었습니다',
-                                    [
-                                        {
-                                            text: '다음에 결정',
-                                            style: 'cancel',
-                                        },
-                                        {
-                                            text: "실패",
-                                            onPress: () => {
-                                                sendResult(State.FAIL)
-                                            }
-                                        },
-                                        {
-                                            text: "성공",
-                                            onPress: () => {
-                                                sendResult(State.SUCCEES)
-                                            }
-                                        }
-                                    ])
-                            }}
-                        />
-                    </View>
-                }
-            </View>
-        </TouchableOpacity>
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
     )
 }
 
 
 const cardStyles = StyleSheet.create({
     container: {
-<<<<<<< HEAD
         borderRadius: 5,
         backgroundColor: '#ffffff',
         height: normalize(400, 'height')
@@ -800,16 +633,6 @@ const cardStyles = StyleSheet.create({
         width: 80,
         height: 100
     }
-=======
-        borderTopRightRadius: 5,
-        borderTopLeftRadius: 5,
-        borderBottomStartRadius: 5,
-        borderBottomEndRadius: 5,
-        backgroundColor: '#ffffff',
-        height: 440,
-        margin: 3,
-    },
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
 })
 
 @inject(['appStore'])
@@ -867,17 +690,10 @@ export default class Home extends Component {
                     Alert.alert(null, '수행을 실패한 목적이 있습니다.');
 
 
-<<<<<<< HEAD
 
             }
 
             await AsyncStorage.setItem("PURPOSE_COUNT", (data ? data.length : 0).toString())
-=======
-                
-            }
-
-            await AsyncStorage.setItem("PURPOSE_COUNT" , (data ? data.length : 0).toString())
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
 
             this.setState({
                 activeIndex: 0,
@@ -902,10 +718,6 @@ export default class Home extends Component {
             SplashScreen.hide();
         }, 500);
 
-<<<<<<< HEAD
-=======
-   
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
 
     }
 
@@ -914,7 +726,6 @@ export default class Home extends Component {
     }
 
     render() {
-<<<<<<< HEAD
         return (
             <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
                 <Modal
@@ -968,54 +779,6 @@ export default class Home extends Component {
                             />
                         }
                         </View>
-=======
-
-        return (
-            <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
-                 <Modal
-                        transparent={true}
-                        visible={this.appStore.isStart}
-                >
-                    <UITutorial/>
-                </Modal>
-                {!this.state.isLoading &&
-                    <View style={{ flex: 1 }}>
-                        <View style={{ flex: 11, justifyContent: 'center' }}>
-                            <View style={{ alignItems: 'center' }}>
-                                {!this.state.data || this.state.data.length == 0 ?
-                                    <EmptyCard
-                                        onPress={() => {
-                                            this.props.navigation.navigate('CreateNavigation', {
-                                                screen: 'PurposeWriteBoard',
-                                                params: {
-                                                    type: PurposeWriteType.CREATE
-                                                }
-                                            })
-                                        }}
-                                    /> :
-                                    <Carousel
-                                        ref={(ref) => { this.carousel = ref; }}
-                                        data={this.state.data}
-                                        renderItem={this._renderItem}
-                                        scrollEnabled={true}
-                                        sliderWidth={fullWidth}
-                                        itemWidth={300}
-                                        onSnapToItem={
-                                            index => this.setState({ activeIndex: index })}
-                                        hasParallaxImages={true}
-                                    />
-                                }
-                            </View>
-                        </View>
-                        <View style={{ justifyContent: 'flex-start', flex: 1 }}>
-                            {this.state.data && this.state.data.length != 0 &&
-                                <PageStateText
-                                    activeIndex={this.state.activeIndex + 1}
-                                    endIndex={this.state.endIndex}
-                                />
-                            }
-                        </View>
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
                     </View>}
             </View>
 
@@ -1026,7 +789,4 @@ export default class Home extends Component {
 }
 
 
-<<<<<<< HEAD
-//110
-=======
->>>>>>> af12d29ceb9847caa6469a2c3bb1469e79719cdb
+

@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, Image, StyleSheet, Dimensions } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Left, Row } from 'native-base';
@@ -95,4 +96,105 @@ export default function StoryCardTest({ userImg, userName, hisTime, title, conte
                 <View style={styles.BottCardContainer}>
 
                     <TouchableOpacity>
-<<<<<<< HEAD
+                        
+                        <Image
+                            style={{ height: 45, width: 45, borderRadius: 30, marginLeft: '17%', marginTop: -2 }}
+                            //바로가기
+                            source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRBibCuTx1Uzx9GmgTA7jzHvD8p9L8JkwrmD1OUN9oLla6vCAV2&usqp=CAU' }} />
+                 
+                    </TouchableOpacity>
+
+                    <View style={styles.comments}>
+
+                        <TouchableOpacity style={{
+                            flexDirection: 'row',
+                            marginRight: '10%', marginLeft: '10%'
+                        }}>
+                            <Image style={{ width: 25, height: 25, marginTop: '25%', marginRight: 7 }} source={{ uri: 'https://i.pinimg.com/originals/d8/3b/09/d83b09ebec8c4ca33339cc880d6f1143.jpg' }}></Image>
+                            <Text style={{ fontSize: 20, marginTop: '17%' }}>{likeGrab}</Text>
+                        </TouchableOpacity>
+
+
+                        <TouchableOpacity style={{ flexDirection: 'row' }}>
+                            <Image style={{ width: 30, height: 30, marginTop: '20%', marginLeft: '13%', marginRight: 7 }} source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTgeWEa9bZFVkYxojjRJIJxuJsFEdWh1F4o1JTz17t1b4hyOX3_&usqp=CAU' }}></Image>
+                            <Text style={{ fontSize: 20, marginTop: '16%' }}>{comentGrab}</Text>
+                        </TouchableOpacity>
+
+                    </View>
+
+
+                </View>
+
+            </View>
+        </View>
+    )
+
+
+
+}
+
+
+const styles = StyleSheet.create({
+
+    container: {
+        // backgroundColor:'red',
+        width: fullWidth,
+        height: 380,
+        padding: 10
+
+    },
+
+    Cardcontainer: {
+
+        backgroundColor: 'white',
+        width: '100%',
+        height: '100%',
+        flexDirection: 'column',
+        borderRadius: 10
+
+
+    },
+
+    TopCardContainer: {
+
+        padding: 6,
+
+        flexDirection: 'row',
+
+        flex: 1,
+        //   borderWidth:1,
+        borderColor: 'black'
+    },
+
+    MidCardTitleContainer: {
+
+        flexDirection: 'row',
+
+        flex: 2,
+        //  borderWidth:1
+    },
+
+    MidCardContentContainer: {
+        flex: 3,
+        //    borderWidth:1
+    },
+
+    BottCardContainer: {
+        flexDirection: 'row',
+        flex: 1.2,
+        // borderWidth:1
+    },
+
+    comments: {
+
+        flexDirection: 'row',
+
+        marginLeft: '41%',
+        //backgroundColor:'blue',
+        height: '100%',
+        width: '40%'
+    }
+
+
+
+})
