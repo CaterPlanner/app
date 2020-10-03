@@ -7,7 +7,7 @@ YellowBox.ignoreWarnings = ([
     'VirtualizedList: missing keys for items, make sure to specify a key or id property on each item or provide a custom keyExtractor.'
   ])
 
-const PHOTO_LIMIT_SIZE = 1024 * 1024 * 10;
+const PHOTO_LIMIT_SIZE = 1024 * 1024 * 5;
 
 export default class SelectPhoto extends Component{
 
@@ -34,6 +34,7 @@ export default class SelectPhoto extends Component{
             }
         }
 
+
         return data;
 
     }
@@ -46,7 +47,6 @@ export default class SelectPhoto extends Component{
             assertType: 'Photos',
             include: ['filename', 'fileSize']
         })).edges.map((photo) => {
-
 
             if(photo.node.image.fileSize > PHOTO_LIMIT_SIZE)
                 return;
@@ -70,12 +70,6 @@ export default class SelectPhoto extends Component{
 
     componentDidMount() {
         this._getPhotos();
-
-        setTimeout(() => {
-            ToastAndroid.showWithGravity(
-                '크기가 10MB 이상인 사진들은 제외되었습니다.'
-                ,ToastAndroid.SHORT, ToastAndroid.CENTER);
-        }, 500);
     }
 
 

@@ -96,10 +96,12 @@ export default function StoryCardTest({ userImg, userName, hisTime, title, conte
                 <View style={styles.BottCardContainer}>
 
                     <TouchableOpacity>
+                        
                         <Image
                             style={{ height: 45, width: 45, borderRadius: 30, marginLeft: '17%', marginTop: -2 }}
                             //바로가기
                             source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRBibCuTx1Uzx9GmgTA7jzHvD8p9L8JkwrmD1OUN9oLla6vCAV2&usqp=CAU' }} />
+                 
                     </TouchableOpacity>
 
                     <View style={styles.comments}>

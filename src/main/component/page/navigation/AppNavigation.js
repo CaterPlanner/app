@@ -23,12 +23,15 @@ const AppNavigation = () => {
                     titie: ''
                 }
             )} name={"WriteStory"} component={WriteStory}/> */}
-            <Stack.Screen options={{headerShown:false}} name="MainNavigation" component={MainNavigation} />
+            <Stack.Screen options={{headerShown:false, animationEnabled : false}} name="MainNavigation" component={MainNavigation} />
             <Stack.Screen options={{headerShown:false}} name="CreateNavigation" component={CreateNavigation} />
-            <Stack.Screen name="ServerNotification" component={ServerNotification} />
+            <Stack.Screen options={{
+                animationEnabled : false
+            }}name="ServerNotification" component={ServerNotification} />
             <Stack.Screen options={({route, navigation}) => ({
                 ...defaultHeaderStyle(navigation),
                 title: '설정',
+                animationEnabled : false,
                 headerTitleAlign:'center',
                 headerTitleStyle: {
                     fontWeight: 'bold'

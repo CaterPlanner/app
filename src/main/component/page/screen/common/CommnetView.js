@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, FlatList, TextInput, TouchableOpacity, Image, Modal, Text, KeyboardAvoidingView } from 'react-native';
+import { View, FlatList, TextInput, TouchableOpacity, Image, Modal, Text, Keyboard } from 'react-native';
 import Comment from '../../../molecule/Comment'
 import EasyDate from '../../../../util/EasyDate';
 import ImageButton from '../../../atom/button/ImageButton';
@@ -11,6 +11,9 @@ import Request from '../../../../util/Request'
 import MyTextInput from '../../../atom/input/MyTextInput';
 
 //https://stackoverflow.com/questions/31475187/making-a-multiline-expanding-textinput-with-react-native
+
+
+
 @inject(['authStore'])
 export default class CommentView extends Component {
 
@@ -25,7 +28,8 @@ export default class CommentView extends Component {
             page: 0,
             commentText: '',
             isCommentAction: false,
-            commentHeight: 0
+            commentHeight: 0,
+            keyboardSpaceHeight: 0
         }
 
         this.authStore = this.props.authStore;
@@ -135,7 +139,7 @@ export default class CommentView extends Component {
             }
 
             this.setState({
-                commentText : ''
+                commentText: ''
             })
 
             switch (this.props.route.params.entity) {
@@ -176,6 +180,25 @@ export default class CommentView extends Component {
             isLoading: true,
         }, this._loadData)
     }
+
+    componentWillMount(){
+        this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', (e) => {
+            this.setState({
+                keyboardSpaceHeight: e.endCoordinates.height
+            })
+        });
+        this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', (e) => {
+            this.setState({
+                keyboardSpaceHeight : 0
+            })
+        });
+    }
+    
+    componentWillUnmount(){
+        this.keyboardDidShowSub.remove();
+        this.keyboardDidHideSub.remove();
+    }
+
 
     render() {
 
@@ -242,7 +265,7 @@ export default class CommentView extends Component {
                     onEndReachedThreshold={0.01}
                     ListFooterComponent={this._renderFooter}
                 />
-                    <View style={{ width: '100%', backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, paddingVertical: 12, elevation: 15}}>
+                    <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10, paddingVertical: 12, elevation: 15 }}>
                         <View style={{
                             backgroundColor: '#E9E9E9',
                             width: '85%',
@@ -252,10 +275,9 @@ export default class CommentView extends Component {
                         }}>
                             <MyTextInput
                                 autoCorrect={false}
-                                numberOfLines={1}
                                 placeholder={'댓글 입력하기'}
                                 multiline={true}
-                                maxLine={8}
+                                maxLine={12}
                                 textStyles={{
                                     fontSize: 15,
                                     lineHeight: 20,
@@ -267,6 +289,7 @@ export default class CommentView extends Component {
                                 onChangeText={text => this.setState({ commentText: text })}
                                 value={this.state.commentText}
                             />
+
                         </View>
                         <TouchableOpacity
                             style={{
@@ -298,6 +321,7 @@ export default class CommentView extends Component {
                             }
                         </TouchableOpacity>
                     </View>
+                    <View style={{height: this.state.keyboardSpaceHeight}}/>
             </View>
         )
     }

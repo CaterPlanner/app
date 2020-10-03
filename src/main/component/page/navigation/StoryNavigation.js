@@ -20,7 +20,9 @@ const StoryNavigation = ({navigation, route}) => {
     }
 
     return(
-          <Stack.Navigator>
+          <Stack.Navigator screenOptions={{
+            animationEnabled : false
+        }}>
             {/* <Stack.Screen name="TestView" component={TestView}/> */}
             <Stack.Screen options={({navigation}) => ({
                 ...defaultHeaderStyle(),

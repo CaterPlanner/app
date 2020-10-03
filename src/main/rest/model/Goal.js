@@ -11,17 +11,17 @@ export function getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams
             maxTime = diffDay + 1;
             break;
         case "W":
-            const getDayBriefingCountInTerm = (startDate, endDate, piece) => {
+            const getDayBriefingCountInTerm = (startDate, endDate) => {
                 let count = 0;
 
                 if(startDate.getDay() < endDate.getDay()){
-                    for(let i = 0; i < piece.length; i++){
-                        if(piece[i] >= startDate.getDay() && piece[i] <= endDate.getDay())
+                    for(let i = 0; i < cycleParams.length; i++){
+                        if(cycleParams[i] >= startDate.getDay() && cycleParams[i] <= endDate.getDay())
                             count++;
                     }
                 }else{
-                    for(let i = 0; i < piece.length; i++){
-                        if(piece[i] >= startDate.getDay() || piece[i] <= endDate.getDay())
+                    for(let i = 0; i < cycleParams.length; i++){
+                        if(cycleParams[i] >= startDate.getDay() || cycleParams[i] <= endDate.getDay())
                             count++;
                     }
                 }
@@ -29,8 +29,8 @@ export function getBetweenMaxBriefing(startDate, endDate, cycleType, cycleParams
                 return count;
             }
             
-            maxTime = diffDay < 7 ? getDayBriefingCountInTerm(startDate, endDate, cycleParams) :
-                (Math.floor(diffDay / 7) * cycleParams.length) + getDayBriefingCountInTerm(endDate.minusDays((diffDay % 7)) , endDate, cycleParams);
+            maxTime = diffDay < 7 ? getDayBriefingCountInTerm(startDate, endDate) :
+                (Math.floor(diffDay / 7) * cycleParams.length) + getDayBriefingCountInTerm(endDate.minusDays((diffDay % 7)) , endDate);
 
             break;
     }
@@ -80,12 +80,12 @@ export default class Goal {
         return getBetweenMaxBriefing(this.startDate, this.endDate, this.cycleType, this.cycleParams);
     }
 
-    get currentPerfectTime(){
-        return getBetweenMaxBriefing(EasyDate.now(), this.endDate, this.cycleType, this.cycleParams);
-    }
-
     get currentBriefingCount(){
         return this.briefingCount;
+    }
+
+    get currentPerfectTime(){
+        return getBetweenMaxBriefing(EasyDate.now(), this.endDate, this.cycleType, this.cycleParams);
     }
 
     get achieve(){
@@ -109,32 +109,32 @@ export default class Goal {
         return EasyDate.between(Date.now(), this.nextLeftDay).day;
     }
 
-    get nextLeftDay(){
-        let today = EasyDate.now();
-        let nextDay = null;
+    // get nextLeftDay(){
+    //     let today = EasyDate.now();
+    //     let nextDay = null;
 
-        if(this.isNowBriefing){
-            nextDay = today;
-        }else{
-            switch(this.cycleType){
-                case 'A':
-                    nextDay = new Date(today.getDate() + 1);
-                    break;
-                case 'W':
-                    const cycleParams = this.cycleParams;
-                    nextDay = today.plusDays(EasyDate.waitingDayOfWeekCount(today, cycleParams[0]));
-                    for(let i = 1; i < cycleParams.length; i++){
-                        if(cycleParams[i] > today.getDay()) {
-                            nextDay = today.plusDays(EasyDate.waitingDayOfWeekCount(today, cycleParams[i]));
-                            break;
-                        }
-                    }
-                    break;
-            }
-        }
+    //     if(this.isNowBriefing){
+    //         nextDay = today;
+    //     }else{
+    //         switch(this.cycleType){
+    //             case 'A':
+    //                 nextDay = new Date(today.getDate() + 1);
+    //                 break;
+    //             case 'W':
+    //                 const cycleParams = this.cycleParams;
+    //                 nextDay = today.plusDays(EasyDate.waitingDayOfWeekCount(today, cycleParams[0]));
+    //                 for(let i = 1; i < cycleParams.length; i++){
+    //                     if(cycleParams[i] > today.getDay()) {
+    //                         nextDay = today.plusDays(EasyDate.waitingDayOfWeekCount(today, cycleParams[i]));
+    //                         break;
+    //                     }
+    //                 }
+    //                 break;
+    //         }
+    //     }
 
-        return nextDay;
-    }
+    //     return nextDay;
+    // }
 
     get isNowBriefing(){
         let today = EasyDate.now();

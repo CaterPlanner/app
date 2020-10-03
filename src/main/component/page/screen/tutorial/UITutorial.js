@@ -8,7 +8,6 @@ import normalize from '../../../../util/noramlize';
 
 const fullWidth = Dimensions.get('window').width;
 
-@inject(['appStore'])
 export default class UITutorial extends Component{
 
     constructor(props){
@@ -37,7 +36,6 @@ export default class UITutorial extends Component{
             }
         ]
 
-        this.appStore = this.props.appStore;
     }
 
     _renderItem = ({item}) => {
@@ -55,6 +53,7 @@ export default class UITutorial extends Component{
                 />
             </View>
         )
+
     }
 
     render(){
@@ -66,9 +65,7 @@ export default class UITutorial extends Component{
                     alignSelf :'flex-end',
                 }}
                 imageStyle={styles.exitButton}
-                onPress={() => {
-                    this.appStore.setIsStart(false);
-                }}
+                onPress={this.props.finish}
             />
             <View style={{justifyContent: 'center' ,alignItems:'center', flex:1}}>
                 <Carousel
@@ -106,7 +103,7 @@ export default class UITutorial extends Component{
                     <View style={{ flex: 1, alignItems: 'flex-end' }}>
                         <TouchableOpacity onPress={() => {
                             if (this.isLast) {
-                                this.appStore.setIsStart(false);
+                                this.props.finish();
                             } else {
                                 this.carousel._snapToItem(this.state.activeIndex + 1);
                             }

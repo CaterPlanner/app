@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 
-export default function PageStateIcon({current, max, selectColor, unselectColor}){
+export default function PageStateIcon({current, max, selectColor, unselectColor, iconStyle}){
     return(
         <View style={{flexDirection : 'row', justifyContent: 'center', alignItems:'center'}}>
             {
@@ -9,7 +9,7 @@ export default function PageStateIcon({current, max, selectColor, unselectColor}
                     let icons = [];
                     for(let i = 0; i < max; i++){
                         icons.push(
-                            <View key={i} style={{marginHorizontal: 8, width : 10, height: 10, borderRadius: 10, backgroundColor: i === current ? selectColor : unselectColor}}/>
+                            <View key={i} style={[{marginHorizontal: 8, width : 10, height: 10, borderRadius: 10, backgroundColor: i === current ? selectColor : unselectColor}, iconStyle]}/>
                         )
                     }
                     return icons;

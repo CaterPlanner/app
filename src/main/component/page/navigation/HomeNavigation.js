@@ -9,6 +9,8 @@ import PublicNavigation, { hey } from './PublicNavigation'
 
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 import BriefingGoalList from '../screen/homes/BriefingGoalList';
+import { State } from '../../../AppEnum';
+import EditImage from '../screen/purposeWrites/EditImage';
 
 
 const Stack = createStackNavigator();
@@ -22,7 +24,9 @@ const HomeNavigation = ({navigation, route}) => {
     }
 
     return (
-        <Stack.Navigator scrren>
+        <Stack.Navigator screenOptions={{
+            animationEnabled : false
+        }}>
             <Stack.Screen options={({ navigation }) => (
                 {
                     ...defaultHeaderStyle(),

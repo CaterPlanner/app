@@ -15,7 +15,9 @@ const ProfileNavigation = ({navigation, route}) => {
 }
 
   return(
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{
+      animationEnabled : false
+  }}>
             <Stack.Screen options={({ navigation }) => ({
                 ...defaultHeaderStyle(),
                 title: '프로필',

@@ -40,7 +40,7 @@ export default function UserProfile({ data }) {
                 </Text>
 
                 {/* 정보들 */}
-                <View style={{ width: '100%', alignItems: 'center', marginTop: 15, marginBottom: 25, flexDirection: 'row' }}>
+                <View style={{ width: '100%', alignItems: 'center', marginTop: 20, marginBottom: 25, flexDirection: 'row' }}>
 
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <Text style={{ fontSize: 16 }}>{data.successPer}%</Text>

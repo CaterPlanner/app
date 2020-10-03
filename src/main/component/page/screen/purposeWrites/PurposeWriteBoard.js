@@ -105,7 +105,7 @@ export default class PurposeWriteBoard extends Component {
 
                     response = await Request.post(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
-                    })
+                    }, 60000)
                         .auth(await this.authStore.getToken())
                         .submit();
 
@@ -133,7 +133,7 @@ export default class PurposeWriteBoard extends Component {
       
                     response = await Request.patch(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
-                    })
+                    }, 60000)
                         .auth(await this.authStore.getToken())
                         .submit();
 
@@ -160,7 +160,7 @@ export default class PurposeWriteBoard extends Component {
 
                     response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
-                    })
+                    }, 60000)
                         .auth(await this.authStore.getToken())
                         .submit();
 
@@ -181,7 +181,7 @@ export default class PurposeWriteBoard extends Component {
 
                     response = await Request.put(`${GlobalConfig.CATEPLANNER_REST_SERVER.domain}/purpose/${this.purposeWriteStore.purpose.id}`, this.purposeWriteStore.resultFormData, {
                         'Content-Type': 'multipart/form-data'
-                    })
+                    }, 60000)
                         .auth(await this.authStore.getToken())
                         .submit();
 

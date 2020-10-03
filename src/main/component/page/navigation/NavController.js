@@ -63,6 +63,7 @@ export default class NavController extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar hidden />
+                {/* <AppNavigation /> */}
                {/* <BeginNavigation /> */}
                 {this.appStore.isBegin ?
                     <BeginNavigation /> :

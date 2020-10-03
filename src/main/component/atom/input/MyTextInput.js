@@ -24,7 +24,7 @@ export default class MyTextInput extends Component {
 
         this.lineHeight = textStyles.lineHeight ? textStyles.lineHeight : fontSize + 2 * 2;
         this.viewHeight = backgroundStyles.height ? backgroundStyles.height : 30;
-        this.containerMaxHeight = this.props.containerMaxHeight ? this.props.containerMaxHeight : 200;
+        this.containerMaxHeight = this.props.containerMaxHeight ? this.props.containerMaxHeight : 140;
         this.maxLine = this.props.maxLine ? this.props.maxLine : 5;
 
     
@@ -64,17 +64,17 @@ export default class MyTextInput extends Component {
                     ref={input => this.textInput = input}
                     pointerEvents="none"
                     style={[this.props.textStyles, { paddingVertical:0, paddingHorizontal: 0, lineHeight: this.lineHeight}]}
-                    multiline={this.props.multiline}
-                    value={this.props.value}
-                    maxLength={this.props.maxLength}
-                    placeholder={this.props.placeholder}
-                    numberOfLines={this.props.numberOfLines}
-                    returnKeyType={this.props.returnKeyType}
-                    onSubmitEditing={this.props.onSubmitEditing}
-                    blueOnSumbit={this.props.blueOnSumbit}
                     onChangeText={(text) => {
                         if(this.props.onChangeText)
                         this.props.onChangeText(text)
+
+                        if(text == ""){
+                            this.setState({
+                                textHeight : 0,
+                                textLine : 0
+                            })
+                        }
+
                     }}
                     onContentSizeChange={({ nativeEvent }) => {
 
@@ -96,7 +96,16 @@ export default class MyTextInput extends Component {
                         if(this.props.onChange)
                         this.props.onChange(e);
                     }}
+                    // multiline={this.props.multiline}
+                    // value={this.props.value}
+                    // maxLength={this.props.maxLength}
+                    // placeholder={this.props.placeholder}
+                    // numberOfLines={this.props.numberOfLines}
+                    // returnKeyType={this.props.returnKeyType}
+                    // onSubmitEditing={this.props.onSubmitEditing}                 
+                    // blueOnSumbit={this.props.blueOnSumbit}
                     underlineColorAndroid='transparent'
+                    {...this.props}
                 />
             </View>
         )

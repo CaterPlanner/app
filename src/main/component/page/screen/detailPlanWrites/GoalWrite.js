@@ -117,8 +117,6 @@ export default class GoalWrite extends Component {
 
 
     render() {
-
-
         return (
             <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
                 {this.state.showDatePicker &&
@@ -135,9 +133,15 @@ export default class GoalWrite extends Component {
                                 
                                 this.setState({
                                     selectDate: date.isBefore(this.detailPlanWriteStore.entryStartDate.minusDays(1)) ? date : this.state.selectDate,
-                                    selectDate: null,
+                                    changeDate: null,
                                     showDatePicker: false,
                                     ...data,
+                                })
+                            }else if(event.type == 'dismissed'){
+                                this.setState({
+                                    selectDate: null,
+                                    changeDate: null,
+                                    showDatePicker: false,
                                 })
                             }
                         }}
@@ -289,11 +293,12 @@ export default class GoalWrite extends Component {
                             <RoundColorButton
                                 text={'매일'}
                                 textStyle={{
-                                    textAlign: 'center'
+                                    textAlign: 'center',
+                                    color : this.state.goalCycleType == 0 ? 'white' : 'black'
                                 }}
                                 borderWidth={0}
                                 elevation={this.state.goalCycleType == 0 ? 1 : 0}
-                                color={this.state.goalCycleType == 0 ? 'white' : '#F2F2F2'}
+                                color={this.state.goalCycleType == 0 ? '#00B412' : '#F2F2F2'}
                                 width={80}
                                 height={33}
                                 onPress={() => {
@@ -305,11 +310,12 @@ export default class GoalWrite extends Component {
                             <RoundColorButton
                                 text={'매주'}
                                 textStyle={{
-                                    textAlign: 'center'
+                                    textAlign: 'center',
+                                    color : this.state.goalCycleType == 1 ? 'white' : 'black'
                                 }}
                                 borderWidth={0}
                                 elevation={this.state.goalCycleType == 1 ? 1 : 0}
-                                color={this.state.goalCycleType == 1 ? 'white' : '#F2F2F2'}
+                                color={this.state.goalCycleType == 1 ? '#00B412' : '#F2F2F2'}
                                 width={80}
                                 height={33}
                                 onPress={() => {
@@ -332,7 +338,7 @@ export default class GoalWrite extends Component {
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 elevation: this.state.goalCycleParamByDays[index] || this.state.goalCycleType == 0 ? 1 : 0,
-                                                backgroundColor: this.state.goalCycleParamByDays[index] || this.state.goalCycleType == 0 ? 'white' : '#F2F2F2'
+                                                backgroundColor: this.state.goalCycleParamByDays[index] || this.state.goalCycleType == 0 ? '#00B412' : '#F2F2F2'
                                             }}
                                             onPress={() => {
                                                 this.state.goalCycleParamByDays[index] = !this.state.goalCycleParamByDays[index];
@@ -350,7 +356,9 @@ export default class GoalWrite extends Component {
 
                                             }}
                                         >
-                                            <Text>{dayName}</Text>
+                                            <Text
+                                                style={{color :this.state.goalCycleParamByDays[index] || this.state.goalCycleType == 0 ? 'white' : 'black' }}
+                                            >{dayName}</Text>
                                         </TouchableOpacity>
                                     )
                                 })

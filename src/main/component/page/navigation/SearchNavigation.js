@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import PublicNavigation from './PublicNavigation'
 import Search from '../screen/search/Search';
+import BeforeSearch from '../screen/search/BeforeSearch';
 import defaultHeaderStyle from '../../organism/header/defaultHeaderStyle';
 
 const Stack = createStackNavigator();
@@ -15,7 +16,9 @@ const SearchNavigation = ({navigation, route}) => {
 }
 
   return(
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{
+      animationEnabled : false
+  }}> 
         <Stack.Screen options={({ navigation }) => ({
                 ...defaultHeaderStyle(),
                 title: '탐색',
@@ -23,7 +26,7 @@ const SearchNavigation = ({navigation, route}) => {
                 headerTitleStyle: {
                     fontWeight: 'bold'
                 }
-            })} name="Search" component={Search}/>
+            })} name="BeforeSearch" component={BeforeSearch}/>
         {/* <Stack.Screen options={{ headerShown: false }} name="PublicNavigation" component={PublicNavigation} /> */}
         {PublicNavigation.get()}
     </Stack.Navigator>

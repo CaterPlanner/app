@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import 'mobx-react-lite/batchingForReactNative'
 import React, {Component} from 'react'
-import {ToastAndroid, BackHandler} from 'react-native'
+import {ToastAndroid, BackHandler, LogBox} from 'react-native'
 import { NavigationContainer} from '@react-navigation/native';
 import RootStore from './src/main/mobX/store/RootStore';
 import {Provider} from 'mobx-react'
@@ -17,8 +17,8 @@ export default class App extends Component{
       SQLite.enablePromise(false);
 
       this.root = new RootStore();
-
-    }
+      console.disableYellowBox = true;
+        }
 
     componentDidMount(){
       BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);

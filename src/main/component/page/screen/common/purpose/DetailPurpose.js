@@ -383,7 +383,7 @@ export default class DetailPurpose extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1}}>
                 <View style={{ alignSelf: 'flex-end' }}>
                     <Menu
                         ref={ref => { this._purposeContolMenuRef = ref }}>
@@ -491,8 +491,9 @@ export default class DetailPurpose extends Component {
                         )
                     }}
                     stickyHeaderHeight={53}
-                    parallaxHeaderHeight={Dimensions.get('window').height * 0.33}
+                    parallaxHeaderHeight={Dimensions.get('window').height * 0.38}
                     backgroundSpeed={10}
+                    contentBackgroundColor={'rgba(0,0,0,0)'}
                     renderBackground={() => {
                         return (
                             <View style={detailPurposeStyles.thumbnailImageContainer}>
@@ -505,9 +506,12 @@ export default class DetailPurpose extends Component {
                         )
                     }}
                 >
-                    <View style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
+                    <View style={{ backgroundColor: '#F8F8F8'}}>
                         <View style={detailPurposeStyles.purposeInfoContainer}>
-                            <View style={{ position: 'absolute', right: 15, top: -40 }}>
+                            <View
+                                style={{borderTopLeftRadius:20, borderTopRightRadius:20, position:'absolute', top:-30, left:0, height: 30, width: Dimensions.get('window').width, backgroundColor:'white'}}
+                            />
+                            <View style={{ position: 'absolute', right: 15, top: -60 }}>
                                 <CaterPlannerRank
                                     purpose={this.props.data.purpose}
                                     style={{
@@ -697,18 +701,16 @@ export default class DetailPurpose extends Component {
 const detailPurposeStyles = StyleSheet.create({
     thumbnailImageContainer: {
         width: '100%',
-        height: Dimensions.get('window').height * 0.33,
+        height: Dimensions.get('window').height * 0.50,
     },
     purposeInfoContainer: {
         width: '100%',
         backgroundColor: 'white',
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
     },
     purposeNameFont: {
-        fontSize: 20,
+        fontSize: 24,
         textAlign: 'left',
-        marginTop: 30,
-        fontWeight: 'bold',
         marginBottom: 15
     },
     purposeDescriptionFont: {
