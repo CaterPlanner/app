@@ -57,13 +57,13 @@ export default class Story extends Component{
             .auth(await this.authStore.getToken())
             .submit();
 
-            this.isFinish = response.data.final;
+            this.isFinish = response.data.isFinal;
 
 
             this.setState({
                 data : this.state.loadType == LoadType.REFRESH ? response.data.elements : this.state.data.concat(response.data.elements),
                 isLoading : false,
-                isFinish : response.data.final
+                isFinish : response.data.isFinal
             });
 
         }catch(e){

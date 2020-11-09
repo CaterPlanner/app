@@ -16,7 +16,7 @@ const UserImage_Grab = 'https://library.kissclipart.com/20180918/ove/kissclipart
 
 export default function StoryCardTest({ userImg, userName, hisTime, title, content, likes, coments }) {
 
-
+  
 
     return (
 

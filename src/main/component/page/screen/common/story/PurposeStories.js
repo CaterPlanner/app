@@ -33,7 +33,7 @@ export default class PurposeStories extends Component{
             .auth(await this.authStore.getToken())
             .submit();
 
-            this.isFinish = response.data.final;
+            this.isFinish = response.data.isFinal;
 
             this.setState({
                 data : this.state.data.concat(response.data.elements),

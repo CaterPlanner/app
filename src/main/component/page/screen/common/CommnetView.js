@@ -61,7 +61,7 @@ export default class CommentView extends Component {
             this.setState({
                 data: this.state.loadType == LoadType.MORE ? this.state.data.slice(0, this.state.page * 15).concat(response.data.elements) : response.data.elements,
                 isLoading: false,
-                isFinish: response.data.final,
+                isFinish: response.data.isFinal,
                 loadType: null,
                 ...include
             })

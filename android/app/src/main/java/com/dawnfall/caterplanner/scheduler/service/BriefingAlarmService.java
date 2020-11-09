@@ -11,7 +11,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.downfall.caterplanner.R;
 import com.facebook.react.HeadlessJsTaskService;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.jstasks.HeadlessJsTaskConfig;
